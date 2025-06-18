@@ -1,0 +1,10 @@
+{
+  "name": "pmc",
+  "version": "1.0.0",
+  "scripts": {},
+  "keywords": [],
+  "packageManager": "pnpm@10.12.1",
+  "dependencies": {
+    "sst": "^3.17.5"
+  }
+}
