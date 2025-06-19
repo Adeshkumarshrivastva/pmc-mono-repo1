@@ -47,3 +47,5 @@ next-env.d.ts
 .open-next
 
 /src/generated/prisma
+
+.turbo

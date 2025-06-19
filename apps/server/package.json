@@ -1,0 +1,14 @@
+{
+  "name": "@pmc/server",
+  "scripts": {
+    "format": "prettier --write --ignore-path .gitignore --cache ."
+  },
+  "dependencies": {
+    "hono": "4.8.0"
+  },
+  "devDependencies": {
+    "@pmc/config": "workspace:*",
+    "@types/node": "24.0.3",
+    "typescript": "5.8.3"
+  }
+}

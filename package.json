@@ -1,10 +1,21 @@
 {
   "name": "pmc",
   "version": "1.0.0",
-  "scripts": {},
+  "scripts": {
+    "format": "concurrently \"prettier --write --ignore-path .gitignore --cache .\" \"turbo run format\""
+  },
   "keywords": [],
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
-    "sst": "^3.17.5"
+    "sst": "3.17.6"
+  },
+  "devDependencies": {
+    "@pmc/config": "workspace:*",
+    "@types/aws-lambda": "8.10.150",
+    "@types/node": "24.0.3",
+    "concurrently": "9.1.2",
+    "prettier": "3.5.3",
+    "turbo": "2.5.4",
+    "typescript": "5.8.3"
   }
 }
