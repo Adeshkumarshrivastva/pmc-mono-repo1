@@ -10,6 +10,10 @@ declare module "sst" {
       type: "sst.aws.Function";
       url: string;
     };
+    PmcRouter: {
+      type: "sst.aws.Router";
+      url: string;
+    };
   }
 }
 /// <reference path="sst-env.d.ts" />
