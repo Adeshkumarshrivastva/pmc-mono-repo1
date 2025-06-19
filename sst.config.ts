@@ -9,5 +9,16 @@ export default $config({
       home: "aws",
     };
   },
-  async run() {},
+  async run() {
+    const router = new sst.aws.Router("PmcRouter", {});
+    const honoFunction = new sst.aws.Function("PmcHonoServer", {
+      handler: "apps/server/src/index.handler",
+      url: {
+        router: {
+          instance: router,
+          path: "/api",
+        },
+      },
+    });
+  },
 });

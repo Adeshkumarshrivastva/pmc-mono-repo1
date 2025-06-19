@@ -2,6 +2,7 @@
   "name": "pmc",
   "version": "1.0.0",
   "scripts": {
+    "clean": "rimraf node_modules **/*/node_modules",
     "format": "concurrently \"prettier --write --ignore-path .gitignore --cache .\" \"turbo run format\""
   },
   "keywords": [],
@@ -15,6 +16,7 @@
     "@types/node": "24.0.3",
     "concurrently": "9.1.2",
     "prettier": "3.5.3",
+    "rimraf": "6.0.1",
     "turbo": "2.5.4",
     "typescript": "5.8.3"
   }

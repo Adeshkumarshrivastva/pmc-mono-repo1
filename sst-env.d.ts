@@ -4,7 +4,13 @@
 /* deno-fmt-ignore-file */
 
 declare module "sst" {
-  export interface Resource {}
+  export interface Resource {
+    PmcHonoServer: {
+      name: string;
+      type: "sst.aws.Function";
+      url: string;
+    };
+  }
 }
 /// <reference path="sst-env.d.ts" />
 
