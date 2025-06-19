@@ -2,7 +2,8 @@
   "name": "@pmc/config",
   "files": [
     "eslint.config.mjs",
-    "prettier.config.cjs"
+    "prettier.config.cjs",
+    "base.json"
   ],
   "scripts": {
     "format": "prettier --write --ignore-path .gitignore --cache ."
