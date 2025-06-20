@@ -1,7 +1,8 @@
 {
   "name": "@pmc/server",
   "scripts": {
-    "format": "prettier --write --ignore-path .gitignore --cache ."
+    "format": "prettier --write --ignore-path .gitignore --cache .",
+    "lint": "eslint ."
   },
   "dependencies": {
     "hono": "4.8.0"
