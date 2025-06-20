@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
+import importPlugin from 'eslint-plugin-import'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
@@ -15,6 +16,7 @@ export default defineConfig([
   },
   tseslint.configs.recommended,
   {
+    plugins: { import: importPlugin },
     rules: {
       'no-undef': 'off',
       '@typescript-eslint/no-unused-vars': 'error',
