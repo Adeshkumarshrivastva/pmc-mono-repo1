@@ -1,0 +1,51 @@
+{
+  "name": "landing-page",
+  "version": "1.0.0",
+  "description": "A blank template to get started with Payload 3.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build --experimental-build-mode compile",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --cache --write --no-error-on-unmatched-pattern \"src/**/*.{ts,tsx,js}\" *.{ts,tsx,js}",
+    "generate:types": "cross-env PAYLOAD_CONFIG_PATH=src/payload/config.ts payload generate:types",
+    "generate:importmap": "pnpm generate:importmap",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch"
+  },
+  "dependencies": {
+    "@payloadcms/db-mongodb": "3.43.0",
+    "@payloadcms/next": "3.43.0",
+    "@payloadcms/payload-cloud": "3.43.0",
+    "@payloadcms/richtext-lexical": "3.43.0",
+    "@payloadcms/ui": "3.43.0",
+    "cross-env": "7.0.3",
+    "graphql": "16.8.1",
+    "next": "15.3.0",
+    "payload": "3.43.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "sharp": "0.32.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.2.0",
+    "@types/node": "22.5.4",
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.2",
+    "eslint": "9.16.0",
+    "eslint-config-next": "15.3.0",
+    "prettier": "3.4.2",
+    "typescript": "5.7.3"
+  },
+  "engines": {
+    "node": "18.20.2 || >=20.9.0",
+    "pnpm": "9 || 10"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
+  }
+}
