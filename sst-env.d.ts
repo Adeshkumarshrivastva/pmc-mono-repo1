@@ -10,6 +10,10 @@ declare module "sst" {
       type: "sst.aws.Function";
       url: string;
     };
+    PmcPortal: {
+      type: "sst.aws.StaticSite";
+      url: string;
+    };
     PmcRouter: {
       type: "sst.aws.Router";
       url: string;
