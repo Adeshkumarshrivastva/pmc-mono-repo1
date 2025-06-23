@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "clean": "rimraf node_modules **/*/node_modules",
-    "format": "concurrently \"prettier --write --ignore-path .gitignore --cache .\" \"turbo run format\"",
+    "format": "concurrently \"prettier --write --ignore-path .gitignore --cache *.json *.ts\" \"turbo run format\"",
     "lint": "turbo lint"
   },
   "keywords": [],

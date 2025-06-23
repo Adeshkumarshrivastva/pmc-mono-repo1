@@ -1,1 +1,1 @@
-export { default } from "@pmc/config/eslint.config.mjs";
+export { default } from '@pmc/config/eslint.config.mjs'

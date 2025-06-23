@@ -1,10 +1,4 @@
-import { Hono } from 'hono'
 import { handle } from 'hono/aws-lambda'
-
-const app = new Hono().basePath('/api')
-
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+import { app } from './app'
 
 export const handler = handle(app)
