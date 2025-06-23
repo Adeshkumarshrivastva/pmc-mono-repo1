@@ -1,4 +1,5 @@
 {
+  "extends": ["@pmc/config/tsconfig/base.json"],
   "compilerOptions": {
     "baseUrl": ".",
     "lib": [
