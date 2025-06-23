@@ -20,5 +20,16 @@ export default $config({
         },
       },
     });
+    const viteSite = new sst.aws.StaticSite("PmcPortal", {
+      path: "apps/portal",
+      build: {
+        command: "pnpm build",
+        output: "dist",
+      },
+      router: {
+        instance: router,
+        path: "/portal",
+      },
+    });
   },
 });
