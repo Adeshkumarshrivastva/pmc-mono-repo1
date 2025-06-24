@@ -6,6 +6,9 @@
     },
     "lint": {
       "cache": true
+    },
+    "build": {
+      "dependsOn": ["^build"]
     }
   }
 }

@@ -13,6 +13,7 @@ export default $config({
   async run() {
     const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
     const router = new sst.aws.Router('PmcRouter', {})
+
     new sst.aws.Function('PmcHonoServer', {
       handler: 'apps/server/src/index.handler',
       url: {
@@ -22,11 +23,11 @@ export default $config({
         },
       },
     })
+
     new sst.aws.StaticSite('PmcPortal', {
-      path: 'apps/portal',
       build: {
-        command: 'pnpm build',
-        output: 'dist',
+        command: 'pnpm build --filter=@pmc/portal',
+        output: 'apps/portal/dist',
       },
       router: {
         instance: router,
@@ -37,9 +38,10 @@ export default $config({
         VITE_PUBLIC_BASE_PATH: '/portal',
       },
     })
+
     new sst.aws.Nextjs('PmcLandingPage', {
       link: [MediaBucket],
-      path: 'apps/landing-page',
+      buildCommand: 'pnpm build --filter=@pmc/landing-page',
       router: {
         instance: router,
         path: '/',
