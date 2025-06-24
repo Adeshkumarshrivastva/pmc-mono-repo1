@@ -36,5 +36,12 @@ export default $config({
         VITE_PUBLIC_BASE_PATH: '/portal',
       },
     })
+    new sst.aws.Nextjs('PmcLandingPage', {
+      path: 'apps/landing-page',
+      router: {
+        instance: router,
+        path: '/'
+      }
+    })
   },
 })

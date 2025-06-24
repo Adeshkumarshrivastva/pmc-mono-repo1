@@ -10,6 +10,10 @@ declare module "sst" {
       "type": "sst.aws.Function"
       "url": string
     }
+    "PmcLandingPage": {
+      "type": "sst.aws.Nextjs"
+      "url": string
+    }
     "PmcPortal": {
       "type": "sst.aws.StaticSite"
       "url": string
