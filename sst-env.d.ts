@@ -3,28 +3,28 @@
 /* eslint-disable */
 /* deno-fmt-ignore-file */
 
-declare module "sst" {
+declare module 'sst' {
   export interface Resource {
-    "PmcHonoServer": {
-      "name": string
-      "type": "sst.aws.Function"
-      "url": string
+    PmcHonoServer: {
+      name: string
+      type: 'sst.aws.Function'
+      url: string
     }
-    "PmcLandingPage": {
-      "type": "sst.aws.Nextjs"
-      "url": string
+    PmcLandingPage: {
+      type: 'sst.aws.Nextjs'
+      url: string
     }
-    "PmcPortal": {
-      "type": "sst.aws.StaticSite"
-      "url": string
+    PmcPortal: {
+      type: 'sst.aws.StaticSite'
+      url: string
     }
-    "PmcRouter": {
-      "type": "sst.aws.Router"
-      "url": string
+    PmcRouter: {
+      type: 'sst.aws.Router'
+      url: string
     }
   }
 }
 /// <reference path="sst-env.d.ts" />
 
-import "sst"
+import 'sst'
 export {}

@@ -40,8 +40,8 @@ export default $config({
       path: 'apps/landing-page',
       router: {
         instance: router,
-        path: '/'
-      }
+        path: '/',
+      },
     })
   },
 })
