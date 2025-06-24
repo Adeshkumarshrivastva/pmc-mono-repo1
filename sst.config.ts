@@ -22,10 +22,9 @@ export default $config({
       },
     })
     new sst.aws.StaticSite('PmcPortal', {
-      path: 'apps/portal',
       build: {
-        command: 'pnpm build',
-        output: 'dist',
+        command: 'pnpm build --filter=@pmc/portal',
+        output: 'apps/portal/dist',
       },
       router: {
         instance: router,
