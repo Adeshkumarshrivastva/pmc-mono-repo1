@@ -11,6 +11,7 @@ export default $config({
     }
   },
   async run() {
+    const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
     const router = new sst.aws.Router('PmcRouter', {})
     new sst.aws.Function('PmcHonoServer', {
       handler: 'apps/server/src/index.handler',
@@ -37,6 +38,7 @@ export default $config({
       },
     })
     new sst.aws.Nextjs('PmcLandingPage', {
+      link: [MediaBucket],
       path: 'apps/landing-page',
       router: {
         instance: router,
