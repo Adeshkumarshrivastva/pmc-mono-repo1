@@ -16,7 +16,7 @@ export const Route = createFileRoute('/')({
 function Home() {
   const { message } = Route.useLoaderData()
   return (
-    <div className="flex flex-col bg-red-400">
+    <div className="flex flex-col font-extralight bg-red-400">
       Hello "/"! {message}
       <Button className="bg-blue-500 text-white">Click Me</Button>
     </div>
