@@ -19,10 +19,7 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider
-          router={router}
-          basepath={import.meta.env.VITE_PUBLIC_BASE_PATH}
-        />
+        <RouterProvider router={router} basepath={import.meta.env.VITE_PUBLIC_BASE_PATH} />
       </QueryClientProvider>
     </StrictMode>,
   )
