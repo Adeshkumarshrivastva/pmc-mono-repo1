@@ -25,10 +25,7 @@ export default defineConfig([
       'comma-dangle': 'off',
       'func-call-spacing': 'off',
       'import/no-absolute-path': 'off',
-      'import/order': [
-        'error',
-        { groups: ['builtin', 'external', 'internal'] },
-      ],
+      'import/order': ['error', { groups: ['builtin', 'external', 'internal'] }],
       'import/un-resolved': 'off',
       indent: 'off',
       'multiline-ternary': 'off',

@@ -5,9 +5,17 @@
 
 declare module 'sst' {
   export interface Resource {
+    PMC_LANDING_PAGE_MEDIA_BUCKET: {
+      name: string
+      type: 'sst.aws.Bucket'
+    }
     PmcHonoServer: {
       name: string
       type: 'sst.aws.Function'
+      url: string
+    }
+    PmcLandingPage: {
+      type: 'sst.aws.Nextjs'
       url: string
     }
     PmcPortal: {
