@@ -10,8 +10,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --cache --write --no-error-on-unmatched-pattern \"src/**/*.{ts,tsx,js}\" *.{ts,tsx,js}",
-    "generate:types": "cross-env PAYLOAD_CONFIG_PATH=src/payload/config.ts payload generate:types",
-    "generate:importmap": "pnpm generate:importmap",
+    "payload:generate-types": "cross-env PAYLOAD_CONFIG_PATH=src/payload/config.ts payload generate:types",
+    "payload:generate-importmap": "cross-env PAYLOAD_CONFIG_PATH=src/payload/config.ts payload generate:importmap",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch"
   },

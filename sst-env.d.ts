@@ -5,6 +5,14 @@
 
 declare module 'sst' {
   export interface Resource {
+    PAYLOAD_DB_URL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    PAYLOAD_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     PMC_LANDING_PAGE_MEDIA_BUCKET: {
       name: string
       type: 'sst.aws.Bucket'

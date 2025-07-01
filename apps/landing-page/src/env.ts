@@ -1,14 +1,17 @@
 import { createEnv } from '@t3-oss/env-nextjs'
 import { z } from 'zod/v4'
 
+console.log(process.env)
+
 export const env = createEnv({
   /*
    * Serverside Environment variables, not available on the client.
    * Will throw if you access these variables on the client.
    */
   server: {
-    DATABASE_URI: z.string().url(),
-    PAYLOAD_SECRET: z.string().min(1),
+    PAYLOAD_DB_URL: z.url(),
+    PAYLOAD_SECRET: z.string(),
+    PAYLOAD_BUCKET: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -23,7 +26,8 @@ export const env = createEnv({
    * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
    */
   runtimeEnv: {
-    DATABASE_URI: process.env.DATABASE_URI,
+    PAYLOAD_DB_URL: process.env.PAYLOAD_DB_URL,
     PAYLOAD_SECRET: process.env.PAYLOAD_SECRET,
+    PAYLOAD_BUCKET: process.env.PAYLOAD_BUCKET,
   },
 })

@@ -7,7 +7,7 @@ import globals from 'globals'
 export default defineConfig([
   ...defaultConfig,
   {
-    ignores: ['dist/'],
+    ignores: ['dist/', 'src/sst-env.d.ts'],
   },
   {
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],

@@ -5,7 +5,8 @@
     "clean": "rimraf node_modules **/*/node_modules",
     "format": "concurrently \"prettier --write --ignore-path .gitignore --cache *.json *.ts\" \"turbo run format\"",
     "lint": "turbo lint",
-    "build": "turbo build"
+    "build": "turbo build",
+    "dev": "turbo dev"
   },
   "keywords": [],
   "packageManager": "pnpm@10.12.1",

@@ -4,7 +4,6 @@ import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
-import { Resource } from 'sst'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { env } from '@/env'
 import { Users } from './collections/Users'
@@ -27,7 +26,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'types.ts'),
   },
   db: mongooseAdapter({
-    url: env.DATABASE_URI,
+    url: env.PAYLOAD_DB_URL,
   }),
   plugins: [
     payloadCloudPlugin(),
@@ -35,7 +34,7 @@ export default buildConfig({
       collections: {
         media: true,
       },
-      bucket: Resource.PMC_LANDING_PAGE_MEDIA_BUCKET.name,
+      bucket: env.PAYLOAD_BUCKET,
       config: {},
     }),
   ],

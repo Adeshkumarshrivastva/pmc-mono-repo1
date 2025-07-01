@@ -16,7 +16,6 @@ export default $config({
     }
   },
   async run() {
-    const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
     const router = new sst.aws.Router('PmcRouter', {})
 
     new sst.aws.Function('PmcHonoServer', {
@@ -34,22 +33,36 @@ export default $config({
         command: 'pnpm build --filter=@pmc/portal',
         output: 'apps/portal/dist',
       },
+      dev: {
+        directory: 'apps/portal',
+      },
       router: {
         instance: router,
         path: '/portal',
       },
       environment: {
-        VITE_PUBLIC_API_BASE_URL: $interpolate`${router.url}`,
+        VITE_PUBLIC_API_BASE_URL: router.url,
         VITE_PUBLIC_BASE_PATH: '/portal',
       },
     })
 
+    const PayloadSecret = new sst.Secret('PAYLOAD_SECRET')
+    const PayloadDBUrl = new sst.Secret('PAYLOAD_DB_URL')
+    const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
     new sst.aws.Nextjs('PmcLandingPage', {
-      link: [MediaBucket],
+      link: [MediaBucket, PayloadDBUrl, PayloadSecret],
       buildCommand: 'pnpm build --filter=@pmc/landing-page',
+      dev: {
+        directory: 'apps/landing-page',
+      },
       router: {
         instance: router,
         path: '/',
+      },
+      environment: {
+        PAYLOAD_SECRET: PayloadSecret.value,
+        PAYLOAD_BUCKET: MediaBucket.name,
+        PAYLOAD_DB_URL: PayloadDBUrl.value,
       },
     })
   },
