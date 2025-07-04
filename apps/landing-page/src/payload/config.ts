@@ -8,7 +8,11 @@ import { s3Storage } from '@payloadcms/storage-s3'
 import { env } from '@/env'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { Home } from './globals/Home'
+import { Home } from './globals/home'
+import { QuizList } from './globals/quiz-list'
+import { DeepTms } from './globals/deep-tms'
+import { ContactUs } from './globals/contact-us'
+import { DoctorList } from './globals/doctor-list'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,7 +25,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media],
-  globals: [Home],
+  globals: [Home, QuizList, DeepTms, ContactUs, DoctorList],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {
