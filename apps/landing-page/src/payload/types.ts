@@ -289,9 +289,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Home {
   id: string;
-  heroSetion: {
-    heroSectionTitle: string;
-    heroSectionDescription: {
+  heroSetion?: {
+    heroSectionTitle?: string | null;
+    heroSectionDescription?: {
       root: {
         type: string;
         children: {
@@ -305,18 +305,20 @@ export interface Home {
         version: number;
       };
       [k: string]: unknown;
-    };
-    heroSectionImage: string | Media;
-    heroSectionAction: string;
-    features: {
-      featureTitle?: string | null;
-      featureBackground?: ('primary' | 'accent') | null;
-      id?: string | null;
-    }[];
+    } | null;
+    heroSectionImage?: (string | null) | Media;
+    heroSectionAction?: string | null;
+    features?:
+      | {
+          featureTitle?: string | null;
+          featureBackground?: ('primary' | 'accent') | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  deepTmsSection: {
-    title: string;
-    description: {
+  deepTmsSection?: {
+    title?: string | null;
+    description?: {
       root: {
         type: string;
         children: {
@@ -330,18 +332,20 @@ export interface Home {
         version: number;
       };
       [k: string]: unknown;
-    };
-    deepTmsFeatures: {
-      title: string;
-      image?: (string | null) | Media;
-      description: string;
-      id?: string | null;
-    }[];
+    } | null;
+    deepTmsFeatures?:
+      | {
+          title?: string | null;
+          image?: (string | null) | Media;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  isThisTreatmentRightYouSection: {
-    title: string;
-    image: string | Media;
-    description: {
+  isThisTreatmentRightYouSection?: {
+    title?: string | null;
+    image?: (string | null) | Media;
+    description?: {
       root: {
         type: string;
         children: {
@@ -355,121 +359,139 @@ export interface Home {
         version: number;
       };
       [k: string]: unknown;
-    };
-    featureList: {
-      title: string;
-      id?: string | null;
-    }[];
+    } | null;
+    featureList?:
+      | {
+          title?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  whyChooseUsSection: {
-    title: string;
-    feature: {
-      title: string;
-      description: string;
-      id?: string | null;
-    }[];
+  whyChooseUsSection?: {
+    title?: string | null;
+    feature?:
+      | {
+          title?: string | null;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  professionalsTeamSection: {
-    title: string;
-    profileInformationreTeam: {
-      profileImage: string | Media;
-      name: string;
-      designation: string;
-      description: {
-        root: {
-          type: string;
-          children: {
-            type: string;
-            version: number;
+  professionalsTeamSection?: {
+    title?: string | null;
+    profileInformationreTeam?:
+      | {
+          profileImage?: (string | null) | Media;
+          name?: string | null;
+          designation?: string | null;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
             [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      };
-      id?: string | null;
-    }[];
+          } | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  packageSection: {
-    title: string;
-    featurePackage: {
-      title: string;
-      price: number;
-      description: {
-        root: {
-          type: string;
-          children: {
-            type: string;
-            version: number;
+  packageSection?: {
+    title?: string | null;
+    featurePackage?:
+      | {
+          title?: string | null;
+          price?: number | null;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
             [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      };
-      id?: string | null;
-    }[];
+          } | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  appointmentSection: {
-    title: string;
-    contacts: {
-      phone: string;
-      id?: string | null;
-    }[];
-    location: string;
-    socialLinks: {
-      platform: 'facebook' | 'x' | 'linkedin' | 'instagram';
-      url: string;
-      id?: string | null;
-    }[];
+  appointmentSection?: {
+    title?: string | null;
+    contacts?:
+      | {
+          phone?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    location?: string | null;
+    socialLinks?:
+      | {
+          platform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
+          url?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  testimonialSection: {
-    title: string;
-    testimonialSlides: {
-      image: string | Media;
-      title: string;
-      quote: string;
-      quoteAuthor: string;
-      id?: string | null;
-    }[];
+  testimonialSection?: {
+    title?: string | null;
+    testimonialSlides?:
+      | {
+          image?: (string | null) | Media;
+          title?: string | null;
+          quote?: string | null;
+          quoteAuthor?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  faqSection: {
-    title: string;
-    faqQuestionsAndAnswer: {
-      question: string;
-      answer: string;
-      id?: string | null;
-    }[];
+  faqSection?: {
+    title?: string | null;
+    faqQuestionsAndAnswer?:
+      | {
+          question?: string | null;
+          answer?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  blogsSection: {
-    title: string;
-    blogsFeature: {
-      image: string | Media;
-      description: {
-        root: {
-          type: string;
-          children: {
-            type: string;
-            version: number;
+  blogsSection?: {
+    title?: string | null;
+    blogsFeature?:
+      | {
+          image?: (string | null) | Media;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
             [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      };
-      name: string;
-      date: string;
-      id?: string | null;
-    }[];
+          } | null;
+          name?: string | null;
+          date?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;

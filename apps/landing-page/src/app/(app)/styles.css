@@ -1,1 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
 @import 'tailwindcss';
+
+:root {
+  --background: #ffffea;
+  --foreground: #333333;
+  --primary: #385246;
+  --primary-foreground: #fff;
+  --muted-foreground: #606060;
+  --accent: #fefee3;
+  --accent-foreground: #254d47;
+  --card: #778c6e;
+  --card-foreground: #fefee3;
+  --font-family: 'Figtree', sans-serif;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --default-font-family: var(--font-family);
+}

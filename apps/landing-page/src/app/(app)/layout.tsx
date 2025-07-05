@@ -1,3 +1,4 @@
+import AppShell from './_components/app-shell'
 import './styles.css'
 
 export const metadata = {
@@ -5,13 +6,11 @@ export const metadata = {
   title: 'Payload Blank Template',
 }
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
-
+export default async function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   )
