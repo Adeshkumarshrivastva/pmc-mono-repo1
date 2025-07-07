@@ -6,7 +6,9 @@ export default async function HomePage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">{home.heroSectionTitle}</h1>
+      {home.heroSetion?.heroSectionTitle ? (
+        <h1 className="text-3xl font-bold underline">{home.heroSetion?.heroSectionTitle}</h1>
+      ) : null}
     </div>
   )
 }

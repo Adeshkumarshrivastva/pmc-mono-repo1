@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    blog: Blog;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -77,6 +78,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    blog: BlogSelect<false> | BlogSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -86,9 +88,13 @@ export interface Config {
   };
   globals: {
     home: Home;
+    'deep-tms': DeepTm;
+    'contact-us': ContactUs;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
+    'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
+    'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -155,6 +161,33 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog".
+ */
+export interface Blog {
+  id: string;
+  title: string;
+  author: string;
+  image?: (string | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -167,6 +200,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'blog';
+        value: string | Blog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -245,6 +282,18 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog_select".
+ */
+export interface BlogSelect<T extends boolean = true> {
+  title?: T;
+  author?: T;
+  image?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
@@ -281,31 +330,336 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Home {
   id: string;
-  heroSectionTitle: string;
-  heroSectionDescription: {
-    root: {
-      type: string;
-      children: {
+  heroSetion?: {
+    heroSectionTitle?: string | null;
+    heroSectionDescription?: {
+      root: {
         type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
         version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    } | null;
+    heroSectionImage?: (string | null) | Media;
+    heroSectionAction?: string | null;
+    heroSectionHeadline?: string | null;
+    heroSectionDetails?:
+      | {
+          label?: string | null;
+          value?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
-  heroSectionImage: string | Media;
-  heroSectionAction: string;
-  features?:
-    | {
-        featureTitle?: string | null;
-        featureBackground?: ('primary' | 'accent') | null;
-        id?: string | null;
-      }[]
-    | null;
+  deepTmsSection?: {
+    title?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    action?: string | null;
+    deepTmsFeatures?:
+      | {
+          title?: string | null;
+          background?: ('primary' | 'accent') | null;
+          image?: (string | null) | Media;
+          description?: string | null;
+          stampImage?: (string | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  treatmentSection?: {
+    title?: string | null;
+    premaryImage?: (string | null) | Media;
+    secondryImage?: (string | null) | Media;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    subTitle?: string | null;
+    action?: string | null;
+    featureList?:
+      | {
+          title?: string | null;
+          feature?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  whyChooseSection?: {
+    title?: string | null;
+    action?: string | null;
+    featuresCards?:
+      | {
+          featureTitle?: string | null;
+          featureDescription?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  packageSection?: {
+    title?: string | null;
+    packageFeatures?:
+      | {
+          title?: string | null;
+          price?: string | null;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          action?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  appointmentSection?: {
+    appointmentSection?: {
+      title?: string | null;
+      contacts?:
+        | {
+            phone?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      location?: string | null;
+      socialMediaLinks?:
+        | {
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
+            url?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
+  testimonialSection?: {
+    title?: string | null;
+    testimonialSlides?:
+      | {
+          image?: (string | null) | Media;
+          title?: string | null;
+          quote?: string | null;
+          quoteAuthor?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  faqSection?: {
+    title?: string | null;
+    faqQuestionsAndAnswer?:
+      | {
+          question?: string | null;
+          answer?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  blogsSection?: {
+    title?: string | null;
+    blogsFeature?:
+      | {
+          image?: (string | null) | Media;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          name?: string | null;
+          date?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "deep-tms".
+ */
+export interface DeepTm {
+  id: string;
+  deepTmsAboutSection?: {
+    title?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    image?: (string | null) | Media;
+    statCards?:
+      | {
+          title?: string | null;
+          value?: string | null;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  deepTmsWorkSection?: {
+    title?: string | null;
+    deepTmsWorkCards?:
+      | {
+          image?: (string | null) | Media;
+          title?: string | null;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  deepTmsApproachSection?: {
+    title?: string | null;
+    featureTable?:
+      | {
+          feature?: string | null;
+          deepTms?: string | null;
+          medicationTalkTherapy?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  deepTmsEligibilitySection?: {
+    title?: string | null;
+    image?: (string | null) | Media;
+    subTitle?: string | null;
+    eligibilityList?:
+      | {
+          addEligibility?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    action?: string | null;
+  };
+  appointmentSection?: {
+    appointmentSection?: {
+      title?: string | null;
+      contacts?:
+        | {
+            phone?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      location?: string | null;
+      socialMediaLinks?:
+        | {
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
+            url?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
+  faqSection?: {
+    title?: string | null;
+    faqQuestionsAndAnswer?:
+      | {
+          question?: string | null;
+          answer?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-us".
+ */
+export interface ContactUs {
+  id: string;
+  contactUs?: {
+    title?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -314,16 +668,259 @@ export interface Home {
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
-  heroSectionTitle?: T;
-  heroSectionDescription?: T;
-  heroSectionImage?: T;
-  heroSectionAction?: T;
-  features?:
+  heroSetion?:
     | T
     | {
-        featureTitle?: T;
-        featureBackground?: T;
-        id?: T;
+        heroSectionTitle?: T;
+        heroSectionDescription?: T;
+        heroSectionImage?: T;
+        heroSectionAction?: T;
+        heroSectionHeadline?: T;
+        heroSectionDetails?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+      };
+  deepTmsSection?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        action?: T;
+        deepTmsFeatures?:
+          | T
+          | {
+              title?: T;
+              background?: T;
+              image?: T;
+              description?: T;
+              stampImage?: T;
+              id?: T;
+            };
+      };
+  treatmentSection?:
+    | T
+    | {
+        title?: T;
+        premaryImage?: T;
+        secondryImage?: T;
+        description?: T;
+        subTitle?: T;
+        action?: T;
+        featureList?:
+          | T
+          | {
+              title?: T;
+              feature?: T;
+              id?: T;
+            };
+      };
+  whyChooseSection?:
+    | T
+    | {
+        title?: T;
+        action?: T;
+        featuresCards?:
+          | T
+          | {
+              featureTitle?: T;
+              featureDescription?: T;
+              id?: T;
+            };
+      };
+  packageSection?:
+    | T
+    | {
+        title?: T;
+        packageFeatures?:
+          | T
+          | {
+              title?: T;
+              price?: T;
+              description?: T;
+              action?: T;
+              id?: T;
+            };
+      };
+  appointmentSection?:
+    | T
+    | {
+        appointmentSection?:
+          | T
+          | {
+              title?: T;
+              contacts?:
+                | T
+                | {
+                    phone?: T;
+                    id?: T;
+                  };
+              location?: T;
+              socialMediaLinks?:
+                | T
+                | {
+                    socialMediaPlatform?: T;
+                    url?: T;
+                    id?: T;
+                  };
+            };
+      };
+  testimonialSection?:
+    | T
+    | {
+        title?: T;
+        testimonialSlides?:
+          | T
+          | {
+              image?: T;
+              title?: T;
+              quote?: T;
+              quoteAuthor?: T;
+              id?: T;
+            };
+      };
+  faqSection?:
+    | T
+    | {
+        title?: T;
+        faqQuestionsAndAnswer?:
+          | T
+          | {
+              question?: T;
+              answer?: T;
+              id?: T;
+            };
+      };
+  blogsSection?:
+    | T
+    | {
+        title?: T;
+        blogsFeature?:
+          | T
+          | {
+              image?: T;
+              description?: T;
+              name?: T;
+              date?: T;
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "deep-tms_select".
+ */
+export interface DeepTmsSelect<T extends boolean = true> {
+  deepTmsAboutSection?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        statCards?:
+          | T
+          | {
+              title?: T;
+              value?: T;
+              description?: T;
+              id?: T;
+            };
+      };
+  deepTmsWorkSection?:
+    | T
+    | {
+        title?: T;
+        deepTmsWorkCards?:
+          | T
+          | {
+              image?: T;
+              title?: T;
+              description?: T;
+              id?: T;
+            };
+      };
+  deepTmsApproachSection?:
+    | T
+    | {
+        title?: T;
+        featureTable?:
+          | T
+          | {
+              feature?: T;
+              deepTms?: T;
+              medicationTalkTherapy?: T;
+              id?: T;
+            };
+      };
+  deepTmsEligibilitySection?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        subTitle?: T;
+        eligibilityList?:
+          | T
+          | {
+              addEligibility?: T;
+              id?: T;
+            };
+        action?: T;
+      };
+  appointmentSection?:
+    | T
+    | {
+        appointmentSection?:
+          | T
+          | {
+              title?: T;
+              contacts?:
+                | T
+                | {
+                    phone?: T;
+                    id?: T;
+                  };
+              location?: T;
+              socialMediaLinks?:
+                | T
+                | {
+                    socialMediaPlatform?: T;
+                    url?: T;
+                    id?: T;
+                  };
+            };
+      };
+  faqSection?:
+    | T
+    | {
+        title?: T;
+        faqQuestionsAndAnswer?:
+          | T
+          | {
+              question?: T;
+              answer?: T;
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-us_select".
+ */
+export interface ContactUsSelect<T extends boolean = true> {
+  contactUs?:
+    | T
+    | {
+        title?: T;
+        description?: T;
       };
   updatedAt?: T;
   createdAt?: T;
