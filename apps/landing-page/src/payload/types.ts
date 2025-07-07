@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    blog: Blog;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -77,6 +78,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    blog: BlogSelect<false> | BlogSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -86,17 +88,13 @@ export interface Config {
   };
   globals: {
     home: Home;
-    'quiz-list': QuizList;
     'deep-tms': DeepTm;
     'contact-us': ContactUs;
-    'doctor-list': DoctorList;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
-    'quiz-list': QuizListSelect<false> | QuizListSelect<true>;
     'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
-    'doctor-list': DoctorListSelect<false> | DoctorListSelect<true>;
   };
   locale: null;
   user: User & {
@@ -163,6 +161,33 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog".
+ */
+export interface Blog {
+  id: string;
+  title: string;
+  author: string;
+  image?: (string | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -175,6 +200,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'blog';
+        value: string | Blog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -253,6 +282,18 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog_select".
+ */
+export interface BlogSelect<T extends boolean = true> {
+  title?: T;
+  author?: T;
+  image?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
@@ -308,10 +349,11 @@ export interface Home {
     } | null;
     heroSectionImage?: (string | null) | Media;
     heroSectionAction?: string | null;
-    features?:
+    heroSectionHeadline?: string | null;
+    heroSectionDetails?:
       | {
-          featureTitle?: string | null;
-          featureBackground?: ('primary' | 'accent') | null;
+          label?: string | null;
+          value?: string | null;
           id?: string | null;
         }[]
       | null;
@@ -333,18 +375,22 @@ export interface Home {
       };
       [k: string]: unknown;
     } | null;
+    action?: string | null;
     deepTmsFeatures?:
       | {
           title?: string | null;
+          background?: ('primary' | 'accent') | null;
           image?: (string | null) | Media;
           description?: string | null;
+          stampImage?: (string | null) | Media;
           id?: string | null;
         }[]
       | null;
   };
-  isThisTreatmentRightYouSection?: {
+  treatmentSection?: {
     title?: string | null;
-    image?: (string | null) | Media;
+    premaryImage?: (string | null) | Media;
+    secondryImage?: (string | null) | Media;
     description?: {
       root: {
         type: string;
@@ -360,55 +406,33 @@ export interface Home {
       };
       [k: string]: unknown;
     } | null;
+    subTitle?: string | null;
+    action?: string | null;
     featureList?:
       | {
           title?: string | null;
+          feature?: string | null;
           id?: string | null;
         }[]
       | null;
   };
-  whyChooseUsSection?: {
+  whyChooseSection?: {
     title?: string | null;
-    feature?:
+    action?: string | null;
+    featuresCards?:
       | {
-          title?: string | null;
-          description?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  professionalsTeamSection?: {
-    title?: string | null;
-    profileInformationreTeam?:
-      | {
-          profileImage?: (string | null) | Media;
-          name?: string | null;
-          designation?: string | null;
-          description?: {
-            root: {
-              type: string;
-              children: {
-                type: string;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
+          featureTitle?: string | null;
+          featureDescription?: string | null;
           id?: string | null;
         }[]
       | null;
   };
   packageSection?: {
     title?: string | null;
-    featurePackage?:
+    packageFeatures?:
       | {
           title?: string | null;
-          price?: number | null;
+          price?: string | null;
           description?: {
             root: {
               type: string;
@@ -424,26 +448,29 @@ export interface Home {
             };
             [k: string]: unknown;
           } | null;
+          action?: string | null;
           id?: string | null;
         }[]
       | null;
   };
   appointmentSection?: {
-    title?: string | null;
-    contacts?:
-      | {
-          phone?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-    location?: string | null;
-    socialLinks?:
-      | {
-          platform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
-          url?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    appointmentSection?: {
+      title?: string | null;
+      contacts?:
+        | {
+            phone?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      location?: string | null;
+      socialMediaLinks?:
+        | {
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
+            url?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
   };
   testimonialSection?: {
     title?: string | null;
@@ -498,32 +525,13 @@ export interface Home {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "quiz-list".
- */
-export interface QuizList {
-  id: string;
-  quizList: {
-    quizQuestionAndAnswer: {
-      question: string;
-      answer: {
-        answer: string;
-        id?: string | null;
-      }[];
-      id?: string | null;
-    }[];
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "deep-tms".
  */
 export interface DeepTm {
   id: string;
-  powersLastingMentalReliefSetion: {
-    title: string;
-    description: {
+  deepTmsAboutSection?: {
+    title?: string | null;
+    description?: {
       root: {
         type: string;
         children: {
@@ -537,100 +545,93 @@ export interface DeepTm {
         version: number;
       };
       [k: string]: unknown;
+    } | null;
+    image?: (string | null) | Media;
+    statCards?:
+      | {
+          title?: string | null;
+          value?: string | null;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  deepTmsWorkSection?: {
+    title?: string | null;
+    deepTmsWorkCards?:
+      | {
+          image?: (string | null) | Media;
+          title?: string | null;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  deepTmsApproachSection?: {
+    title?: string | null;
+    featureTable?:
+      | {
+          feature?: string | null;
+          deepTms?: string | null;
+          medicationTalkTherapy?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  deepTmsEligibilitySection?: {
+    title?: string | null;
+    image?: (string | null) | Media;
+    subTitle?: string | null;
+    eligibilityList?:
+      | {
+          addEligibility?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    action?: string | null;
+  };
+  appointmentSection?: {
+    appointmentSection?: {
+      title?: string | null;
+      contacts?:
+        | {
+            phone?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      location?: string | null;
+      socialMediaLinks?:
+        | {
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
+            url?: string | null;
+            id?: string | null;
+          }[]
+        | null;
     };
-    image: string | Media;
-    stat: {
-      title: string;
-      value: string;
-      description: {
-        root: {
-          type: string;
-          children: {
-            type: string;
-            version: number;
-            [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      };
-      id?: string | null;
-    }[];
   };
-  DeepTmsWorkSection: {
-    title: string;
-    howDoesDeepTmsWork: {
-      image: string | Media;
-      title: string;
-      description: string;
-      id?: string | null;
-    }[];
-  };
-  deepTraditionalApproachesSection: {
-    title: string;
-    featureList: {
-      feature: string;
-      deepTms: string;
-      medicationTalkTherapy: string;
-      id?: string | null;
-    }[];
-  };
-  isDeepRightYou: {
-    title: string;
-    image: string | Media;
-    subTitle: string;
-    benefits: {
-      text: string;
-      id?: string | null;
-    }[];
-  };
-  professionalsTeamSection: {
-    title: string;
-    profileInformationreTeam: {
-      profileImage: string | Media;
-      name: string;
-      designation: string;
-      description: {
-        root: {
-          type: string;
-          children: {
-            type: string;
-            version: number;
-            [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      };
-      id?: string | null;
-    }[];
-  };
-  appointmentSection: {
-    title: string;
-    contacts: {
-      phone: string;
-      id?: string | null;
-    }[];
-    location: string;
-    socialLinks: {
-      platform: 'facebook' | 'x' | 'linkedin' | 'instagram';
-      url: string;
-      id?: string | null;
-    }[];
-  };
-  faqSection: {
-    title: string;
-    faqQuestionsAndAnswer: {
-      question: string;
-      answer: string;
-      id?: string | null;
-    }[];
+  faqSection?: {
+    title?: string | null;
+    faqQuestionsAndAnswer?:
+      | {
+          question?: string | null;
+          answer?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -641,45 +642,23 @@ export interface DeepTm {
  */
 export interface ContactUs {
   id: string;
-  title: string;
-  description: string;
-  subTitle: string;
-  benefits: {
-    benefit: string;
-    id?: string | null;
-  }[];
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "doctor-list".
- */
-export interface DoctorList {
-  id: string;
-  doctorList: {
-    title: string;
-    drProfileInformation: {
-      profileImage: string | Media;
-      name: string;
-      designation: string;
-      description: {
-        root: {
+  contactUs?: {
+    title?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
           type: string;
-          children: {
-            type: string;
-            version: number;
-            [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
           version: number;
-        };
-        [k: string]: unknown;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
       };
-      id?: string | null;
-    }[];
+      [k: string]: unknown;
+    } | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -696,11 +675,12 @@ export interface HomeSelect<T extends boolean = true> {
         heroSectionDescription?: T;
         heroSectionImage?: T;
         heroSectionAction?: T;
-        features?:
+        heroSectionHeadline?: T;
+        heroSectionDetails?:
           | T
           | {
-              featureTitle?: T;
-              featureBackground?: T;
+              label?: T;
+              value?: T;
               id?: T;
             };
       };
@@ -709,51 +689,45 @@ export interface HomeSelect<T extends boolean = true> {
     | {
         title?: T;
         description?: T;
+        action?: T;
         deepTmsFeatures?:
           | T
           | {
               title?: T;
+              background?: T;
               image?: T;
               description?: T;
+              stampImage?: T;
               id?: T;
             };
       };
-  isThisTreatmentRightYouSection?:
+  treatmentSection?:
     | T
     | {
         title?: T;
-        image?: T;
+        premaryImage?: T;
+        secondryImage?: T;
         description?: T;
+        subTitle?: T;
+        action?: T;
         featureList?:
           | T
           | {
               title?: T;
+              feature?: T;
               id?: T;
             };
       };
-  whyChooseUsSection?:
+  whyChooseSection?:
     | T
     | {
         title?: T;
-        feature?:
+        action?: T;
+        featuresCards?:
           | T
           | {
-              title?: T;
-              description?: T;
-              id?: T;
-            };
-      };
-  professionalsTeamSection?:
-    | T
-    | {
-        title?: T;
-        profileInformationreTeam?:
-          | T
-          | {
-              profileImage?: T;
-              name?: T;
-              designation?: T;
-              description?: T;
+              featureTitle?: T;
+              featureDescription?: T;
               id?: T;
             };
       };
@@ -761,32 +735,37 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        featurePackage?:
+        packageFeatures?:
           | T
           | {
               title?: T;
               price?: T;
               description?: T;
+              action?: T;
               id?: T;
             };
       };
   appointmentSection?:
     | T
     | {
-        title?: T;
-        contacts?:
+        appointmentSection?:
           | T
           | {
-              phone?: T;
-              id?: T;
-            };
-        location?: T;
-        socialLinks?:
-          | T
-          | {
-              platform?: T;
-              url?: T;
-              id?: T;
+              title?: T;
+              contacts?:
+                | T
+                | {
+                    phone?: T;
+                    id?: T;
+                  };
+              location?: T;
+              socialMediaLinks?:
+                | T
+                | {
+                    socialMediaPlatform?: T;
+                    url?: T;
+                    id?: T;
+                  };
             };
       };
   testimonialSection?:
@@ -835,41 +814,16 @@ export interface HomeSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "quiz-list_select".
- */
-export interface QuizListSelect<T extends boolean = true> {
-  quizList?:
-    | T
-    | {
-        quizQuestionAndAnswer?:
-          | T
-          | {
-              question?: T;
-              answer?:
-                | T
-                | {
-                    answer?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "deep-tms_select".
  */
 export interface DeepTmsSelect<T extends boolean = true> {
-  powersLastingMentalReliefSetion?:
+  deepTmsAboutSection?:
     | T
     | {
         title?: T;
         description?: T;
         image?: T;
-        stat?:
+        statCards?:
           | T
           | {
               title?: T;
@@ -878,11 +832,11 @@ export interface DeepTmsSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  DeepTmsWorkSection?:
+  deepTmsWorkSection?:
     | T
     | {
         title?: T;
-        howDoesDeepTmsWork?:
+        deepTmsWorkCards?:
           | T
           | {
               image?: T;
@@ -891,11 +845,11 @@ export interface DeepTmsSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  deepTraditionalApproachesSection?:
+  deepTmsApproachSection?:
     | T
     | {
         title?: T;
-        featureList?:
+        featureTable?:
           | T
           | {
               feature?: T;
@@ -904,50 +858,41 @@ export interface DeepTmsSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  isDeepRightYou?:
+  deepTmsEligibilitySection?:
     | T
     | {
         title?: T;
         image?: T;
         subTitle?: T;
-        benefits?:
+        eligibilityList?:
           | T
           | {
-              text?: T;
+              addEligibility?: T;
               id?: T;
             };
-      };
-  professionalsTeamSection?:
-    | T
-    | {
-        title?: T;
-        profileInformationreTeam?:
-          | T
-          | {
-              profileImage?: T;
-              name?: T;
-              designation?: T;
-              description?: T;
-              id?: T;
-            };
+        action?: T;
       };
   appointmentSection?:
     | T
     | {
-        title?: T;
-        contacts?:
+        appointmentSection?:
           | T
           | {
-              phone?: T;
-              id?: T;
-            };
-        location?: T;
-        socialLinks?:
-          | T
-          | {
-              platform?: T;
-              url?: T;
-              id?: T;
+              title?: T;
+              contacts?:
+                | T
+                | {
+                    phone?: T;
+                    id?: T;
+                  };
+              location?: T;
+              socialMediaLinks?:
+                | T
+                | {
+                    socialMediaPlatform?: T;
+                    url?: T;
+                    id?: T;
+                  };
             };
       };
   faqSection?:
@@ -971,37 +916,11 @@ export interface DeepTmsSelect<T extends boolean = true> {
  * via the `definition` "contact-us_select".
  */
 export interface ContactUsSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  subTitle?: T;
-  benefits?:
-    | T
-    | {
-        benefit?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "doctor-list_select".
- */
-export interface DoctorListSelect<T extends boolean = true> {
-  doctorList?:
+  contactUs?:
     | T
     | {
         title?: T;
-        drProfileInformation?:
-          | T
-          | {
-              profileImage?: T;
-              name?: T;
-              designation?: T;
-              description?: T;
-              id?: T;
-            };
+        description?: T;
       };
   updatedAt?: T;
   createdAt?: T;

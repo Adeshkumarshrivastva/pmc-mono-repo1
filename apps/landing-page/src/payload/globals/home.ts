@@ -1,4 +1,6 @@
 import { GlobalConfig } from 'payload'
+import { appointmentSection } from '../fields/appointment-section'
+import { faqSection } from '../fields/faq-section'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -30,27 +32,25 @@ export const Home: GlobalConfig = {
           label: 'Hero Section Action',
           type: 'text',
         },
-        // TODO: add feature section title, description, action
         {
-          name: 'features',
-          label: 'Features',
+          name: 'heroSectionHeadline',
+          label: 'Hero Section Headline',
+          type: 'textarea',
+        },
+        {
+          name: 'heroSectionDetails',
+          label: 'Hero Section Details',
           type: 'array',
           fields: [
             {
-              name: 'featureTitle',
-              label: 'Feature Title',
+              name: 'label',
+              label: 'Label',
               type: 'text',
             },
-            // TODO: add feature description, feature icon, feature image (optional)
             {
-              name: 'featureBackground',
-              label: 'Feature Background',
-              type: 'select',
-              options: [
-                { label: 'Primary', value: 'primary' },
-                { label: 'Accent', value: 'accent' },
-              ],
-              defaultValue: 'primary',
+              name: 'value',
+              label: 'Value',
+              type: 'text',
             },
           ],
         },
@@ -72,6 +72,11 @@ export const Home: GlobalConfig = {
           type: 'richText',
         },
         {
+          name: 'action',
+          label: 'Action',
+          type: 'text',
+        },
+        {
           name: 'deepTmsFeatures',
           label: 'Deep TMS Features',
           type: 'array',
@@ -80,6 +85,16 @@ export const Home: GlobalConfig = {
               name: 'title',
               label: 'Title',
               type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              defaultValue: 'primary',
             },
             {
               name: 'image',
@@ -92,13 +107,19 @@ export const Home: GlobalConfig = {
               label: 'Description',
               type: 'textarea',
             },
+            {
+              name: 'stampImage',
+              label: 'Stamp Image',
+              type: 'upload',
+              relationTo: 'media',
+            },
           ],
         },
       ],
     },
     {
-      name: 'isThisTreatmentRightYouSection',
-      label: 'Is This Treatment Right You Section',
+      name: 'treatmentSection',
+      label: 'Treatment Section',
       type: 'group',
       fields: [
         {
@@ -107,15 +128,31 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'image',
-          label: 'Image',
-          type: 'relationship',
+          name: 'premaryImage',
+          label: 'Primary Image',
+          type: 'upload',
+          relationTo: 'media',
+        },
+        {
+          name: 'secondryImage',
+          label: 'Secondry Image',
+          type: 'upload',
           relationTo: 'media',
         },
         {
           name: 'description',
           label: 'Description',
           type: 'richText',
+        },
+        {
+          name: 'subTitle',
+          label: 'Sub Title',
+          type: 'text',
+        },
+        {
+          name: 'action',
+          label: 'Action',
+          type: 'text',
         },
         {
           name: 'featureList',
@@ -127,14 +164,18 @@ export const Home: GlobalConfig = {
               label: 'Title',
               type: 'text',
             },
+            {
+              name: 'feature',
+              label: 'Feature',
+              type: 'text',
+            },
           ],
         },
       ],
     },
-    //TODO: Why Choose Us Section
     {
-      name: 'whyChooseUsSection',
-      label: 'Why Choose Us Section',
+      name: 'whyChooseSection',
+      label: 'Why Choose Section',
       type: 'group',
       fields: [
         {
@@ -143,59 +184,24 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'feature',
-          label: 'Features',
+          name: 'action',
+          label: 'Action',
+          type: 'text',
+        },
+        {
+          name: 'featuresCards',
+          label: 'Features Cards',
           type: 'array',
           fields: [
             {
-              name: 'title',
-              label: 'Title',
+              name: 'featureTitle',
+              label: 'Feature Title',
               type: 'text',
             },
             {
-              name: 'description',
-              label: 'Description',
+              name: 'featureDescription',
+              label: 'Feature Description',
               type: 'textarea',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'professionalsTeamSection',
-      label: 'Professionals Team Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-        },
-        {
-          name: 'profileInformationreTeam',
-          label: 'Profile Information',
-          type: 'array',
-          fields: [
-            {
-              name: 'profileImage',
-              label: 'Profile Image',
-              type: 'upload',
-              relationTo: 'media',
-            },
-            {
-              name: 'name',
-              label: 'Name',
-              type: 'text',
-            },
-            {
-              name: 'designation',
-              label: 'Designation',
-              type: 'text',
-            },
-            {
-              name: 'description',
-              label: 'Description',
-              type: 'richText',
             },
           ],
         },
@@ -212,8 +218,8 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'featurePackage',
-          label: 'Features Package',
+          name: 'packageFeatures',
+          label: 'Package Features',
           type: 'array',
           fields: [
             {
@@ -224,69 +230,23 @@ export const Home: GlobalConfig = {
             {
               name: 'price',
               label: 'Price',
-              type: 'number',
+              type: 'text',
             },
             {
               name: 'description',
               label: 'Description',
               type: 'richText',
             },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'appointmentSection',
-      label: 'Appointment Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-        },
-        {
-          name: 'contacts',
-          label: 'contacts',
-          type: 'array',
-          fields: [
             {
-              name: 'phone',
-              label: 'phone',
-              type: 'text',
-            },
-          ],
-        },
-        {
-          name: 'location',
-          label: 'Location',
-          type: 'text',
-        },
-        {
-          name: 'socialLinks',
-          label: 'Social Links',
-          type: 'array',
-          fields: [
-            {
-              name: 'platform',
-              label: 'Platform',
-              type: 'select',
-              options: [
-                { label: 'Facebook', value: 'facebook' },
-                { label: 'X (Twitter)', value: 'x' },
-                { label: 'LinkedIn', value: 'linkedin' },
-                { label: 'Instagram', value: 'instagram' },
-              ],
-            },
-            {
-              name: 'url',
-              label: 'URL',
+              name: 'action',
+              label: 'Action',
               type: 'text',
             },
           ],
         },
       ],
     },
+    appointmentSection,
     {
       name: 'testimonialSection',
       label: 'Testimonial Section',
@@ -301,6 +261,7 @@ export const Home: GlobalConfig = {
           name: 'testimonialSlides',
           label: 'Testimonial Slides',
           type: 'array',
+
           fields: [
             {
               name: 'image',
@@ -327,35 +288,7 @@ export const Home: GlobalConfig = {
         },
       ],
     },
-    {
-      name: 'faqSection',
-      label: 'FAQ Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-        },
-        {
-          name: 'faqQuestionsAndAnswer',
-          label: 'FAQ Questions And Answer',
-          type: 'array',
-          fields: [
-            {
-              name: 'question',
-              label: 'Question',
-              type: 'text',
-            },
-            {
-              name: 'answer',
-              label: 'Answer',
-              type: 'text',
-            },
-          ],
-        },
-      ],
-    },
+    faqSection,
     {
       name: 'blogsSection',
       label: 'Blogs Section',

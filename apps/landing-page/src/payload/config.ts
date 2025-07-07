@@ -9,10 +9,9 @@ import { env } from '@/env'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Home } from './globals/home'
-import { QuizList } from './globals/quiz-list'
 import { DeepTms } from './globals/deep-tms'
 import { ContactUs } from './globals/contact-us'
-import { DoctorList } from './globals/doctor-list'
+import { Blog } from './collections/blog'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -24,8 +23,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
-  globals: [Home, QuizList, DeepTms, ContactUs, DoctorList],
+  collections: [Users, Media, Blog],
+  globals: [Home, DeepTms, ContactUs],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {
