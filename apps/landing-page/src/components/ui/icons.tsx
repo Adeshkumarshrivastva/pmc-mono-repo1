@@ -110,9 +110,9 @@ export function SqurePlusIcon(props: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className="lucide lucide-square-plus-icon lucide-square-plus"
     >
       <rect width="18" height="18" x="3" y="3" rx="2" />
@@ -132,9 +132,9 @@ export function SqureMinusIcon(props: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className="lucide lucide-square-minus-icon lucide-square-minus"
     >
       <rect width="18" height="18" x="3" y="3" rx="2" />

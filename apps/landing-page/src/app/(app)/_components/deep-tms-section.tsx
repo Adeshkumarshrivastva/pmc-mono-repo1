@@ -1,4 +1,5 @@
 'use client'
+
 import Image from 'next/image'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Home } from '@/payload/types'
@@ -9,75 +10,93 @@ import { cn } from '@/lib/utils'
 
 type DeepTmsSectionProps = {
   data: Home['deepTmsSection']
-  className?: string
-  style?: React.CSSProperties
 }
 
 export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
   return (
-    <div className="w-full bg-accent p-12 md:p-25">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 mb-12">
-        <div>
-          <h2 className="text-3xl text-primary md:text-4xl font-semibold leading-tight">{data?.title}</h2>
-        </div>
-        <div>
-          <div className="text-primary mb-4">
-            <RichText
-              data={typeof data?.description === 'string' ? JSON.parse(data.description) : data?.description}
-              disableContainer={true}
-            />
-          </div>
-          <Button variant="secondary" icon={<ChatIcon />} className="mt-2 bg-primary text-white px-5 py-2 rounded-md ">
-            {data?.action}
-          </Button>
-        </div>
-      </div>
-      <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-        {data?.deepTmsFeatures?.map((feature, index) => (
-          <div
-            key={index}
-            className={cn(
-              'h-[402px] p-6 rounded-lg flex flex-col justify-between',
-              feature.background === 'primary'
-                ? 'bg-card text-white'
-                : 'bg-card-foreground text-primary border border-green-900',
-            )}
-          >
-            <div className="flex justify-between gap-2">
-              <h3 className="text-3xl font-semibold mb-2">{feature.title}</h3>
-              {feature.image ? (
-                <Image
-                  alt="background-image"
-                  width={150}
-                  height={150}
-                  className="object-contain h-auto"
-                  src={getURLFromMedia(feature.image ?? '')}
-                />
-              ) : null}
+    <section className="w-full bg-accent">
+      <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-20 xl:px-16 xl:py-25">
+        <div className="max-w-7xl mx-auto mb-8 sm:mb-12 lg:mb-16">
+          <div className="grid gap-6 md:grid-cols-2 md:gap-8 lg:gap-12">
+            <div className="space-y-4">
+              <h2 className="text-2xl font-semibold leading-tight text-primary sm:text-3xl md:text-4xl">
+                {data?.title}
+              </h2>
             </div>
-            <div className="mt-2">
-              <p className="text-base">{feature.description}</p>
-              <div
-                className={cn(
-                  'mt-3 w-full h-[1px]',
-                  feature.background === 'primary' ? 'bg-card-foreground' : 'bg-card',
-                )}
-              />
-              {feature?.stampImage ? (
-                <div className="mt-5">
-                  <Image
-                    alt="stamp image"
-                    width={50}
-                    height={50}
-                    className="object-contain h-auto"
-                    src={getURLFromMedia(feature.stampImage ?? '')}
-                  />
+
+            <div className="flex flex-col justify-center space-y-4 md:space-y-6">
+              {data?.description && (
+                <div className="text-primary prose prose-sm sm:prose-base max-w-none">
+                  <RichText data={data.description!} disableContainer={true} />
+                </div>
+              )}
+
+              {data?.action ? (
+                <div className="flex">
+                  <Button
+                    variant="secondary"
+                    icon={<ChatIcon />}
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded-md transition-all duration-200 hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:px-6 sm:py-3"
+                  >
+                    {data.action}
+                  </Button>
                 </div>
               ) : null}
             </div>
           </div>
-        ))}
+        </div>
+
+        {data?.deepTmsFeatures && data.deepTmsFeatures.length > 0 ? (
+          <div className="max-w-7xl mx-auto">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
+              {data?.deepTmsFeatures?.map((feature, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    'h-[402px] p-6 rounded-lg flex flex-col justify-between',
+                    feature.background === 'primary'
+                      ? 'bg-card text-primary-foreground'
+                      : 'bg-card-foreground text-primary border border-green-900',
+                  )}
+                >
+                  <div className="flex justify-between gap-2">
+                    <h3 className="text-3xl font-semibold mb-2">{feature.title}</h3>
+                    {feature.image ? (
+                      <Image
+                        alt="background-image"
+                        width={150}
+                        height={150}
+                        className="object-contain h-auto"
+                        src={getURLFromMedia(feature.image ?? '')}
+                      />
+                    ) : null}
+                  </div>
+                  <div className="mt-2">
+                    <p className="text-base">{feature.description}</p>
+                    <div
+                      className={cn(
+                        'mt-3 w-full h-[1px]',
+                        feature.background === 'primary' ? 'bg-card-foreground' : 'bg-card',
+                      )}
+                    />
+                    {feature?.stampImage ? (
+                      <div className="mt-5">
+                        <Image
+                          alt="stamp image"
+                          width={50}
+                          height={50}
+                          className="object-contain h-auto"
+                          src={getURLFromMedia(feature.stampImage ?? '')}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
-    </div>
+    </section>
   )
 }
