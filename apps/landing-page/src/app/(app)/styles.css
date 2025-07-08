@@ -12,6 +12,7 @@
   --accent-foreground: #254d47;
   --card: #778c6e;
   --card-foreground: #fefee3;
+  --border: #D0D0D0;
   --font-family: 'Figtree', sans-serif;
   --font-secondary: 'Mulish', sans-serif;
 }
@@ -26,6 +27,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
   --default-font-family: var(--font-family);
   --font-secondary: var(--font-secondary);
 }
