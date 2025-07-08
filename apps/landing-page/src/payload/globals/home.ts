@@ -14,12 +14,12 @@ export const Home: GlobalConfig = {
         {
           name: 'heroSectionTitle',
           label: 'Hero Section Title',
-          type: 'text',
+          type: 'richText',
         },
         {
           name: 'heroSectionDescription',
           label: 'Hero Section Description',
-          type: 'richText',
+          type: 'textarea',
         },
         {
           name: 'heroSectionImage',

@@ -1,7 +1,7 @@
-import { Logo } from '@/components/ui/logo'
 import Link from 'next/link'
+import { Logo } from '@/components/ui/logo'
 
-export default function AppShell({}: React.PropsWithChildren) {
+export default function AppShell({ children }: React.PropsWithChildren) {
   return (
     <div>
       <div className="bg-primary text-primary-foreground px-4 py-2">
@@ -13,6 +13,7 @@ export default function AppShell({}: React.PropsWithChildren) {
           </div>
         </Link>
       </div>
+      {children}
     </div>
   )
 }

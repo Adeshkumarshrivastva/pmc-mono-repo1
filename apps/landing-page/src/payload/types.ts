@@ -331,8 +331,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface Home {
   id: string;
   heroSetion?: {
-    heroSectionTitle?: string | null;
-    heroSectionDescription?: {
+    heroSectionTitle?: {
       root: {
         type: string;
         children: {
@@ -347,6 +346,7 @@ export interface Home {
       };
       [k: string]: unknown;
     } | null;
+    heroSectionDescription?: string | null;
     heroSectionImage?: (string | null) | Media;
     heroSectionAction?: string | null;
     heroSectionHeadline?: string | null;

@@ -25,7 +25,7 @@ export default buildConfig({
   },
   collections: [Users, Media, Blog],
   globals: [Home, DeepTms, ContactUs],
-  editor: lexicalEditor(),
+  editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'types.ts'),

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
 @import 'tailwindcss';
 
 :root {
@@ -12,6 +13,7 @@
   --card: #778c6e;
   --card-foreground: #fefee3;
   --font-family: 'Figtree', sans-serif;
+  --font-secondary: 'Mulish', sans-serif;
 }
 
 @theme {
@@ -25,4 +27,5 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --default-font-family: var(--font-family);
+  --font-secondary: var(--font-secondary);
 }
