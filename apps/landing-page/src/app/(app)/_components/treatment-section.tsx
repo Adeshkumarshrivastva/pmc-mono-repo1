@@ -10,13 +10,11 @@ type TreatmentSectionProps = {
 }
 
 export default function TreatmentSection({ data }: TreatmentSectionProps) {
-
   return (
     <section className="w-full bg-accent">
       <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-20 xl:px-16 xl:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-
             <div className="hidden lg:block">
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 <Image
@@ -31,9 +29,7 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
 
             <div className="space-y-6 lg:space-y-8">
               <div className="space-y-4 lg:space-y-6">
-                <h1 className="text-3xl font-semibold text-primary sm:text-4xl lg:text-5xl">
-                  {data?.title}
-                </h1>
+                <h1 className="text-3xl font-semibold text-primary sm:text-4xl lg:text-5xl">{data?.title}</h1>
                 {data?.description ? (
                   <div className="lg:text-lg">
                     <RichText
@@ -45,9 +41,7 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
               </div>
 
               {data?.subTitle ? (
-                <h2 className="font-secondary text-xl font-medium text-primary sm:text-2xl">
-                  {data.subTitle}
-                </h2>
+                <h2 className="font-secondary text-xl font-medium text-primary sm:text-2xl">{data.subTitle}</h2>
               ) : null}
 
               {data?.action ? (
@@ -67,9 +61,7 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
                           <div className="flex-shrink-0 pt-1">
                             <MedalRibbonIcon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-9 lg:w-9" />
                           </div>
-                          <span className="text-lg font-semibold sm:text-xl">
-                            {feature.title}
-                          </span>
+                          <span className="text-lg font-semibold sm:text-xl">{feature.title}</span>
                         </div>
                       ))}
                     </div>
@@ -81,7 +73,7 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
                         <Image
                           width={356}
                           height={280}
-                          alt={data.title ? `${data.title} secondary image` : "Treatment secondary image"}
+                          alt={data.title ? `${data.title} secondary image` : 'Treatment secondary image'}
                           src={getURLFromMedia(data.secondryImage)}
                           className="h-auto w-full object-contain"
                         />
