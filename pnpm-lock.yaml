@@ -99,6 +99,9 @@ importers:
       tailwindcss:
         specifier: 4.1.10
         version: 4.1.10
+      ts-pattern:
+        specifier: 5.0.5
+        version: 5.0.5
       zod:
         specifier: 3.25.67
         version: 3.25.67
@@ -4769,6 +4772,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  ts-pattern@5.0.5:
+    resolution: {integrity: sha512-tL0w8U/pgaacOmkb9fRlYzWEUDCfVjjv9dD4wHTgZ61MjhuMt46VNWTG747NqW6vRzoWIKABVhFSOJ82FvXrfA==}
 
   tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
@@ -10720,6 +10726,8 @@ snapshots:
   ts-essentials@10.0.3(typescript@5.8.3):
     optionalDependencies:
       typescript: 5.8.3
+
+  ts-pattern@5.0.5: {}
 
   tsconfig-paths@3.15.0:
     dependencies:
