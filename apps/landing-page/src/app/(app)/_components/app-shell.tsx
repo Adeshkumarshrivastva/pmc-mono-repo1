@@ -1,18 +1,9 @@
-import Link from 'next/link'
-import { Logo } from '@/components/ui/logo'
+import Navbar from './navbar'
 
 export default function AppShell({ children }: React.PropsWithChildren) {
   return (
     <div>
-      <div className="bg-primary text-primary-foreground px-4 py-2">
-        <Link href="/" className="flex items-center gap-2">
-          <Logo className="size-16" />
-          <div>
-            <div className="text-2xl font-semibold">Positive</div>
-            <div className="text-base">Mind Care</div>
-          </div>
-        </Link>
-      </div>
+      <Navbar />
       {children}
     </div>
   )
