@@ -10,47 +10,90 @@ type TreatmentSectionProps = {
 }
 
 export default function TreatmentSection({ data }: TreatmentSectionProps) {
+
   return (
-    <div className="w-full bg-accent p-12 md:p-25">
-      <div className="flex flex-col items-center lg:flex-row max-w-7xl mx-auto">
-        <Image
-          alt="Deep TMS"
-          width={564}
-          height={800}
-          className="object-contain h-auto"
-          src={getURLFromMedia(data?.premaryImage ?? '')}
-        />
-        <div className="m-auto space-y-6 px-4 md:px-12 lg:px-16 lg:flex-1">
-          <div className="space-y-8">
-            <h1 className="text-5xl text-primary font-semibold">{data?.title}</h1>
-            <RichText
-              data={typeof data?.description === 'string' ? JSON.parse(data.description) : data?.description}
-              disableContainer={true}
-            />
-          </div>
-          <h2 className="font-medium font-secondary text-primary text-2xl">{data?.subTitle ?? ''}</h2>
-          <Button icon={<ChatIcon />}>{data?.action}</Button>
-          <div className="flex justify-between">
-            <div className="space-y-6">
-              {data?.featureList && data.featureList.length !== 0
-                ? data.featureList.map((feature, index) => (
-                    <div key={index} className="flex space-x-4">
-                      <MedalRibbonIcon className="h-9 w-9" />
-                      <span className="font-semibold text-xl">{feature.title}</span>
-                    </div>
-                  ))
-                : null}
+    <section className="w-full bg-accent">
+      <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-20 xl:px-16 xl:py-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+
+            <div className="hidden lg:block">
+              <div className="relative mx-auto max-w-md lg:max-w-none">
+                <Image
+                  alt="Deep TMS treatment"
+                  width={564}
+                  height={800}
+                  className="h-auto w-full object-contain"
+                  src={getURLFromMedia(data?.premaryImage ?? '')}
+                />
+              </div>
             </div>
-            <Image
-              width={356}
-              height={280}
-              alt="Deep TMS"
-              src={getURLFromMedia(data?.secondryImage ?? '')}
-              className="object-contain"
-            />
+
+            <div className="space-y-6 lg:space-y-8">
+              <div className="space-y-4 lg:space-y-6">
+                <h1 className="text-3xl font-semibold text-primary sm:text-4xl lg:text-5xl">
+                  {data?.title}
+                </h1>
+                {data?.description ? (
+                  <div className="lg:text-lg">
+                    <RichText
+                      data={typeof data.description === 'string' ? JSON.parse(data.description) : data.description}
+                      disableContainer={true}
+                    />
+                  </div>
+                ) : null}
+              </div>
+
+              {data?.subTitle ? (
+                <h2 className="font-secondary text-xl font-medium text-primary sm:text-2xl">
+                  {data.subTitle}
+                </h2>
+              ) : null}
+
+              {data?.action ? (
+                <div className="pt-2">
+                  <Button icon={<ChatIcon />} className="w-full sm:w-auto">
+                    {data.action}
+                  </Button>
+                </div>
+              ) : null}
+
+              <div className="space-y-8 pt-4 lg:pt-6">
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  {data?.featureList && data.featureList.length > 0 ? (
+                    <div className="space-y-4 lg:space-y-6">
+                      {data.featureList.map((feature, index) => (
+                        <div key={index} className="flex items-center space-x-3 lg:space-x-4">
+                          <div className="flex-shrink-0 pt-1">
+                            <MedalRibbonIcon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-9 lg:w-9" />
+                          </div>
+                          <span className="text-lg font-semibold sm:text-xl">
+                            {feature.title}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {data?.secondryImage ? (
+                    <div className="hidden xl:block">
+                      <div className="relative max-w-xs">
+                        <Image
+                          width={356}
+                          height={280}
+                          alt={data.title ? `${data.title} secondary image` : "Treatment secondary image"}
+                          src={getURLFromMedia(data.secondryImage)}
+                          className="h-auto w-full object-contain"
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
