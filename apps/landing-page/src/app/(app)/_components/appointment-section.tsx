@@ -57,7 +57,7 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
                         .returnType<React.ReactNode>()
                         .with('facebook', () => <FacebookIcon className="text-primary h-8 w-8 " />)
                         .with('instagram', () => <InstagramIcon className="text-primary h-8 w-8 " />)
-                        .with('x', () => <FacebookIcon className="text-primary h-8 w-8" />)
+                        .with('x', () => <InstagramIcon className="text-primary h-8 w-8" />)
                         .with('linkedin', () => <FacebookIcon className="text-primary h-8 w-8" />)
                         .with(P._, () => null)
                         .exhaustive()}

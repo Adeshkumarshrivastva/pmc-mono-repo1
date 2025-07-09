@@ -7,8 +7,8 @@ export const DeepTms: GlobalConfig = {
   label: 'About Deep TMS',
   fields: [
     {
-      name: 'deepTmsAboutSection',
-      label: 'Deep TMS About Setion',
+      name: 'deepTmsHeroSection',
+      label: 'Deep TMS Hero Setion',
       type: 'group',
       fields: [
         {
