@@ -189,6 +189,12 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
+          name: 'image',
+          label: 'Image',
+          type: 'upload',
+          relationTo: 'media',
+        },
+        {
           name: 'featuresCards',
           label: 'Features Cards',
           type: 'array',
@@ -202,6 +208,12 @@ export const Home: GlobalConfig = {
               name: 'featureDescription',
               label: 'Feature Description',
               type: 'textarea',
+            },
+            {
+              name: 'featureIcon',
+              label: 'Feature Icon',
+              type: 'upload',
+              relationTo: 'media',
             },
           ],
         },

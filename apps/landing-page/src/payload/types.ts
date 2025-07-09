@@ -59,609 +59,611 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji';
+  | 'Pacific/Fiji'
 
 export interface Config {
   auth: {
-    users: UserAuthOperations;
-  };
-  blocks: {};
+    users: UserAuthOperations
+  }
+  blocks: {}
   collections: {
-    users: User;
-    media: Media;
-    blog: Blog;
-    'payload-locked-documents': PayloadLockedDocument;
-    'payload-preferences': PayloadPreference;
-    'payload-migrations': PayloadMigration;
-  };
-  collectionsJoins: {};
+    users: User
+    media: Media
+    blog: Blog
+    'payload-locked-documents': PayloadLockedDocument
+    'payload-preferences': PayloadPreference
+    'payload-migrations': PayloadMigration
+  }
+  collectionsJoins: {}
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    blog: BlogSelect<false> | BlogSelect<true>;
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
-  };
+    users: UsersSelect<false> | UsersSelect<true>
+    media: MediaSelect<false> | MediaSelect<true>
+    blog: BlogSelect<false> | BlogSelect<true>
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
+  }
   db: {
-    defaultIDType: string;
-  };
+    defaultIDType: string
+  }
   globals: {
-    home: Home;
-    'deep-tms': DeepTm;
-    'contact-us': ContactUs;
-  };
+    home: Home
+    'deep-tms': DeepTm
+    'contact-us': ContactUs
+  }
   globalsSelect: {
-    home: HomeSelect<false> | HomeSelect<true>;
-    'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
-    'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
-  };
-  locale: null;
+    home: HomeSelect<false> | HomeSelect<true>
+    'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>
+    'contact-us': ContactUsSelect<false> | ContactUsSelect<true>
+  }
+  locale: null
   user: User & {
-    collection: 'users';
-  };
+    collection: 'users'
+  }
   jobs: {
-    tasks: unknown;
-    workflows: unknown;
-  };
+    tasks: unknown
+    workflows: unknown
+  }
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   login: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   registerFirstUser: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   unlock: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
+  id: string
+  updatedAt: string
+  createdAt: string
+  email: string
+  resetPasswordToken?: string | null
+  resetPasswordExpiration?: string | null
+  salt?: string | null
+  hash?: string | null
+  loginAttempts?: number | null
+  lockUntil?: string | null
+  password?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+  id: string
+  alt: string
+  updatedAt: string
+  createdAt: string
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  focalX?: number | null
+  focalY?: number | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blog".
  */
 export interface Blog {
-  id: string;
-  title: string;
-  author: string;
-  image?: (string | null) | Media;
+  id: string
+  title: string
+  author: string
+  image?: (string | null) | Media
   content: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  updatedAt: string;
-  createdAt: string;
+        type: string
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: string
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'users'
+        value: string | User
       } | null)
     | ({
-        relationTo: 'media';
-        value: string | Media;
+        relationTo: 'media'
+        value: string | Media
       } | null)
     | ({
-        relationTo: 'blog';
-        value: string | Blog;
-      } | null);
-  globalSlug?: string | null;
+        relationTo: 'blog'
+        value: string | Blog
+      } | null)
+  globalSlug?: string | null
   user: {
-    relationTo: 'users';
-    value: string | User;
-  };
-  updatedAt: string;
-  createdAt: string;
+    relationTo: 'users'
+    value: string | User
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: string
   user: {
-    relationTo: 'users';
-    value: string | User;
-  };
-  key?: string | null;
+    relationTo: 'users'
+    value: string | User
+  }
+  key?: string | null
   value?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
-  name?: string | null;
-  batch?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  id: string
+  name?: string | null
+  batch?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
+  updatedAt?: T
+  createdAt?: T
+  email?: T
+  resetPasswordToken?: T
+  resetPasswordExpiration?: T
+  salt?: T
+  hash?: T
+  loginAttempts?: T
+  lockUntil?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+  alt?: T
+  updatedAt?: T
+  createdAt?: T
+  url?: T
+  thumbnailURL?: T
+  filename?: T
+  mimeType?: T
+  filesize?: T
+  width?: T
+  height?: T
+  focalX?: T
+  focalY?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blog_select".
  */
 export interface BlogSelect<T extends boolean = true> {
-  title?: T;
-  author?: T;
-  image?: T;
-  content?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  title?: T
+  author?: T
+  image?: T
+  content?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T;
-  globalSlug?: T;
-  user?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  document?: T
+  globalSlug?: T
+  user?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T;
-  key?: T;
-  value?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  user?: T
+  key?: T
+  value?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T;
-  batch?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  batch?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home".
  */
 export interface Home {
-  id: string;
+  id: string
   heroSetion?: {
     heroSectionTitle?: {
       root: {
-        type: string;
+        type: string
         children: {
-          type: string;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    heroSectionDescription?: string | null;
-    heroSectionImage?: (string | null) | Media;
-    heroSectionAction?: string | null;
-    heroSectionHeadline?: string | null;
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    heroSectionDescription?: string | null
+    heroSectionImage?: (string | null) | Media
+    heroSectionAction?: string | null
+    heroSectionHeadline?: string | null
     heroSectionDetails?:
       | {
-          label?: string | null;
-          value?: string | null;
-          id?: string | null;
+          label?: string | null
+          value?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   deepTmsSection?: {
-    title?: string | null;
+    title?: string | null
     description?: {
       root: {
-        type: string;
+        type: string
         children: {
-          type: string;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    action?: string | null;
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    action?: string | null
     deepTmsFeatures?:
       | {
-          title?: string | null;
-          background?: ('primary' | 'accent') | null;
-          image?: (string | null) | Media;
-          description?: string | null;
-          stampImage?: (string | null) | Media;
-          id?: string | null;
+          title?: string | null
+          background?: ('primary' | 'accent') | null
+          image?: (string | null) | Media
+          description?: string | null
+          stampImage?: (string | null) | Media
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   treatmentSection?: {
-    title?: string | null;
-    premaryImage?: (string | null) | Media;
-    secondryImage?: (string | null) | Media;
+    title?: string | null
+    premaryImage?: (string | null) | Media
+    secondryImage?: (string | null) | Media
     description?: {
       root: {
-        type: string;
+        type: string
         children: {
-          type: string;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    subTitle?: string | null;
-    action?: string | null;
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    subTitle?: string | null
+    action?: string | null
     featureList?:
       | {
-          title?: string | null;
-          feature?: string | null;
-          id?: string | null;
+          title?: string | null
+          feature?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   whyChooseSection?: {
-    title?: string | null;
-    action?: string | null;
+    title?: string | null
+    action?: string | null
+    image?: (string | null) | Media
     featuresCards?:
       | {
-          featureTitle?: string | null;
-          featureDescription?: string | null;
-          id?: string | null;
+          featureTitle?: string | null
+          featureDescription?: string | null
+          featureIcon?: (string | null) | Media
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   packageSection?: {
-    title?: string | null;
+    title?: string | null
     packageFeatures?:
       | {
-          title?: string | null;
-          price?: string | null;
+          title?: string | null
+          price?: string | null
           description?: {
             root: {
-              type: string;
+              type: string
               children: {
-                type: string;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          action?: string | null;
-          id?: string | null;
+                type: string
+                version: number
+                [k: string]: unknown
+              }[]
+              direction: ('ltr' | 'rtl') | null
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+              indent: number
+              version: number
+            }
+            [k: string]: unknown
+          } | null
+          action?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   appointmentSection?: {
     appointmentSection?: {
-      title?: string | null;
+      title?: string | null
       contacts?:
         | {
-            phone?: string | null;
-            id?: string | null;
+            phone?: string | null
+            id?: string | null
           }[]
-        | null;
-      location?: string | null;
+        | null
+      location?: string | null
       socialMediaLinks?:
         | {
-            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
-            url?: string | null;
-            id?: string | null;
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null
+            url?: string | null
+            id?: string | null
           }[]
-        | null;
-    };
-  };
+        | null
+    }
+  }
   testimonialSection?: {
-    title?: string | null;
+    title?: string | null
     testimonialSlides?:
       | {
-          image?: (string | null) | Media;
-          title?: string | null;
-          quote?: string | null;
-          quoteAuthor?: string | null;
-          id?: string | null;
+          image?: (string | null) | Media
+          title?: string | null
+          quote?: string | null
+          quoteAuthor?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   faqSection?: {
-    title?: string | null;
+    title?: string | null
     faqQuestionsAndAnswer?:
       | {
-          question?: string | null;
-          answer?: string | null;
-          id?: string | null;
+          question?: string | null
+          answer?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   blogsSection?: {
-    title?: string | null;
+    title?: string | null
     blogsFeature?:
       | {
-          image?: (string | null) | Media;
+          image?: (string | null) | Media
           description?: {
             root: {
-              type: string;
+              type: string
               children: {
-                type: string;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          name?: string | null;
-          date?: string | null;
-          id?: string | null;
+                type: string
+                version: number
+                [k: string]: unknown
+              }[]
+              direction: ('ltr' | 'rtl') | null
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+              indent: number
+              version: number
+            }
+            [k: string]: unknown
+          } | null
+          name?: string | null
+          date?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+      | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "deep-tms".
  */
 export interface DeepTm {
-  id: string;
+  id: string
   deepTmsHeroSection?: {
-    title?: string | null;
+    title?: string | null
     description?: {
       root: {
-        type: string;
+        type: string
         children: {
-          type: string;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    image?: (string | null) | Media;
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    image?: (string | null) | Media
     statCards?:
       | {
-          title?: string | null;
-          value?: string | null;
-          description?: string | null;
-          id?: string | null;
+          title?: string | null
+          value?: string | null
+          description?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   deepTmsWorkSection?: {
-    title?: string | null;
+    title?: string | null
     deepTmsWorkCards?:
       | {
-          image?: (string | null) | Media;
-          title?: string | null;
+          image?: (string | null) | Media
+          title?: string | null
           description?: {
             root: {
-              type: string;
+              type: string
               children: {
-                type: string;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          id?: string | null;
+                type: string
+                version: number
+                [k: string]: unknown
+              }[]
+              direction: ('ltr' | 'rtl') | null
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+              indent: number
+              version: number
+            }
+            [k: string]: unknown
+          } | null
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   deepTmsApproachSection?: {
-    title?: string | null;
+    title?: string | null
     featureTable?:
       | {
-          feature?: string | null;
-          deepTms?: string | null;
-          medicationTalkTherapy?: string | null;
-          id?: string | null;
+          feature?: string | null
+          deepTms?: string | null
+          medicationTalkTherapy?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   deepTmsEligibilitySection?: {
-    title?: string | null;
-    image?: (string | null) | Media;
-    subTitle?: string | null;
+    title?: string | null
+    image?: (string | null) | Media
+    subTitle?: string | null
     eligibilityList?:
       | {
-          addEligibility?: string | null;
-          id?: string | null;
+          addEligibility?: string | null
+          id?: string | null
         }[]
-      | null;
-    action?: string | null;
-  };
+      | null
+    action?: string | null
+  }
   appointmentSection?: {
     appointmentSection?: {
-      title?: string | null;
+      title?: string | null
       contacts?:
         | {
-            phone?: string | null;
-            id?: string | null;
+            phone?: string | null
+            id?: string | null
           }[]
-        | null;
-      location?: string | null;
+        | null
+      location?: string | null
       socialMediaLinks?:
         | {
-            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
-            url?: string | null;
-            id?: string | null;
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null
+            url?: string | null
+            id?: string | null
           }[]
-        | null;
-    };
-  };
+        | null
+    }
+  }
   faqSection?: {
-    title?: string | null;
+    title?: string | null
     faqQuestionsAndAnswer?:
       | {
-          question?: string | null;
-          answer?: string | null;
-          id?: string | null;
+          question?: string | null
+          answer?: string | null
+          id?: string | null
         }[]
-      | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+      | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-us".
  */
 export interface ContactUs {
-  id: string;
+  id: string
   contactUs?: {
-    title?: string | null;
+    title?: string | null
     description?: {
       root: {
-        type: string;
+        type: string
         children: {
-          type: string;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -671,146 +673,148 @@ export interface HomeSelect<T extends boolean = true> {
   heroSetion?:
     | T
     | {
-        heroSectionTitle?: T;
-        heroSectionDescription?: T;
-        heroSectionImage?: T;
-        heroSectionAction?: T;
-        heroSectionHeadline?: T;
+        heroSectionTitle?: T
+        heroSectionDescription?: T
+        heroSectionImage?: T
+        heroSectionAction?: T
+        heroSectionHeadline?: T
         heroSectionDetails?:
           | T
           | {
-              label?: T;
-              value?: T;
-              id?: T;
-            };
-      };
+              label?: T
+              value?: T
+              id?: T
+            }
+      }
   deepTmsSection?:
     | T
     | {
-        title?: T;
-        description?: T;
-        action?: T;
+        title?: T
+        description?: T
+        action?: T
         deepTmsFeatures?:
           | T
           | {
-              title?: T;
-              background?: T;
-              image?: T;
-              description?: T;
-              stampImage?: T;
-              id?: T;
-            };
-      };
+              title?: T
+              background?: T
+              image?: T
+              description?: T
+              stampImage?: T
+              id?: T
+            }
+      }
   treatmentSection?:
     | T
     | {
-        title?: T;
-        premaryImage?: T;
-        secondryImage?: T;
-        description?: T;
-        subTitle?: T;
-        action?: T;
+        title?: T
+        premaryImage?: T
+        secondryImage?: T
+        description?: T
+        subTitle?: T
+        action?: T
         featureList?:
           | T
           | {
-              title?: T;
-              feature?: T;
-              id?: T;
-            };
-      };
+              title?: T
+              feature?: T
+              id?: T
+            }
+      }
   whyChooseSection?:
     | T
     | {
-        title?: T;
-        action?: T;
+        title?: T
+        action?: T
+        image?: T
         featuresCards?:
           | T
           | {
-              featureTitle?: T;
-              featureDescription?: T;
-              id?: T;
-            };
-      };
+              featureTitle?: T
+              featureDescription?: T
+              featureIcon?: T
+              id?: T
+            }
+      }
   packageSection?:
     | T
     | {
-        title?: T;
+        title?: T
         packageFeatures?:
           | T
           | {
-              title?: T;
-              price?: T;
-              description?: T;
-              action?: T;
-              id?: T;
-            };
-      };
+              title?: T
+              price?: T
+              description?: T
+              action?: T
+              id?: T
+            }
+      }
   appointmentSection?:
     | T
     | {
         appointmentSection?:
           | T
           | {
-              title?: T;
+              title?: T
               contacts?:
                 | T
                 | {
-                    phone?: T;
-                    id?: T;
-                  };
-              location?: T;
+                    phone?: T
+                    id?: T
+                  }
+              location?: T
               socialMediaLinks?:
                 | T
                 | {
-                    socialMediaPlatform?: T;
-                    url?: T;
-                    id?: T;
-                  };
-            };
-      };
+                    socialMediaPlatform?: T
+                    url?: T
+                    id?: T
+                  }
+            }
+      }
   testimonialSection?:
     | T
     | {
-        title?: T;
+        title?: T
         testimonialSlides?:
           | T
           | {
-              image?: T;
-              title?: T;
-              quote?: T;
-              quoteAuthor?: T;
-              id?: T;
-            };
-      };
+              image?: T
+              title?: T
+              quote?: T
+              quoteAuthor?: T
+              id?: T
+            }
+      }
   faqSection?:
     | T
     | {
-        title?: T;
+        title?: T
         faqQuestionsAndAnswer?:
           | T
           | {
-              question?: T;
-              answer?: T;
-              id?: T;
-            };
-      };
+              question?: T
+              answer?: T
+              id?: T
+            }
+      }
   blogsSection?:
     | T
     | {
-        title?: T;
+        title?: T
         blogsFeature?:
           | T
           | {
-              image?: T;
-              description?: T;
-              name?: T;
-              date?: T;
-              id?: T;
-            };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+              image?: T
+              description?: T
+              name?: T
+              date?: T
+              id?: T
+            }
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -820,96 +824,96 @@ export interface DeepTmsSelect<T extends boolean = true> {
   deepTmsHeroSection?:
     | T
     | {
-        title?: T;
-        description?: T;
-        image?: T;
+        title?: T
+        description?: T
+        image?: T
         statCards?:
           | T
           | {
-              title?: T;
-              value?: T;
-              description?: T;
-              id?: T;
-            };
-      };
+              title?: T
+              value?: T
+              description?: T
+              id?: T
+            }
+      }
   deepTmsWorkSection?:
     | T
     | {
-        title?: T;
+        title?: T
         deepTmsWorkCards?:
           | T
           | {
-              image?: T;
-              title?: T;
-              description?: T;
-              id?: T;
-            };
-      };
+              image?: T
+              title?: T
+              description?: T
+              id?: T
+            }
+      }
   deepTmsApproachSection?:
     | T
     | {
-        title?: T;
+        title?: T
         featureTable?:
           | T
           | {
-              feature?: T;
-              deepTms?: T;
-              medicationTalkTherapy?: T;
-              id?: T;
-            };
-      };
+              feature?: T
+              deepTms?: T
+              medicationTalkTherapy?: T
+              id?: T
+            }
+      }
   deepTmsEligibilitySection?:
     | T
     | {
-        title?: T;
-        image?: T;
-        subTitle?: T;
+        title?: T
+        image?: T
+        subTitle?: T
         eligibilityList?:
           | T
           | {
-              addEligibility?: T;
-              id?: T;
-            };
-        action?: T;
-      };
+              addEligibility?: T
+              id?: T
+            }
+        action?: T
+      }
   appointmentSection?:
     | T
     | {
         appointmentSection?:
           | T
           | {
-              title?: T;
+              title?: T
               contacts?:
                 | T
                 | {
-                    phone?: T;
-                    id?: T;
-                  };
-              location?: T;
+                    phone?: T
+                    id?: T
+                  }
+              location?: T
               socialMediaLinks?:
                 | T
                 | {
-                    socialMediaPlatform?: T;
-                    url?: T;
-                    id?: T;
-                  };
-            };
-      };
+                    socialMediaPlatform?: T
+                    url?: T
+                    id?: T
+                  }
+            }
+      }
   faqSection?:
     | T
     | {
-        title?: T;
+        title?: T
         faqQuestionsAndAnswer?:
           | T
           | {
-              question?: T;
-              answer?: T;
-              id?: T;
-            };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+              question?: T
+              answer?: T
+              id?: T
+            }
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -919,21 +923,20 @@ export interface ContactUsSelect<T extends boolean = true> {
   contactUs?:
     | T
     | {
-        title?: T;
-        description?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        title?: T
+        description?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
-
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}
