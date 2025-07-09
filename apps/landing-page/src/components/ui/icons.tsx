@@ -172,3 +172,19 @@ export function ClipBoardNotesWithQuestionMark(props: IconProps) {
     </svg>
   )
 }
+
+export function MaterialSymbolsArrowBackIos(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <path fill="currentColor" d="M10 22L0 12L10 2l1.775 1.775L3.55 12l8.225 8.225z" />
+    </svg>
+  )
+}
+
+export function MaterialSymbolsArrowForwardIos(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <path fill="currentColor" d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10z" />
+    </svg>
+  )
+}
