@@ -19,7 +19,7 @@ export default async function HomePage() {
       <HeroSection data={heroSetion} />
       <DeepTmsSection data={deepTmsSection} />
       <TreatmentSection data={treatmentSection} />
-      <WhyChooseSection data={whyChooseSection} />
+      {/* <WhyChooseSection data={whyChooseSection} /> */}
       <AppointmentSection data={appointmentSection} />
       <FAQSection data={faqSection} />
     </div>

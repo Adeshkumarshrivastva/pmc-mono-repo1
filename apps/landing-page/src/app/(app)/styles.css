@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
 @import 'tailwindcss';
 
 :root {
@@ -14,7 +14,7 @@
   --card-foreground: #fefee3;
   --border: #d0d0d0;
   --font-family: 'Figtree', sans-serif;
-  --font-secondary: 'Mulish', sans-serif;
+  --font-display: 'Barlow', sans-serif;
 }
 
 @theme {
@@ -29,5 +29,5 @@
   --color-card-foreground: var(--card-foreground);
   --color-border: var(--border);
   --default-font-family: var(--font-family);
-  --font-secondary: var(--font-secondary);
+  --font-display: var(--font-display);
 }

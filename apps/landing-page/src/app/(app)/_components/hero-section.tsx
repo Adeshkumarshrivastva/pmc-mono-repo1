@@ -26,7 +26,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
               </h1>
 
               {data?.heroSectionDescription ? (
-                <p className="sm:text-lg text-primary-foreground font-medium font-secondary leading-relaxed">
+                <p className="sm:text-lg text-primary-foreground font-medium leading-relaxed">
                   {data.heroSectionDescription}
                 </p>
               ) : null}
@@ -43,7 +43,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
 
           <div className="flex-shrink-0 w-full xl:w-72">
             <div className="space-y-4 p-6">
-              <p className="hidden xl:block sm:text-lg text-primary-foreground font-medium font-secondary">
+              <p className="hidden xl:block sm:text-lg text-primary-foreground font-medium">
                 {data?.heroSectionHeadline}
               </p>
 
@@ -58,7 +58,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
                           )}
                           <div className="col-span-1 text-primary-foreground flex flex-col justify-center">
                             <p className="text-sm font-light">{item.label}</p>
-                            <p className="font-secondary font-semibold">{item.value}</p>
+                            <p className="font-semibold">{item.value}</p>
                           </div>
                           {index % 2 === 0 && (
                             <div className="h-16 border-[0.5px] border-primary-foreground border-dashed" />
