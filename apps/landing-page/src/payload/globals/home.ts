@@ -240,6 +240,7 @@ export const Home: GlobalConfig = {
               type: 'text',
             },
             {
+              // TODO: Rename it to pricing
               name: 'price',
               label: 'Package Pricing',
               type: 'group',

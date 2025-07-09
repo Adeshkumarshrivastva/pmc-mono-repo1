@@ -25,11 +25,11 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
             </div>
 
             <div className="flex flex-col justify-center space-y-4 md:space-y-6">
-              {data?.description && (
-                <div className="text-primary prose prose-sm sm:prose-base max-w-none">
-                  <RichText data={data.description!} disableContainer={true} />
+              {data?.description ? (
+                <div className="text-primary max-w-none">
+                  <RichText data={data.description} disableContainer={true} />
                 </div>
-              )}
+              ) : null}
 
               {data?.action ? (
                 <div className="flex">

@@ -6,20 +6,29 @@ import AppointmentSection from './_components/appointment-section'
 import DeepTmsSection from './_components/deep-tms-section'
 import FAQSection from './_components/faq-section'
 import WhyChooseSection from './_components/why-choose-section'
+import PackagesSection from './_components/packages-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
-  const { heroSetion, deepTmsSection, treatmentSection, appointmentSection, faqSection, whyChooseSection } =
-    await payload.findGlobal({
-      slug: 'home',
-    })
+  const {
+    heroSetion,
+    deepTmsSection,
+    treatmentSection,
+    appointmentSection,
+    faqSection,
+    whyChooseSection,
+    packagesSection,
+  } = await payload.findGlobal({
+    slug: 'home',
+  })
 
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
       <HeroSection data={heroSetion} />
       <DeepTmsSection data={deepTmsSection} />
       <TreatmentSection data={treatmentSection} />
-      {/* <WhyChooseSection data={whyChooseSection} /> */}
+      <WhyChooseSection data={whyChooseSection} />
+      <PackagesSection data={packagesSection} />
       <AppointmentSection data={appointmentSection} />
       <FAQSection data={faqSection} />
     </div>
