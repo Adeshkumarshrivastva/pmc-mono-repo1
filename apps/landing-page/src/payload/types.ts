@@ -429,27 +429,23 @@ export interface Home {
         }[]
       | null;
   };
-  packageSection?: {
+  packagesSection?: {
     title?: string | null;
-    packageFeatures?:
+    availablePackages?:
       | {
-          title?: string | null;
-          price?: string | null;
-          description?: {
-            root: {
-              type: string;
-              children: {
-                type: string;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
+          name?: string | null;
+          price?: {
+            price?: string | null;
+            unitText?: string | null;
+          };
+          description?: string | null;
+          featureHeadline?: string | null;
+          features?:
+            | {
+                title?: string | null;
+                id?: string | null;
+              }[]
+            | null;
           action?: string | null;
           id?: string | null;
         }[]
@@ -735,16 +731,28 @@ export interface HomeSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  packageSection?:
+  packagesSection?:
     | T
     | {
         title?: T;
-        packageFeatures?:
+        availablePackages?:
           | T
           | {
-              title?: T;
-              price?: T;
+              name?: T;
+              price?:
+                | T
+                | {
+                    price?: T;
+                    unitText?: T;
+                  };
               description?: T;
+              featureHeadline?: T;
+              features?:
+                | T
+                | {
+                    title?: T;
+                    id?: T;
+                  };
               action?: T;
               id?: T;
             };
