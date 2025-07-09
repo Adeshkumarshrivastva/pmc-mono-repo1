@@ -531,7 +531,7 @@ export interface Home {
  */
 export interface DeepTm {
   id: string
-  deepTmsAboutSection?: {
+  deepTmsHeroSection?: {
     title?: string | null
     description?: {
       root: {
@@ -821,7 +821,7 @@ export interface HomeSelect<T extends boolean = true> {
  * via the `definition` "deep-tms_select".
  */
 export interface DeepTmsSelect<T extends boolean = true> {
-  deepTmsAboutSection?:
+  deepTmsHeroSection?:
     | T
     | {
         title?: T

@@ -33,7 +33,7 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
                 {data?.description ? (
                   <div className="lg:text-lg">
                     <RichText
-                      data={typeof data.description === 'string' ? JSON.parse(data.description) : data.description}
+                      data={data.description}
                       disableContainer={true}
                     />
                   </div>
