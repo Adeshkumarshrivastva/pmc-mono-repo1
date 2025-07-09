@@ -3,7 +3,7 @@ import './styles.css'
 
 export const metadata = {
   description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  title: 'Positive Mind Care',
 }
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {

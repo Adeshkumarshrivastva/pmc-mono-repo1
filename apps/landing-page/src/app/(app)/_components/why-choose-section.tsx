@@ -9,7 +9,7 @@ type WhyChooseSectionProps = {
   data: Home['whyChooseSection']
 }
 
-export default function whyChooseSection({ data }: WhyChooseSectionProps) {
+export default function WhyChooseSection({ data }: WhyChooseSectionProps) {
   return (
     <div className="w-full flex justify-around bg-primary px-9">
       <div className="flex flex-col justify-between items-start space-y-6 pt-10">
