@@ -32,16 +32,13 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
                 <h1 className="text-3xl font-semibold text-primary sm:text-4xl lg:text-5xl">{data?.title}</h1>
                 {data?.description ? (
                   <div className="lg:text-lg">
-                    <RichText
-                      data={data.description}
-                      disableContainer={true}
-                    />
+                    <RichText data={data.description} disableContainer={true} />
                   </div>
                 ) : null}
               </div>
 
               {data?.subTitle ? (
-                <h2 className="font-secondary text-xl font-medium text-primary sm:text-2xl">{data.subTitle}</h2>
+                <h2 className="text-xl font-medium text-primary sm:text-2xl">{data.subTitle}</h2>
               ) : null}
 
               {data?.action ? (

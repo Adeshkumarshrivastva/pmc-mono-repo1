@@ -28,10 +28,7 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4">Our Contact</h3>
                     <div className="space-y-2">
                       {appointmentData?.contacts?.map((contact, index) => (
-                        <div
-                          key={index}
-                          className="font-secondary text-muted-foreground font-medium text-sm sm:text-base"
-                        >
+                        <div key={index} className="text-muted-foreground font-medium text-sm sm:text-base">
                           <a href={`tel:${contact.phone}`} className="hover:text-primary transition-colors">
                             {contact.phone}
                           </a>
@@ -42,7 +39,7 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
 
                   <div className="flex-1">
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4">Location</h3>
-                    <div className="font-secondary text-muted-foreground font-medium text-sm sm:text-base">
+                    <div className="text-muted-foreground font-medium text-sm sm:text-base">
                       {appointmentData?.location}
                     </div>
                   </div>
