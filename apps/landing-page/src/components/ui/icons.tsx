@@ -196,3 +196,14 @@ export function MaterialSymbolsArrowForwardIos(props: IconProps) {
     </svg>
   )
 }
+
+export function ArrowRightIcon(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="12" r="10" opacity=".5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h8m0 0l-3-3m3 3l-3 3" />
+      </g>
+    </svg>
+  )
+}
