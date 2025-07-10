@@ -146,7 +146,7 @@ export function SqureMinusIcon(props: IconProps) {
 export function ClipBoardNotesWithQuestionMark(props: IconProps) {
   return (
     <svg {...props} viewBox="0 0 48 48">
-      <g clip-path="url(#clip0_112_45)">
+      <g clipPath="url(#clip0_112_45)">
         <path
           d="M35 48C27.832 48 22 42.168 22 35C22 27.832 27.832 22 35 22C42.168 22 48 27.832 48 35C48 42.168 42.168 48 35 48ZM35 24C28.934 24 24 28.936 24 35C24 41.064 28.934 46 35 46C41.066 46 46 41.064 46 35C46 28.936 41.066 24 35 24Z"
           fill="#1B1B1B"
@@ -184,7 +184,15 @@ export function MaterialSymbolsArrowBackIos(props: IconProps) {
 export function MaterialSymbolsArrowForwardIos(props: IconProps) {
   return (
     <svg {...props} viewBox="0 0 24 24">
-      <path fill="currentColor" d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10z" />
+      <path
+        fill="currentColor"
+        d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10"
+        opacity=".5"
+      />
+      <path
+        fill="#fff"
+        d="M16.03 8.97a.75.75 0 0 1 0 1.06l-5 5a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06l1.47 1.47l2.235-2.235L14.97 8.97a.75.75 0 0 1 1.06 0"
+      />
     </svg>
   )
 }
