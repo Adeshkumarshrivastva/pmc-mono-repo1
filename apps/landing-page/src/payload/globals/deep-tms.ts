@@ -87,8 +87,8 @@ export const DeepTms: GlobalConfig = {
       ],
     },
     {
-      name: 'deepTmsApproachSection',
-      label: 'Deep TMS Approache Section',
+      name: 'deepTmsComparisonSection',
+      label: 'Deep TMS vs Traditional Method Table Section',
       type: 'group',
       fields: [
         {
@@ -97,23 +97,38 @@ export const DeepTms: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'featureTable',
-          label: 'Features Table',
+          name: 'featureParameterHeading',
+          label: 'Feature Parameter Heading',
+          type: 'text',
+        },
+        {
+          name: 'deepTmsTableHeading',
+          label: 'Deep TMS Table Heading',
+          type: 'text',
+        },
+        {
+          name: 'traditionalTableHeading',
+          label: 'Traditional Table Heading',
+          type: 'text',
+        },
+        {
+          name: 'comparisonRows',
+          label: 'Feature Comparison Rows',
           type: 'array',
           fields: [
             {
               name: 'feature',
-              label: 'Feature',
+              label: 'Feature Parameter',
               type: 'text',
             },
             {
-              name: 'deepTms',
-              label: 'Deep TMS',
+              name: 'deepTmsFeature',
+              label: 'Deep TMS Feature Value',
               type: 'text',
             },
             {
-              name: 'medicationTalkTherapy',
-              label: 'MeMedication / Talk Therapy',
+              name: 'traditionalFeature',
+              label: 'Traditional Feature Value',
               type: 'text',
             },
           ],

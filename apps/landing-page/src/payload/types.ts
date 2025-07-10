@@ -560,13 +560,16 @@ export interface DeepTm {
         }[]
       | null;
   };
-  deepTmsApproachSection?: {
+  deepTmsComparisonSection?: {
     title?: string | null;
-    featureTable?:
+    featureParameterHeading?: string | null;
+    deepTmsTableHeading?: string | null;
+    traditionalTableHeading?: string | null;
+    comparisonRows?:
       | {
           feature?: string | null;
-          deepTms?: string | null;
-          medicationTalkTherapy?: string | null;
+          deepTmsFeature?: string | null;
+          traditionalFeature?: string | null;
           id?: string | null;
         }[]
       | null;
@@ -831,16 +834,19 @@ export interface DeepTmsSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  deepTmsApproachSection?:
+  deepTmsComparisonSection?:
     | T
     | {
         title?: T;
-        featureTable?:
+        featureParameterHeading?: T;
+        deepTmsTableHeading?: T;
+        traditionalTableHeading?: T;
+        comparisonRows?:
           | T
           | {
               feature?: T;
-              deepTms?: T;
-              medicationTalkTherapy?: T;
+              deepTmsFeature?: T;
+              traditionalFeature?: T;
               id?: T;
             };
       };
