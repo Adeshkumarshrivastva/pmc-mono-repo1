@@ -1,31 +1,26 @@
 import { Field } from 'payload'
 
-export const ExpertsSection: Field = {
+export const expertsSection: Field = {
   name: 'expertsSection',
   label: 'Experts Section',
   type: 'group',
   fields: [
     {
       name: 'title',
-      label: 'Title',
+      label: 'Section Title',
       type: 'text',
     },
     {
       name: 'experts',
-      label: 'Add Experts',
-      type: 'array',
-      fields: [
-        {
-          name: 'question',
-          label: 'Question',
-          type: 'text',
-        },
-        {
-          name: 'answer',
-          label: 'Answer',
-          type: 'text',
-        },
-      ],
+      label: 'Experts',
+      type: 'relationship',
+      relationTo: 'experts',
+      hasMany: true,
+    },
+    {
+      name: 'action',
+      label: 'Expert action',
+      type: 'text',
     },
   ],
 }

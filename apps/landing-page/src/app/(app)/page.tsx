@@ -9,6 +9,7 @@ import WhyChooseSection from './_components/why-choose-section'
 import { TestimonialSection } from './_components/testimonial-section'
 import PackagesSection from './_components/packages-section'
 import BlogsSection from './_components/blogs-section'
+import ExpertsSection from './_components/experts-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -22,6 +23,7 @@ export default async function HomePage() {
     testimonialSection,
     packagesSection,
     blogsSection,
+    expertsSection,
   } = await payload.findGlobal({
     slug: 'home',
   })
@@ -32,6 +34,7 @@ export default async function HomePage() {
       <DeepTmsSection data={deepTmsSection} />
       <TreatmentSection data={treatmentSection} />
       <WhyChooseSection data={whyChooseSection} />
+      <ExpertsSection data={expertsSection} />
       <TestimonialSection data={testimonialSection} />
       <PackagesSection data={packagesSection} />
       <AppointmentSection data={appointmentSection} />

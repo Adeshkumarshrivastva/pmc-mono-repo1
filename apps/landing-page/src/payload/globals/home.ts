@@ -1,6 +1,7 @@
 import { GlobalConfig } from 'payload'
 import { appointmentSection } from '../fields/appointment-section'
 import { faqSection } from '../fields/faq-section'
+import { expertsSection } from '../fields/experts-section'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -323,6 +324,7 @@ export const Home: GlobalConfig = {
       ],
     },
     faqSection,
+    expertsSection,
     {
       name: 'blogsSection',
       label: 'Blogs Section',

@@ -207,3 +207,35 @@ export function ArrowRightIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10"
+        opacity=".5"
+      />
+      <path
+        fill="#fff"
+        d="M16.03 8.97a.75.75 0 0 1 0 1.06l-5 5a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06l1.47 1.47l2.235-2.235L14.97 8.97a.75.75 0 0 1 1.06 0"
+      />
+    </svg>
+  )
+}
+
+export function OouiArrowPreviousLtr(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 20 20">
+      <path fill="currentColor" d="m5.83 9l5.58-5.58L10 2l-8 8l8 8l1.41-1.41L5.83 11H18V9z" />
+    </svg>
+  )
+}
+
+export function OouiArrowPreviousRtl(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 20 20">
+      <path fill="currentColor" d="M2 11h12.2l-5.6 5.6L10 18l8-8l-8-8l-1.4 1.4L14.2 9H2z" />
+    </svg>
+  )
+}

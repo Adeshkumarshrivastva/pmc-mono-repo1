@@ -8,7 +8,7 @@ export const Experts: CollectionConfig = {
   },
   fields: [
     {
-      name: 'expert',
+      name: 'expertName',
       type: 'text',
       label: 'Expert Name',
       required: true,
