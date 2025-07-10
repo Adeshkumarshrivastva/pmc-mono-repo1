@@ -610,13 +610,25 @@ export interface DeepTm {
         }[]
       | null;
   };
-  deepTmsApproachSection?: {
+  deepTmsComparisonSection?: {
     title?: string | null;
-    featureTable?:
+    featureParameterColumn?: {
+      heading?: string | null;
+      background?: ('primary' | 'accent') | null;
+    };
+    deepTmsFeatureColumn?: {
+      heading?: string | null;
+      background?: ('primary' | 'accent') | null;
+    };
+    traditionalFeatureColumn?: {
+      heading?: string | null;
+      background?: ('primary' | 'accent') | null;
+    };
+    comparisonRows?:
       | {
           feature?: string | null;
-          deepTms?: string | null;
-          medicationTalkTherapy?: string | null;
+          deepTmsFeature?: string | null;
+          traditionalFeature?: string | null;
           id?: string | null;
         }[]
       | null;
@@ -888,16 +900,34 @@ export interface DeepTmsSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  deepTmsApproachSection?:
+  deepTmsComparisonSection?:
     | T
     | {
         title?: T;
-        featureTable?:
+        featureParameterColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+            };
+        deepTmsFeatureColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+            };
+        traditionalFeatureColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+            };
+        comparisonRows?:
           | T
           | {
               feature?: T;
-              deepTms?: T;
-              medicationTalkTherapy?: T;
+              deepTmsFeature?: T;
+              traditionalFeature?: T;
               id?: T;
             };
       };

@@ -87,8 +87,8 @@ export const DeepTms: GlobalConfig = {
       ],
     },
     {
-      name: 'deepTmsApproachSection',
-      label: 'Deep TMS Approache Section',
+      name: 'deepTmsComparisonSection',
+      label: 'Deep TMS vs Traditional Method Table Section',
       type: 'group',
       fields: [
         {
@@ -97,23 +97,89 @@ export const DeepTms: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'featureTable',
-          label: 'Features Table',
+          name: 'featureParameterColumn',
+          label: 'Feature Parameter Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              defaultValue: 'primary',
+            },
+          ],
+        },
+        {
+          name: 'deepTmsFeatureColumn',
+          label: 'Deep TMS Feature Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              defaultValue: 'accent',
+            },
+          ],
+        },
+        {
+          name: 'traditionalFeatureColumn',
+          label: 'Traditional Feature Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              defaultValue: 'primary',
+            },
+          ],
+        },
+        {
+          name: 'comparisonRows',
+          label: 'Feature Comparison Rows',
           type: 'array',
           fields: [
             {
               name: 'feature',
-              label: 'Feature',
+              label: 'Feature Parameter',
               type: 'text',
             },
             {
-              name: 'deepTms',
-              label: 'Deep TMS',
+              name: 'deepTmsFeature',
+              label: 'Deep TMS Feature Value',
               type: 'text',
             },
             {
-              name: 'medicationTalkTherapy',
-              label: 'MeMedication / Talk Therapy',
+              name: 'traditionalFeature',
+              label: 'Traditional Feature Value',
               type: 'text',
             },
           ],

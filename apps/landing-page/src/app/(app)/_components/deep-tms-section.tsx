@@ -73,18 +73,18 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
                   </div>
                   <div className="mt-2">
                     <p className="text-base">{feature.description}</p>
-                    <div
+                    {/* <div
                       className={cn(
                         'mt-3 w-full h-[1px]',
                         feature.background === 'primary' ? 'bg-card-foreground' : 'bg-card',
                       )}
-                    />
+                    /> */}
                     {feature?.stampImage ? (
                       <div className="mt-5">
                         <Image
                           alt="stamp image"
-                          width={50}
-                          height={50}
+                          width={120}
+                          height={120}
                           className="object-contain h-auto"
                           src={getURLFromMedia(feature.stampImage ?? '')}
                         />
