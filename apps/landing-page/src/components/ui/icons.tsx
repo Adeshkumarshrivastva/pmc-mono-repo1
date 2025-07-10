@@ -173,6 +173,33 @@ export function ClipBoardNotesWithQuestionMark(props: IconProps) {
   )
 }
 
+export function MaterialSymbolsArrowBackIos(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <path fill="currentColor" d="M10 22L0 12L10 2l1.775 1.775L3.55 12l8.225 8.225z" />
+    </svg>
+  )
+}
+
+export function MaterialSymbolsArrowForwardIos(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <path fill="currentColor" d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10z" />
+    </svg>
+  )
+}
+
+export function ArrowRightIcon(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="12" r="10" opacity=".5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h8m0 0l-3-3m3 3l-3 3" />
+      </g>
+    </svg>
+  )
+}
+
 export function CheckIcon(props: IconProps) {
   return (
     <svg {...props} viewBox="0 0 24 24">
@@ -189,13 +216,18 @@ export function CheckIcon(props: IconProps) {
   )
 }
 
-export function ArrowRightIcon(props: IconProps) {
+export function OouiArrowPreviousLtr(props: IconProps) {
   return (
-    <svg {...props} viewBox="0 0 24 24">
-      <g fill="none" stroke="currentColor" strokeWidth="1.5">
-        <circle cx="12" cy="12" r="10" opacity=".5" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h8m0 0l-3-3m3 3l-3 3" />
-      </g>
+    <svg {...props} viewBox="0 0 20 20">
+      <path fill="currentColor" d="m5.83 9l5.58-5.58L10 2l-8 8l8 8l1.41-1.41L5.83 11H18V9z" />
+    </svg>
+  )
+}
+
+export function OouiArrowPreviousRtl(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 20 20">
+      <path fill="currentColor" d="M2 11h12.2l-5.6 5.6L10 18l8-8l-8-8l-1.4 1.4L14.2 9H2z" />
     </svg>
   )
 }

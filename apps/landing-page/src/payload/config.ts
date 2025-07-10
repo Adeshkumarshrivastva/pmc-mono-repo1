@@ -6,12 +6,13 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { env } from '@/env'
-import { Users } from './collections/users'
-import { Media } from './collections/media'
 import { Home } from './globals/home'
 import { DeepTms } from './globals/deep-tms'
 import { ContactUs } from './globals/contact-us'
 import { Blog } from './collections/blog'
+import { Experts } from './collections/experts'
+import { Users } from './collections/Users'
+import { Media } from './collections/Media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -23,7 +24,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Blog],
+  collections: [Users, Media, Blog, Experts],
   globals: [Home, DeepTms, ContactUs],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,

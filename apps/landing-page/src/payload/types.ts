@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     blog: Blog;
+    experts: Expert;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -79,6 +80,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     blog: BlogSelect<false> | BlogSelect<true>;
+    experts: ExpertsSelect<false> | ExpertsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -189,6 +191,33 @@ export interface Blog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "experts".
+ */
+export interface Expert {
+  id: string;
+  expertName: string;
+  image?: (string | null) | Media;
+  profession: string;
+  headline?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -205,6 +234,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blog';
         value: string | Blog;
+      } | null)
+    | ({
+        relationTo: 'experts';
+        value: string | Expert;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -291,6 +324,18 @@ export interface BlogSelect<T extends boolean = true> {
   image?: T;
   content?: T;
   publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "experts_select".
+ */
+export interface ExpertsSelect<T extends boolean = true> {
+  expertName?: T;
+  image?: T;
+  profession?: T;
+  headline?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -493,6 +538,11 @@ export interface Home {
           id?: string | null;
         }[]
       | null;
+  };
+  expertsSection?: {
+    title?: string | null;
+    experts?: (string | Expert)[] | null;
+    action?: string | null;
   };
   blogsSection?: {
     title?: string | null;
@@ -801,6 +851,13 @@ export interface HomeSelect<T extends boolean = true> {
               answer?: T;
               id?: T;
             };
+      };
+  expertsSection?:
+    | T
+    | {
+        title?: T;
+        experts?: T;
+        action?: T;
       };
   blogsSection?:
     | T

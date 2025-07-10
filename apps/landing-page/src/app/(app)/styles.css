@@ -32,7 +32,6 @@
   --font-display: var(--font-display);
 }
 
-
 .list-bullet {
   @apply list-disc list-inside;
 }
