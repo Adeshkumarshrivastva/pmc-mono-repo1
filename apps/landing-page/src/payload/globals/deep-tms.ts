@@ -97,19 +97,70 @@ export const DeepTms: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'featureParameterHeading',
-          label: 'Feature Parameter Heading',
-          type: 'text',
+          name: 'featureParameterColumn',
+          label: 'Feature Parameter Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              defaultValue: 'primary',
+            },
+          ],
         },
         {
-          name: 'deepTmsTableHeading',
-          label: 'Deep TMS Table Heading',
-          type: 'text',
+          name: 'deepTmsFeatureColumn',
+          label: 'Deep TMS Feature Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              defaultValue: 'accent',
+            },
+          ],
         },
         {
-          name: 'traditionalTableHeading',
-          label: 'Traditional Table Heading',
-          type: 'text',
+          name: 'traditionalFeatureColumn',
+          label: 'Traditional Feature Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              defaultValue: 'primary',
+            },
+          ],
         },
         {
           name: 'comparisonRows',

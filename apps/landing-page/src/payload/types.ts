@@ -562,9 +562,18 @@ export interface DeepTm {
   };
   deepTmsComparisonSection?: {
     title?: string | null;
-    featureParameterHeading?: string | null;
-    deepTmsTableHeading?: string | null;
-    traditionalTableHeading?: string | null;
+    featureParameterColumn?: {
+      heading?: string | null;
+      background?: ('primary' | 'accent') | null;
+    };
+    deepTmsFeatureColumn?: {
+      heading?: string | null;
+      background?: ('primary' | 'accent') | null;
+    };
+    traditionalFeatureColumn?: {
+      heading?: string | null;
+      background?: ('primary' | 'accent') | null;
+    };
     comparisonRows?:
       | {
           feature?: string | null;
@@ -838,9 +847,24 @@ export interface DeepTmsSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        featureParameterHeading?: T;
-        deepTmsTableHeading?: T;
-        traditionalTableHeading?: T;
+        featureParameterColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+            };
+        deepTmsFeatureColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+            };
+        traditionalFeatureColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+            };
         comparisonRows?:
           | T
           | {

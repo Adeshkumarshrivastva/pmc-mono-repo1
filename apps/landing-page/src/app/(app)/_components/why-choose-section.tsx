@@ -3,6 +3,7 @@ import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Button } from '@/components/ui/button'
 import { CallIcon, ClipBoardNotesWithQuestionMark } from '@/components/ui/icons'
+import SVGImageIcon from '@/components/svg-image-icon'
 
 type WhyChooseSectionProps = {
   data: Home['whyChooseSection']
@@ -28,7 +29,11 @@ export default function WhyChooseSection({ data }: WhyChooseSectionProps) {
         {data?.featuresCards && data.featuresCards.length !== 0
           ? data.featuresCards.map((feature, index) => (
               <div key={index} className="flex flex-col bg-accent space-y-4 p-6 w-[340px] h-[204px] rounded-md">
-                <ClipBoardNotesWithQuestionMark className="h-12 w-12 text-primary" />
+                {feature.featureIcon ? (
+                  <SVGImageIcon src={getURLFromMedia(feature.featureIcon)} className="h-12 w-12 text-primary" />
+                ) : (
+                  <ClipBoardNotesWithQuestionMark className="h-12 w-12 text-primary" />
+                )}
                 <p className="font-semibold text-xl text-primary">{feature.featureTitle}</p>
                 <p className="font-normal text-lg ">{feature.featureDescription}</p>
               </div>

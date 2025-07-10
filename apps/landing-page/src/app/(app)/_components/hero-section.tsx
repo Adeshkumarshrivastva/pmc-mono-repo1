@@ -26,7 +26,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
               </h1>
 
               {data?.heroSectionDescription ? (
-                <p className="sm:text-lg text-primary-foreground font-medium leading-relaxed">
+                <p className="sm:text-lg text-primary-foreground leading-relaxed opacity-80">
                   {data.heroSectionDescription}
                 </p>
               ) : null}
