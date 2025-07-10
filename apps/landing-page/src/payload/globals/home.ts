@@ -330,36 +330,21 @@ export const Home: GlobalConfig = {
       fields: [
         {
           name: 'title',
-          label: 'Title',
+          label: 'Section Title',
           type: 'text',
         },
         {
-          name: 'blogsFeature',
-          label: 'Blogs Feature',
-          type: 'array',
-          fields: [
-            {
-              name: 'image',
-              label: 'Image',
-              type: 'upload',
-              relationTo: 'media',
-            },
-            {
-              name: 'description',
-              label: 'Description',
-              type: 'richText',
-            },
-            {
-              name: 'name',
-              label: 'Name',
-              type: 'text',
-            },
-            {
-              name: 'date',
-              label: 'Date',
-              type: 'date',
-            },
-          ],
+          name: 'action',
+          label: 'Action Button Text',
+          type: 'text',
+        },
+        {
+          name: 'featuredBlogs',
+          label: 'Featured Blog Posts',
+          relationTo: 'blog',
+          type: 'relationship',
+          hasMany: true,
+          maxRows: 3,
         },
       ],
     },

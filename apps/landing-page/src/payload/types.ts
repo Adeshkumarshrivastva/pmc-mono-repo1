@@ -183,6 +183,7 @@ export interface Blog {
     };
     [k: string]: unknown;
   };
+  publishedAt: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -289,6 +290,7 @@ export interface BlogSelect<T extends boolean = true> {
   author?: T;
   image?: T;
   content?: T;
+  publishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -494,29 +496,8 @@ export interface Home {
   };
   blogsSection?: {
     title?: string | null;
-    blogsFeature?:
-      | {
-          image?: (string | null) | Media;
-          description?: {
-            root: {
-              type: string;
-              children: {
-                type: string;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          name?: string | null;
-          date?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    action?: string | null;
+    featuredBlogs?: (string | Blog)[] | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -810,15 +791,8 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        blogsFeature?:
-          | T
-          | {
-              image?: T;
-              description?: T;
-              name?: T;
-              date?: T;
-              id?: T;
-            };
+        action?: T;
+        featuredBlogs?: T;
       };
   updatedAt?: T;
   createdAt?: T;
