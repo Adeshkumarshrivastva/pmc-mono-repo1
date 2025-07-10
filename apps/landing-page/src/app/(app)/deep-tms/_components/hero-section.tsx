@@ -28,7 +28,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
                   alt="Deep TMS People"
                   width={525}
                   height={500}
-                  className="h-auto w-full object-contain"
+                  className="h-auto w-full object-contain rounded-sm"
                   src={getURLFromMedia(data?.image ?? '')}
                 />
               </div>

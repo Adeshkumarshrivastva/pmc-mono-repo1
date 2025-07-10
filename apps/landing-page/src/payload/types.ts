@@ -564,15 +564,18 @@ export interface DeepTm {
     title?: string | null;
     featureParameterColumn?: {
       heading?: string | null;
-      background?: ('primary' | 'accent') | null;
+      background?: ('card' | 'card-foreground') | null;
+      textColor?: ('primary' | 'primary-foreground') | null;
     };
     deepTmsFeatureColumn?: {
       heading?: string | null;
-      background?: ('primary' | 'accent') | null;
+      background?: ('card' | 'card-foreground') | null;
+      textColor?: ('primary' | 'primary-foreground') | null;
     };
     traditionalFeatureColumn?: {
       heading?: string | null;
-      background?: ('primary' | 'accent') | null;
+      background?: ('card' | 'card-foreground') | null;
+      textColor?: ('primary' | 'primary-foreground') | null;
     };
     comparisonRows?:
       | {
@@ -852,18 +855,21 @@ export interface DeepTmsSelect<T extends boolean = true> {
           | {
               heading?: T;
               background?: T;
+              textColor?: T;
             };
         deepTmsFeatureColumn?:
           | T
           | {
               heading?: T;
               background?: T;
+              textColor?: T;
             };
         traditionalFeatureColumn?:
           | T
           | {
               heading?: T;
               background?: T;
+              textColor?: T;
             };
         comparisonRows?:
           | T

@@ -47,9 +47,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                     </div>
 
                     <div className="bg-card p-4 sm:p-6 md:p-8 rounded-3xl absolute left-3 sm:left-4 md:left-6 top-48 sm:top-52 md:top-64 right-3 sm:right-4 md:right-auto max-w-none sm:max-w-sm">
-                      <h3 className="text-base sm:text-xl text-primary-foreground font-medium mb-2">
-                        {blog.title}
-                      </h3>
+                      <h3 className="text-base sm:text-xl text-primary-foreground font-medium mb-2">{blog.title}</h3>
 
                       <div className="flex justify-between items-center gap-2 opacity-80">
                         <div className="flex-1 min-w-0">

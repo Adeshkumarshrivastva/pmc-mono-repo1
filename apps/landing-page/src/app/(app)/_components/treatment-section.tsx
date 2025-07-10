@@ -21,7 +21,7 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
                   alt="Deep TMS treatment"
                   width={564}
                   height={800}
-                  className="h-auto w-full object-contain"
+                  className="h-auto w-full object-contain rounded-xl"
                   src={getURLFromMedia(data?.premaryImage ?? '')}
                 />
               </div>
@@ -72,7 +72,7 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
                           height={280}
                           alt={data.title ? `${data.title} secondary image` : 'Treatment secondary image'}
                           src={getURLFromMedia(data.secondryImage)}
-                          className="h-auto w-full object-contain"
+                          className="h-auto w-full object-contain rounded-sm"
                         />
                       </div>
                     </div>

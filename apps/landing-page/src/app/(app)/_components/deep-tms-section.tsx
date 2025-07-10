@@ -53,32 +53,26 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
                 <div
                   key={index}
                   className={cn(
-                    'h-[402px] p-6 rounded-lg flex flex-col justify-between',
+                    'relative h-[402px] p-6 rounded-lg flex flex-col justify-between',
                     feature.background === 'primary'
                       ? 'bg-card text-primary-foreground'
                       : 'bg-card-foreground text-primary border border-green-900',
                   )}
                 >
-                  <div className="flex justify-between gap-2">
-                    <h3 className="text-3xl font-semibold mb-2">{feature.title}</h3>
+                  <h3 className="z-10 text-3xl font-semibold mb-2">{feature.title}</h3>
+                  <div className="absolute top-0 right-0">
                     {feature.image ? (
                       <Image
-                        alt="background-image"
-                        width={150}
-                        height={150}
-                        className="object-contain h-auto"
+                        alt={feature?.title ?? ''}
+                        width={400}
+                        height={220}
+                        className="object-contain w-full h-auto"
                         src={getURLFromMedia(feature.image ?? '')}
                       />
                     ) : null}
                   </div>
                   <div className="mt-2">
                     <p className="text-base">{feature.description}</p>
-                    {/* <div
-                      className={cn(
-                        'mt-3 w-full h-[1px]',
-                        feature.background === 'primary' ? 'bg-card-foreground' : 'bg-card',
-                      )}
-                    /> */}
                     {feature?.stampImage ? (
                       <div className="mt-5">
                         <Image
