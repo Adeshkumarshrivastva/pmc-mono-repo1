@@ -1,7 +1,6 @@
+import { RichText } from '@payloadcms/richtext-lexical/react'
 import { DeepTm } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import { RichText } from '@payloadcms/richtext-lexical/react'
-import Image from 'next/image'
 
 type WorkSectionProps = {
   data: DeepTm['deepTmsWorkSection']
@@ -17,7 +16,8 @@ export default function WorkSection({ data }: WorkSectionProps) {
             <div className="grid grid-cols-1 justify-center items-center lg:grid-cols-3 lg:gap-12">
               {data?.deepTmsWorkCards?.map((card, index) => (
                 <div key={index} className="space-y-6">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={getURLFromMedia(card.image ?? '')}
                     alt={`Deep TMS Treatment - ${index}`}
                     width={380}

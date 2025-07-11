@@ -17,7 +17,8 @@ export default function WhyChooseSection({ data }: WhyChooseSectionProps) {
         <Button icon={<CallIcon />} variant={'secondary'} className="font-normal">
           {data?.action}
         </Button>
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           alt="Doctors"
           width={564}
           height={800}

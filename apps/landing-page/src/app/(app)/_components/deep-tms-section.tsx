@@ -62,7 +62,8 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
                   <h3 className="z-10 text-3xl font-semibold mb-2">{feature.title}</h3>
                   <div className="absolute top-0 right-0">
                     {feature.image ? (
-                      <Image
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
                         alt={feature?.title ?? ''}
                         width={400}
                         height={220}
@@ -75,7 +76,8 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
                     <p className="text-base">{feature.description}</p>
                     {feature?.stampImage ? (
                       <div className="mt-5">
-                        <Image
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                           alt="stamp image"
                           width={120}
                           height={120}

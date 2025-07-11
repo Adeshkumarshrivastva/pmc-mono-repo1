@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import { DeepTm } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import Image from 'next/image'
 
 export type EligibilityProps = {
   data: DeepTm['deepTmsEligibilitySection']
@@ -10,9 +9,10 @@ export type EligibilityProps = {
 
 export function EligibilitySection({ data }: EligibilityProps) {
   return (
-    <div className="flex justify-center items-center p-5 md:p-20">
+    <div className="flex justify-center items-center p-5 md:p-20 bg-accent">
       <div className="flex md:gap-16 gap-4 justify-between flex-col lg:flex-row">
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           alt="Doctors"
           width={572}
           height={576}

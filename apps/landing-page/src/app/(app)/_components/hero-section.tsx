@@ -15,14 +15,14 @@ export default function HeroSection({ data }: HeroSectionProps) {
   return (
     <div
       className="bg-cover bg-center bg-no-repeat bg-primary min-h-[600px] sm:min-h-[700px] xl:min-h-[800px] xl:bg-contain xl:bg-bottom flex items-center"
-      style={{ backgroundImage: `url(${backgroundImageUrl})` }}
+      style={{ backgroundImage: `url('${backgroundImageUrl}')` }}
     >
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 xl:px-25">
         <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8 xl:gap-12">
           <div className="flex-1 max-w-2xl xl:max-w-none">
             <div className="space-y-6 xl:w-[484px]">
               <h1 className="text-2xl sm:text-3xl lg:text-5xl font-semibold text-primary-foreground leading-tight">
-                <RichText data={data?.heroSectionTitle!} disableContainer={true} />
+                {data?.heroSectionTitle ? <RichText data={data.heroSectionTitle} disableContainer={true} /> : null}
               </h1>
 
               {data?.heroSectionDescription ? (

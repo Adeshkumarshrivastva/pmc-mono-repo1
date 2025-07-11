@@ -36,12 +36,12 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                 return (
                   <div key={blog.id} className="relative">
                     <div className="relative">
-                      <Image
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={getURLFromMedia(blog?.image ?? '')}
                         alt={blog?.title ?? ''}
                         width={384}
                         height={360}
-                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                         className="h-full w-full object-cover rounded-2xl"
                       />
                     </div>
