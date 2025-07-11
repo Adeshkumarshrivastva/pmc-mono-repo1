@@ -688,6 +688,7 @@ export interface ContactUs {
   id: string;
   contactUs?: {
     title?: string | null;
+    subtitle?: string | null;
     description?: {
       root: {
         type: string;
@@ -999,6 +1000,7 @@ export interface ContactUsSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        subtitle?: T;
         description?: T;
       };
   updatedAt?: T;
