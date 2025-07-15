@@ -1,5 +1,5 @@
 import { match, P } from 'ts-pattern'
-import { FacebookIcon, InstagramIcon } from '@/components/ui/icons'
+import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '@/components/ui/icons'
 import { Home } from '@/payload/types'
 import { Button } from '@/components/ui/button'
 
@@ -49,16 +49,16 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
               {appointmentData?.socialMediaLinks && appointmentData?.socialMediaLinks?.length > 0 && (
                 <div className="flex items-center space-x-3 sm:space-x-4 pt-4 lg:pt-0">
                   {appointmentData?.socialMediaLinks.map((platform, index) => (
-                    <button key={index}>
+                    <a href={platform.url ?? ''} target="_blank" key={index}>
                       {match(platform.socialMediaPlatform)
                         .returnType<React.ReactNode>()
                         .with('facebook', () => <FacebookIcon className="text-primary h-8 w-8 " />)
                         .with('instagram', () => <InstagramIcon className="text-primary h-8 w-8 " />)
-                        .with('x', () => <InstagramIcon className="text-primary h-8 w-8" />)
-                        .with('linkedin', () => <FacebookIcon className="text-primary h-8 w-8" />)
+                        .with('x', () => <TwitterIcon className="text-primary h-8 w-8" />)
+                        .with('linkedin', () => <LinkedinIcon className="text-primary h-8 w-8" />)
                         .with(P._, () => null)
                         .exhaustive()}
-                    </button>
+                    </a>
                   ))}
                 </div>
               )}
