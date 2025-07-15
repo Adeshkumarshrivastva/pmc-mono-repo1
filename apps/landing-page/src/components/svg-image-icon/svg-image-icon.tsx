@@ -19,10 +19,11 @@ export default function SVGImageIcon({ src, className, style }: SVGImageIconProp
         throw new Error(`Failed to fetch SVG image from ${src}`)
       }
       const contentType = res.headers.get('content-type')
-      console.log('content type - ', contentType)
+
       if (contentType !== SVG_MIME_TYPE) {
         throw new Error(`Invalid content type: expected SVG_MIME_TYPE, got '${contentType}'`)
       }
+
       const text = await res.text()
       const domParser = new DOMParser()
       const svg = domParser.parseFromString(text, SVG_MIME_TYPE)
