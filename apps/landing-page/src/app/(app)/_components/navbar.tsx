@@ -2,13 +2,17 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import { MenuIcon } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
 export default function Navbar() {
   const pathname = usePathname()
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground" style={{ height: NAVBAR_HEIGHT }}>
@@ -22,11 +26,11 @@ export default function Navbar() {
         </Link>
 
         <div className="flex-1 hidden md:flex items-center justify-center space-x-8">
-          {navItems.map((item) => {
+          {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href
             return (
               <Link
-                key={item.href}
+                key={item.id}
                 href={item.href}
                 className={`text-lg font-semibold transition-colors hover:text-primary-foreground rounded-md px-2 py-1 ${
                   isActive ? 'text-primary-foreground' : 'text-primary-foreground/50 hover:text-primary-foreground'
@@ -38,16 +42,38 @@ export default function Navbar() {
           })}
         </div>
 
-        <Button variant="secondary" icon={<CallIcon />}>
+        <Button variant="secondary" icon={<CallIcon />} className="hidden md:flex">
           Book Free Consultation
         </Button>
+
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+          <SheetTrigger className="block md:hidden">
+            <MenuIcon />
+          </SheetTrigger>
+          <SheetContent side="top">
+            <SheetHeader>
+              <SheetTitle className="mb-8 text-2xl text-accent-foreground">Positive Mind Care</SheetTitle>
+              <SheetDescription className="space-y-6">
+                {NAV_ITEMS.map((link) => {
+                  return (
+                    <div key={link.id} className="text-lg">
+                      <Link href={`${link.href}`} onClick={() => setSheetOpen(false)}>
+                        {link.label}
+                      </Link>
+                    </div>
+                  )
+                })}
+              </SheetDescription>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
       </nav>
     </header>
   )
 }
 
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/deep-tms', label: 'Deep TMS' },
-  { href: '/contact-us', label: 'Contact' },
+const NAV_ITEMS = [
+  { id: 'home', href: '/', label: 'Home' },
+  { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
+  { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ]
