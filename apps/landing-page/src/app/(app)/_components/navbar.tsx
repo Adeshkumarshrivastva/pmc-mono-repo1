@@ -43,7 +43,7 @@ export default function Navbar() {
         </div>
 
         <Button variant="secondary" icon={<CallIcon />} className="hidden md:flex">
-          Book Free Consultation
+          Book Appointment
         </Button>
 
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>

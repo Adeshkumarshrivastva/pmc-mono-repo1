@@ -16,7 +16,7 @@ export function EligibilitySection({ data }: EligibilityProps) {
           alt="Doctors"
           width={572}
           height={576}
-          className="h-auto object-contain"
+          className="h-auto object-contain rounded-xl"
           src={getURLFromMedia(data?.image ?? '')}
         />
         <div className="flex flex-col items-start justify-around gap-4">
