@@ -230,3 +230,53 @@ export function LinkedinIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function SolarBag4Linear(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <g fill="none">
+        <path
+          stroke="currentColor"
+          strokeWidth="1.5"
+          d="M3.794 12.03C4.331 9.342 4.6 8 5.487 7.134a4 4 0 0 1 .53-.434C7.04 6 8.41 6 11.15 6h1.703c2.739 0 4.108 0 5.13.7q.285.196.53.435C19.4 8 19.67 9.343 20.207 12.03c.771 3.856 1.157 5.784.269 7.15q-.241.373-.56.683C18.75 21 16.785 21 12.853 21H11.15c-3.933 0-5.899 0-7.065-1.138a4 4 0 0 1-.559-.683c-.888-1.366-.502-3.294.27-7.15Z"
+        />
+        <circle cx="15" cy="9" r="1" fill="currentColor" />
+        <circle cx="9" cy="9" r="1" fill="currentColor" />
+        <path stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" d="M9 6V5a3 3 0 1 1 6 0v1" />
+      </g>
+    </svg>
+  )
+}
+
+export function SolarCallChatRoundedBoldDuotone(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M17 12a5 5 0 1 0-4.478-2.774a.82.82 0 0 1 .067.574l-.298 1.113a.65.65 0 0 0 .796.796l1.113-.298a.82.82 0 0 1 .574.067A5 5 0 0 0 17 12"
+      />
+      <path
+        fill="currentColor"
+        d="m8.038 7.316l.649 1.163c.585 1.05.35 2.426-.572 3.349c0 0-1.12 1.119.91 3.148c2.027 2.027 3.146.91 3.147.91c.923-.923 2.3-1.158 3.349-.573l1.163.65c1.585.884 1.772 3.106.379 4.5c-.837.836-1.863 1.488-2.996 1.53c-1.908.073-5.149-.41-8.4-3.66c-3.25-3.251-3.733-6.492-3.66-8.4c.043-1.133.694-2.159 1.53-2.996c1.394-1.393 3.616-1.206 4.5.38"
+        opacity=".5"
+      />
+    </svg>
+  )
+}
+
+export function SolarAddCircleOutline(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"
+      />
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M12 1.25C6.063 1.25 1.25 6.063 1.25 12S6.063 22.75 12 22.75S22.75 17.937 22.75 12S17.937 1.25 12 1.25M2.75 12a9.25 9.25 0 1 1 18.5 0a9.25 9.25 0 0 1-18.5 0"
+        clipRule="evenodd"
+      />
+    </svg>
+  )
+}
