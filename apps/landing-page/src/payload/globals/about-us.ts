@@ -1,4 +1,5 @@
 import { GlobalConfig } from 'payload'
+import { expertsSection } from '../fields/experts-section'
 
 export const AboutUs: GlobalConfig = {
   slug: 'about-us',
@@ -191,6 +192,59 @@ export const AboutUs: GlobalConfig = {
               ],
             },
           ],
+        },
+      ],
+    },
+    {
+      name: 'teamMembersSection',
+      label: 'Team Members Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Section Title',
+          type: 'text',
+        },
+        {
+          name: 'members',
+          label: 'Members',
+          type: 'relationship',
+          relationTo: 'TeamMembers',
+          hasMany: true,
+        },
+      ],
+    },
+    expertsSection,
+    {
+      name: 'opportunitiesSection',
+      label: 'Opportunities Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'image',
+          label: 'Image',
+          type: 'upload',
+          relationTo: 'media',
+        },
+        {
+          name: 'description',
+          label: 'Descitption',
+          type: 'richText',
+        },
+        {
+          name: 'action',
+          label: 'Action',
+          type: 'text',
+        },
+        {
+          name: 'subAction',
+          label: 'Sub Action',
+          type: 'text',
         },
       ],
     },

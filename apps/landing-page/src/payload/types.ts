@@ -72,6 +72,7 @@ export interface Config {
     blog: Blog;
     experts: Expert;
     'contact-submissions': ContactSubmission;
+    TeamMembers: TeamMember;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -83,6 +84,7 @@ export interface Config {
     blog: BlogSelect<false> | BlogSelect<true>;
     experts: ExpertsSelect<false> | ExpertsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
+    TeamMembers: TeamMembersSelect<false> | TeamMembersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -236,6 +238,18 @@ export interface ContactSubmission {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamMembers".
+ */
+export interface TeamMember {
+  id: string;
+  memberName: string;
+  image: string | Media;
+  role: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -260,6 +274,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'contact-submissions';
         value: string | ContactSubmission;
+      } | null)
+    | ({
+        relationTo: 'TeamMembers';
+        value: string | TeamMember;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -371,6 +389,17 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
   phone?: T;
   address?: T;
   message?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamMembers_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  memberName?: T;
+  image?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -881,6 +910,36 @@ export interface AboutUs {
       } | null;
     };
   };
+  teamMembersSection?: {
+    title?: string | null;
+    members?: (string | TeamMember)[] | null;
+  };
+  expertsSection?: {
+    title?: string | null;
+    experts?: (string | Expert)[] | null;
+    action?: string | null;
+  };
+  opportunitiesSection?: {
+    title?: string | null;
+    image?: (string | null) | Media;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    action?: string | null;
+    subAction?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1246,6 +1305,28 @@ export interface AboutUsSelect<T extends boolean = true> {
               heading?: T;
               story?: T;
             };
+      };
+  teamMembersSection?:
+    | T
+    | {
+        title?: T;
+        members?: T;
+      };
+  expertsSection?:
+    | T
+    | {
+        title?: T;
+        experts?: T;
+        action?: T;
+      };
+  opportunitiesSection?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+        action?: T;
+        subAction?: T;
       };
   updatedAt?: T;
   createdAt?: T;

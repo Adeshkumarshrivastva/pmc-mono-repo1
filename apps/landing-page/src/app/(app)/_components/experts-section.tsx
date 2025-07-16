@@ -28,7 +28,7 @@ export default function ExpertsSection({ data }: ExportsectionProps) {
 
   return (
     <section className="w-full bg-accent">
-      <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-20 xl:px-16 xl:py-24">
+      <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-22 xl:px-16 xl:py-24">
         <div className="max-w-7xl mx-auto ">
           <div className="space-y-6 sm:space-y-10 lg:space-y-15">
             <div className="flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0">
