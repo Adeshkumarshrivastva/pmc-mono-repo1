@@ -1,6 +1,4 @@
-'use client'
-
-import Image from 'next/image'
+import Link from 'next/link'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Home } from '@/payload/types'
 import { Button } from '@/components/ui/button'
@@ -33,13 +31,15 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
 
               {data?.action ? (
                 <div className="flex">
-                  <Button
-                    variant="secondary"
-                    icon={<ChatIcon />}
-                    className="bg-primary text-primary-foreground px-4 py-2 rounded-md transition-all duration-200 hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:px-6 sm:py-3"
-                  >
-                    {data.action}
-                  </Button>
+                  <Link href={'/deep-tms'}>
+                    <Button
+                      variant="secondary"
+                      icon={<ChatIcon />}
+                      className="bg-primary text-primary-foreground px-4 py-2 rounded-md transition-all duration-200 hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:px-6 sm:py-3"
+                    >
+                      {data.action}
+                    </Button>
+                  </Link>
                 </div>
               ) : null}
             </div>

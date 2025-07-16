@@ -72,6 +72,7 @@ export interface Config {
     blog: Blog;
     experts: Expert;
     'contact-submissions': ContactSubmission;
+    'team-members': TeamMember;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -83,6 +84,7 @@ export interface Config {
     blog: BlogSelect<false> | BlogSelect<true>;
     experts: ExpertsSelect<false> | ExpertsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -94,11 +96,13 @@ export interface Config {
     home: Home;
     'deep-tms': DeepTm;
     'contact-us': ContactUs;
+    'about-us': AboutUs;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
+    'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -234,6 +238,18 @@ export interface ContactSubmission {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: string;
+  memberName: string;
+  image: string | Media;
+  role: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -258,6 +274,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'contact-submissions';
         value: string | ContactSubmission;
+      } | null)
+    | ({
+        relationTo: 'team-members';
+        value: string | TeamMember;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -369,6 +389,17 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
   phone?: T;
   address?: T;
   message?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  memberName?: T;
+  image?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -743,6 +774,196 @@ export interface ContactUs {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-us".
+ */
+export interface AboutUs {
+  id: string;
+  aboutUsHeroSection?: {
+    preHeader?: string | null;
+    heading?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    overlayContent?: {
+      overlayImage?: (string | null) | Media;
+      heading?: string | null;
+      description?: string | null;
+      statistics?:
+        | {
+            value?: string | null;
+            label?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
+  whatWeDoSection: {
+    heading: string;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    /**
+     * The two cards that appear on the left and right of the image.
+     */
+    featureCards?:
+      | {
+          heading?: string | null;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          image?: (string | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  missionVisionStory?: {
+    purposeHeading?: string | null;
+    mission?: {
+      heading?: string | null;
+      description?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    vision?: {
+      heading?: string | null;
+      description?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    storyIntro?: string | null;
+    storyContent?: {
+      heading?: string | null;
+      story?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+  };
+  teamMembersSection?: {
+    title?: string | null;
+    members?: (string | TeamMember)[] | null;
+  };
+  expertsSection?: {
+    title?: string | null;
+    experts?: (string | Expert)[] | null;
+    action?: string | null;
+  };
+  opportunitiesSection?: {
+    title?: string | null;
+    image?: (string | null) | Media;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    action?: string | null;
+    subAction?: string | null;
+  };
+  appointmentSection?: {
+    appointmentSection?: {
+      title?: string | null;
+      contacts?:
+        | {
+            phone?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      location?: string | null;
+      socialMediaLinks?:
+        | {
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
+            url?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -1035,6 +1256,119 @@ export interface ContactUsSelect<T extends boolean = true> {
         title?: T;
         subtitle?: T;
         description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-us_select".
+ */
+export interface AboutUsSelect<T extends boolean = true> {
+  aboutUsHeroSection?:
+    | T
+    | {
+        preHeader?: T;
+        heading?: T;
+        description?: T;
+        overlayContent?:
+          | T
+          | {
+              overlayImage?: T;
+              heading?: T;
+              description?: T;
+              statistics?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    id?: T;
+                  };
+            };
+      };
+  whatWeDoSection?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+        featureCards?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+              image?: T;
+              id?: T;
+            };
+      };
+  missionVisionStory?:
+    | T
+    | {
+        purposeHeading?: T;
+        mission?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+            };
+        vision?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+            };
+        storyIntro?: T;
+        storyContent?:
+          | T
+          | {
+              heading?: T;
+              story?: T;
+            };
+      };
+  teamMembersSection?:
+    | T
+    | {
+        title?: T;
+        members?: T;
+      };
+  expertsSection?:
+    | T
+    | {
+        title?: T;
+        experts?: T;
+        action?: T;
+      };
+  opportunitiesSection?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+        action?: T;
+        subAction?: T;
+      };
+  appointmentSection?:
+    | T
+    | {
+        appointmentSection?:
+          | T
+          | {
+              title?: T;
+              contacts?:
+                | T
+                | {
+                    phone?: T;
+                    id?: T;
+                  };
+              location?: T;
+              socialMediaLinks?:
+                | T
+                | {
+                    socialMediaPlatform?: T;
+                    url?: T;
+                    id?: T;
+                  };
+            };
       };
   updatedAt?: T;
   createdAt?: T;
