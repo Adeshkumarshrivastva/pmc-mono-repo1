@@ -14,8 +14,8 @@ import { Experts } from './collections/experts'
 import { ContactSubmissions } from './collections/contact-submissions'
 import { AboutUs } from './globals/about-us'
 import { TeamMembers } from './collections/team-members'
-import { Users } from './collections/Users'
-import { Media } from './collections/Media'
+import { Users } from './collections/users'
+import { Media } from './collections/media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
