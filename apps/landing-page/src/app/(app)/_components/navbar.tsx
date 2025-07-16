@@ -32,7 +32,7 @@ export default function Navbar() {
               <Link
                 key={item.id}
                 href={item.href}
-                className={`text-lg font-semibold transition-colors hover:text-primary-foreground rounded-md px-2 py-1 ${
+                className={`text-lg font-semibold transition-colors rounded-md px-2 py-1 ${
                   isActive ? 'text-primary-foreground' : 'text-primary-foreground/50 hover:text-primary-foreground'
                 }`}
               >
