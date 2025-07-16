@@ -1,3 +1,5 @@
+'use client'
+
 import { match, P } from 'ts-pattern'
 import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '@/components/ui/icons'
 import { Home } from '@/payload/types'
@@ -72,7 +74,6 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
                       Your Name
                     </label>
                     <input
-                      id="name"
                       type="text"
                       className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Enter your name"
@@ -84,7 +85,6 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
                       Email Address
                     </label>
                     <input
-                      id="email"
                       type="email"
                       className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Enter your email"
@@ -96,7 +96,6 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
                       Phone Number
                     </label>
                     <input
-                      id="phone"
                       type="tel"
                       className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Enter your phone"

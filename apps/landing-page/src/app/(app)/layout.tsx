@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/sonner'
 import AppShell from './_components/app-shell'
 import Providers from './_components/providers'
 import './styles.css'
@@ -14,6 +15,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>
+        <Toaster />
       </body>
     </html>
   )
