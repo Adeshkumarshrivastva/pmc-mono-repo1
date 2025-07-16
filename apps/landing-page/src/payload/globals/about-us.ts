@@ -116,5 +116,83 @@ export const AboutUs: GlobalConfig = {
         },
       ],
     },
+    {
+      name: 'missionVisionStory',
+      label: 'Mission, Vision & Story',
+      type: 'group',
+      fields: [
+        {
+          type: 'tabs',
+          tabs: [
+            {
+              label: 'Purpose (Mission & Vision)',
+              fields: [
+                {
+                  name: 'purposeHeading',
+                  label: 'Heading Quote',
+                  type: 'textarea',
+                },
+                {
+                  name: 'mission',
+                  label: 'Mission',
+                  type: 'group',
+                  fields: [
+                    {
+                      name: 'heading',
+                      type: 'text',
+                    },
+                    {
+                      name: 'description',
+                      type: 'richText',
+                    },
+                  ],
+                },
+                {
+                  name: 'vision',
+                  label: 'Vision',
+                  type: 'group',
+                  fields: [
+                    {
+                      name: 'heading',
+                      type: 'text',
+                    },
+                    {
+                      name: 'description',
+                      type: 'richText',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              label: 'Company Story',
+              fields: [
+                {
+                  name: 'storyIntro',
+                  label: 'Heading Quote',
+                  type: 'text',
+                },
+                {
+                  name: 'storyContent',
+                  label: 'Story Content',
+                  type: 'group',
+                  fields: [
+                    {
+                      name: 'heading',
+                      type: 'text',
+                    },
+                    {
+                      name: 'story',
+                      label: 'Story',
+                      type: 'richText',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

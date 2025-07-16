@@ -823,6 +823,64 @@ export interface AboutUs {
         }[]
       | null;
   };
+  missionVisionStory?: {
+    purposeHeading?: string | null;
+    mission?: {
+      heading?: string | null;
+      description?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    vision?: {
+      heading?: string | null;
+      description?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    storyIntro?: string | null;
+    storyContent?: {
+      heading?: string | null;
+      story?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1163,6 +1221,30 @@ export interface AboutUsSelect<T extends boolean = true> {
               description?: T;
               image?: T;
               id?: T;
+            };
+      };
+  missionVisionStory?:
+    | T
+    | {
+        purposeHeading?: T;
+        mission?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+            };
+        vision?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+            };
+        storyIntro?: T;
+        storyContent?:
+          | T
+          | {
+              heading?: T;
+              story?: T;
             };
       };
   updatedAt?: T;
