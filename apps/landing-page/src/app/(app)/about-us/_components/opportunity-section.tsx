@@ -10,9 +10,9 @@ type OpportunitySectionProps = {
 
 export default function OpportunitySection({ data }: OpportunitySectionProps) {
   return (
-    <div className="flex flex-col-reverse lg:flex-row lg:justify-between gap-2 md:px-22 md:py-10 items-center bg-accent p-5">
-      <div className="flex gap-2">
-        <div className="flex flex-col space-y-7 max-w-2xl">
+    <div className="md:px-28 md:py-10 items-center bg-accent p-5">
+      <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row xl:justify-between gap-12">
+        <div className="flex flex-col space-y-7 max-w-2xl justify-center">
           <p className="font-semibold text-4xl text-primary">{data?.title}</p>
           {data?.description ? (
             <div className="text-primary">
@@ -26,14 +26,14 @@ export default function OpportunitySection({ data }: OpportunitySectionProps) {
             </Button>
           </div>
         </div>
+        <img
+          alt="opportunities"
+          width={572}
+          height={576}
+          className="object-contain rounded-xl lg:max-w-[36%] xl:max-w-full"
+          src={getURLFromMedia(data?.image ?? '')}
+        />
       </div>
-      <img
-        alt="opportunities"
-        width={572}
-        height={576}
-        className="object-contain rounded-xl lg:max-w-[36%] xl:max-w-full"
-        src={getURLFromMedia(data?.image ?? '')}
-      />
     </div>
   )
 }

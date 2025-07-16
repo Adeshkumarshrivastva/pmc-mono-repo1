@@ -8,8 +8,8 @@ type TeamMembersSectionProps = {
 
 export default function TeamMembersSection({ data }: TeamMembersSectionProps) {
   return (
-    <div className="bg-primary flex justify-center items-center md:p-22 p-5">
-      <div className="flex flex-col items-center gap-6 w-full">
+    <div className="bg-primary flex justify-center items-center lg:p-22 xl:px-28 p-5">
+      <div className="max-w-7xl mx-auto flex flex-col items-center gap-6 w-full">
         <p className="text-primary-foreground font-semibold md:text-3xl text-lg">{data?.title}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 w-full">
@@ -33,7 +33,9 @@ export default function TeamMembersSection({ data }: TeamMembersSectionProps) {
                       <p className="font-medium text-lg">{member.memberName}</p>
                       {member?.role && <p className="text-sm opacity-80">{member.role}</p>}
                     </div>
-                    <SolarAddCircleOutline className="h-9 w-9 text-primary cursor-pointer text-xs font-normal" />
+                    <div className="h-9 w-9 text-primary rounded-full cursor-pointer text-xs font-normal flex justify-center items-center">
+                      +
+                    </div>
                   </div>
                 </div>
               )

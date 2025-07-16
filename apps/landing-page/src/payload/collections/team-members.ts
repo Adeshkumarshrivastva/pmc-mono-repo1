@@ -1,7 +1,7 @@
 import { CollectionConfig } from 'payload'
 
 export const TeamMembers: CollectionConfig = {
-  slug: 'TeamMembers',
+  slug: 'team-members',
   access: {
     create: () => true,
     read: () => true,

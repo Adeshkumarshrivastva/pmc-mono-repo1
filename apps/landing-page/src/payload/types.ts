@@ -72,7 +72,7 @@ export interface Config {
     blog: Blog;
     experts: Expert;
     'contact-submissions': ContactSubmission;
-    TeamMembers: TeamMember;
+    'team-members': TeamMember;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -84,7 +84,7 @@ export interface Config {
     blog: BlogSelect<false> | BlogSelect<true>;
     experts: ExpertsSelect<false> | ExpertsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
-    TeamMembers: TeamMembersSelect<false> | TeamMembersSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -238,7 +238,7 @@ export interface ContactSubmission {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TeamMembers".
+ * via the `definition` "team-members".
  */
 export interface TeamMember {
   id: string;
@@ -276,7 +276,7 @@ export interface PayloadLockedDocument {
         value: string | ContactSubmission;
       } | null)
     | ({
-        relationTo: 'TeamMembers';
+        relationTo: 'team-members';
         value: string | TeamMember;
       } | null);
   globalSlug?: string | null;
@@ -394,7 +394,7 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TeamMembers_select".
+ * via the `definition` "team-members_select".
  */
 export interface TeamMembersSelect<T extends boolean = true> {
   memberName?: T;
@@ -940,6 +940,25 @@ export interface AboutUs {
     action?: string | null;
     subAction?: string | null;
   };
+  appointmentSection?: {
+    appointmentSection?: {
+      title?: string | null;
+      contacts?:
+        | {
+            phone?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      location?: string | null;
+      socialMediaLinks?:
+        | {
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
+            url?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1327,6 +1346,29 @@ export interface AboutUsSelect<T extends boolean = true> {
         description?: T;
         action?: T;
         subAction?: T;
+      };
+  appointmentSection?:
+    | T
+    | {
+        appointmentSection?:
+          | T
+          | {
+              title?: T;
+              contacts?:
+                | T
+                | {
+                    phone?: T;
+                    id?: T;
+                  };
+              location?: T;
+              socialMediaLinks?:
+                | T
+                | {
+                    socialMediaPlatform?: T;
+                    url?: T;
+                    id?: T;
+                  };
+            };
       };
   updatedAt?: T;
   createdAt?: T;
