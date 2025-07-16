@@ -22,7 +22,7 @@ export const AboutUs: GlobalConfig = {
         {
           name: 'description',
           label: 'Description',
-          type: 'textarea',
+          type: 'richText',
         },
 
         {
