@@ -94,11 +94,13 @@ export interface Config {
     home: Home;
     'deep-tms': DeepTm;
     'contact-us': ContactUs;
+    'about-us': AboutUs;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
+    'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -743,6 +745,32 @@ export interface ContactUs {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-us".
+ */
+export interface AboutUs {
+  id: string;
+  aboutUsHeroSection?: {
+    preHeader?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    overlayContent?: {
+      overlayImage?: (string | null) | Media;
+      heading?: string | null;
+      description?: string | null;
+      statistics?:
+        | {
+            value?: string | null;
+            label?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -1035,6 +1063,36 @@ export interface ContactUsSelect<T extends boolean = true> {
         title?: T;
         subtitle?: T;
         description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-us_select".
+ */
+export interface AboutUsSelect<T extends boolean = true> {
+  aboutUsHeroSection?:
+    | T
+    | {
+        preHeader?: T;
+        heading?: T;
+        description?: T;
+        overlayContent?:
+          | T
+          | {
+              overlayImage?: T;
+              heading?: T;
+              description?: T;
+              statistics?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    id?: T;
+                  };
+            };
       };
   updatedAt?: T;
   createdAt?: T;
