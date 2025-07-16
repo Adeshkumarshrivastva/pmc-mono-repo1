@@ -33,7 +33,7 @@ export default function TeamMembersSection({ data }: TeamMembersSectionProps) {
                       <p className="font-medium text-lg">{member.memberName}</p>
                       {member?.role && <p className="text-sm opacity-80">{member.role}</p>}
                     </div>
-                    <div className="h-9 w-9 text-primary rounded-full cursor-pointer text-xs font-normal flex justify-center items-center">
+                    <div className="h-9 w-9 text-primary rounded-full cursor-pointer font-normal flex justify-center items-center border text-xl">
                       +
                     </div>
                   </div>
