@@ -73,5 +73,48 @@ export const AboutUs: GlobalConfig = {
         },
       ],
     },
+    {
+      name: 'whatWeDoSection',
+      label: 'What We Do Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'heading',
+          label: 'Heading',
+          type: 'text',
+          required: true,
+          defaultValue: 'What We Do',
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'richText',
+        },
+        {
+          name: 'featureCards',
+          label: 'Feature Cards',
+          type: 'array',
+          admin: {
+            description: 'The two cards that appear on the left and right of the image.',
+          },
+          fields: [
+            {
+              name: 'heading',
+              type: 'text',
+            },
+            {
+              name: 'description',
+              type: 'richText',
+            },
+            {
+              name: 'image',
+              label: 'Image',
+              type: 'upload',
+              relationTo: 'media',
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

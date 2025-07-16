@@ -780,6 +780,49 @@ export interface AboutUs {
         | null;
     };
   };
+  whatWeDoSection: {
+    heading: string;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    /**
+     * The two cards that appear on the left and right of the image.
+     */
+    featureCards?:
+      | {
+          heading?: string | null;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          image?: (string | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1106,6 +1149,20 @@ export interface AboutUsSelect<T extends boolean = true> {
                     label?: T;
                     id?: T;
                   };
+            };
+      };
+  whatWeDoSection?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+        featureCards?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+              image?: T;
+              id?: T;
             };
       };
   updatedAt?: T;
