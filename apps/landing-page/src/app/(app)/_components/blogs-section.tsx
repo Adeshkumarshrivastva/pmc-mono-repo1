@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, ChatIcon } from '@/components/ui/icons'
 import { Home } from '@/payload/types'

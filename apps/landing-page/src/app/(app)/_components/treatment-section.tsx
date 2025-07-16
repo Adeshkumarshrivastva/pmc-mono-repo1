@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'

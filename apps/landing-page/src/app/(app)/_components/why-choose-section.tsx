@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Button } from '@/components/ui/button'

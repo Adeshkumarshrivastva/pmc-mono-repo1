@@ -1,8 +1,8 @@
+import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Button } from '@/components/ui/button'
 import { SolarBag4Linear, SolarCallChatRoundedBoldDuotone } from '@/components/ui/icons'
 import { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import { RichText } from '@payloadcms/richtext-lexical/react'
 
 type OpportunitySectionProps = {
   data: AboutUs['opportunitiesSection']

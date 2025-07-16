@@ -1,4 +1,3 @@
-import { SolarAddCircleOutline } from '@/components/ui/icons'
 import { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
@@ -21,6 +20,7 @@ export default function TeamMembersSection({ data }: TeamMembersSectionProps) {
               return (
                 <div key={index} className="bg-white rounded-lg flex flex-col overflow-hidden">
                   <div className="h-[350px] w-full">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={getURLFromMedia(member?.image ?? '')}
                       alt={member?.memberName ?? ''}

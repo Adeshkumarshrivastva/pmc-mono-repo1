@@ -52,6 +52,8 @@ const ContentBlock = ({
   className,
 }: {
   heading?: string | null
+  // TODO: Fix type error
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   description?: any
   className?: string
 }) => {
