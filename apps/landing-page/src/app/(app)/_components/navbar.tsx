@@ -74,6 +74,7 @@ export default function Navbar() {
 
 const NAV_ITEMS = [
   { id: 'home', href: '/', label: 'Home' },
+  { id: 'about', href: '/about', label: 'About' },
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ]
