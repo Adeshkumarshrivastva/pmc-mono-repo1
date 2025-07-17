@@ -1,23 +1,59 @@
 'use client'
 
 import { match, P } from 'ts-pattern'
+import { useForm, useWatch } from 'react-hook-form'
+import { toast } from 'sonner'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '@/components/ui/icons'
-import { Home } from '@/payload/types'
+import { Home, Service } from '@/payload/types'
 import { Button } from '@/components/ui/button'
+import { createLead, leadFormInput, LeadFormInput } from '@/payload/actions'
 
 type AppointmentSectionProps = {
   data: Home['appointmentSection']
+  services: Service[]
 }
 
-export default function AppointmentSection({ data }: AppointmentSectionProps) {
+export default function AppointmentSection({ data, services }: AppointmentSectionProps) {
   const appointmentData = data?.appointmentSection
+
+  const form = useForm<LeadFormInput>({
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phone: '',
+      serviceId: '',
+      subServiceId: '',
+      message: '',
+    },
+    resolver: zodResolver(leadFormInput),
+  })
+
+  const serviceId = useWatch({ control: form.control, name: 'serviceId' })
+  const subServices = services.find((service) => service.id === serviceId)?.subservices?.docs ?? []
+
+  const contactFormMutation = useMutation({
+    mutationFn: createLead,
+    onSuccess: () => {
+      toast('Thank you for your interest!', {
+        description: 'We will get back to you as soon as possible.',
+      })
+      form.reset()
+    },
+    onError: () => {
+      toast('Failed to submit the form. Please try again later.', {
+        description: 'If the problem persists, please contact us directly.',
+      })
+    },
+  })
 
   return (
     <section className="w-full bg-primary py-8 px-4 sm:py-12 sm:px-6 lg:px-28">
       <div className="w-full max-w-7xl mx-auto">
         <div className="bg-primary-foreground rounded-xl border border-border p-4 sm:p-8 lg:p-16 min-h-[600px] lg:h-[700px]">
-          <div className="flex flex-col h-full lg:flex-row lg:items-start lg:justify-between lg:space-x-12 xl:space-x-20">
-            <div className="flex-1 flex flex-col h-full mb-8 lg:mb-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24">
+            <div className="flex flex-col h-full mb-8 lg:mb-0">
               <div className="space-y-4 sm:space-y-6 flex-1">
                 <div className="text-primary text-xs sm:text-sm font-bold tracking-wider">APPOINTMENT</div>
 
@@ -67,27 +103,22 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
             </div>
 
             <div className="w-full lg:w-auto lg:min-w-[400px] xl:min-w-[450px]">
-              <form className="border border-border rounded-xl p-4 sm:p-6 lg:p-8">
+              <form
+                onSubmit={form.handleSubmit((values) => {
+                  contactFormMutation.mutate(values)
+                })}
+                className="bg-primary-foreground border border-border rounded-xl p-4 sm:p-6 lg:p-8"
+              >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="col-span-1">
                     <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Your Name
+                      Full name
                     </label>
                     <input
+                      {...form.register('fullName')}
                       type="text"
                       className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Enter your name"
-                    />
-                  </div>
-
-                  <div className="col-span-1">
-                    <label htmlFor="email" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder="Enter your email"
                     />
                   </div>
 
@@ -96,56 +127,88 @@ export default function AppointmentSection({ data }: AppointmentSectionProps) {
                       Phone Number
                     </label>
                     <input
+                      {...form.register('phone')}
                       type="tel"
                       className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder="Enter your phone"
+                      placeholder="Ex. +91 9012 8934 78"
+                    />
+                  </div>
+
+                  <div className="col-span-full">
+                    <label htmlFor="email" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      {...form.register('email')}
+                      type="email"
+                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      placeholder="Enter your email"
                     />
                   </div>
 
                   <div className="col-span-1">
-                    <label
-                      htmlFor="services"
-                      className="block text-muted-foreground uppercase text-xs font-semibold mb-2"
-                    >
-                      Services
+                    <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
+                      Service
                     </label>
                     <select
-                      id="services"
+                      {...form.register('serviceId')}
                       className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     >
-                      <option value="">Choose one</option>
-                      {/* TODO: Add Other options */}
+                      <option value={''}>Select Service</option>
+                      {services?.map((service) => (
+                        <option key={service.id} value={service.id}>
+                          {service.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="col-span-1">
+                    <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
+                      Sub Service
+                    </label>
+                    <select
+                      {...form.register('subServiceId')}
+                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    >
+                      <option value={''}>Select Sub Service</option>
+                      {subServices.map((service) => {
+                        if (typeof service === 'string') {
+                          return null
+                        }
+
+                        return (
+                          <option key={service.id} value={service.id}>
+                            {service.name}
+                          </option>
+                        )
+                      })}
                     </select>
                   </div>
 
                   <div className="col-span-full sm:col-span-2">
-                    <label htmlFor="date" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Date
+                    <label
+                      htmlFor="message"
+                      className="block text-muted-foreground uppercase text-xs font-semibold mb-2"
+                    >
+                      Tell us your message
                     </label>
-                    <input
-                      id="date"
-                      type="date"
+                    <textarea
+                      {...form.register('message')}
+                      rows={4}
                       className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    />
-                  </div>
-
-                  <div className="col-span-full sm:col-span-2">
-                    <label htmlFor="time" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Time
-                    </label>
-                    <input
-                      id="time"
-                      type="time"
-                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      placeholder="Write your message here..."
                     />
                   </div>
 
                   <div className="col-span-full sm:col-span-2 pt-2">
                     <Button
                       type="submit"
-                      className="w-full py-3 text-sm font-semibold tracking-wider hover:bg-primary/90 transition-colors"
+                      disabled={contactFormMutation.isPending || contactFormMutation.isSuccess}
+                      variant="secondary"
+                      className="inline-flex items-center justify-center space-x-2 rounded-lg cursor-pointer bg-primary text-primary-foreground disabled:pointer-events-none disabled:opacity-50 h-12 px-4 w-full py-3 text-sm font-semibold tracking-wider hover:bg-primary/90 transition-colors"
                     >
-                      MAKE APPOINTMENT
+                      Submit
                     </Button>
                   </div>
                 </div>
