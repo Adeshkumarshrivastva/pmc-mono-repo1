@@ -71,22 +71,28 @@ export interface Config {
     media: Media;
     blog: Blog;
     experts: Expert;
-    'contact-submissions': ContactSubmission;
     'team-members': TeamMember;
     testimonial: Testimonial;
+    services: Service;
+    leads: Lead;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    services: {
+      subservices: 'services';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     blog: BlogSelect<false> | BlogSelect<true>;
     experts: ExpertsSelect<false> | ExpertsSelect<true>;
-    'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     testimonial: TestimonialSelect<false> | TestimonialSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    leads: LeadsSelect<false> | LeadsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -228,20 +234,6 @@ export interface Expert {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-submissions".
- */
-export interface ContactSubmission {
-  id: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  message: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "team-members".
  */
 export interface TeamMember {
@@ -262,6 +254,58 @@ export interface Testimonial {
   auhtorImage: string | Media;
   title: string;
   message: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: string;
+  _order?: string | null;
+  name: string;
+  slug: string;
+  /**
+   * Leave empty for Main Service.
+   */
+  parent?: (string | null) | Service;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  isActive?: boolean | null;
+  subservices?: {
+    docs?: (string | Service)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads".
+ */
+export interface Lead {
+  id: string;
+  fullName: string;
+  email?: string | null;
+  phone: string;
+  service?: (string | null) | Service;
+  subService?: (string | null) | Service;
+  message?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -289,16 +333,20 @@ export interface PayloadLockedDocument {
         value: string | Expert;
       } | null)
     | ({
-        relationTo: 'contact-submissions';
-        value: string | ContactSubmission;
-      } | null)
-    | ({
         relationTo: 'team-members';
         value: string | TeamMember;
       } | null)
     | ({
         relationTo: 'testimonial';
         value: string | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: string | Service;
+      } | null)
+    | ({
+        relationTo: 'leads';
+        value: string | Lead;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -402,19 +450,6 @@ export interface ExpertsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-submissions_select".
- */
-export interface ContactSubmissionsSelect<T extends boolean = true> {
-  fullName?: T;
-  email?: T;
-  phone?: T;
-  address?: T;
-  message?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "team-members_select".
  */
 export interface TeamMembersSelect<T extends boolean = true> {
@@ -432,6 +467,35 @@ export interface TestimonialSelect<T extends boolean = true> {
   authorName?: T;
   auhtorImage?: T;
   title?: T;
+  message?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  slug?: T;
+  parent?: T;
+  description?: T;
+  isActive?: T;
+  subservices?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads_select".
+ */
+export interface LeadsSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  phone?: T;
+  service?: T;
+  subService?: T;
   message?: T;
   updatedAt?: T;
   createdAt?: T;

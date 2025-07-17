@@ -11,13 +11,14 @@ import { DeepTms } from './globals/deep-tms'
 import { ContactUs } from './globals/contact-us'
 import { Blog } from './collections/blog'
 import { Experts } from './collections/experts'
-import { ContactSubmissions } from './collections/contact-submissions'
 import { AboutUs } from './globals/about-us'
 import { TeamMembers } from './collections/team-members'
 import { Users } from './collections/users'
 import { Media } from './collections/media'
 import { Testimonial } from './collections/testimonial'
 import { OurServices } from './globals/our-services'
+import { Services } from './collections/services'
+import { Leads } from './collections/leads'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -29,7 +30,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Blog, Experts, ContactSubmissions, TeamMembers, Testimonial],
+  collections: [Users, Media, Blog, Experts, TeamMembers, Testimonial, Services, Leads],
   globals: [Home, DeepTms, OurServices, ContactUs, AboutUs],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
