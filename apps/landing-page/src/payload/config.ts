@@ -16,6 +16,7 @@ import { AboutUs } from './globals/about-us'
 import { TeamMembers } from './collections/team-members'
 import { Users } from './collections/users'
 import { Media } from './collections/media'
+import { Services } from './globals/services'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,7 +29,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Blog, Experts, ContactSubmissions, TeamMembers],
-  globals: [Home, DeepTms, ContactUs, AboutUs],
+  globals: [Home, DeepTms, Services, ContactUs, AboutUs],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
   typescript: {
