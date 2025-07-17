@@ -97,14 +97,14 @@ export interface Config {
   globals: {
     home: Home;
     'deep-tms': DeepTm;
-    services: Service;
+    ourServices: OurService;
     'contact-us': ContactUs;
     'about-us': AboutUs;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
-    services: ServicesSelect<false> | ServicesSelect<true>;
+    ourServices: OurServicesSelect<false> | OurServicesSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
   };
@@ -616,15 +616,7 @@ export interface Home {
   };
   testimonialSection?: {
     title?: string | null;
-    testimonialSlides?:
-      | {
-          image?: (string | null) | Media;
-          title?: string | null;
-          quote?: string | null;
-          quoteAuthor?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    testimonialSlides?: (string | Testimonial)[] | null;
   };
   faqSection?: {
     title?: string | null;
@@ -779,9 +771,9 @@ export interface DeepTm {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services".
+ * via the `definition` "ourServices".
  */
-export interface Service {
+export interface OurService {
   id: string;
   servicesHeroSection?: {
     image?: (string | null) | Media;
@@ -1155,15 +1147,7 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        testimonialSlides?:
-          | T
-          | {
-              image?: T;
-              title?: T;
-              quote?: T;
-              quoteAuthor?: T;
-              id?: T;
-            };
+        testimonialSlides?: T;
       };
   faqSection?:
     | T
@@ -1317,9 +1301,9 @@ export interface DeepTmsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services_select".
+ * via the `definition` "ourServices_select".
  */
-export interface ServicesSelect<T extends boolean = true> {
+export interface OurServicesSelect<T extends boolean = true> {
   servicesHeroSection?:
     | T
     | {

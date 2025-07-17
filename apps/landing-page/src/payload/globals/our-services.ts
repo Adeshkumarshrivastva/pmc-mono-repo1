@@ -1,8 +1,8 @@
 import { GlobalConfig } from 'payload'
 
-export const Services: GlobalConfig = {
-  slug: 'services',
-  label: 'Services',
+export const OurServices: GlobalConfig = {
+  slug: 'ourServices',
+  label: 'Our Services',
   fields: [
     {
       name: 'servicesHeroSection',

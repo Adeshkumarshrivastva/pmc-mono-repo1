@@ -1,12 +1,12 @@
 import SVGImageIcon from '@/components/svg-image-icon'
 import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
-import { Service } from '@/payload/types'
+import { OurService } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 
 type HeroSectionProps = {
-  data: Service['servicesHeroSection']
+  data: OurService['servicesHeroSection']
 }
 
 export default function HeroSection({ data }: HeroSectionProps) {
