@@ -73,6 +73,7 @@ export interface Config {
     experts: Expert;
     'contact-submissions': ContactSubmission;
     'team-members': TeamMember;
+    testimonial: Testimonial;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -85,6 +86,7 @@ export interface Config {
     experts: ExpertsSelect<false> | ExpertsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    testimonial: TestimonialSelect<false> | TestimonialSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -252,6 +254,19 @@ export interface TeamMember {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonial".
+ */
+export interface Testimonial {
+  id: string;
+  authorName: string;
+  auhtorImage: string | Media;
+  title: string;
+  message: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -280,6 +295,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'team-members';
         value: string | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'testimonial';
+        value: string | Testimonial;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -402,6 +421,18 @@ export interface TeamMembersSelect<T extends boolean = true> {
   memberName?: T;
   image?: T;
   role?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonial_select".
+ */
+export interface TestimonialSelect<T extends boolean = true> {
+  authorName?: T;
+  auhtorImage?: T;
+  title?: T;
+  message?: T;
   updatedAt?: T;
   createdAt?: T;
 }

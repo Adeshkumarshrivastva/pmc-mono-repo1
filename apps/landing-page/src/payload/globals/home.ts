@@ -2,6 +2,7 @@ import { GlobalConfig } from 'payload'
 import { appointmentSection } from '../fields/appointment-section'
 import { faqSection } from '../fields/faq-section'
 import { expertsSection } from '../fields/experts-section'
+import { testimonialSection } from '../fields/testimonial-section'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -282,47 +283,7 @@ export const Home: GlobalConfig = {
       ],
     },
     appointmentSection,
-    {
-      name: 'testimonialSection',
-      label: 'Testimonial Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-        },
-        {
-          name: 'testimonialSlides',
-          label: 'Testimonial Slides',
-          type: 'array',
-
-          fields: [
-            {
-              name: 'image',
-              label: 'Image',
-              type: 'upload',
-              relationTo: 'media',
-            },
-            {
-              name: 'title',
-              label: 'Title',
-              type: 'text',
-            },
-            {
-              name: 'quote',
-              label: 'Quote',
-              type: 'text',
-            },
-            {
-              name: 'quoteAuthor',
-              label: 'Quote Author',
-              type: 'text',
-            },
-          ],
-        },
-      ],
-    },
+    testimonialSection,
     faqSection,
     expertsSection,
     {
