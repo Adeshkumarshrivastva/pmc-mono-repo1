@@ -76,5 +76,6 @@ const NAV_ITEMS = [
   { id: 'home', href: '/', label: 'Home' },
   { id: 'about', href: '/about-us', label: 'About Us' },
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
+  { id: 'services', href: '/services', label: 'Services' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ]
