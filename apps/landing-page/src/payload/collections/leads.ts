@@ -1,10 +1,11 @@
 import { CollectionConfig } from 'payload'
 
-export const ContactSubmissions: CollectionConfig = {
-  slug: 'contact-submissions',
+export const Leads: CollectionConfig = {
+  slug: 'leads',
   access: {
     read: () => true,
-    create: () => true,
+    create: () => false,
+    update: () => false,
   },
   fields: [
     {
@@ -17,7 +18,6 @@ export const ContactSubmissions: CollectionConfig = {
       name: 'email',
       label: 'Email Address',
       type: 'email',
-      required: true,
     },
     {
       name: 'phone',
@@ -26,16 +26,23 @@ export const ContactSubmissions: CollectionConfig = {
       required: true,
     },
     {
-      name: 'address',
-      label: 'Address',
-      type: 'text',
-      required: true,
+      name: 'service',
+      label: 'Service',
+      type: 'relationship',
+      relationTo: 'services',
+      hasMany: false,
+    },
+    {
+      name: 'subService',
+      label: 'Sub Service',
+      type: 'relationship',
+      relationTo: 'services',
+      hasMany: false,
     },
     {
       name: 'message',
-      label: 'Tell us your message',
+      label: 'Message',
       type: 'textarea',
-      required: true,
     },
   ],
   timestamps: true,

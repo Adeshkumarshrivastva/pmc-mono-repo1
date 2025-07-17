@@ -26,6 +26,7 @@ export default function OpportunitySection({ data }: OpportunitySectionProps) {
             </Button>
           </div>
         </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt="opportunities"
           width={572}

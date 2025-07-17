@@ -1,33 +1,38 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { useMutation } from '@tanstack/react-query'
-import { ContactUs } from '@/payload/types'
+import { ContactUs, Service } from '@/payload/types'
 import { Button } from '@/components/ui/button'
-import { contactFormInput, ContactFormInput } from '@/payload/actions/contact-form/contact-form.input'
-import { createContactFormSubmission } from '@/payload/actions'
+import { leadFormInput, LeadFormInput } from '@/payload/actions/leads/leads.input'
+import { createLead } from '@/payload/actions'
 
 type ContactFormSectionProps = {
   data: ContactUs['contactUs']
+  services: Service[]
 }
 
-export default function ContactFormSection({ data }: ContactFormSectionProps) {
-  const form = useForm<ContactFormInput>({
+export default function ContactFormSection({ data, services }: ContactFormSectionProps) {
+  const form = useForm<LeadFormInput>({
     defaultValues: {
       fullName: '',
       email: '',
       phone: '',
-      address: '',
+      serviceId: '',
+      subServiceId: '',
       message: '',
     },
-    resolver: zodResolver(contactFormInput),
+    resolver: zodResolver(leadFormInput),
   })
 
+  const serviceId = useWatch({ control: form.control, name: 'serviceId' })
+  const subServices = services.find((service) => service.id === serviceId)?.subservices?.docs ?? []
+
   const contactFormMutation = useMutation({
-    mutationFn: createContactFormSubmission,
+    mutationFn: createLead,
     onSuccess: () => {
       toast('Thank you for your interest!', {
         description: 'We will get back to you as soon as possible.',
@@ -95,16 +100,44 @@ export default function ContactFormSection({ data }: ContactFormSectionProps) {
                     />
                   </div>
 
-                  <div className="col-span-full">
-                    <label htmlFor="address" className="block text-primary-foreground text-xs font-semibold mb-2">
-                      Address
+                  <div className="col-span-1">
+                    <label htmlFor="name" className="block text-primary-foreground text-xs font-semibold mb-2">
+                      Service
                     </label>
-                    <input
-                      {...form.register('address')}
-                      type="text"
+                    <select
+                      {...form.register('serviceId')}
                       className="w-full bg-primary-foreground rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                      placeholder="Ex. 12 C Dehradun"
-                    />
+                    >
+                      <option value={''}>Select Service</option>
+                      {services?.map((service) => (
+                        <option key={service.id} value={service.id}>
+                          {service.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="col-span-1">
+                    <label htmlFor="name" className="block text-primary-foreground text-xs font-semibold mb-2">
+                      Sub Service
+                    </label>
+                    <select
+                      {...form.register('subServiceId')}
+                      className="w-full bg-primary-foreground rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                    >
+                      <option value={''}>Select Sub Service</option>
+                      {subServices.map((service) => {
+                        if (typeof service === 'string') {
+                          return null
+                        }
+
+                        return (
+                          <option key={service.id} value={service.id}>
+                            {service.name}
+                          </option>
+                        )
+                      })}
+                    </select>
                   </div>
 
                   <div className="col-span-full sm:col-span-2">
