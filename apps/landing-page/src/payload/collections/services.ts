@@ -20,6 +20,12 @@ export const Services: CollectionConfig = {
       index: true,
     },
     {
+      name: 'image',
+      type: 'upload',
+      label: 'Image',
+      relationTo: 'media',
+    },
+    {
       name: 'parent',
       type: 'relationship',
       label: 'Parent Service',

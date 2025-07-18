@@ -103,14 +103,14 @@ export interface Config {
   globals: {
     home: Home;
     'deep-tms': DeepTm;
-    ourServices: OurService;
+    'our-services': OurService;
     'contact-us': ContactUs;
     'about-us': AboutUs;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
-    ourServices: OurServicesSelect<false> | OurServicesSelect<true>;
+    'our-services': OurServicesSelect<false> | OurServicesSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
   };
@@ -266,6 +266,7 @@ export interface Service {
   _order?: string | null;
   name: string;
   slug: string;
+  image?: (string | null) | Media;
   /**
    * Leave empty for Main Service.
    */
@@ -479,6 +480,7 @@ export interface ServicesSelect<T extends boolean = true> {
   _order?: T;
   name?: T;
   slug?: T;
+  image?: T;
   parent?: T;
   description?: T;
   isActive?: T;
@@ -835,7 +837,7 @@ export interface DeepTm {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ourServices".
+ * via the `definition` "our-services".
  */
 export interface OurService {
   id: string;
@@ -1365,7 +1367,7 @@ export interface DeepTmsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ourServices_select".
+ * via the `definition` "our-services_select".
  */
 export interface OurServicesSelect<T extends boolean = true> {
   servicesHeroSection?:

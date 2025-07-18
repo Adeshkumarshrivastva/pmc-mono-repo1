@@ -1,9 +1,9 @@
+import { RichText } from '@payloadcms/richtext-lexical/react'
 import SVGImageIcon from '@/components/svg-image-icon'
 import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import { OurService } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import { RichText } from '@payloadcms/richtext-lexical/react'
 
 type HeroSectionProps = {
   data: OurService['servicesHeroSection']
@@ -14,6 +14,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
     <section className="w-full bg-accent">
       <div className="p-6 sm:p-10 lg:py-20 lg:px-5 flex flex-col gap-10 sm:gap-15 lg:gap-20 max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-5 lg:gap-5 items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={getURLFromMedia(data?.image ?? '')}
             alt={`services`}
