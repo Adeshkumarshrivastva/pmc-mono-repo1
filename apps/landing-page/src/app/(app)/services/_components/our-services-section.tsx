@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
@@ -44,7 +45,9 @@ function ServiceCard({ service }: { service: Service }) {
           </ul>
         </div>
         <div>
-          <Button className="w-full sm:w-auto">View all Services</Button>
+          <Link href={`/services/${service.slug}`}>
+            <Button className="w-full sm:w-auto">View all Services</Button>
+          </Link>
         </div>
       </div>
       <div className="lg:col-span-1 order-first lg:order-last">

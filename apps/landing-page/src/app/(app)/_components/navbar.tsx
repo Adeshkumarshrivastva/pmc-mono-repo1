@@ -27,7 +27,7 @@ export default function Navbar() {
 
         <div className="flex-1 hidden md:flex items-center justify-center space-x-8">
           {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href
+            const isActive = `/${pathname.split('/')[1]}` === item.href
             return (
               <Link
                 key={item.id}
