@@ -1,4 +1,5 @@
 import { GlobalConfig } from 'payload'
+import { testimonialSection } from '../fields/testimonial-section'
 
 export const OurServices: GlobalConfig = {
   slug: 'our-services',
@@ -55,5 +56,6 @@ export const OurServices: GlobalConfig = {
         },
       ],
     },
+    testimonialSection,
   ],
 }

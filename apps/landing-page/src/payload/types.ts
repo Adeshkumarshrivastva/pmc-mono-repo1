@@ -869,6 +869,10 @@ export interface OurService {
         }[]
       | null;
   };
+  testimonialSection?: {
+    title?: string | null;
+    testimonialSlides?: (string | Testimonial)[] | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1385,6 +1389,12 @@ export interface OurServicesSelect<T extends boolean = true> {
               featureImage?: T;
               id?: T;
             };
+      };
+  testimonialSection?:
+    | T
+    | {
+        title?: T;
+        testimonialSlides?: T;
       };
   updatedAt?: T;
   createdAt?: T;

@@ -18,9 +18,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
           <img
             src={getURLFromMedia(data?.image ?? '')}
             alt={`services`}
-            width={545}
-            height={505}
-            className="object-contain rounded-xl w-full max-w-sm sm:max-w-md lg:max-w-none lg:w-[400px]"
+            className="object-cover rounded-lg sm:rounded-xl w-full max-w-sm sm:max-w-md lg:max-w-none lg:w-[400px] h-[300px] sm:h-[400px] lg:h-[500px] lg:flex-shrink-0"
           />
           <div className="p-4 sm:p-8 lg:p-15 w-full">
             <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8 pb-4 sm:pb-5 lg:pb-6">
