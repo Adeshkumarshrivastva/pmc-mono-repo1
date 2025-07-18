@@ -17,7 +17,11 @@ export default function PackagesSection({ data }: PackagesSectionProps) {
             {data?.availablePackages && data?.availablePackages.length > 0 ? (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
                 {data.availablePackages.map((pkg, index) => (
-                  <div key={index} className="rounded-2xl border border-border space-y-2 p-2 bg-card">
+                  <div key={index} className="relative rounded-2xl border border-border space-y-2 p-2 bg-card">
+                    {/* TODO: Fetch this from CMS */}
+                    {index === 1 ? (
+                      <div className="absolute top-4 right-4 rounded-2xl bg-accent text-sm px-5 py-1.5">Best Value</div>
+                    ) : null}
                     <div
                       className={cn(
                         'border rounded-xl p-8 space-y-2',
@@ -64,10 +68,7 @@ export default function PackagesSection({ data }: PackagesSectionProps) {
                       )}
                     >
                       <p
-                        className={cn(
-                          'font-medium',
-                          index === 1 ? 'text-primary-foreground' : 'text-muted-foreground',
-                        )}
+                        className={cn('font-medium', index === 1 ? 'text-primary-foreground' : 'text-muted-foreground')}
                       >
                         {pkg?.description}
                       </p>

@@ -1,25 +1,14 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
 import { DialogTrigger } from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { getServices } from '@/payload/actions'
-import { Service } from '@/payload/types'
 
 type AppointmentFormProps = {
   trigger: React.ReactNode
 }
 
 export default function AppointmentForm({ trigger }: AppointmentFormProps) {
-  const getServicesQuery = useQuery({
-    queryKey: ['main-services'],
-    queryFn: async () => {
-      const services = await getServices({})
-      return services.docs
-    },
-  })
-
   // TODO: Open form in Drawer in mobile
   return (
     <Dialog>
@@ -31,13 +20,13 @@ export default function AppointmentForm({ trigger }: AppointmentFormProps) {
             Fill out the form below, and we&apos;ll get back to you as soon as possible.
           </DialogDescription>
         </DialogHeader>
-        <InputForm services={getServicesQuery?.data ? getServicesQuery.data : []} />
+        <InputForm />
       </DialogContent>
     </Dialog>
   )
 }
 
-function InputForm({ services }: { services: Service[] }) {
+function InputForm() {
   return (
     <form className="border border-border rounded-xl p-4 sm:p-6 lg:p-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -72,23 +61,6 @@ function InputForm({ services }: { services: Service[] }) {
             className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             placeholder="Enter your email"
           />
-        </div>
-
-        <div className="col-span-full">
-          <label htmlFor="services" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-            Services
-          </label>
-          <select
-            id="services"
-            className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-          >
-            <option value="">Choose one</option>
-            {services.map((service) => (
-              <option key={service.id} value={service.id}>
-                {service.name}
-              </option>
-            ))}
-          </select>
         </div>
 
         <div className="col-span-full sm:col-span-1">

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import SVGImageIcon from '@/components/svg-image-icon'
 import { Button } from '@/components/ui/button'
@@ -36,7 +37,9 @@ export default function HeroSection({ data }: HeroSectionProps) {
               ) : null}
             </div>
             <div className="flex justify-center lg:justify-start">
-              <Button icon={<CallIcon />}>{data?.action}</Button>
+              <Link href={'/contact-us'}>
+                <Button icon={<CallIcon />}>{data?.action}</Button>
+              </Link>
             </div>
           </div>
         </div>
