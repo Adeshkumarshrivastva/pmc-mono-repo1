@@ -49,7 +49,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
   })
 
   return (
-    <section className="w-full bg-primary py-8 px-4 sm:py-12 sm:px-6 lg:px-28">
+    <section className="w-full bg-primary py-8 px-4 sm:py-12 sm:px-6 lg:px-28" id="appointement-section">
       <div className="w-full max-w-7xl mx-auto">
         <div className="bg-primary-foreground rounded-xl border border-border p-4 sm:p-8 lg:p-16 min-h-[600px] lg:h-[700px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24">

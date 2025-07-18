@@ -14,6 +14,10 @@ export default function Navbar() {
   const pathname = usePathname()
   const [sheetOpen, setSheetOpen] = useState(false)
 
+  const handleBooking = () => {
+    document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground" style={{ height: NAVBAR_HEIGHT }}>
       <nav className="flex items-center justify-between h-full px-4 py-2 mx-auto">
@@ -42,7 +46,14 @@ export default function Navbar() {
           })}
         </div>
 
-        <Button variant="secondary" icon={<CallIcon />} className="hidden md:flex">
+        <Button
+          variant="secondary"
+          icon={<CallIcon />}
+          className="hidden md:flex"
+          onClick={() => {
+            handleBooking()
+          }}
+        >
           Book Appointment
         </Button>
 

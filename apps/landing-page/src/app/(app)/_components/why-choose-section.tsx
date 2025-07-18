@@ -1,3 +1,5 @@
+'use client'
+
 import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Button } from '@/components/ui/button'
@@ -9,11 +11,22 @@ type WhyChooseSectionProps = {
 }
 
 export default function WhyChooseSection({ data }: WhyChooseSectionProps) {
+  const handleBooking = () => {
+    document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <div className="w-full flex justify-around bg-primary px-9 overflow-hidden py-2 flex-col lg:flex-row">
       <div className="flex flex-col justify-between items-start space-y-6 pt-10">
         <p className="text-5xl font-semibold text-primary-foreground max-w-[539px]">{data?.title ?? ''}</p>
-        <Button icon={<CallIcon />} variant={'secondary'} className="font-normal">
+        <Button
+          icon={<CallIcon />}
+          variant={'secondary'}
+          className="font-normal"
+          onClick={() => {
+            handleBooking()
+          }}
+        >
           {data?.action}
         </Button>
         {/* eslint-disable-next-line @next/next/no-img-element */}
