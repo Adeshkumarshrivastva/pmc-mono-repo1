@@ -30,7 +30,7 @@ export default function OurServicesSection({ services }: OurServicesSectionProps
   )
 }
 
-const ServiceCard = ({ service }: { service: Service }) => {
+function ServiceCard({ service }: { service: Service }) {
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-accent grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 rounded-3xl">
       <div className="flex flex-col lg:col-span-2 space-y-8 lg:space-y-14">
