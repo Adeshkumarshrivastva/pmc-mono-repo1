@@ -23,6 +23,10 @@ export function TestimonialSection({ data }: testimonialSectionProps) {
 
   const currentTestimonial = slides[currentIndex]
 
+  if (typeof currentTestimonial === 'string') {
+    return null
+  }
+
   return (
     <section className="w-full bg-accent">
       <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-20 xl:px-16 xl:py-24">
@@ -39,16 +43,16 @@ export function TestimonialSection({ data }: testimonialSectionProps) {
                       width={427}
                       height={427}
                       className="rounded-md w-full max-w-[280px] sm:max-w-[350px] lg:max-w-[427px] h-auto object-cover"
-                      src={getURLFromMedia(currentTestimonial?.image ?? '')}
+                      src={getURLFromMedia(currentTestimonial?.auhtorImage ?? '')}
                     />
                   </div>
                   <div className="flex flex-col space-y-4 sm:space-y-6 lg:space-y-10 text-center md:text-left">
                     <p className="font-semibold text-lg sm:text-xl lg:text-2xl text-primary">
                       {currentTestimonial.title}
                     </p>
-                    <p className="text-sm sm:text-base leading-relaxed">{currentTestimonial.quote}</p>
+                    <p className="text-sm sm:text-base leading-relaxed">{currentTestimonial.message}</p>
                     <p className="text-base sm:text-lg lg:text-xl font-semibold text-foreground">
-                      {currentTestimonial.quoteAuthor}
+                      {currentTestimonial.authorName}
                     </p>
                   </div>
                 </div>
