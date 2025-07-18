@@ -46,7 +46,7 @@ export default function MissionVisionSection({ data }: MissionVisionStoryProps) 
   )
 }
 
-const ContentBlock = ({
+function ContentBlock({
   heading,
   description,
   className,
@@ -56,7 +56,7 @@ const ContentBlock = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   description?: any
   className?: string
-}) => {
+}) {
   if (!heading && !description) return null
 
   return (

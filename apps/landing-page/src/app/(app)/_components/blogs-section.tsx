@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { ArrowRightIcon, ChatIcon } from '@/components/ui/icons'
+import { CircleArrowRightIcon, ChatIcon } from '@/components/ui/icons'
 import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
@@ -61,7 +61,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                         </div>
 
                         <Button
-                          icon={<ArrowRightIcon className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />}
+                          icon={<CircleArrowRightIcon className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />}
                           className="bg-transparent hover:bg-transparent p-2 flex-shrink-0"
                         />
                       </div>

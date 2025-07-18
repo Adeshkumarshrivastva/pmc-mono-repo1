@@ -15,6 +15,8 @@ import { AboutUs } from './globals/about-us'
 import { TeamMembers } from './collections/team-members'
 import { Users } from './collections/users'
 import { Media } from './collections/media'
+import { Testimonial } from './collections/testimonial'
+import { OurServices } from './globals/our-services'
 import { Services } from './collections/services'
 import { Leads } from './collections/leads'
 
@@ -28,8 +30,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Blog, Experts, TeamMembers, Services, Leads],
-  globals: [Home, DeepTms, ContactUs, AboutUs],
+  collections: [Users, Media, Blog, Experts, TeamMembers, Testimonial, Services, Leads],
+  globals: [Home, DeepTms, OurServices, ContactUs, AboutUs],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
   typescript: {

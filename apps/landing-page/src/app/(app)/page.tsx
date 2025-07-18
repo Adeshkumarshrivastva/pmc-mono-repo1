@@ -1,5 +1,6 @@
 import { getPayloadClient } from '@/lib/payload'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
+import { getServices } from '@/payload/actions'
 import HeroSection from './_components/hero-section'
 import TreatmentSection from './_components/treatment-section'
 import AppointmentSection from './_components/appointment-section'
@@ -28,6 +29,8 @@ export default async function HomePage() {
     slug: 'home',
   })
 
+  const services = await getServices({})
+
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
       <HeroSection data={heroSetion} />
@@ -35,9 +38,9 @@ export default async function HomePage() {
       <TreatmentSection data={treatmentSection} />
       <WhyChooseSection data={whyChooseSection} />
       <ExpertsSection data={expertsSection} />
-      <TestimonialSection data={testimonialSection} />
       <PackagesSection data={packagesSection} />
-      <AppointmentSection data={appointmentSection} />
+      <AppointmentSection data={appointmentSection} services={services.docs} />
+      <TestimonialSection data={testimonialSection} />
       <FAQSection data={faqSection} />
       <BlogsSection data={blogsSection} />
     </div>

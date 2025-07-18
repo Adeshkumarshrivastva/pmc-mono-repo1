@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import { getURLFromMedia } from '@/payload/utils'
 import { Home } from '@/payload/types'
+import AppointmentForm from './appointment-form'
 
 type HeroSectionProps = {
   data: Home['heroSetion']
@@ -34,9 +35,13 @@ export default function HeroSection({ data }: HeroSectionProps) {
 
             {data?.heroSectionAction ? (
               <div className="mt-8">
-                <Button variant="secondary" icon={<CallIcon />} className="w-full sm:w-auto">
-                  {data.heroSectionAction}
-                </Button>
+                <AppointmentForm
+                  trigger={
+                    <Button variant="secondary" icon={<CallIcon />} className="w-full sm:w-auto">
+                      {data.heroSectionAction}
+                    </Button>
+                  }
+                />
               </div>
             ) : null}
           </div>

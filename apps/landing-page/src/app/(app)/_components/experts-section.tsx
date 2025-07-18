@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { CallIcon, OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
 import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import AppointmentForm from './appointment-form'
 
 type ExportsectionProps = {
   data: Home['expertsSection']
@@ -78,13 +79,17 @@ export default function ExpertsSection({ data }: ExportsectionProps) {
                       </div>
                     ) : null}
                     <div className="flex justify-center sm:justify-start">
-                      <Button
-                        icon={<CallIcon />}
-                        variant={'secondary'}
-                        className="font-normal text-sm sm:text-base w-full sm:w-auto"
-                      >
-                        {data?.action}
-                      </Button>
+                      <AppointmentForm
+                        trigger={
+                          <Button
+                            icon={<CallIcon />}
+                            variant={'secondary'}
+                            className="font-normal text-sm sm:text-base w-full sm:w-auto"
+                          >
+                            {data?.action}
+                          </Button>
+                        }
+                      />
                     </div>
                   </div>
                 </div>

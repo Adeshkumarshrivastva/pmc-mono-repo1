@@ -72,6 +72,7 @@ export interface Config {
     blog: Blog;
     experts: Expert;
     'team-members': TeamMember;
+    testimonial: Testimonial;
     services: Service;
     leads: Lead;
     'payload-locked-documents': PayloadLockedDocument;
@@ -89,6 +90,7 @@ export interface Config {
     blog: BlogSelect<false> | BlogSelect<true>;
     experts: ExpertsSelect<false> | ExpertsSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    testimonial: TestimonialSelect<false> | TestimonialSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     leads: LeadsSelect<false> | LeadsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -101,12 +103,14 @@ export interface Config {
   globals: {
     home: Home;
     'deep-tms': DeepTm;
+    'our-services': OurService;
     'contact-us': ContactUs;
     'about-us': AboutUs;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
+    'our-services': OurServicesSelect<false> | OurServicesSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
   };
@@ -242,6 +246,19 @@ export interface TeamMember {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonial".
+ */
+export interface Testimonial {
+  id: string;
+  authorName: string;
+  auhtorImage: string | Media;
+  title: string;
+  message: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
 export interface Service {
@@ -249,6 +266,7 @@ export interface Service {
   _order?: string | null;
   name: string;
   slug: string;
+  image?: (string | null) | Media;
   /**
    * Leave empty for Main Service.
    */
@@ -318,6 +336,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'team-members';
         value: string | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'testimonial';
+        value: string | Testimonial;
       } | null)
     | ({
         relationTo: 'services';
@@ -440,12 +462,25 @@ export interface TeamMembersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonial_select".
+ */
+export interface TestimonialSelect<T extends boolean = true> {
+  authorName?: T;
+  auhtorImage?: T;
+  title?: T;
+  message?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
   _order?: T;
   name?: T;
   slug?: T;
+  image?: T;
   parent?: T;
   description?: T;
   isActive?: T;
@@ -647,15 +682,7 @@ export interface Home {
   };
   testimonialSection?: {
     title?: string | null;
-    testimonialSlides?:
-      | {
-          image?: (string | null) | Media;
-          title?: string | null;
-          quote?: string | null;
-          quoteAuthor?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    testimonialSlides?: (string | Testimonial)[] | null;
   };
   faqSection?: {
     title?: string | null;
@@ -801,6 +828,43 @@ export interface DeepTm {
       | {
           question?: string | null;
           answer?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "our-services".
+ */
+export interface OurService {
+  id: string;
+  servicesHeroSection?: {
+    image?: (string | null) | Media;
+    title?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    action?: string | null;
+    featureCards?:
+      | {
+          title?: string | null;
+          description?: string | null;
+          featureImage?: (string | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -1149,15 +1213,7 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        testimonialSlides?:
-          | T
-          | {
-              image?: T;
-              title?: T;
-              quote?: T;
-              quoteAuthor?: T;
-              id?: T;
-            };
+        testimonialSlides?: T;
       };
   faqSection?:
     | T
@@ -1302,6 +1358,31 @@ export interface DeepTmsSelect<T extends boolean = true> {
           | {
               question?: T;
               answer?: T;
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "our-services_select".
+ */
+export interface OurServicesSelect<T extends boolean = true> {
+  servicesHeroSection?:
+    | T
+    | {
+        image?: T;
+        title?: T;
+        description?: T;
+        action?: T;
+        featureCards?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              featureImage?: T;
               id?: T;
             };
       };

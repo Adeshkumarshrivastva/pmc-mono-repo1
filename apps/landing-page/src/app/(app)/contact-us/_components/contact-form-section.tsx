@@ -77,18 +77,6 @@ export default function ContactFormSection({ data, services }: ContactFormSectio
                   </div>
 
                   <div className="col-span-1">
-                    <label htmlFor="email" className="block text-primary-foreground text-xs font-semibold mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      {...form.register('email')}
-                      type="email"
-                      className="w-full bg-primary-foreground rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-
-                  <div className="col-span-full">
                     <label htmlFor="phone" className="block text-primary-foreground text-xs font-semibold mb-2">
                       Phone Number
                     </label>
@@ -97,6 +85,18 @@ export default function ContactFormSection({ data, services }: ContactFormSectio
                       type="tel"
                       className="w-full bg-primary-foreground rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                       placeholder="Ex. +91 9012 8934 78"
+                    />
+                  </div>
+
+                  <div className="col-span-full">
+                    <label htmlFor="email" className="block text-primary-foreground text-xs font-semibold mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      {...form.register('email')}
+                      type="email"
+                      className="w-full bg-primary-foreground rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                      placeholder="Enter your email"
                     />
                   </div>
 

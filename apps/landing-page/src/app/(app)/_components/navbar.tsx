@@ -14,9 +14,13 @@ export default function Navbar() {
   const pathname = usePathname()
   const [sheetOpen, setSheetOpen] = useState(false)
 
+  const handleBooking = () => {
+    document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground" style={{ height: NAVBAR_HEIGHT }}>
-      <nav className="flex items-center justify-between h-full px-4 py-2 max-w-7xl mx-auto">
+      <nav className="flex items-center justify-between h-full px-4 py-2 mx-auto">
         <Link href="/" className="flex items-center gap-2">
           <Logo className="size-16" />
           <div className="text-left">
@@ -27,7 +31,7 @@ export default function Navbar() {
 
         <div className="flex-1 hidden md:flex items-center justify-center space-x-8">
           {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href
+            const isActive = `/${pathname.split('/')[1]}` === item.href
             return (
               <Link
                 key={item.id}
@@ -42,7 +46,14 @@ export default function Navbar() {
           })}
         </div>
 
-        <Button variant="secondary" icon={<CallIcon />} className="hidden md:flex">
+        <Button
+          variant="secondary"
+          icon={<CallIcon />}
+          className="hidden md:flex"
+          onClick={() => {
+            handleBooking()
+          }}
+        >
           Book Appointment
         </Button>
 
@@ -76,5 +87,6 @@ const NAV_ITEMS = [
   { id: 'home', href: '/', label: 'Home' },
   { id: 'about', href: '/about-us', label: 'About Us' },
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
+  { id: 'services', href: '/services', label: 'Services' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ]

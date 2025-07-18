@@ -43,9 +43,11 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
 
               {data?.action ? (
                 <div className="pt-2">
-                  <Button icon={<ChatIcon />} className="w-full sm:w-auto">
-                    {data.action}
-                  </Button>
+                  <a href="/contact-us">
+                    <Button icon={<ChatIcon />} className="w-full sm:w-auto">
+                      {data.action}
+                    </Button>
+                  </a>
                 </div>
               ) : null}
 
