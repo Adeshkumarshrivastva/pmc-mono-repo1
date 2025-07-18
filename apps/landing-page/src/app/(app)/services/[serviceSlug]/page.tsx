@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import SquareArrowRightIcon from '@/components/ui/icons'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { getService, getServices } from '@/payload/actions'
-import { Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { TestimonialSection } from '../../_components/testimonial-section'
 import AppointmentSection from '../../_components/appointment-section'
@@ -15,9 +14,12 @@ type MainServicePageProps = {
 
 export default async function MainServicePage({ params }: MainServicePageProps) {
   const { serviceSlug } = await params
-  const service = await getService({ serviceSlug })
-  const subServices = (service?.subservices?.docs as Service[]) ?? []
   const services = await getServices({})
+
+  const service = await getService({ serviceSlug })
+  const subServices = await getServices({
+    parentServiceSlug: service.slug,
+  })
 
   const payload = await getPayloadClient()
   const { appointmentSection, faqSection, testimonialSection } = await payload.findGlobal({
@@ -36,7 +38,7 @@ export default async function MainServicePage({ params }: MainServicePageProps) 
                 </h2>
               </div>
               <div className="grid gap-6 md:grid-cols-3 md:gap-8 lg:gap-12">
-                {subServices.map((subService) => (
+                {subServices?.docs.map((subService) => (
                   <div key={subService.id} className="space-y-2">
                     <div>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
