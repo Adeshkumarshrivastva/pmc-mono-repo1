@@ -32,11 +32,11 @@ export default function OurServicesSection({ services }: OurServicesSectionProps
 
 const ServiceCard = ({ service }: { service: Service }) => {
   return (
-    <div className="p-8 bg-accent grid grid-cols-3 rounded-3xl">
-      <div className="flex flex-col col-span-2 space-y-14">
+    <div className="p-4 sm:p-6 lg:p-8 bg-accent grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 rounded-3xl">
+      <div className="flex flex-col lg:col-span-2 space-y-8 lg:space-y-14">
         <div className="space-y-6 flex-1">
-          <h3 className="text-primary text-4xl font-semibold">{service.name}</h3>
-          <ul className="text-primary grid grid-cols-2 list-disc list-inside">
+          <h3 className="text-primary text-2xl sm:text-3xl lg:text-4xl font-semibold">{service.name}</h3>
+          <ul className="text-primary grid grid-cols-1 sm:grid-cols-2 gap-2 list-disc list-inside">
             {service.subservices?.docs?.map((subService) => {
               const service = subService as Service
               return <li key={service.id}>{service.name}</li>
@@ -44,12 +44,16 @@ const ServiceCard = ({ service }: { service: Service }) => {
           </ul>
         </div>
         <div>
-          <Button>View all Services</Button>
+          <Button className="w-full sm:w-auto">View all Services</Button>
         </div>
       </div>
-      <div className="col-span-1">
+      <div className="lg:col-span-1 order-first lg:order-last">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img alt={service.name} src={getURLFromMedia(service.image ?? '')} className="rounded-3xl w-96 h-96" />
+        <img
+          alt={service.name}
+          src={getURLFromMedia(service.image ?? '')}
+          className="rounded-3xl w-full h-64 sm:h-80 lg:h-96 lg:w-96 object-cover mx-auto"
+        />
       </div>
     </div>
   )
