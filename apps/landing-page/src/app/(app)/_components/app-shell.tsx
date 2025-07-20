@@ -1,10 +1,13 @@
+import { getServices } from '@/payload/actions'
 import Footer from './footer'
 import Navbar from './navbar'
 
-export default function AppShell({ children }: React.PropsWithChildren) {
+export default async function AppShell({ children }: React.PropsWithChildren) {
+  const services = await getServices({})
+
   return (
     <div>
-      <Navbar />
+      <Navbar services={services.docs} />
       {children}
       <Footer />
     </div>

@@ -20,7 +20,9 @@ export default function PackagesSection({ data }: PackagesSectionProps) {
                   <div key={index} className="relative rounded-2xl border border-border space-y-2 p-2 bg-card">
                     {/* TODO: Fetch this from CMS */}
                     {index === 1 ? (
-                      <div className="absolute top-4 right-4 rounded-2xl bg-accent text-sm px-5 py-1.5">Best Value</div>
+                      <div className="absolute top-4 right-4 rounded-2xl bg-accent text-sm px-5 py-1.5">
+                        Recommended
+                      </div>
                     ) : null}
                     <div
                       className={cn(
