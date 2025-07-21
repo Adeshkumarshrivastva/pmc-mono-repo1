@@ -661,6 +661,16 @@ export interface Home {
         }[]
       | null;
   };
+  servicesSection?: {
+    title?: string | null;
+    services?: (string | Service)[] | null;
+    action?: string | null;
+  };
+  expertsSection?: {
+    title?: string | null;
+    experts?: (string | Expert)[] | null;
+    action?: string | null;
+  };
   appointmentSection?: {
     appointmentSection?: {
       title?: string | null;
@@ -693,11 +703,6 @@ export interface Home {
           id?: string | null;
         }[]
       | null;
-  };
-  expertsSection?: {
-    title?: string | null;
-    experts?: (string | Expert)[] | null;
-    action?: string | null;
   };
   blogsSection?: {
     title?: string | null;
@@ -1190,6 +1195,20 @@ export interface HomeSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  servicesSection?:
+    | T
+    | {
+        title?: T;
+        services?: T;
+        action?: T;
+      };
+  expertsSection?:
+    | T
+    | {
+        title?: T;
+        experts?: T;
+        action?: T;
+      };
   appointmentSection?:
     | T
     | {
@@ -1230,13 +1249,6 @@ export interface HomeSelect<T extends boolean = true> {
               answer?: T;
               id?: T;
             };
-      };
-  expertsSection?:
-    | T
-    | {
-        title?: T;
-        experts?: T;
-        action?: T;
       };
   blogsSection?:
     | T

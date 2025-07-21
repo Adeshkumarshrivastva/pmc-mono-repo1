@@ -11,6 +11,7 @@ import { TestimonialSection } from './_components/testimonial-section'
 import PackagesSection from './_components/packages-section'
 import BlogsSection from './_components/blogs-section'
 import ExpertsSection from './_components/experts-section'
+import ServicesSection from './_components/services-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -25,6 +26,7 @@ export default async function HomePage() {
     packagesSection,
     blogsSection,
     expertsSection,
+    servicesSection,
   } = await payload.findGlobal({
     slug: 'home',
   })
