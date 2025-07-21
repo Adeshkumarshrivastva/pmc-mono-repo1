@@ -83,12 +83,15 @@ export default function Navbar({ services }: NavbarProps) {
                             {service.subservices?.docs?.map((subService) => {
                               const typedSubService = subService as Service
                               return (
-                                <button
+                                <Link
                                   key={typedSubService.id}
-                                  className="flex w-full text-left items-center py-2 px-4 font-medium space-x-2 cursor-pointer"
+                                  href={`${item.href}/${service.slug}/${typedSubService.slug}`}
+                                  className="flex w-full"
                                 >
-                                  <span>{typedSubService.name}</span>
-                                </button>
+                                  <button className="flex w-full text-left items-center py-2 px-4 font-medium space-x-2 cursor-pointer">
+                                    <span>{typedSubService.name}</span>
+                                  </button>
+                                </Link>
                               )
                             })}
                           </HoverCardContent>

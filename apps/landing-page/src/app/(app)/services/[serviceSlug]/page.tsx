@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getPayloadClient } from '@/lib/payload'
 import { Button } from '@/components/ui/button'
 import SquareArrowRightIcon from '@/components/ui/icons'
@@ -48,13 +49,15 @@ export default async function MainServicePage({ params }: MainServicePageProps) 
                         className="rounded-3xl w-full h-64 sm:h-80 lg:h-96 lg:w-96 object-cover mx-auto"
                       />
                     </div>
-                    <Button
-                      className="w-full rounded-2xl justify-between h-16 text-left"
-                      icon={<SquareArrowRightIcon className="size-12" />}
-                      iconPosition="right"
-                    >
-                      {subService.name}
-                    </Button>
+                    <Link href={`${service.slug}/${subService.slug}`}>
+                      <Button
+                        className="w-full rounded-2xl justify-between h-16 text-left"
+                        icon={<SquareArrowRightIcon className="size-12" />}
+                        iconPosition="right"
+                      >
+                        {subService.name}
+                      </Button>
+                    </Link>
                   </div>
                 ))}
               </div>

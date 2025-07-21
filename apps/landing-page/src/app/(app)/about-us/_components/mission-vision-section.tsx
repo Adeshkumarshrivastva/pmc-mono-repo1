@@ -63,7 +63,7 @@ function ContentBlock({
     <div className={cn('space-y-3 sm:space-y-4', className)}>
       {heading && <h3 className="font-semibold text-xl sm:text-2xl text-primary leading-tight">{heading}</h3>}
       {description && (
-        <div className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+        <div className="text-muted-foreground text-sm sm:text-lg leading-relaxed">
           <RichText data={description} />
         </div>
       )}

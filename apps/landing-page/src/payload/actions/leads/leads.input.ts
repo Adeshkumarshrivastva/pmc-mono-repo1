@@ -6,7 +6,7 @@ export const leadFormInput = z.object({
   email: z.email(),
   phone: z.string().min(1),
   serviceId: objectId,
-  subServiceId: objectId.optional(),
+  subServiceId: z.union([objectId, z.literal('')]),
   message: z.string().min(1),
 })
 

@@ -30,7 +30,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
             </div>
           </div>
           <div
-            className="flex flex-col bg-cover bg-[center_30%] bg-no-repeat w-full p-4 sm:p-6 md:p-8 lg:p-12 min-h-[300px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[450px] rounded-2xl relative"
+            className="flex flex-col bg-cover bg-[center_30%] bg-no-repeat w-full p-4 sm:p-6 md:p-8 lg:p-12 min-h-[300px] md:min-h-[400px] lg:min-h-[450px] rounded-2xl relative"
             style={{ backgroundImage: `url('${getURLFromMedia(data?.overlayContent?.overlayImage ?? '')}')` }}
           >
             <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-transparent rounded-2xl"></div>
