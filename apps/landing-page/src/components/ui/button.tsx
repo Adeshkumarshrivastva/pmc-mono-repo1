@@ -11,9 +11,11 @@ export const buttonVariants = cva(
           'bg-primary text-primary-foreground hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50',
         secondary:
           'bg-accent text-accent-foreground hover:bg-accent/80 disabled:pointer-events-none disabled:opacity-50',
+        outline: 'border border-input bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground',
       },
       size: {
         default: 'h-12 px-4 py-3',
+        icon: 'h-9 w-9 justify-center',
       },
     },
     defaultVariants: {
