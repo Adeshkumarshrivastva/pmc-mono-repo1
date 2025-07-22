@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { DeepTm } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
@@ -24,7 +23,8 @@ export default function HeroSection({ data }: HeroSectionProps) {
             </div>
             <div>
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   alt="Deep TMS People"
                   width={525}
                   height={500}
