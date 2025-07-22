@@ -26,5 +26,11 @@ export const TeamMembers: CollectionConfig = {
       label: 'Member Role',
       required: true,
     },
+    {
+      name: 'bio',
+      type: 'richText',
+      label: 'Bio',
+      required: true,
+    },
   ],
 }
