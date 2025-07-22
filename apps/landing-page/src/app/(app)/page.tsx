@@ -39,7 +39,7 @@ export default async function HomePage() {
       <DeepTmsSection data={deepTmsSection} />
       <TreatmentSection data={treatmentSection} />
       <WhyChooseSection data={whyChooseSection} />
-      <ServicesSection data={servicesSection} />
+      <ServicesSection data={servicesSection} services={services.docs} />
       <ExpertsSection data={expertsSection} />
       <PackagesSection data={packagesSection} />
       <AppointmentSection data={appointmentSection} services={services.docs} />

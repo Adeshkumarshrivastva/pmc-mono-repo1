@@ -1,5 +1,4 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { getService, getServices } from '@/payload/actions'
 import { getURLFromMedia } from '@/payload/utils'
 import { Button } from '@/components/ui/button'
@@ -18,7 +17,7 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
   })
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
+    <>
       <section className="w-full bg-accent">
         <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-20">
           <div className="max-w-7xl mx-auto mb-8 sm:mb-12 lg:mb-16 space-y-20">
@@ -88,6 +87,6 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
           </div>
         </div>
       </section>
-    </div>
+    </>
   )
 }
