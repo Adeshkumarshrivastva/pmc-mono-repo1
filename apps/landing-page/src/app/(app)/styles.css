@@ -36,3 +36,7 @@
 .list-bullet {
   @apply list-disc list-inside;
 }
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}

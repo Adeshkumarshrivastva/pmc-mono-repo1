@@ -241,6 +241,21 @@ export interface TeamMember {
   memberName: string;
   image: string | Media;
   role: string;
+  bio: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -457,6 +472,7 @@ export interface TeamMembersSelect<T extends boolean = true> {
   memberName?: T;
   image?: T;
   role?: T;
+  bio?: T;
   updatedAt?: T;
   createdAt?: T;
 }
