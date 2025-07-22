@@ -145,27 +145,32 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
       </HoverCardTrigger>
       <HoverCardContent align="center" className="p-0 flex w-lg">
         <div className="cursor-pointer w-full flex flex-col bg-primary-foreground">
-          {services.map((service) => (
-            <div
-              className={cn('flex w-full justify-between', service.id === activeServiceId ? 'bg-accent' : null)}
-              key={service.id}
-              onMouseEnter={() => {
-                setActiveServiceId(service.id)
-              }}
-            >
-              <Link href={`/services/${service.slug}`} className="group flex w-full">
-                <button
-                  className={cn(
-                    'flex w-full justify-between text-left items-center py-2 px-4 space-x-2 cursor-pointer',
-                    service.id === activeServiceId ? 'font-medium' : null,
-                  )}
-                >
-                  <span>{service.name}</span>
-                  <ChevronRight className="size-4 flex-shrink-0 text-primary/30 group-hover:text-primary" />
-                </button>
-              </Link>
-            </div>
-          ))}
+          {services.map((service) => {
+            const isActiveService = service.id === activeServiceId
+            return (
+              <div
+                className={cn('flex w-full justify-between', isActiveService ? 'bg-accent' : null)}
+                key={service.id}
+                onMouseEnter={() => {
+                  setActiveServiceId(service.id)
+                }}
+              >
+                <Link href={`/services/${service.slug}`} className="group flex w-full">
+                  <button
+                    className={cn(
+                      'flex w-full justify-between text-left items-center py-2 px-4 space-x-2 cursor-pointer',
+                      isActiveService ? 'font-medium' : null,
+                    )}
+                  >
+                    <span>{service.name}</span>
+                    <ChevronRight
+                      className={cn('size-4 flex-shrink-0 text-primary', isActiveService ? 'opacity-100' : 'opacity-0')}
+                    />
+                  </button>
+                </Link>
+              </div>
+            )
+          })}
         </div>
         <div className="cursor-pointer w-full flex flex-col bg-primary-foreground shadow-xl">
           {activeService
