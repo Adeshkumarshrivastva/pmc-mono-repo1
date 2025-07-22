@@ -1,6 +1,7 @@
 import { GlobalConfig } from 'payload'
 import { appointmentSection } from '../fields/appointment-section'
 import { faqSection } from '../fields/faq-section'
+import { serivicesSection } from '../fields/services-section'
 
 export const DeepTms: GlobalConfig = {
   slug: 'deep-tms',
@@ -256,6 +257,7 @@ export const DeepTms: GlobalConfig = {
         },
       ],
     },
+    serivicesSection,
     appointmentSection,
     faqSection,
   ],

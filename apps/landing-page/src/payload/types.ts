@@ -663,8 +663,8 @@ export interface Home {
   };
   servicesSection?: {
     title?: string | null;
-    services?: (string | Service)[] | null;
     action?: string | null;
+    cardAction?: string | null;
   };
   expertsSection?: {
     title?: string | null;
@@ -807,6 +807,11 @@ export interface DeepTm {
         }[]
       | null;
     action?: string | null;
+  };
+  servicesSection?: {
+    title?: string | null;
+    action?: string | null;
+    cardAction?: string | null;
   };
   appointmentSection?: {
     appointmentSection?: {
@@ -1199,8 +1204,8 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        services?: T;
         action?: T;
+        cardAction?: T;
       };
   expertsSection?:
     | T
@@ -1341,6 +1346,13 @@ export interface DeepTmsSelect<T extends boolean = true> {
               id?: T;
             };
         action?: T;
+      };
+  servicesSection?:
+    | T
+    | {
+        title?: T;
+        action?: T;
+        cardAction?: T;
       };
   appointmentSection?:
     | T

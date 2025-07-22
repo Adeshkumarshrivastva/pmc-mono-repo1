@@ -5,11 +5,11 @@ import Autoscroll from 'embla-carousel-auto-scroll'
 import { ArrowRightIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { Home, Service } from '@/payload/types'
+import { DeepTm, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
 type ServicesSectionProps = {
-  data: Home['servicesSection']
+  data: DeepTm['servicesSection']
   services: Service[]
 }
 
@@ -22,12 +22,7 @@ export default function ServicesSection({ data, services }: ServicesSectionProps
         <div className="mx-auto max-w-7xl">
           <div className="space-y-8 sm:space-y-12">
             <header className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-start md:justify-between">
-              <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-xl">{data?.title}</h2>
-              {data?.action ? (
-                <Link href={'/services'}>
-                  <Button className="w-full sm:w-auto">{data.action}</Button>
-                </Link>
-              ) : null}
+              <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-md">{data?.title}</h2>
             </header>
 
             <Carousel
@@ -49,7 +44,10 @@ export default function ServicesSection({ data, services }: ServicesSectionProps
                   const typedService = service as Service
                   return (
                     <CarouselItem key={typedService.id} className="md:basis-1/3 lg:basis-1/4">
-                      <Link href={`/services/${typedService.slug}`} className="group flex flex-col space-y-4 h-full">
+                      <Link
+                        href={`/services/deep-tms/${typedService.slug}`}
+                        className="group flex flex-col space-y-4 h-full"
+                      >
                         <div className="overflow-hidden rounded-xl bg-muted">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img

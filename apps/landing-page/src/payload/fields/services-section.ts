@@ -11,15 +11,13 @@ export const serivicesSection: Field = {
       type: 'text',
     },
     {
-      name: 'services',
-      label: 'Services',
-      type: 'relationship',
-      relationTo: 'services',
-      hasMany: true,
-    },
-    {
       name: 'action',
       label: 'Action Button Text',
+      type: 'text',
+    },
+    {
+      name: 'cardAction',
+      label: 'Card Action Button Text',
       type: 'text',
     },
   ],
