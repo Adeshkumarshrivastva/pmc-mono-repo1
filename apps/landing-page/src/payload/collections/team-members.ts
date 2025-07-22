@@ -28,7 +28,7 @@ export const TeamMembers: CollectionConfig = {
     },
     {
       name: 'bio',
-      type: 'richText',
+      type: 'textarea',
       label: 'Bio',
       required: true,
     },

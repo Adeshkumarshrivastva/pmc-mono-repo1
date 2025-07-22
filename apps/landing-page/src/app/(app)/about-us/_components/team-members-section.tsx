@@ -38,7 +38,7 @@ export default function TeamMembersSection({ data }: TeamMembersSectionProps) {
               const isFlipped = flippedCards.has(index)
 
               return (
-                <div key={index} className="bg-white rounded-lg overflow-hidden h-[430px] relative">
+                <div key={member.id} className="bg-white rounded-lg overflow-hidden h-[430px] relative">
                   <div
                     className={`absolute inset-0 transition-transform duration-700 transform-style-preserve-3d ${
                       isFlipped ? 'rotate-y-180' : ''

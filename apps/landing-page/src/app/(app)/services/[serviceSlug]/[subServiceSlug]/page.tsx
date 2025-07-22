@@ -56,7 +56,7 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
                 }
                 return (
                   <div
-                    key={service.slug}
+                    key={service.id}
                     className="p-4 sm:p-6 md:p-8 bg-accent rounded-xl md:rounded-2xl shadow-md flex flex-col-reverse gap-5 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-6"
                   >
                     <div className="flex flex-col space-y-4 sm:space-y-6 md:space-y-12 lg:max-w-xl xl:max-w-2xl">
