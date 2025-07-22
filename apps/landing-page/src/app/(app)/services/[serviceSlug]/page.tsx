@@ -1,13 +1,8 @@
 import Link from 'next/link'
-import { getPayloadClient } from '@/lib/payload'
 import { Button } from '@/components/ui/button'
 import SquareArrowRightIcon from '@/components/ui/icons'
-import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { getService, getServices } from '@/payload/actions'
 import { getURLFromMedia } from '@/payload/utils'
-import { TestimonialSection } from '../../_components/testimonial-section'
-import AppointmentSection from '../../_components/appointment-section'
-import FAQSection from '../../_components/faq-section'
 
 type MainServicePageProps = {
   params: Promise<{ serviceSlug: string }>
@@ -15,20 +10,14 @@ type MainServicePageProps = {
 
 export default async function MainServicePage({ params }: MainServicePageProps) {
   const { serviceSlug } = await params
-  const services = await getServices({})
 
   const service = await getService({ serviceSlug })
   const subServices = await getServices({
     parentServiceSlug: service.slug,
   })
 
-  const payload = await getPayloadClient()
-  const { appointmentSection, faqSection, testimonialSection } = await payload.findGlobal({
-    slug: 'home',
-  })
-
   return (
-    <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
+    <>
       <section className="w-full bg-accent">
         <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-20">
           <div className="max-w-7xl mx-auto mb-8 sm:mb-12 lg:mb-16 space-y-20">
@@ -65,9 +54,6 @@ export default async function MainServicePage({ params }: MainServicePageProps) 
           </div>
         </div>
       </section>
-      <TestimonialSection data={testimonialSection} />
-      <AppointmentSection data={appointmentSection} services={services.docs} />
-      <FAQSection data={faqSection} />
-    </div>
+    </>
   )
 }

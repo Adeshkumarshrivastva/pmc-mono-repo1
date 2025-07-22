@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import Autoscroll from 'embla-carousel-auto-scroll'
 import { ArrowRightIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { DeepTm, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
