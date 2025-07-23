@@ -1,14 +1,15 @@
 import { GlobalConfig } from 'payload'
 import { appointmentSection } from '../fields/appointment-section'
 import { faqSection } from '../fields/faq-section'
+import { serivicesSection } from '../fields/services-section'
 
 export const DeepTms: GlobalConfig = {
   slug: 'deep-tms',
   label: 'About Deep TMS',
   fields: [
     {
-      name: 'deepTmsAboutSection',
-      label: 'Deep TMS About Setion',
+      name: 'deepTmsHeroSection',
+      label: 'Deep TMS Hero Setion',
       type: 'group',
       fields: [
         {
@@ -87,8 +88,8 @@ export const DeepTms: GlobalConfig = {
       ],
     },
     {
-      name: 'deepTmsApproachSection',
-      label: 'Deep TMS Approache Section',
+      name: 'deepTmsComparisonSection',
+      label: 'Deep TMS vs Traditional Method Table Section',
       type: 'group',
       fields: [
         {
@@ -97,23 +98,119 @@ export const DeepTms: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'featureTable',
-          label: 'Features Table',
+          name: 'featureParameterColumn',
+          label: 'Feature Parameter Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Card', value: 'card' },
+                { label: 'Card Foreground', value: 'card-foreground' },
+              ],
+              defaultValue: 'card',
+            },
+            {
+              name: 'textColor',
+              label: 'Text Color',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Primary Foreground', value: 'primary-foreground' },
+              ],
+              defaultValue: 'primary-foreground',
+            },
+          ],
+        },
+        {
+          name: 'deepTmsFeatureColumn',
+          label: 'Deep TMS Feature Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Card', value: 'card' },
+                { label: 'Card Foreground', value: 'card-foreground' },
+              ],
+              defaultValue: 'card-foreground',
+            },
+            {
+              name: 'textColor',
+              label: 'Text Color',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Primary Foreground', value: 'primary-foreground' },
+              ],
+              defaultValue: 'primary',
+            },
+          ],
+        },
+        {
+          name: 'traditionalFeatureColumn',
+          label: 'Traditional Feature Column',
+          type: 'group',
+          fields: [
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Card', value: 'card' },
+                { label: 'Card Foreground', value: 'card-foreground' },
+              ],
+              defaultValue: 'card',
+            },
+            {
+              name: 'textColor',
+              label: 'Text Color',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Primary Foreground', value: 'primary-foreground' },
+              ],
+              defaultValue: 'primary-foreground',
+            },
+          ],
+        },
+        {
+          name: 'comparisonRows',
+          label: 'Feature Comparison Rows',
           type: 'array',
           fields: [
             {
               name: 'feature',
-              label: 'Feature',
+              label: 'Feature Parameter',
               type: 'text',
             },
             {
-              name: 'deepTms',
-              label: 'Deep TMS',
+              name: 'deepTmsFeature',
+              label: 'Deep TMS Feature Value',
               type: 'text',
             },
             {
-              name: 'medicationTalkTherapy',
-              label: 'MeMedication / Talk Therapy',
+              name: 'traditionalFeature',
+              label: 'Traditional Feature Value',
               type: 'text',
             },
           ],
@@ -160,6 +257,7 @@ export const DeepTms: GlobalConfig = {
         },
       ],
     },
+    serivicesSection,
     appointmentSection,
     faqSection,
   ],

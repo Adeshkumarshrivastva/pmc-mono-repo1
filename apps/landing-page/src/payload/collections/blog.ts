@@ -2,6 +2,9 @@ import { CollectionConfig } from 'payload'
 
 export const Blog: CollectionConfig = {
   slug: 'blog',
+  admin: {
+    useAsTitle: 'title',
+  },
   access: {
     create: () => true,
     read: () => true,
@@ -29,6 +32,12 @@ export const Blog: CollectionConfig = {
       name: 'content',
       type: 'richText',
       label: 'Blog Content',
+      required: true,
+    },
+    {
+      name: 'publishedAt',
+      type: 'date',
+      label: 'Published At',
       required: true,
     },
   ],

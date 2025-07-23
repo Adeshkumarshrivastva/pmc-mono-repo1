@@ -1,18 +1,15 @@
-import { Logo } from '@/components/ui/logo'
-import Link from 'next/link'
+import { getServices } from '@/payload/actions'
+import Footer from './footer'
+import Navbar from './navbar'
 
-export default function AppShell({}: React.PropsWithChildren) {
+export default async function AppShell({ children }: React.PropsWithChildren) {
+  const services = await getServices({})
+
   return (
     <div>
-      <div className="bg-primary text-primary-foreground px-4 py-2">
-        <Link href="/" className="flex items-center gap-2">
-          <Logo className="size-16" />
-          <div>
-            <div className="text-2xl font-semibold">Positive</div>
-            <div className="text-base">Mind Care</div>
-          </div>
-        </Link>
-      </div>
+      <Navbar services={services.docs} />
+      {children}
+      <Footer />
     </div>
   )
 }

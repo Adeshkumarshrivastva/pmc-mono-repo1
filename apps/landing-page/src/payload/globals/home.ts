@@ -1,6 +1,9 @@
 import { GlobalConfig } from 'payload'
 import { appointmentSection } from '../fields/appointment-section'
 import { faqSection } from '../fields/faq-section'
+import { expertsSection } from '../fields/experts-section'
+import { testimonialSection } from '../fields/testimonial-section'
+import { serivicesSection } from '../fields/services-section'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -14,12 +17,12 @@ export const Home: GlobalConfig = {
         {
           name: 'heroSectionTitle',
           label: 'Hero Section Title',
-          type: 'text',
+          type: 'richText',
         },
         {
           name: 'heroSectionDescription',
           label: 'Hero Section Description',
-          type: 'richText',
+          type: 'textarea',
         },
         {
           name: 'heroSectionImage',
@@ -189,6 +192,12 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
+          name: 'image',
+          label: 'Image',
+          type: 'upload',
+          relationTo: 'media',
+        },
+        {
           name: 'featuresCards',
           label: 'Features Cards',
           type: 'array',
@@ -203,91 +212,81 @@ export const Home: GlobalConfig = {
               label: 'Feature Description',
               type: 'textarea',
             },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'packageSection',
-      label: 'Package / Pricing Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-        },
-        {
-          name: 'packageFeatures',
-          label: 'Package Features',
-          type: 'array',
-          fields: [
             {
-              name: 'title',
-              label: 'Title',
-              type: 'text',
-            },
-            {
-              name: 'price',
-              label: 'Price',
-              type: 'text',
-            },
-            {
-              name: 'description',
-              label: 'Description',
-              type: 'richText',
-            },
-            {
-              name: 'action',
-              label: 'Action',
-              type: 'text',
-            },
-          ],
-        },
-      ],
-    },
-    appointmentSection,
-    {
-      name: 'testimonialSection',
-      label: 'Testimonial Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-        },
-        {
-          name: 'testimonialSlides',
-          label: 'Testimonial Slides',
-          type: 'array',
-
-          fields: [
-            {
-              name: 'image',
-              label: 'Image',
+              name: 'featureIcon',
+              label: 'Feature Icon',
               type: 'upload',
               relationTo: 'media',
             },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'packagesSection',
+      label: 'Packages Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Section Title',
+          type: 'text',
+        },
+        {
+          name: 'availablePackages',
+          label: 'Available Packages',
+          type: 'array',
+          fields: [
             {
-              name: 'title',
-              label: 'Title',
+              name: 'name',
+              label: 'Package Name',
               type: 'text',
             },
             {
-              name: 'quote',
-              label: 'Quote',
+              // TODO: Rename it to pricing
+              name: 'price',
+              label: 'Package Pricing',
+              type: 'group',
+              fields: [
+                { name: 'price', label: 'Price', type: 'text' },
+                { name: 'unitText', label: 'Unit Text', type: 'text' },
+              ],
+            },
+            {
+              name: 'description',
+              label: 'Package Description',
+              type: 'textarea',
+            },
+            {
+              name: 'featureHeadline',
+              label: 'Package Features Headline',
               type: 'text',
             },
             {
-              name: 'quoteAuthor',
-              label: 'Quote Author',
+              name: 'features',
+              label: 'Package Features',
+              type: 'array',
+              fields: [
+                {
+                  name: 'title',
+                  label: 'Feature Title',
+                  type: 'text',
+                },
+              ],
+            },
+            {
+              name: 'action',
+              label: 'Package Action Button Text',
               type: 'text',
             },
           ],
         },
       ],
     },
+    serivicesSection,
+    expertsSection,
+    appointmentSection,
+    testimonialSection,
     faqSection,
     {
       name: 'blogsSection',
@@ -296,36 +295,21 @@ export const Home: GlobalConfig = {
       fields: [
         {
           name: 'title',
-          label: 'Title',
+          label: 'Section Title',
           type: 'text',
         },
         {
-          name: 'blogsFeature',
-          label: 'Blogs Feature',
-          type: 'array',
-          fields: [
-            {
-              name: 'image',
-              label: 'Image',
-              type: 'upload',
-              relationTo: 'media',
-            },
-            {
-              name: 'description',
-              label: 'Description',
-              type: 'richText',
-            },
-            {
-              name: 'name',
-              label: 'Name',
-              type: 'text',
-            },
-            {
-              name: 'date',
-              label: 'Date',
-              type: 'date',
-            },
-          ],
+          name: 'action',
+          label: 'Action Button Text',
+          type: 'text',
+        },
+        {
+          name: 'featuredBlogs',
+          label: 'Featured Blog Posts',
+          relationTo: 'blog',
+          type: 'relationship',
+          hasMany: true,
+          maxRows: 3,
         },
       ],
     },

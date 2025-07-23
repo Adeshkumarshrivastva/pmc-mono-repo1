@@ -70,15 +70,29 @@ export interface Config {
     users: User;
     media: Media;
     blog: Blog;
+    experts: Expert;
+    'team-members': TeamMember;
+    testimonial: Testimonial;
+    services: Service;
+    leads: Lead;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    services: {
+      subservices: 'services';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     blog: BlogSelect<false> | BlogSelect<true>;
+    experts: ExpertsSelect<false> | ExpertsSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    testimonial: TestimonialSelect<false> | TestimonialSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    leads: LeadsSelect<false> | LeadsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -89,12 +103,16 @@ export interface Config {
   globals: {
     home: Home;
     'deep-tms': DeepTm;
+    'our-services': OurService;
     'contact-us': ContactUs;
+    'about-us': AboutUs;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     'deep-tms': DeepTmsSelect<false> | DeepTmsSelect<true>;
+    'our-services': OurServicesSelect<false> | OurServicesSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
+    'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -183,6 +201,113 @@ export interface Blog {
     };
     [k: string]: unknown;
   };
+  publishedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "experts".
+ */
+export interface Expert {
+  id: string;
+  expertName: string;
+  image?: (string | null) | Media;
+  profession: string;
+  headline?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: string;
+  memberName: string;
+  image: string | Media;
+  role: string;
+  bio: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonial".
+ */
+export interface Testimonial {
+  id: string;
+  authorName: string;
+  auhtorImage: string | Media;
+  title: string;
+  message: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: string;
+  _order?: string | null;
+  name: string;
+  slug: string;
+  image?: (string | null) | Media;
+  /**
+   * Leave empty for Main Service.
+   */
+  parent?: (string | null) | Service;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  isActive?: boolean | null;
+  subservices?: {
+    docs?: (string | Service)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads".
+ */
+export interface Lead {
+  id: string;
+  fullName: string;
+  email?: string | null;
+  phone: string;
+  service?: (string | null) | Service;
+  subService?: (string | null) | Service;
+  message?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -204,6 +329,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blog';
         value: string | Blog;
+      } | null)
+    | ({
+        relationTo: 'experts';
+        value: string | Expert;
+      } | null)
+    | ({
+        relationTo: 'team-members';
+        value: string | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'testimonial';
+        value: string | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: string | Service;
+      } | null)
+    | ({
+        relationTo: 'leads';
+        value: string | Lead;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -289,6 +434,73 @@ export interface BlogSelect<T extends boolean = true> {
   author?: T;
   image?: T;
   content?: T;
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "experts_select".
+ */
+export interface ExpertsSelect<T extends boolean = true> {
+  expertName?: T;
+  image?: T;
+  profession?: T;
+  headline?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  memberName?: T;
+  image?: T;
+  role?: T;
+  bio?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonial_select".
+ */
+export interface TestimonialSelect<T extends boolean = true> {
+  authorName?: T;
+  auhtorImage?: T;
+  title?: T;
+  message?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  slug?: T;
+  image?: T;
+  parent?: T;
+  description?: T;
+  isActive?: T;
+  subservices?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads_select".
+ */
+export interface LeadsSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  phone?: T;
+  service?: T;
+  subService?: T;
+  message?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -331,8 +543,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface Home {
   id: string;
   heroSetion?: {
-    heroSectionTitle?: string | null;
-    heroSectionDescription?: {
+    heroSectionTitle?: {
       root: {
         type: string;
         children: {
@@ -347,6 +558,7 @@ export interface Home {
       };
       [k: string]: unknown;
     } | null;
+    heroSectionDescription?: string | null;
     heroSectionImage?: (string | null) | Media;
     heroSectionAction?: string | null;
     heroSectionHeadline?: string | null;
@@ -419,39 +631,47 @@ export interface Home {
   whyChooseSection?: {
     title?: string | null;
     action?: string | null;
+    image?: (string | null) | Media;
     featuresCards?:
       | {
           featureTitle?: string | null;
           featureDescription?: string | null;
+          featureIcon?: (string | null) | Media;
           id?: string | null;
         }[]
       | null;
   };
-  packageSection?: {
+  packagesSection?: {
     title?: string | null;
-    packageFeatures?:
+    availablePackages?:
       | {
-          title?: string | null;
-          price?: string | null;
-          description?: {
-            root: {
-              type: string;
-              children: {
-                type: string;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
+          name?: string | null;
+          price?: {
+            price?: string | null;
+            unitText?: string | null;
+          };
+          description?: string | null;
+          featureHeadline?: string | null;
+          features?:
+            | {
+                title?: string | null;
+                id?: string | null;
+              }[]
+            | null;
           action?: string | null;
           id?: string | null;
         }[]
       | null;
+  };
+  servicesSection?: {
+    title?: string | null;
+    action?: string | null;
+    cardAction?: string | null;
+  };
+  expertsSection?: {
+    title?: string | null;
+    experts?: (string | Expert)[] | null;
+    action?: string | null;
   };
   appointmentSection?: {
     appointmentSection?: {
@@ -474,15 +694,7 @@ export interface Home {
   };
   testimonialSection?: {
     title?: string | null;
-    testimonialSlides?:
-      | {
-          image?: (string | null) | Media;
-          title?: string | null;
-          quote?: string | null;
-          quoteAuthor?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    testimonialSlides?: (string | Testimonial)[] | null;
   };
   faqSection?: {
     title?: string | null;
@@ -496,29 +708,8 @@ export interface Home {
   };
   blogsSection?: {
     title?: string | null;
-    blogsFeature?:
-      | {
-          image?: (string | null) | Media;
-          description?: {
-            root: {
-              type: string;
-              children: {
-                type: string;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          name?: string | null;
-          date?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    action?: string | null;
+    featuredBlogs?: (string | Blog)[] | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -529,7 +720,7 @@ export interface Home {
  */
 export interface DeepTm {
   id: string;
-  deepTmsAboutSection?: {
+  deepTmsHeroSection?: {
     title?: string | null;
     description?: {
       root: {
@@ -581,13 +772,28 @@ export interface DeepTm {
         }[]
       | null;
   };
-  deepTmsApproachSection?: {
+  deepTmsComparisonSection?: {
     title?: string | null;
-    featureTable?:
+    featureParameterColumn?: {
+      heading?: string | null;
+      background?: ('card' | 'card-foreground') | null;
+      textColor?: ('primary' | 'primary-foreground') | null;
+    };
+    deepTmsFeatureColumn?: {
+      heading?: string | null;
+      background?: ('card' | 'card-foreground') | null;
+      textColor?: ('primary' | 'primary-foreground') | null;
+    };
+    traditionalFeatureColumn?: {
+      heading?: string | null;
+      background?: ('card' | 'card-foreground') | null;
+      textColor?: ('primary' | 'primary-foreground') | null;
+    };
+    comparisonRows?:
       | {
           feature?: string | null;
-          deepTms?: string | null;
-          medicationTalkTherapy?: string | null;
+          deepTmsFeature?: string | null;
+          traditionalFeature?: string | null;
           id?: string | null;
         }[]
       | null;
@@ -603,6 +809,11 @@ export interface DeepTm {
         }[]
       | null;
     action?: string | null;
+  };
+  servicesSection?: {
+    title?: string | null;
+    action?: string | null;
+    cardAction?: string | null;
   };
   appointmentSection?: {
     appointmentSection?: {
@@ -638,11 +849,12 @@ export interface DeepTm {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-us".
+ * via the `definition` "our-services".
  */
-export interface ContactUs {
+export interface OurService {
   id: string;
-  contactUs?: {
+  servicesHeroSection?: {
+    image?: (string | null) | Media;
     title?: string | null;
     description?: {
       root: {
@@ -659,6 +871,237 @@ export interface ContactUs {
       };
       [k: string]: unknown;
     } | null;
+    action?: string | null;
+    featureCards?:
+      | {
+          title?: string | null;
+          description?: string | null;
+          featureImage?: (string | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  testimonialSection?: {
+    title?: string | null;
+    testimonialSlides?: (string | Testimonial)[] | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-us".
+ */
+export interface ContactUs {
+  id: string;
+  contactUs?: {
+    title?: string | null;
+    subtitle?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-us".
+ */
+export interface AboutUs {
+  id: string;
+  aboutUsHeroSection?: {
+    preHeader?: string | null;
+    heading?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    overlayContent?: {
+      overlayImage?: (string | null) | Media;
+      heading?: string | null;
+      description?: string | null;
+      statistics?:
+        | {
+            value?: string | null;
+            label?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
+  whatWeDoSection: {
+    heading: string;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    /**
+     * The two cards that appear on the left and right of the image.
+     */
+    featureCards?:
+      | {
+          heading?: string | null;
+          description?: {
+            root: {
+              type: string;
+              children: {
+                type: string;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          image?: (string | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  missionVisionStory?: {
+    purposeHeading?: string | null;
+    mission?: {
+      heading?: string | null;
+      description?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    vision?: {
+      heading?: string | null;
+      description?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    storyIntro?: string | null;
+    storyContent?: {
+      heading?: string | null;
+      story?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+  };
+  teamMembersSection?: {
+    title?: string | null;
+    members?: (string | TeamMember)[] | null;
+  };
+  expertsSection?: {
+    title?: string | null;
+    experts?: (string | Expert)[] | null;
+    action?: string | null;
+  };
+  opportunitiesSection?: {
+    title?: string | null;
+    image?: (string | null) | Media;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    action?: string | null;
+    subAction?: string | null;
+  };
+  appointmentSection?: {
+    appointmentSection?: {
+      title?: string | null;
+      contacts?:
+        | {
+            phone?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      location?: string | null;
+      socialMediaLinks?:
+        | {
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null;
+            url?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -723,27 +1166,55 @@ export interface HomeSelect<T extends boolean = true> {
     | {
         title?: T;
         action?: T;
+        image?: T;
         featuresCards?:
           | T
           | {
               featureTitle?: T;
               featureDescription?: T;
+              featureIcon?: T;
               id?: T;
             };
       };
-  packageSection?:
+  packagesSection?:
     | T
     | {
         title?: T;
-        packageFeatures?:
+        availablePackages?:
           | T
           | {
-              title?: T;
-              price?: T;
+              name?: T;
+              price?:
+                | T
+                | {
+                    price?: T;
+                    unitText?: T;
+                  };
               description?: T;
+              featureHeadline?: T;
+              features?:
+                | T
+                | {
+                    title?: T;
+                    id?: T;
+                  };
               action?: T;
               id?: T;
             };
+      };
+  servicesSection?:
+    | T
+    | {
+        title?: T;
+        action?: T;
+        cardAction?: T;
+      };
+  expertsSection?:
+    | T
+    | {
+        title?: T;
+        experts?: T;
+        action?: T;
       };
   appointmentSection?:
     | T
@@ -772,15 +1243,7 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        testimonialSlides?:
-          | T
-          | {
-              image?: T;
-              title?: T;
-              quote?: T;
-              quoteAuthor?: T;
-              id?: T;
-            };
+        testimonialSlides?: T;
       };
   faqSection?:
     | T
@@ -798,15 +1261,8 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        blogsFeature?:
-          | T
-          | {
-              image?: T;
-              description?: T;
-              name?: T;
-              date?: T;
-              id?: T;
-            };
+        action?: T;
+        featuredBlogs?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -817,7 +1273,7 @@ export interface HomeSelect<T extends boolean = true> {
  * via the `definition` "deep-tms_select".
  */
 export interface DeepTmsSelect<T extends boolean = true> {
-  deepTmsAboutSection?:
+  deepTmsHeroSection?:
     | T
     | {
         title?: T;
@@ -845,16 +1301,37 @@ export interface DeepTmsSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  deepTmsApproachSection?:
+  deepTmsComparisonSection?:
     | T
     | {
         title?: T;
-        featureTable?:
+        featureParameterColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+              textColor?: T;
+            };
+        deepTmsFeatureColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+              textColor?: T;
+            };
+        traditionalFeatureColumn?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+              textColor?: T;
+            };
+        comparisonRows?:
           | T
           | {
               feature?: T;
-              deepTms?: T;
-              medicationTalkTherapy?: T;
+              deepTmsFeature?: T;
+              traditionalFeature?: T;
               id?: T;
             };
       };
@@ -871,6 +1348,13 @@ export interface DeepTmsSelect<T extends boolean = true> {
               id?: T;
             };
         action?: T;
+      };
+  servicesSection?:
+    | T
+    | {
+        title?: T;
+        action?: T;
+        cardAction?: T;
       };
   appointmentSection?:
     | T
@@ -913,6 +1397,37 @@ export interface DeepTmsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "our-services_select".
+ */
+export interface OurServicesSelect<T extends boolean = true> {
+  servicesHeroSection?:
+    | T
+    | {
+        image?: T;
+        title?: T;
+        description?: T;
+        action?: T;
+        featureCards?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              featureImage?: T;
+              id?: T;
+            };
+      };
+  testimonialSection?:
+    | T
+    | {
+        title?: T;
+        testimonialSlides?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-us_select".
  */
 export interface ContactUsSelect<T extends boolean = true> {
@@ -920,7 +1435,121 @@ export interface ContactUsSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        subtitle?: T;
         description?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-us_select".
+ */
+export interface AboutUsSelect<T extends boolean = true> {
+  aboutUsHeroSection?:
+    | T
+    | {
+        preHeader?: T;
+        heading?: T;
+        description?: T;
+        overlayContent?:
+          | T
+          | {
+              overlayImage?: T;
+              heading?: T;
+              description?: T;
+              statistics?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    id?: T;
+                  };
+            };
+      };
+  whatWeDoSection?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+        featureCards?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+              image?: T;
+              id?: T;
+            };
+      };
+  missionVisionStory?:
+    | T
+    | {
+        purposeHeading?: T;
+        mission?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+            };
+        vision?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+            };
+        storyIntro?: T;
+        storyContent?:
+          | T
+          | {
+              heading?: T;
+              story?: T;
+            };
+      };
+  teamMembersSection?:
+    | T
+    | {
+        title?: T;
+        members?: T;
+      };
+  expertsSection?:
+    | T
+    | {
+        title?: T;
+        experts?: T;
+        action?: T;
+      };
+  opportunitiesSection?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+        action?: T;
+        subAction?: T;
+      };
+  appointmentSection?:
+    | T
+    | {
+        appointmentSection?:
+          | T
+          | {
+              title?: T;
+              contacts?:
+                | T
+                | {
+                    phone?: T;
+                    id?: T;
+                  };
+              location?: T;
+              socialMediaLinks?:
+                | T
+                | {
+                    socialMediaPlatform?: T;
+                    url?: T;
+                    id?: T;
+                  };
+            };
       };
   updatedAt?: T;
   createdAt?: T;

@@ -15,6 +15,11 @@ export const ContactUs: GlobalConfig = {
           type: 'text',
         },
         {
+          name: 'subtitle',
+          label: 'SubTitle',
+          type: 'textarea',
+        },
+        {
           name: 'description',
           label: 'Description',
           type: 'richText',

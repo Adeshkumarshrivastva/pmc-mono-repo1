@@ -1,16 +1,21 @@
+import { Toaster } from '@/components/ui/sonner'
 import AppShell from './_components/app-shell'
+import Providers from './_components/providers'
 import './styles.css'
 
 export const metadata = {
   description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  title: 'Positive Mind Care',
 }
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
       <body>
-        <AppShell>{children}</AppShell>
+        <Providers>
+          <AppShell>{children}</AppShell>
+        </Providers>
+        <Toaster />
       </body>
     </html>
   )

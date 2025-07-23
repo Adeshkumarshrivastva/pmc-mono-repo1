@@ -23,7 +23,7 @@ export default $config({
       url: {
         router: {
           instance: router,
-          path: '/api',
+          path: '/server',
         },
       },
     })
@@ -51,10 +51,7 @@ export default $config({
     const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
     new sst.aws.Nextjs('PmcLandingPage', {
       link: [MediaBucket, PayloadDBUrl, PayloadSecret],
-      buildCommand: 'pnpm build --filter=@pmc/landing-page',
-      dev: {
-        directory: 'apps/landing-page',
-      },
+      path: 'apps/landing-page',
       router: {
         instance: router,
         path: '/',
