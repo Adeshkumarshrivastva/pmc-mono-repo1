@@ -25,7 +25,7 @@ export default async function DeepTmsPage() {
   })
 
   const services = await getServices({})
-  const deepTmsServices = services.docs.find((service) => service.slug === 'deep-tms')?.subservices
+  const deepTmsServices = await getServices({ parentServiceSlug: 'deep-tms' })
 
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
@@ -34,7 +34,7 @@ export default async function DeepTmsPage() {
       <EligibilitySection data={deepTmsEligibilitySection} />
       <ComparisonTableSection data={deepTmsComparisonSection} />
       <AppointmentSection data={appointmentSection} services={services.docs} />
-      <ServicesSection data={servicesSection} services={deepTmsServices?.docs as Service[]} />
+      <ServicesSection data={servicesSection} services={deepTmsServices.docs} />
       <FAQSection data={faqSection} />
     </div>
   )
