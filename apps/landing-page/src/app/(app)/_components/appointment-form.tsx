@@ -1,8 +1,14 @@
 'use client'
 
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { useMutation } from '@tanstack/react-query'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { DialogTrigger } from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { appointmentFormInput, AppointmentFormInput } from '@/payload/actions/appointments/appointments.input'
+import { createAppointment } from '@/payload/actions/appointments/appointments.actions'
 
 type AppointmentFormProps = {
   trigger: React.ReactNode
@@ -27,14 +33,46 @@ export default function AppointmentForm({ trigger }: AppointmentFormProps) {
 }
 
 function InputForm() {
+  const form = useForm<AppointmentFormInput>({
+    defaultValues: {
+      fullName: '',
+      phone: '',
+      date: '',
+      time: '',
+    },
+    resolver: zodResolver(appointmentFormInput),
+  })
+
+  const appointmentFormMutation = useMutation({
+    mutationFn: createAppointment,
+    onSuccess: () => {
+      toast('Thank you for your interest!', {
+        description: 'We will get back to you as soon as possible.',
+      })
+      form.reset()
+    },
+    onError: () => {
+      toast('Failed to submit the form. Please try again later.', {
+        description: 'If the problem persists, please contact us directly.',
+      })
+    },
+  })
+
   return (
-    <form className="border border-border rounded-xl p-4 sm:p-6 lg:p-8">
+    <form
+      onSubmit={form.handleSubmit((values) => {
+        appointmentFormMutation.mutate(values)
+      })}
+      className="border border-border rounded-xl p-4 sm:p-6 lg:p-8"
+    >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div className="col-span-1">
           <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
             Your Name
           </label>
           <input
+            {...form.register('fullName')}
+            name="fullName"
             type="text"
             className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             placeholder="Enter your name"
@@ -46,6 +84,8 @@ function InputForm() {
             Phone Number
           </label>
           <input
+            {...form.register('phone')}
+            name="phone"
             type="tel"
             className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             placeholder="Enter your phone"
@@ -57,7 +97,8 @@ function InputForm() {
             Email Address
           </label>
           <input
-            type="email"
+            {...form.register('email')}
+            name="email"
             className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             placeholder="Enter your email"
           />
@@ -68,7 +109,8 @@ function InputForm() {
             Date
           </label>
           <input
-            id="date"
+            {...form.register('date')}
+            name="date"
             type="date"
             className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
           />
@@ -79,7 +121,8 @@ function InputForm() {
             Time
           </label>
           <input
-            id="time"
+            {...form.register('time')}
+            name="time"
             type="time"
             className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
           />

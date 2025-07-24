@@ -19,6 +19,7 @@ import { Testimonial } from './collections/testimonial'
 import { OurServices } from './globals/our-services'
 import { Services } from './collections/services'
 import { Leads } from './collections/leads'
+import { Appointments } from './collections/appointments'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,7 +31,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Blog, Experts, TeamMembers, Testimonial, Services, Leads],
+  collections: [Users, Media, Blog, Experts, TeamMembers, Testimonial, Services, Leads, Appointments],
   globals: [Home, DeepTms, OurServices, ContactUs, AboutUs],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
