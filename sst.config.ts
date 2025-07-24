@@ -16,7 +16,12 @@ export default $config({
     }
   },
   async run() {
-    const router = new sst.aws.Router('PmcRouter', {})
+    const router = new sst.aws.Router('PmcRouter', {
+      domain: {
+        name: 'positivemindcare.com',
+        redirects: ['www.positivemindcare.com'],
+      },
+    })
 
     new sst.aws.Function('PmcHonoServer', {
       handler: 'apps/server/src/index.handler',
