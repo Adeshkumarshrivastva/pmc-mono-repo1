@@ -75,6 +75,7 @@ export interface Config {
     testimonial: Testimonial;
     services: Service;
     leads: Lead;
+    appointments: Appointment;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -93,6 +94,7 @@ export interface Config {
     testimonial: TestimonialSelect<false> | TestimonialSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     leads: LeadsSelect<false> | LeadsSelect<true>;
+    appointments: AppointmentsSelect<false> | AppointmentsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -312,6 +314,22 @@ export interface Lead {
   createdAt: string;
 }
 /**
+ * These are trial session appointments
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointments".
+ */
+export interface Appointment {
+  id: string;
+  fullName: string;
+  phone: string;
+  email?: string | null;
+  date?: string | null;
+  time?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
@@ -349,6 +367,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'leads';
         value: string | Lead;
+      } | null)
+    | ({
+        relationTo: 'appointments';
+        value: string | Appointment;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -501,6 +523,19 @@ export interface LeadsSelect<T extends boolean = true> {
   service?: T;
   subService?: T;
   message?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointments_select".
+ */
+export interface AppointmentsSelect<T extends boolean = true> {
+  fullName?: T;
+  phone?: T;
+  email?: T;
+  date?: T;
+  time?: T;
   updatedAt?: T;
   createdAt?: T;
 }
