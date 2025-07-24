@@ -83,7 +83,7 @@ export default function TeamMembersSection({ data }: TeamMembersSectionProps) {
 
                         {member?.bio ? (
                           <div className="space-y-3 text-sm text-primary-foreground/80 overflow-auto">
-                            <RichText data={member.bio} disableContainer={true} />
+                            <p>{member?.bio}</p>
                           </div>
                         ) : null}
                       </div>
