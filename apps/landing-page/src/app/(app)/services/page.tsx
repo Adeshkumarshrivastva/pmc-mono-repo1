@@ -6,7 +6,7 @@ import OurServicesSection from './_components/our-services-section'
 export default async function ServicesPage() {
   const payload = await getPayloadClient()
 
-  const { servicesHeroSection } = await payload.findGlobal({
+  const { servicesHeroSection, mainServicesSection } = await payload.findGlobal({
     slug: 'our-services',
   })
 
@@ -15,7 +15,7 @@ export default async function ServicesPage() {
   return (
     <>
       <HeroSection data={servicesHeroSection} />
-      <OurServicesSection services={services.docs} />
+      <OurServicesSection services={services.docs} data={mainServicesSection} />
     </>
   )
 }

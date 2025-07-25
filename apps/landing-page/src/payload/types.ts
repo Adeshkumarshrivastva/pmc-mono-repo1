@@ -916,6 +916,10 @@ export interface OurService {
         }[]
       | null;
   };
+  mainServicesSection?: {
+    heading?: string | null;
+    action?: string | null;
+  };
   testimonialSection?: {
     title?: string | null;
     testimonialSlides?: (string | Testimonial)[] | null;
@@ -1450,6 +1454,12 @@ export interface OurServicesSelect<T extends boolean = true> {
               featureImage?: T;
               id?: T;
             };
+      };
+  mainServicesSection?:
+    | T
+    | {
+        heading?: T;
+        action?: T;
       };
   testimonialSection?:
     | T

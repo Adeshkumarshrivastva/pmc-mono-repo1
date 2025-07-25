@@ -56,6 +56,23 @@ export const OurServices: GlobalConfig = {
         },
       ],
     },
+    {
+      name: 'mainServicesSection',
+      label: 'All Main Services Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'heading',
+          label: 'Main Services Section Heading',
+          type: 'text',
+        },
+        {
+          name: 'action',
+          label: 'Service Card Action Button Text',
+          type: 'text',
+        },
+      ],
+    },
     testimonialSection,
   ],
 }
