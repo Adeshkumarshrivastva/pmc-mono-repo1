@@ -75,6 +75,7 @@ export default function Footer() {
                 <li key={item.id}>
                   <a
                     href={item.href}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
                   >
@@ -128,7 +129,9 @@ const AWARENESS_ITEMS = [
 ]
 
 const FOLLOW_ITEMS = [
-  { id: 'facebook', href: '', label: 'Facebook' },
-  { id: 'youtube', href: '', label: 'Youtube' },
-  { id: 'instagram', href: '', label: 'Instagram' },
+  { id: 'facebook', href: 'https://www.facebook.com/positivemindcaree', label: 'Facebook' },
+  { id: 'youtube', href: 'https://www.youtube.com/@PositiveMindCare', label: 'Youtube' },
+  { id: 'instagram', href: 'https://www.instagram.com/positivemindcare', label: 'Instagram' },
+  { id: 'linkedin', href: 'https://www.linkedin.com/company/positive-mind-care', label: 'Linkedin' },
+  { id: 'twitter', href: 'https://twitter.com/PositivMindCare', label: 'Twitter' },
 ]

@@ -1,6 +1,6 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Button } from '@/components/ui/button'
-import { SolarBag4Linear, SolarCallChatRoundedBoldDuotone } from '@/components/ui/icons'
+import { SolarBag4Linear } from '@/components/ui/icons'
 import { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
@@ -20,10 +20,9 @@ export default function OpportunitySection({ data }: OpportunitySectionProps) {
             </div>
           ) : null}
           <div className="flex flex-col sm:flex-row gap-5 items-center">
-            <Button icon={<SolarBag4Linear />}>{data?.action}</Button>
-            <Button icon={<SolarCallChatRoundedBoldDuotone />} variant={'secondary'} className="border border-primary ">
-              {data?.subAction}
-            </Button>
+            <a href={`mailto:contact@positivemindcare.com`}>
+              <Button icon={<SolarBag4Linear />}>{data?.action}</Button>
+            </a>
           </div>
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
