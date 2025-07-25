@@ -23,7 +23,11 @@ export default $config({
               name: 'positivemindcare.com',
               redirects: ['www.positivemindcare.com'],
             }
-          : undefined,
+          : $app.stage === 'development'
+            ? {
+                name: 'staging.positivemindcare.com',
+              }
+            : undefined,
     })
 
     new sst.aws.Function('PmcHonoServer', {

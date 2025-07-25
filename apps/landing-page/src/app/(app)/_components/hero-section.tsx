@@ -42,7 +42,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
                     </Button>
                   }
                 />
-                <Button variant="outline">Find the Right Expert</Button>
+                {/* <Button variant="outline">Find the Right Expert</Button> */}
               </div>
             ) : null}
           </div>

@@ -4,7 +4,8 @@ import Providers from './_components/providers'
 import './styles.css'
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
+  description:
+    'Most Advance treatment for Depression, Anxiety, OCD, Brain Stroke and Personalized Online Counselling Services at Positive Mind Care.',
   title: 'Positive Mind Care',
 }
 
