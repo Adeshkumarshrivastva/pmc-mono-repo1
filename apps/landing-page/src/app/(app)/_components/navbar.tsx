@@ -36,7 +36,7 @@ export default function Navbar({ services }: NavbarProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-primary text-primary-foreground" style={{ height: NAVBAR_HEIGHT }}>
+    <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
       <nav className="flex items-center justify-between h-full px-4 py-2 mx-auto">
         <Link href="/" className="flex items-center gap-2">
           <Logo className="size-16" />
