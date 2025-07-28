@@ -4,6 +4,7 @@ const baseQuestion = z.object({
   id: z.string(),
   title: z.string(),
   required: z.boolean().default(false),
+  errorMessage: z.string().nullable(),
 })
 
 const optionSchema = z.object({
@@ -25,14 +26,19 @@ export const questionSchema = z.discriminatedUnion('type', [multiSelectSchema, s
 export type Question = z.infer<typeof questionSchema>
 export type Questionnaire = Question[]
 
-export const singleSelectAnswer = z.string().min(1, 'Pick an option')
-export const multiSelectAnswer = z.array(z.string()).min(1, 'Pick atleast one')
+export const singleSelectAnswer = z.string().min(1)
+export const multiSelectAnswer = z.array(z.string()).min(1)
 
 export const answerSchema = z.discriminatedUnion('type', [
   z.object({ type: 'singleSelect', value: singleSelectAnswer }),
   z.object({ type: 'multiSelect', value: multiSelectAnswer }),
 ])
 export type Answer = z.infer<typeof answerSchema>
+
+export const answerValidationMap: Record<'singleSelect' | 'multiSelect', z.ZodType> = {
+  singleSelect: singleSelectAnswer,
+  multiSelect: multiSelectAnswer,
+}
 
 export const questionnaire: Questionnaire = [
   {
@@ -48,6 +54,7 @@ export const questionnaire: Questionnaire = [
       { label: 'My friend', value: 'my-friend' },
       { label: 'My relative', value: 'my-relative' },
     ],
+    errorMessage: 'Choose a service type. You can always change this later.',
   },
   {
     id: 'q2',
@@ -61,6 +68,7 @@ export const questionnaire: Questionnaire = [
       { label: 'Addiction', value: 'addiction' },
       { label: 'Other / Not sure', value: 'other-not-sure' },
     ],
+    errorMessage: 'Please share your preferences.',
   },
   {
     id: 'q3',
@@ -71,6 +79,7 @@ export const questionnaire: Questionnaire = [
       { label: 'Yes', value: 'yes' },
       { label: 'No', value: 'no' },
     ],
+    errorMessage: 'Select an option before moving on: You can always change this later.',
   },
   {
     id: 'q4',
@@ -82,6 +91,7 @@ export const questionnaire: Questionnaire = [
       { label: 'Had no improvement', value: 'had-no-improvement' },
       { label: 'Caused side effects', value: 'caused-side-effects' },
     ],
+    errorMessage: 'Please share your preferences.',
   },
   {
     id: 'q5',
@@ -93,6 +103,7 @@ export const questionnaire: Questionnaire = [
       { label: 'Anxiety / Worry', value: 'anxiety-worry' },
       { label: 'Compulsions or intrusive thoughts', value: 'compulsions-or-intrusive-thoughts' },
     ],
+    errorMessage: 'Please share your preferences.',
   },
   {
     id: 'q6',
@@ -105,6 +116,7 @@ export const questionnaire: Questionnaire = [
       { label: 'I want a doctor-guided, science-based solution', value: 'doctor-guided-science-based-solution' },
       { label: "I'm comfortable coming to a clinic", value: 'comfortable-coming-to-clinic' },
     ],
+    errorMessage: 'Please share your preferences.',
   },
   {
     id: 'q7',
@@ -116,5 +128,18 @@ export const questionnaire: Questionnaire = [
       { label: "I'd like more info first", value: 'more-info-first' },
       { label: 'Not right now', value: 'not-right-now' },
     ],
+    errorMessage: 'Select an option before moving on: You can always change this later.',
   },
 ]
+
+export const defaultAnswers = questionnaire.reduce(
+  (acc, question) => {
+    if (question.type === 'multiSelect') {
+      acc[question.id] = []
+    } else if (question.type === 'singleSelect') {
+      acc[question.id] = ''
+    }
+    return acc
+  },
+  {} as Record<string, unknown>,
+)

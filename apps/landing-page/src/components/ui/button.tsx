@@ -15,6 +15,7 @@ export const buttonVariants = cva(
       },
       size: {
         default: 'h-10 px-3 text-sm sm:h-12 sm:px-4 sm:text-lg',
+        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 text-sm',
         icon: 'h-8 w-8',
       },
     },
