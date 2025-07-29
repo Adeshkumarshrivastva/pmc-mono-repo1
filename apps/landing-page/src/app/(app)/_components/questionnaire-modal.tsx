@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { match, P } from 'ts-pattern'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Dialog, DialogContent, DialogFooter, DialogTrigger } from '@/components/ui/dialog'
-import { answerValidationMap, defaultAnswers, Question, questionnaire } from '@/lib/questionnaire'
+import { answerValidationMap, Question, questionnaire } from '@/lib/questionnaire'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
@@ -15,7 +15,7 @@ type QuestionnaireModalProps = {
   trigger: React.ReactNode
 }
 export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps) {
-  const [answers, setAnswers] = useState<Record<string, unknown>>(defaultAnswers)
+  const [answers, setAnswers] = useState<Record<string, unknown>>({})
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
@@ -40,9 +40,10 @@ export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps)
 
     if (isLastQuestion) {
       // TODO: handle redirect after last question
+      console.log(window.btoa(JSON.stringify(answers)))
+    } else {
+      setActiveQuestionIndex((current) => current + 1)
     }
-
-    setActiveQuestionIndex((current) => current + 1)
   }
 
   const handlePrevious = () => {

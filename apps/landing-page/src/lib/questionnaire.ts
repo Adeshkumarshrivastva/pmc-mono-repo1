@@ -131,15 +131,3 @@ export const questionnaire: Questionnaire = [
     errorMessage: 'Select an option before moving on: You can always change this later.',
   },
 ]
-
-export const defaultAnswers = questionnaire.reduce(
-  (acc, question) => {
-    if (question.type === 'multiSelect') {
-      acc[question.id] = []
-    } else if (question.type === 'singleSelect') {
-      acc[question.id] = ''
-    }
-    return acc
-  },
-  {} as Record<string, unknown>,
-)
