@@ -86,18 +86,23 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="flex justify-between">
-          <div className="text-primary-foreground/50">Copyright © {new Date().getFullYear()} </div>
-          <div className="flex space-x-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+          {/* left column */}
+          <div className="text-primary-foreground/50 text-sm sm:justify-self-start text-center sm:text-left">
+            Copyright © {new Date().getFullYear()}
+          </div>
+
+          {/* right column */}
+          <div className="flex text-sm sm:justify-self-end justify-center space-x-6">
             <a
-              href={'/terms-of-use'}
+              href="/terms-of-use"
               rel="noopener noreferrer"
               className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
             >
               Terms & Conditions
             </a>
             <a
-              href={'/privacy-policy'}
+              href="/privacy-policy"
               rel="noopener noreferrer"
               className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
             >
