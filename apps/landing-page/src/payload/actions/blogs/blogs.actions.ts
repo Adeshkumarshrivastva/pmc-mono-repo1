@@ -3,14 +3,14 @@
 import { getPayloadClient } from '@/lib/payload'
 import { GetBlogInput, GetBlogsInput } from './blogs.input'
 
-export async function getBlogs({ limit, sort }: GetBlogsInput = {}) {
+export async function getBlogs({ limit, sort, page }: GetBlogsInput = {}) {
   const payload = await getPayloadClient()
 
   return payload.find({
     collection: 'blog',
-    limit: limit || 100,
+    limit: limit || 6,
     sort: sort || '-publishedAt',
-    pagination: false,
+    page: page || 1,
   })
 }
 

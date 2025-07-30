@@ -1,15 +1,61 @@
+'use client'
+
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { getBlogs, getServices } from '@/payload/actions'
 import { OurBlog } from '@/payload/types'
 import BlogCard from './blog-card'
+import { useState, useEffect } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 type BlogsSectionProps = {
   data: OurBlog
 }
 
-export default async function BlogsSection({ data }: BlogsSectionProps) {
-  const blogs = await getBlogs()
-  const services = await getServices({})
+export default function BlogsSection({ data }: BlogsSectionProps) {
+  const [blogs, setBlogs] = useState<any>({ docs: [], totalPages: 0, totalDocs: 0 })
+  const [services, setServices] = useState<any>({ docs: [] })
+  const [currentPage, setCurrentPage] = useState(1)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      const [blogsData, servicesData] = await Promise.all([getBlogs({ page: currentPage, limit: 6 }), getServices({})])
+      setBlogs(blogsData)
+      setServices(servicesData)
+      setLoading(false)
+    }
+    fetchData()
+  }, [currentPage])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const renderPageNumbers = () => {
+    const pages = []
+    const maxVisiblePages = 5
+    const startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
+    const endPage = Math.min(blogs.totalPages, startPage + maxVisiblePages - 1)
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <div
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={cn(
+            'w-10 h-10 border-none flex justify-center items-center cursor-pointer',
+            currentPage === i ? 'text-accent-foreground' : '',
+          )}
+        >
+          {i}
+        </div>,
+      )
+    }
+    return pages
+  }
 
   return (
     <div className="px-25 py-15 bg-accent min-h-full w-full">
@@ -29,7 +75,7 @@ export default async function BlogsSection({ data }: BlogsSectionProps) {
               <div className="space-y-4">
                 <div className="bg-card py-2 px-4 rounded-sm cursor-pointer">View All</div>
                 <div className="space-y-4">
-                  {services?.docs.map((service) => (
+                  {services?.docs.map((service: any) => (
                     <p
                       key={service.id}
                       className="py-2 px-4 hover:bg-card rounded-sm cursor-pointer hover:text-primary-foreground"
@@ -44,18 +90,47 @@ export default async function BlogsSection({ data }: BlogsSectionProps) {
         </div>
 
         <div className="flex-1">
-          {blogs.docs.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">Loading blogs...</p>
+            </div>
+          ) : blogs.docs.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">No blogs available yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 space-y-18">
-              {blogs.docs.map((blog) => (
-                <BlogCard key={blog.id} blog={blog} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 space-y-18 mb-8">
+                {blogs.docs.map((blog: any) => (
+                  <BlogCard key={blog.id} blog={blog} />
+                ))}
+              </div>
+            </>
           )}
         </div>
+      </div>
+      <div>
+        {blogs.totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            <Button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="flex items-center gap-2 rounded-full h-8 w-8"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+
+            <div className="flex items-center gap-2">{renderPageNumbers()}</div>
+
+            <Button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === blogs.totalPages}
+              className="flex items-center gap-2 h-8 w-8 rounded-full"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )
