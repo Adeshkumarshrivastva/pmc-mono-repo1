@@ -11,20 +11,13 @@ export default async function WebinarsPage() {
           <h2 className="text-3xl font-semibold tracking-tight text-primary sm:text-4xl md:text-5xl">
             Explore Our Webinars
           </h2>
-          {/* <p className="mt-4 text-base text-muted-foreground sm:text-lg md:mt-6">
-            Learn from industry experts in live and on-demand sessions.
-          </p> */}
         </div>
-
         <WebinarGrid />
       </div>
     </section>
   )
 }
 
-/* ------------------------------------------------------------------ */
-/* Data fetching                                                       */
-/* ------------------------------------------------------------------ */
 async function WebinarGrid() {
   const payload = await getPayloadClient()
   const { docs } = await payload.find({ collection: 'webinars', sort: '-date' })
