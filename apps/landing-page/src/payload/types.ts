@@ -108,6 +108,7 @@ export interface Config {
     'our-services': OurService;
     'contact-us': ContactUs;
     'about-us': AboutUs;
+    'privacy-policy': PrivacyPolicy;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
@@ -115,6 +116,7 @@ export interface Config {
     'our-services': OurServicesSelect<false> | OurServicesSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
+    'privacy-policy': PrivacyPolicySelect<false> | PrivacyPolicySelect<true>;
   };
   locale: null;
   user: User & {
@@ -1146,6 +1148,39 @@ export interface AboutUs {
   createdAt?: string | null;
 }
 /**
+ * Manage the content of your privacy policy page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "privacy-policy".
+ */
+export interface PrivacyPolicy {
+  id: string;
+  title: string;
+  hero?: {
+    headline?: string | null;
+    subhead?: string | null;
+  };
+  lastUpdated?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
@@ -1596,6 +1631,25 @@ export interface AboutUsSelect<T extends boolean = true> {
                   };
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "privacy-policy_select".
+ */
+export interface PrivacyPolicySelect<T extends boolean = true> {
+  title?: T;
+  hero?:
+    | T
+    | {
+        headline?: T;
+        subhead?: T;
+      };
+  lastUpdated?: T;
+  content?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
