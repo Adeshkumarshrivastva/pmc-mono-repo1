@@ -1,0 +1,32 @@
+import { CollectionConfig } from 'payload'
+
+export const Webinars: CollectionConfig = {
+  slug: 'webinars',
+  admin: {
+    useAsTitle: 'title',
+  },
+  fields: [
+    { name: 'title', type: 'text', required: true },
+    { name: 'date', type: 'date', required: true },
+    {
+      name: 'speaker',
+      type: 'group',
+      fields: [
+        { name: 'name', type: 'text' },
+        {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+        },
+        { name: 'profession', type: 'text' },
+      ],
+    },
+    {
+      name: 'poster',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    { name: 'videoLink', type: 'text' },
+    { name: 'description', type: 'richText' },
+  ],
+}
