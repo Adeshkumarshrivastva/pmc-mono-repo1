@@ -76,6 +76,7 @@ export interface Config {
     services: Service;
     leads: Lead;
     appointments: Appointment;
+    webinars: Webinar;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -95,6 +96,7 @@ export interface Config {
     services: ServicesSelect<false> | ServicesSelect<true>;
     leads: LeadsSelect<false> | LeadsSelect<true>;
     appointments: AppointmentsSelect<false> | AppointmentsSelect<true>;
+    webinars: WebinarsSelect<false> | WebinarsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -335,6 +337,39 @@ export interface Appointment {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "webinars".
+ */
+export interface Webinar {
+  id: string;
+  title: string;
+  date: string;
+  speaker?: {
+    name?: string | null;
+    image?: (string | null) | Media;
+    profession?: string | null;
+  };
+  poster?: (string | null) | Media;
+  videoLink?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -375,6 +410,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'appointments';
         value: string | Appointment;
+      } | null)
+    | ({
+        relationTo: 'webinars';
+        value: string | Webinar;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -540,6 +579,26 @@ export interface AppointmentsSelect<T extends boolean = true> {
   email?: T;
   date?: T;
   time?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "webinars_select".
+ */
+export interface WebinarsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  speaker?:
+    | T
+    | {
+        name?: T;
+        image?: T;
+        profession?: T;
+      };
+  poster?: T;
+  videoLink?: T;
+  description?: T;
   updatedAt?: T;
   createdAt?: T;
 }

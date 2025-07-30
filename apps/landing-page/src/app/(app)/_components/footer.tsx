@@ -125,7 +125,7 @@ const NAV_ITEMS = [
 
 const AWARENESS_ITEMS = [
   { id: 'blogs', href: '/blogs', label: 'Blogs' },
-  { id: 'webinar', href: '/webinar', label: 'Webinar' },
+  { id: 'webinar', href: '/webinars', label: 'Webinars & Workshops' },
   { id: 'press-release', href: '/press-release', label: 'Press Releases' },
   { id: 'news', href: '/news', label: 'News' },
   { id: 'campaigns', href: '/campaigns', label: 'Campaigns' },
