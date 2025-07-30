@@ -3,7 +3,7 @@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { getBlogs, getServices } from '@/payload/actions'
-import { OurBlog } from '@/payload/types'
+import { Blog, OurBlog } from '@/payload/types'
 import BlogCard from './blog-card'
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -19,6 +19,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('View All')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +32,18 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
     fetchData()
   }, [currentPage])
 
-  const filteredBlogs = blogs.docs.filter((blog: any) => blog.title?.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredBlogs = blogs.docs.filter((blog: Blog) => {
+    const matchesSearch = blog.title?.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory =
+      selectedCategory === 'View All' ||
+      blog.category?.some((category) => {
+        if (typeof category === 'string') {
+          return category === selectedCategory
+        }
+        return category.name === selectedCategory
+      })
+    return matchesSearch && matchesCategory
+  })
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
@@ -39,6 +51,10 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
+  }
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category)
   }
 
   const renderPageNumbers = () => {
@@ -80,15 +96,31 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
             <div className="flex flex-col gap-6">
               <p className="font-semibold text-2xl text-primary">Blog Categories</p>
               <div className="space-y-4">
-                <div className="bg-card py-2 px-4 rounded-sm cursor-pointer">View All</div>
+                <div
+                  className={cn(
+                    'py-2 px-4 rounded-sm cursor-pointer',
+                    selectedCategory === 'View All'
+                      ? 'bg-card text-primary-foreground'
+                      : 'hover:bg-card hover:text-primary-foreground',
+                  )}
+                  onClick={() => handleCategoryChange('View All')}
+                >
+                  View All
+                </div>
                 <div className="space-y-4">
                   {services?.docs.map((service: any) => (
-                    <p
+                    <div
                       key={service.id}
-                      className="py-2 px-4 hover:bg-card rounded-sm cursor-pointer hover:text-primary-foreground"
+                      className={cn(
+                        'py-2 px-4 rounded-sm cursor-pointer',
+                        selectedCategory === service.name
+                          ? 'bg-card text-primary-foreground'
+                          : 'hover:bg-card hover:text-primary-foreground',
+                      )}
+                      onClick={() => handleCategoryChange(service.name)}
                     >
                       {service.name}
-                    </p>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -119,7 +151,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
         </div>
       </div>
       <div>
-        {blogs.totalPages > 1 && !searchQuery && (
+        {blogs.totalPages > 1 && !searchQuery && selectedCategory === 'View All' && (
           <div className="flex items-center justify-center gap-2 mt-8">
             <Button
               onClick={() => handlePageChange(currentPage - 1)}
