@@ -1,11 +1,11 @@
 import { GlobalConfig } from 'payload'
 
-export const PrivacyPolicy: GlobalConfig = {
-  slug: 'privacy-policy',
-  label: 'Privacy Policy',
+export const TermsAndConditions: GlobalConfig = {
+  slug: 'terms-and-conditions',
+  label: 'Terms & Conditions',
   admin: {
     group: 'Legal',
-    description: 'Manage the content of your privacy policy page.',
+    description: 'Manage the content of your terms and conditions page.',
   },
   fields: [
     {
@@ -13,7 +13,7 @@ export const PrivacyPolicy: GlobalConfig = {
       type: 'text',
       required: true,
       localized: true,
-      defaultValue: 'Privacy Policy',
+      defaultValue: 'Terms & Conditions',
     },
     {
       name: 'hero',
@@ -48,6 +48,7 @@ export const PrivacyPolicy: GlobalConfig = {
       name: 'content',
       type: 'richText',
       required: true,
+      localized: true,
     },
   ],
 }

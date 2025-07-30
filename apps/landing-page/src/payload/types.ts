@@ -109,6 +109,7 @@ export interface Config {
     'contact-us': ContactUs;
     'about-us': AboutUs;
     'privacy-policy': PrivacyPolicy;
+    'terms-and-conditions': TermsAndCondition;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
@@ -117,6 +118,7 @@ export interface Config {
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
     'privacy-policy': PrivacyPolicySelect<false> | PrivacyPolicySelect<true>;
+    'terms-and-conditions': TermsAndConditionsSelect<false> | TermsAndConditionsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1176,7 +1178,38 @@ export interface PrivacyPolicy {
     };
     [k: string]: unknown;
   };
-  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Manage the content of your terms and conditions page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "terms-and-conditions".
+ */
+export interface TermsAndCondition {
+  id: string;
+  title: string;
+  hero?: {
+    headline?: string | null;
+    subhead?: string | null;
+  };
+  lastUpdated?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1649,7 +1682,24 @@ export interface PrivacyPolicySelect<T extends boolean = true> {
       };
   lastUpdated?: T;
   content?: T;
-  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "terms-and-conditions_select".
+ */
+export interface TermsAndConditionsSelect<T extends boolean = true> {
+  title?: T;
+  hero?:
+    | T
+    | {
+        headline?: T;
+        subhead?: T;
+      };
+  lastUpdated?: T;
+  content?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
