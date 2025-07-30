@@ -95,7 +95,7 @@ export default function Footer() {
           {/* right column */}
           <div className="flex text-sm sm:justify-self-end justify-center space-x-6">
             <a
-              href="/terms-of-use"
+              href="/terms-and-conditions"
               rel="noopener noreferrer"
               className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
             >
