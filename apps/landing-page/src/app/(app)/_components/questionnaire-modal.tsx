@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { match, P } from 'ts-pattern'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { Dialog, DialogContent, DialogFooter, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { answerValidationMap, Question, questionnaire } from '@/lib/questionnaire'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -40,6 +40,7 @@ export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps)
 
     if (isLastQuestion) {
       // TODO: handle redirect after last question
+      console.log('answers - ', answers)
       console.log(window.btoa(JSON.stringify(answers)))
     } else {
       setActiveQuestionIndex((current) => current + 1)
@@ -47,6 +48,9 @@ export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps)
   }
 
   const handlePrevious = () => {
+    if (error) {
+      setError(null)
+    }
     setActiveQuestionIndex((current) => current - 1)
   }
 
@@ -54,6 +58,7 @@ export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps)
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="bg-primary-foreground sm:max-w-screen sm:w-[calc(100%-2rem)] h-[calc(100%-2rem)] p-0 flex flex-col">
+        <DialogTitle />
         <div className="p-6 sm:py-16 sm:px-60 flex-1">
           <QuestionCard
             question={activeQuestion}
@@ -93,7 +98,7 @@ export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps)
             <div className="max-w-lg w-full">
               <div className="border border-border rounded-full bg-accent/20 h-4 relative mx-auto">
                 <div
-                  className="absolute h-full bg-primary rounded-full transition-width duration-200"
+                  className="absolute h-full bg-primary rounded-full transition-width duration-300"
                   style={{
                     width: `${(activeQuestionIndex / questionnaire.length) * 100}%`,
                   }}

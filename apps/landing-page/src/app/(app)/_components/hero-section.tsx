@@ -5,7 +5,6 @@ import { CallIcon } from '@/components/ui/icons'
 import { getURLFromMedia } from '@/payload/utils'
 import { Home } from '@/payload/types'
 import AppointmentForm from './appointment-form'
-import QuestionnaireModal from './questionnaire-modal'
 
 type HeroSectionProps = {
   data: Home['heroSetion']
@@ -34,7 +33,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
               ) : null}
             </div>
 
-            <div className="mt-8 flex space-x-2">
+            <div className="mt-8">
               {data?.heroSectionAction ? (
                 <AppointmentForm
                   trigger={
@@ -44,7 +43,6 @@ export default function HeroSection({ data }: HeroSectionProps) {
                   }
                 />
               ) : null}
-              <QuestionnaireModal trigger={<Button variant="outline">Find the right expert</Button>} />
             </div>
           </div>
 

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { Home, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import QuestionnaireModal from './questionnaire-modal'
 
 type ServicesSectionProps = {
   data: Home['servicesSection']
@@ -23,11 +24,20 @@ export default function ServicesSection({ data, services }: ServicesSectionProps
           <div className="space-y-8 sm:space-y-12">
             <header className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-start md:justify-between">
               <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-xl">{data?.title}</h2>
-              {data?.action ? (
-                <Link href={'/services'}>
-                  <Button className="w-full sm:w-auto">{data.action}</Button>
-                </Link>
-              ) : null}
+              <div className="flex space-x-2">
+                <QuestionnaireModal
+                  trigger={
+                    <Button className="bg-accent border border-primary text-primary hover:border-transparent hover:text-primary-foreground">
+                      Find the right expert
+                    </Button>
+                  }
+                />
+                {data?.action ? (
+                  <Link href={'/services'}>
+                    <Button className="w-full sm:w-auto">{data.action}</Button>
+                  </Link>
+                ) : null}
+              </div>
             </header>
 
             <Carousel
