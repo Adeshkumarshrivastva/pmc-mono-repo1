@@ -18,6 +18,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
   const [services, setServices] = useState<any>({ docs: [] })
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,8 +31,14 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
     fetchData()
   }, [currentPage])
 
+  const filteredBlogs = blogs.docs.filter((blog: any) => blog.title?.toLowerCase().includes(searchQuery.toLowerCase()))
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
+  }
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
   }
 
   const renderPageNumbers = () => {
@@ -69,7 +76,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
       <div className="flex justify-between gap-15">
         <div className="sticky top-30 h-fit z-10 flex-shrink-0">
           <div className="flex flex-col gap-6">
-            <Input type="search" placeholder="Search" />
+            <Input type="search" placeholder="Search" value={searchQuery} onChange={handleSearchChange} />
             <div className="flex flex-col gap-6">
               <p className="font-semibold text-2xl text-primary">Blog Categories</p>
               <div className="space-y-4">
@@ -94,14 +101,16 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">Loading blogs...</p>
             </div>
-          ) : blogs.docs.length === 0 ? (
+          ) : filteredBlogs.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-600 text-lg">No blogs available yet.</p>
+              <p className="text-gray-600 text-lg">
+                {searchQuery ? `No blogs found matching "${searchQuery}"` : 'No blogs available yet.'}
+              </p>
             </div>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 space-y-18 mb-8">
-                {blogs.docs.map((blog: any) => (
+                {filteredBlogs.map((blog: any) => (
                   <BlogCard key={blog.id} blog={blog} />
                 ))}
               </div>
@@ -110,7 +119,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
         </div>
       </div>
       <div>
-        {blogs.totalPages > 1 && (
+        {blogs.totalPages > 1 && !searchQuery && (
           <div className="flex items-center justify-center gap-2 mt-8">
             <Button
               onClick={() => handlePageChange(currentPage - 1)}
