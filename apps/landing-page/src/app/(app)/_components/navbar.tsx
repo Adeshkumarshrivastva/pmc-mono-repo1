@@ -23,6 +23,7 @@ const NAV_ITEMS = [
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'services', href: '/services', label: 'Services' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
+  { id: 'blogs', href: '/blogs', label: 'Blogs' },
 ] as const
 
 const HOVER_DELAY = 400
