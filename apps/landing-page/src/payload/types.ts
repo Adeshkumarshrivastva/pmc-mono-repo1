@@ -76,6 +76,7 @@ export interface Config {
     services: Service;
     leads: Lead;
     appointments: Appointment;
+    webinars: Webinar;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -95,6 +96,7 @@ export interface Config {
     services: ServicesSelect<false> | ServicesSelect<true>;
     leads: LeadsSelect<false> | LeadsSelect<true>;
     appointments: AppointmentsSelect<false> | AppointmentsSelect<true>;
+    webinars: WebinarsSelect<false> | WebinarsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -109,6 +111,8 @@ export interface Config {
     'contact-us': ContactUs;
     'about-us': AboutUs;
     'our-blogs': OurBlog;
+    'privacy-policy': PrivacyPolicy;
+    'terms-and-conditions': TermsAndCondition;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
@@ -117,6 +121,8 @@ export interface Config {
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
     'our-blogs': OurBlogsSelect<false> | OurBlogsSelect<true>;
+    'privacy-policy': PrivacyPolicySelect<false> | PrivacyPolicySelect<true>;
+    'terms-and-conditions': TermsAndConditionsSelect<false> | TermsAndConditionsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -272,6 +278,54 @@ export interface Expert {
     };
     [k: string]: unknown;
   } | null;
+  experties?: (string | Service)[] | null;
+  minimumFee?: number | null;
+  /**
+   * Duration in minutes
+   */
+  sessionDuration?: number | null;
+  /**
+   * Calendly or other booking link
+   */
+  bookingLink?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: string;
+  _order?: string | null;
+  name: string;
+  slug: string;
+  image?: (string | null) | Media;
+  /**
+   * Leave empty for Main Service.
+   */
+  parent?: (string | null) | Service;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  isActive?: boolean | null;
+  subservices?: {
+    docs?: (string | Service)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -334,6 +388,39 @@ export interface Appointment {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "webinars".
+ */
+export interface Webinar {
+  id: string;
+  title: string;
+  date: string;
+  speaker?: {
+    name?: string | null;
+    image?: (string | null) | Media;
+    profession?: string | null;
+  };
+  poster?: (string | null) | Media;
+  videoLink?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -374,6 +461,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'appointments';
         value: string | Appointment;
+      } | null)
+    | ({
+        relationTo: 'webinars';
+        value: string | Webinar;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -473,6 +564,10 @@ export interface ExpertsSelect<T extends boolean = true> {
   image?: T;
   profession?: T;
   headline?: T;
+  experties?: T;
+  minimumFee?: T;
+  sessionDuration?: T;
+  bookingLink?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -540,6 +635,26 @@ export interface AppointmentsSelect<T extends boolean = true> {
   email?: T;
   date?: T;
   time?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "webinars_select".
+ */
+export interface WebinarsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  speaker?:
+    | T
+    | {
+        name?: T;
+        image?: T;
+        profession?: T;
+      };
+  poster?: T;
+  videoLink?: T;
+  description?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1150,6 +1265,70 @@ export interface AboutUs {
   createdAt?: string | null;
 }
 /**
+ * Manage the content of your privacy policy page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "privacy-policy".
+ */
+export interface PrivacyPolicy {
+  id: string;
+  title: string;
+  hero?: {
+    headline?: string | null;
+    subhead?: string | null;
+  };
+  lastUpdated?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Manage the content of your terms and conditions page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "terms-and-conditions".
+ */
+export interface TermsAndCondition {
+  id: string;
+  title: string;
+  hero?: {
+    headline?: string | null;
+    subhead?: string | null;
+  };
+  lastUpdated?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "our-blogs".
  */
@@ -1617,11 +1796,44 @@ export interface AboutUsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+<<<<<<< HEAD
  * via the `definition` "our-blogs_select".
  */
 export interface OurBlogsSelect<T extends boolean = true> {
   title?: T;
   description?: T;
+=======
+ * via the `definition` "privacy-policy_select".
+ */
+export interface PrivacyPolicySelect<T extends boolean = true> {
+  title?: T;
+  hero?:
+    | T
+    | {
+        headline?: T;
+        subhead?: T;
+      };
+  lastUpdated?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "terms-and-conditions_select".
+ */
+export interface TermsAndConditionsSelect<T extends boolean = true> {
+  title?: T;
+  hero?:
+    | T
+    | {
+        headline?: T;
+        subhead?: T;
+      };
+  lastUpdated?: T;
+  content?: T;
+>>>>>>> main
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

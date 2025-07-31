@@ -4,9 +4,15 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DialogTrigger } from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { appointmentFormInput, AppointmentFormInput } from '@/payload/actions/appointments/appointments.input'
 import { createAppointment } from '@/payload/actions/appointments/appointments.actions'
 
@@ -15,10 +21,9 @@ type AppointmentFormProps = {
 }
 
 export default function AppointmentForm({ trigger }: AppointmentFormProps) {
-  // TODO: Open form in Drawer in mobile
   return (
     <Dialog>
-      <DialogTrigger>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="bg-primary-foreground">
         <DialogHeader>
           <DialogTitle>Book Trial Session</DialogTitle>

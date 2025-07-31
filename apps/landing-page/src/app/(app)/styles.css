@@ -14,6 +14,7 @@
   --card: #778c6e;
   --card-foreground: #fefee3;
   --border: #d0d0d0;
+  --error: #9f0712;
   --font-family: 'Figtree', sans-serif;
   --font-display: 'Barlow', sans-serif;
 }
@@ -29,6 +30,7 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-border: var(--border);
+  --color-error: var(--error);
   --default-font-family: var(--font-family);
   --font-display: var(--font-display);
 }

@@ -31,5 +31,35 @@ export const Experts: CollectionConfig = {
       label: 'Head Line',
       required: false,
     },
+    {
+      name: 'experties',
+      type: 'relationship',
+      label: 'Experties',
+      relationTo: 'services',
+      hasMany: true,
+    },
+    {
+      name: 'minimumFee',
+      type: 'number',
+      label: 'Minimum Fee',
+      min: 0,
+    },
+    {
+      name: 'sessionDuration',
+      type: 'number',
+      label: 'Session Duration',
+      admin: {
+        description: 'Duration in minutes',
+      },
+      min: 15,
+    },
+    {
+      name: 'bookingLink',
+      type: 'text',
+      label: 'Booking Link',
+      admin: {
+        description: 'Calendly or other booking link',
+      },
+    },
   ],
 }

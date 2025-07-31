@@ -86,18 +86,23 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="flex justify-between">
-          <div className="text-primary-foreground/50">Copyright © {new Date().getFullYear()} </div>
-          <div className="flex space-x-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+          {/* left column */}
+          <div className="text-primary-foreground/50 text-sm sm:justify-self-start text-center sm:text-left">
+            Copyright © {new Date().getFullYear()}
+          </div>
+
+          {/* right column */}
+          <div className="flex text-sm sm:justify-self-end justify-center space-x-6">
             <a
-              href={'/terms-of-use'}
+              href="/terms-and-conditions"
               rel="noopener noreferrer"
               className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
             >
               Terms & Conditions
             </a>
             <a
-              href={'/privacy-policy'}
+              href="/privacy-policy"
               rel="noopener noreferrer"
               className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
             >
@@ -116,17 +121,18 @@ const NAV_ITEMS = [
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
   { id: 'services', href: '/services', label: 'Services' },
+  { id: 'our-experts', href: '/our-experts', label: 'Our Experts' },
   { id: 'blogs', href: '/blogs', label: 'Blogs' },
 ]
 
 const AWARENESS_ITEMS = [
   { id: 'blogs', href: '/blogs', label: 'Blogs' },
-  { id: 'webinar', href: '/webinar', label: 'Webinar' },
-  { id: 'press-release', href: '/press-release', label: 'Press Releases' },
-  { id: 'news', href: '/news', label: 'News' },
-  { id: 'campaigns', href: '/campaigns', label: 'Campaigns' },
-  { id: 'ambassador-program', href: '/ambassador-program', label: 'Ambassador Program' },
-  { id: 'internship', href: '/internship', label: 'Internship' },
+  { id: 'webinar', href: '/webinars', label: 'Webinars & Workshops' },
+  // { id: 'press-release', href: '/press-release', label: 'Press Releases' },
+  // { id: 'news', href: '/news', label: 'News' },
+  // { id: 'campaigns', href: '/campaigns', label: 'Campaigns' },
+  // { id: 'ambassador-program', href: '/ambassador-program', label: 'Ambassador Program' },
+  { id: 'internship', href: 'mailto:contact@positivemindcare.com', label: 'Internship' },
 ]
 
 const FOLLOW_ITEMS = [

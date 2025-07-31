@@ -56,7 +56,7 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
                     'relative h-[402px] p-6 rounded-lg flex flex-col justify-between',
                     feature.background === 'primary'
                       ? 'bg-card text-primary-foreground'
-                      : 'bg-card-foreground text-primary border border-green-900',
+                      : 'bg-card-foreground text-primary border border-primary',
                   )}
                 >
                   <h3 className="z-10 text-3xl font-semibold mb-2">{feature.title}</h3>

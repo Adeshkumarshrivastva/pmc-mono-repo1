@@ -33,8 +33,8 @@ export default function HeroSection({ data }: HeroSectionProps) {
               ) : null}
             </div>
 
-            {data?.heroSectionAction ? (
-              <div className="mt-8 flex space-x-2">
+            <div className="mt-8">
+              {data?.heroSectionAction ? (
                 <AppointmentForm
                   trigger={
                     <Button variant="secondary" icon={<CallIcon />} className="w-full sm:w-auto">
@@ -42,9 +42,8 @@ export default function HeroSection({ data }: HeroSectionProps) {
                     </Button>
                   }
                 />
-                {/* <Button variant="outline">Find the Right Expert</Button> */}
-              </div>
-            ) : null}
+              ) : null}
+            </div>
           </div>
 
           <div className="flex-shrink-0 w-full xl:w-72">

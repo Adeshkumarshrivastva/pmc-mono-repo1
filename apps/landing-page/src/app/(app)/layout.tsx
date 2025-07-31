@@ -7,6 +7,11 @@ export const metadata = {
   description:
     'Most Advance treatment for Depression, Anxiety, OCD, Brain Stroke and Personalized Online Counselling Services at Positive Mind Care.',
   title: 'Positive Mind Care',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/favicon.ico',
+    shortcut: '/favicon.ico',
+  },
 }
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {
