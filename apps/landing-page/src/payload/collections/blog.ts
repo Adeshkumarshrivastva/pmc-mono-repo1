@@ -23,6 +23,14 @@ export const Blog: CollectionConfig = {
       required: true,
     },
     {
+      name: 'category',
+      type: 'relationship',
+      relationTo: 'services',
+      label: 'Category',
+      hasMany: true,
+      required: true,
+    },
+    {
       name: 'image',
       type: 'upload',
       label: 'Image',

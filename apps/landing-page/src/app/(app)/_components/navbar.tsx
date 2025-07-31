@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { id: 'services', href: '/services', label: 'Services' },
   { id: 'our-experts', href: '/our-experts', label: 'Our Experts' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
+  { id: 'blogs', href: '/blogs', label: 'Blogs' },
 ] as const
 
 const HOVER_DELAY = 400

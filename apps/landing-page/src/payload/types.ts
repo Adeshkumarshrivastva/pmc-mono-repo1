@@ -110,6 +110,7 @@ export interface Config {
     'our-services': OurService;
     'contact-us': ContactUs;
     'about-us': AboutUs;
+    'our-blogs': OurBlog;
     'privacy-policy': PrivacyPolicy;
     'terms-and-conditions': TermsAndCondition;
   };
@@ -119,6 +120,7 @@ export interface Config {
     'our-services': OurServicesSelect<false> | OurServicesSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
+    'our-blogs': OurBlogsSelect<false> | OurBlogsSelect<true>;
     'privacy-policy': PrivacyPolicySelect<false> | PrivacyPolicySelect<true>;
     'terms-and-conditions': TermsAndConditionsSelect<false> | TermsAndConditionsSelect<true>;
   };
@@ -193,6 +195,7 @@ export interface Blog {
   id: string;
   title: string;
   author: string;
+  category: (string | Service)[];
   image?: (string | null) | Media;
   content: {
     root: {
@@ -210,6 +213,44 @@ export interface Blog {
     [k: string]: unknown;
   };
   publishedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: string;
+  _order?: string | null;
+  name: string;
+  slug: string;
+  image?: (string | null) | Media;
+  /**
+   * Leave empty for Main Service.
+   */
+  parent?: (string | null) | Service;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  isActive?: boolean | null;
+  subservices?: {
+    docs?: (string | Service)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -507,6 +548,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface BlogSelect<T extends boolean = true> {
   title?: T;
   author?: T;
+  category?: T;
   image?: T;
   content?: T;
   publishedAt?: T;
@@ -1288,6 +1330,17 @@ export interface TermsAndCondition {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "our-blogs".
+ */
+export interface OurBlog {
+  id: string;
+  title?: string | null;
+  description?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -1743,6 +1796,13 @@ export interface AboutUsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+<<<<<<< HEAD
+ * via the `definition` "our-blogs_select".
+ */
+export interface OurBlogsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+=======
  * via the `definition` "privacy-policy_select".
  */
 export interface PrivacyPolicySelect<T extends boolean = true> {
@@ -1773,6 +1833,7 @@ export interface TermsAndConditionsSelect<T extends boolean = true> {
       };
   lastUpdated?: T;
   content?: T;
+>>>>>>> main
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
