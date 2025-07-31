@@ -24,26 +24,23 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-      const [blogsData, servicesData] = await Promise.all([getBlogs({ page: currentPage, limit: 6 }), getServices({})])
+      const [blogsData, servicesData] = await Promise.all([
+        getBlogs({
+          page: currentPage,
+          limit: 6,
+          search: searchQuery || undefined,
+          category: selectedCategory !== 'View All' ? selectedCategory : undefined,
+        }),
+        getServices({}),
+      ])
       setBlogs(blogsData)
       setServices(servicesData)
       setLoading(false)
     }
     fetchData()
-  }, [currentPage])
+  }, [currentPage, searchQuery, selectedCategory])
 
-  const filteredBlogs = blogs.docs.filter((blog: Blog) => {
-    const matchesSearch = blog.title?.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory =
-      selectedCategory === 'View All' ||
-      blog.category?.some((category) => {
-        if (typeof category === 'string') {
-          return category === selectedCategory
-        }
-        return category.name === selectedCategory
-      })
-    return matchesSearch && matchesCategory
-  })
+  const filteredBlogs = blogs.docs
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
@@ -51,10 +48,12 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
+    setCurrentPage(1)
   }
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
+    setCurrentPage(1)
   }
 
   const renderPageNumbers = () => {
@@ -160,7 +159,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
         </div>
       </div>
       <div className="mt-12 flex justify-end">
-        {blogs.totalPages > 1 && !searchQuery && selectedCategory === 'View All' && (
+        {blogs.totalPages > 1 && (
           <div className="flex items-center justify-center gap-2">
             <Button
               onClick={() => handlePageChange(currentPage - 1)}
