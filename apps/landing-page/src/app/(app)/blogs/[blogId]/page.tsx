@@ -1,7 +1,6 @@
-import { getBlogs } from '@/payload/actions/blogs/blogs.actions'
+import { getBlog } from '@/payload/actions/blogs/blogs.actions'
 import { getURLFromMedia } from '@/payload/utils'
 import { notFound } from 'next/navigation'
-import { Blog } from '@/payload/types'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 
 interface BlogDetailPageProps {
@@ -9,8 +8,8 @@ interface BlogDetailPageProps {
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
-  const blogs = await getBlogs()
-  const blog = blogs?.docs.find((b: Blog) => b.id === params.blogId)
+  const blog = await getBlog({ blogId: params.blogId })
+
   if (!blog) return notFound()
 
   return (
