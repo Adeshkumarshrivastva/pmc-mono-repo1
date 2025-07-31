@@ -6,8 +6,9 @@ import { getBlogs, getServices } from '@/payload/actions'
 import { OurBlog } from '@/payload/types'
 import BlogCard from './blog-card'
 import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Sheet, SheetTrigger, SheetContent, SheetClose } from '@/components/ui/sheet'
 
 type BlogsSectionProps = {
   data: OurBlog
@@ -94,7 +95,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
       <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12 xl:gap-15">
         <div className="w-full lg:w-80 lg:max-w-80 lg:flex-shrink-0">
           <div className="lg:sticky lg:top-30 lg:h-fit lg:z-10">
-            <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="flex lg:flex-col gap-4 sm:gap-6">
               <Input
                 type="search"
                 placeholder="Search"
@@ -104,7 +105,64 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                 style={{ fontFamily: 'Mulish, sans-serif' }}
               />
 
-              <div className="flex flex-col gap-4 sm:gap-6">
+              <div className="lg:hidden w-full">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button
+                      className="w-full border border-primary text-base sm:text-lg h-10 sm:h-11 lg:h-12 text-left"
+                      style={{ fontFamily: 'Mulish, sans-serif' }}
+                    >
+                      <span className="flex items-center justify-between w-full">
+                        <span className="block max-w-[80px] truncate" title={selectedCategory || 'Select Category'}>
+                          {selectedCategory || 'Select Category'}
+                        </span>
+                        <ChevronDown className="ml-2 w-4 h-4 shrink-0" />
+                      </span>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="bottom" className="p-0 max-h-[70vh] overflow-y-auto rounded-t-xl">
+                    <div className="p-4">
+                      <h2 className="font-semibold text-xl sm:text-2xl text-primary mb-4">Blog Categories</h2>
+                      <div className="space-y-2 sm:space-y-4 overflow-auto max-h-[50vh]">
+                        <SheetClose asChild>
+                          <div
+                            className={cn(
+                              'py-2 px-3 sm:px-4 rounded-sm cursor-pointer truncate text-sm sm:text-base transition-colors',
+                              selectedCategory === 'View All'
+                                ? 'bg-card text-primary-foreground'
+                                : 'hover:bg-card hover:text-primary-foreground text-primary',
+                            )}
+                            onClick={() => handleCategoryChange('View All')}
+                            title="View All"
+                          >
+                            View All
+                          </div>
+                        </SheetClose>
+                        <div className="space-y-2 sm:space-y-4">
+                          {services?.docs.map((service: any) => (
+                            <SheetClose asChild key={service.id}>
+                              <div
+                                className={cn(
+                                  'py-2 px-3 sm:px-4 rounded-sm cursor-pointer truncate text-sm sm:text-base transition-colors',
+                                  selectedCategory === service.name
+                                    ? 'bg-card text-primary-foreground'
+                                    : 'hover:bg-card hover:text-primary-foreground text-primary',
+                                )}
+                                onClick={() => handleCategoryChange(service.name)}
+                                title={service.name}
+                              >
+                                {service.name}
+                              </div>
+                            </SheetClose>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+
+              <div className="hidden lg:flex flex-col gap-4 sm:gap-6">
                 <h2 className="font-semibold text-xl sm:text-2xl text-primary">Blog Categories</h2>
                 <div className="space-y-2 sm:space-y-4 overflow-auto max-h-[500px]">
                   <div
