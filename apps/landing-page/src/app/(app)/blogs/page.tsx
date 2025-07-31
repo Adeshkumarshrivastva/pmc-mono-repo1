@@ -1,6 +1,6 @@
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { getPayloadClient } from '@/lib/payload'
-import BlogsSection from './_components/blogs-section'
+import Blogs from './_components/blogs'
 
 export default async function BlogsPage() {
   const payload = await getPayloadClient()
@@ -10,7 +10,7 @@ export default async function BlogsPage() {
 
   return (
     <div style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
-      <BlogsSection data={ourBlogs} />
+      <Blogs data={ourBlogs} />
     </div>
   )
 }

@@ -10,11 +10,11 @@ import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '@/components/ui/sheet'
 
-type BlogsSectionProps = {
+type BlogsProps = {
   data: OurBlog
 }
 
-export default function BlogsSection({ data }: BlogsSectionProps) {
+export default function Blogs({ data }: BlogsProps) {
   const [blogs, setBlogs] = useState<any>({ docs: [], totalPages: 0, totalDocs: 0 })
   const [services, setServices] = useState<any>({ docs: [] })
   const [currentPage, setCurrentPage] = useState(1)
