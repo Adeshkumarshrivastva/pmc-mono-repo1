@@ -35,7 +35,6 @@ export default function Navbar({ services }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
       <nav className="flex items-center justify-between h-full px-4 py-2 mx-auto">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Logo className="size-16" />
           <div className="text-left">
@@ -44,7 +43,6 @@ export default function Navbar({ services }: NavbarProps) {
           </div>
         </Link>
 
-        {/* Desktop / Tablet nav */}
         <div className="flex-1 hidden lg:flex items-center justify-center space-x-8">
           {NAV_ITEMS.map((item) => {
             const isActive = `/${pathname.split('/')[1]}` === item.href
@@ -65,12 +63,10 @@ export default function Navbar({ services }: NavbarProps) {
           })}
         </div>
 
-        {/* CTA */}
         <Button variant="secondary" icon={<CallIcon />} className="hidden lg:flex" onClick={handleBooking}>
           Book Appointment
         </Button>
 
-        {/* Mobile / small-tablet sheet */}
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger className="block lg:hidden">
             <MenuIcon />
