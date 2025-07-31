@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { match, P } from 'ts-pattern'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -15,6 +16,7 @@ type QuestionnaireModalProps = {
   trigger: React.ReactNode
 }
 export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps) {
+  const router = useRouter()
   const [answers, setAnswers] = useState<Record<string, unknown>>({})
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
   const [error, setError] = useState<string | null>(null)
@@ -39,9 +41,8 @@ export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps)
     }
 
     if (isLastQuestion) {
-      // TODO: handle redirect after last question
-      console.log('answers - ', answers)
-      console.log(window.btoa(JSON.stringify(answers)))
+      const filterables = window.btoa(JSON.stringify(answers))
+      router.push(`/our-counselors?filterable=${filterables}`)
     } else {
       setActiveQuestionIndex((current) => current + 1)
     }

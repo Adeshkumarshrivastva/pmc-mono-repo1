@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ChevronDown, ChevronRight, MenuIcon } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { id: 'about', href: '/about-us', label: 'About Us' },
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'services', href: '/services', label: 'Services' },
+  { id: 'our-counselors', href: '/our-counselors', label: 'Our Counselors' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ] as const
 

@@ -231,32 +231,16 @@ export interface Expert {
     };
     [k: string]: unknown;
   } | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "team-members".
- */
-export interface TeamMember {
-  id: string;
-  memberName: string;
-  image: string | Media;
-  role: string;
-  bio: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonial".
- */
-export interface Testimonial {
-  id: string;
-  authorName: string;
-  auhtorImage: string | Media;
-  title: string;
-  message: string;
+  experties?: (string | Service)[] | null;
+  minimumFee?: number | null;
+  /**
+   * Duration in minutes
+   */
+  sessionDuration?: number | null;
+  /**
+   * Calendly or other booking link
+   */
+  bookingLink?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -295,6 +279,32 @@ export interface Service {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: string;
+  memberName: string;
+  image: string | Media;
+  role: string;
+  bio: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonial".
+ */
+export interface Testimonial {
+  id: string;
+  authorName: string;
+  auhtorImage: string | Media;
+  title: string;
+  message: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -469,6 +479,10 @@ export interface ExpertsSelect<T extends boolean = true> {
   image?: T;
   profession?: T;
   headline?: T;
+  experties?: T;
+  minimumFee?: T;
+  sessionDuration?: T;
+  bookingLink?: T;
   updatedAt?: T;
   createdAt?: T;
 }
