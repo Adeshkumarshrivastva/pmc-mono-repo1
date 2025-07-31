@@ -15,11 +15,13 @@ export default function BlogCard({ blog }: BlogCardProps) {
       </div>
 
       <div className="bg-card rounded-3xl p-7 -mt-10 mx-3 sm:mx-4 shadow-lg lg:absolute lg:left-3 lg:-right-6 lg:-bottom-16 lg:max-w-none lg:min-h-[160px] lg:flex lg:flex-col lg:justify-between z-10">
-        <h3 className="text-base sm:text-lg text-primary-foreground mb-4 font-medium lg:line-clamp-2">{blog.title}</h3>
+        <h3 className="text-base sm:text-lg text-primary-foreground mb-4 font-medium lg:line-clamp-2 max-w-[270px]">
+          {blog.title}
+        </h3>
 
         <div className="flex items-center justify-between gap-2 lg:mt-auto">
           <div className="flex-1 min-w-0">
-            <div className="text-base text-primary-foreground" style={{ fontFamily: 'Mulish, sans-serif' }}>
+            <div className="text-base text-primary-foreground mb-1" style={{ fontFamily: 'Mulish, sans-serif' }}>
               {blog.author}
             </div>
             <div className="text-xs text-primary-foreground/80">
