@@ -33,19 +33,21 @@ export default function ExpertsSection({ data }: ExportsectionProps) {
         <div className="max-w-7xl mx-auto ">
           <div className="space-y-6 sm:space-y-10 lg:space-y-15">
             <div className="flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-0">
-              <h2 className="font-semibold text-xl sm:text-2xl lg:text-5xl max-w-full md:max-w-xl">{data?.title}</h2>
+              <h2 className="font-semibold text-xl sm:text-2xl md:text-4xl max-w-full md:max-w-xl">{data?.title}</h2>
               <div className="flex gap-2 self-start sm:self-auto">
                 <Button
                   icon={<OouiArrowPreviousLtr className="h-4 w-4" />}
-                  variant={'secondary'}
-                  className="p-0 rounded-full h-7 w-7 flex items-center justify-center text-foreground border cursor-pointer"
+                  variant="secondary"
+                  size="icon"
+                  className="border rounded-full"
                   onClick={handlePrev}
                   disabled={startIdx === 0}
                 />
                 <Button
                   icon={<OouiArrowPreviousRtl className="h-4 w-4" />}
-                  variant={'secondary'}
-                  className="p-0 rounded-full h-7 w-7 flex items-center justify-center text-foreground border cursor-pointer"
+                  variant="secondary"
+                  size="icon"
+                  className="border rounded-full"
                   onClick={handleNext}
                   disabled={startIdx + cardsPerPage >= experts.length}
                 />

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ChevronDown, ChevronRight, MenuIcon } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { id: 'about', href: '/about-us', label: 'About Us' },
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'services', href: '/services', label: 'Services' },
+  { id: 'our-counselors', href: '/our-counselors', label: 'Our Counselors' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ] as const
 
@@ -36,7 +37,7 @@ export default function Navbar({ services }: NavbarProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-primary text-primary-foreground" style={{ height: NAVBAR_HEIGHT }}>
+    <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
       <nav className="flex items-center justify-between h-full px-4 py-2 mx-auto">
         <Link href="/" className="flex items-center gap-2">
           <Logo className="size-16" />

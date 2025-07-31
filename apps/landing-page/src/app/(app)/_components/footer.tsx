@@ -121,16 +121,17 @@ const NAV_ITEMS = [
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
   { id: 'services', href: '/services', label: 'Services' },
+  { id: 'our-counselors', href: '/our-counselors', label: 'Our Counselors' },
 ]
 
 const AWARENESS_ITEMS = [
   { id: 'blogs', href: '/blogs', label: 'Blogs' },
   { id: 'webinar', href: '/webinars', label: 'Webinars & Workshops' },
-  { id: 'press-release', href: '/press-release', label: 'Press Releases' },
-  { id: 'news', href: '/news', label: 'News' },
-  { id: 'campaigns', href: '/campaigns', label: 'Campaigns' },
-  { id: 'ambassador-program', href: '/ambassador-program', label: 'Ambassador Program' },
-  { id: 'internship', href: '/internship', label: 'Internship' },
+  // { id: 'press-release', href: '/press-release', label: 'Press Releases' },
+  // { id: 'news', href: '/news', label: 'News' },
+  // { id: 'campaigns', href: '/campaigns', label: 'Campaigns' },
+  // { id: 'ambassador-program', href: '/ambassador-program', label: 'Ambassador Program' },
+  { id: 'internship', href: 'mailto:contact@positivemindcare.com', label: 'Internship' },
 ]
 
 const FOLLOW_ITEMS = [
