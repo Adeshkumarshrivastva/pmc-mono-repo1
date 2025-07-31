@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getPayloadClient } from '@/lib/payload'
 import { getURLFromMedia } from '@/payload/utils'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Webinar } from '@/payload/types'
 
 export default async function WebinarsPage() {
   return (
@@ -20,21 +21,18 @@ export default async function WebinarsPage() {
 
 async function WebinarGrid() {
   const payload = await getPayloadClient()
-  const { docs } = await payload.find({ collection: 'webinars', sort: '-date' })
-
-  if (!docs.length)
-    return <p className="text-center text-muted-foreground">No webinars scheduled yet. Check back soon!</p>
+  const webinars = await payload.find({ collection: 'webinars', sort: '-date' })
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {docs.map((webinar) => (
+      {webinars.docs.map((webinar) => (
         <WebinarCard key={webinar.id} webinar={webinar} />
       ))}
     </div>
   )
 }
 
-function WebinarCard({ webinar }: { webinar: any }) {
+function WebinarCard({ webinar }: { webinar: Webinar }) {
   const href = `/webinars/${webinar.id}`
   const date = new Date(webinar.date).toLocaleDateString('en-IN', {
     year: 'numeric',
@@ -43,10 +41,7 @@ function WebinarCard({ webinar }: { webinar: any }) {
   })
 
   return (
-    <Link
-      href={href}
-      className="group relative flex flex-col overflow-hidden rounded-2xl bg-card text-card-foreground shadow-sm ring-1 ring-border/50 transition-all hover:scale-[1.02] hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
+    <Link href={href} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card text-card-foreground">
       <AspectRatio ratio={16 / 9} className="bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
