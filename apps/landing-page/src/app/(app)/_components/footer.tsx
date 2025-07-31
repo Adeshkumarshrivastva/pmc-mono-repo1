@@ -122,7 +122,6 @@ const NAV_ITEMS = [
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
   { id: 'services', href: '/services', label: 'Services' },
   { id: 'our-experts', href: '/our-experts', label: 'Our Experts' },
-  { id: 'blogs', href: '/blogs', label: 'Blogs' },
 ]
 
 const AWARENESS_ITEMS = [

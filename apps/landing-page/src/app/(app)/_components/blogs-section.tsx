@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { CircleArrowRightIcon, ChatIcon } from '@/components/ui/icons'
 import { Home } from '@/payload/types'
@@ -21,15 +22,18 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
               <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl max-w-md">{data?.title}</h2>
 
               {data?.action && (
-                <Button icon={<ChatIcon />} className="w-full sm:w-auto">
-                  {data.action}
-                </Button>
+                <Link href={'/blogs'}>
+                  <Button icon={<ChatIcon />} className="w-full sm:w-auto">
+                    {data.action}
+                  </Button>
+                </Link>
               )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
               {data.featuredBlogs.map((blog) => {
                 if (typeof blog === 'string') return null
+
                 return (
                   <article
                     key={blog.id}
@@ -44,27 +48,31 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                       />
                     </div>
 
-                    <div className="bg-card p-4 sm:p-5 rounded-3xl -mt-10 mx-3 sm:mx-4 shadow-lg lg:absolute lg:left-4 lg:right-4 lg:-bottom-4 lg:max-w-none z-10">
-                      <h3 className="text-base sm:text-lg font-semibold text-primary-foreground mb-2">{blog.title}</h3>
+                    <Link href={`/blogs/${blog.id}`}>
+                      <div className="bg-card p-4 sm:p-5 rounded-3xl -mt-10 mx-3 sm:mx-4 shadow-lg lg:absolute lg:left-4 lg:right-4 lg:-bottom-4 lg:max-w-none z-10">
+                        <h3 className="text-base sm:text-lg font-semibold text-primary-foreground mb-2">
+                          {blog.title}
+                        </h3>
 
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <div className="text-sm text-primary-foreground">{blog.author}</div>
-                          <div className="text-xs text-primary-foreground/80">
-                            {new Date(blog.publishedAt).toLocaleDateString('en-IN', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                            })}
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm text-primary-foreground">{blog.author}</div>
+                            <div className="text-xs text-primary-foreground/80">
+                              {new Date(blog.publishedAt).toLocaleDateString('en-IN', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              })}
+                            </div>
                           </div>
-                        </div>
 
-                        <Button
-                          icon={<CircleArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />}
-                          className="bg-transparent hover:bg-transparent p-2 shrink-0"
-                        />
+                          <Button
+                            icon={<CircleArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />}
+                            className="bg-transparent hover:bg-transparent p-2 shrink-0"
+                          />
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </article>
                 )
               })}

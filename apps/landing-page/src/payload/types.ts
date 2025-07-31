@@ -110,9 +110,9 @@ export interface Config {
     'our-services': OurService;
     'contact-us': ContactUs;
     'about-us': AboutUs;
-    'our-blogs': OurBlog;
     'privacy-policy': PrivacyPolicy;
     'terms-and-conditions': TermsAndCondition;
+    'our-blogs': OurBlog;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
@@ -120,9 +120,9 @@ export interface Config {
     'our-services': OurServicesSelect<false> | OurServicesSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
-    'our-blogs': OurBlogsSelect<false> | OurBlogsSelect<true>;
     'privacy-policy': PrivacyPolicySelect<false> | PrivacyPolicySelect<true>;
     'terms-and-conditions': TermsAndConditionsSelect<false> | TermsAndConditionsSelect<true>;
+    'our-blogs': OurBlogsSelect<false> | OurBlogsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -288,44 +288,6 @@ export interface Expert {
    * Calendly or other booking link
    */
   bookingLink?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services".
- */
-export interface Service {
-  id: string;
-  _order?: string | null;
-  name: string;
-  slug: string;
-  image?: (string | null) | Media;
-  /**
-   * Leave empty for Main Service.
-   */
-  parent?: (string | null) | Service;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  isActive?: boolean | null;
-  subservices?: {
-    docs?: (string | Service)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1796,13 +1758,6 @@ export interface AboutUsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
-<<<<<<< HEAD
- * via the `definition` "our-blogs_select".
- */
-export interface OurBlogsSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-=======
  * via the `definition` "privacy-policy_select".
  */
 export interface PrivacyPolicySelect<T extends boolean = true> {
@@ -1833,7 +1788,17 @@ export interface TermsAndConditionsSelect<T extends boolean = true> {
       };
   lastUpdated?: T;
   content?: T;
->>>>>>> main
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "our-blogs_select".
+ */
+export interface OurBlogsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

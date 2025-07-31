@@ -1,14 +1,15 @@
-import { getBlog } from '@/payload/actions/blogs/blogs.actions'
-import { getURLFromMedia } from '@/payload/utils'
 import { notFound } from 'next/navigation'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import { getBlog } from '@/payload/actions/blogs/blogs.actions'
+import { getURLFromMedia } from '@/payload/utils'
 
 interface BlogDetailPageProps {
-  params: { blogId: string }
+  params: Promise<{ blogId: string }>
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
-  const blog = await getBlog({ blogId: params.blogId })
+  const { blogId } = await params
+  const blog = await getBlog({ blogId })
 
   if (!blog) return notFound()
 
@@ -16,6 +17,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     <main className="w-full bg-accent">
       <div className="max-w-3xl mx-auto py-12 px-4">
         <div className="mb-8">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={getURLFromMedia(blog.image ?? '')}
             alt={blog.title}
