@@ -293,3 +293,27 @@ export function SolarAddCircleOutline(props: IconProps) {
     </svg>
   )
 }
+
+export function LocationIcon(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M12 2c-4.418 0-8 4.003-8 8.5c0 4.462 2.553 9.312 6.537 11.174a3.45 3.45 0 0 0 2.926 0C17.447 19.812 20 14.962 20 10.5C20 6.003 16.418 2 12 2"
+        opacity=".5"
+      />
+      <path fill="currentColor" d="M12 12.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5" />
+    </svg>
+  )
+}
+
+export function MailIcon(props: IconProps) {
+  return (
+    <svg {...props} viewBox="0 0 512 512">
+      <path
+        fill="currentColor"
+        d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l217.6 163.2c11.4 8.5 27 8.5 38.4 0l217.6-163.2c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48zM0 176v208c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V176L294.4 339.2a63.9 63.9 0 0 1-76.8 0z"
+      />
+    </svg>
+  )
+}

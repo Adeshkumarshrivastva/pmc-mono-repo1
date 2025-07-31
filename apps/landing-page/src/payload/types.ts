@@ -76,6 +76,7 @@ export interface Config {
     services: Service;
     leads: Lead;
     appointments: Appointment;
+    webinars: Webinar;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -95,6 +96,7 @@ export interface Config {
     services: ServicesSelect<false> | ServicesSelect<true>;
     leads: LeadsSelect<false> | LeadsSelect<true>;
     appointments: AppointmentsSelect<false> | AppointmentsSelect<true>;
+    webinars: WebinarsSelect<false> | WebinarsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -108,6 +110,8 @@ export interface Config {
     'our-services': OurService;
     'contact-us': ContactUs;
     'about-us': AboutUs;
+    'privacy-policy': PrivacyPolicy;
+    'terms-and-conditions': TermsAndCondition;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
@@ -115,6 +119,8 @@ export interface Config {
     'our-services': OurServicesSelect<false> | OurServicesSelect<true>;
     'contact-us': ContactUsSelect<false> | ContactUsSelect<true>;
     'about-us': AboutUsSelect<false> | AboutUsSelect<true>;
+    'privacy-policy': PrivacyPolicySelect<false> | PrivacyPolicySelect<true>;
+    'terms-and-conditions': TermsAndConditionsSelect<false> | TermsAndConditionsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -341,6 +347,39 @@ export interface Appointment {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "webinars".
+ */
+export interface Webinar {
+  id: string;
+  title: string;
+  date: string;
+  speaker?: {
+    name?: string | null;
+    image?: (string | null) | Media;
+    profession?: string | null;
+  };
+  poster?: (string | null) | Media;
+  videoLink?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -381,6 +420,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'appointments';
         value: string | Appointment;
+      } | null)
+    | ({
+        relationTo: 'webinars';
+        value: string | Webinar;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -550,6 +593,26 @@ export interface AppointmentsSelect<T extends boolean = true> {
   email?: T;
   date?: T;
   time?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "webinars_select".
+ */
+export interface WebinarsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  speaker?:
+    | T
+    | {
+        name?: T;
+        image?: T;
+        profession?: T;
+      };
+  poster?: T;
+  videoLink?: T;
+  description?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1160,6 +1223,70 @@ export interface AboutUs {
   createdAt?: string | null;
 }
 /**
+ * Manage the content of your privacy policy page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "privacy-policy".
+ */
+export interface PrivacyPolicy {
+  id: string;
+  title: string;
+  hero?: {
+    headline?: string | null;
+    subhead?: string | null;
+  };
+  lastUpdated?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Manage the content of your terms and conditions page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "terms-and-conditions".
+ */
+export interface TermsAndCondition {
+  id: string;
+  title: string;
+  hero?: {
+    headline?: string | null;
+    subhead?: string | null;
+  };
+  lastUpdated?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
@@ -1610,6 +1737,42 @@ export interface AboutUsSelect<T extends boolean = true> {
                   };
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "privacy-policy_select".
+ */
+export interface PrivacyPolicySelect<T extends boolean = true> {
+  title?: T;
+  hero?:
+    | T
+    | {
+        headline?: T;
+        subhead?: T;
+      };
+  lastUpdated?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "terms-and-conditions_select".
+ */
+export interface TermsAndConditionsSelect<T extends boolean = true> {
+  title?: T;
+  hero?:
+    | T
+    | {
+        headline?: T;
+        subhead?: T;
+      };
+  lastUpdated?: T;
+  content?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
