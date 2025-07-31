@@ -27,8 +27,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, style, type
       />
       {match(type)
         .with('search', () => (
-          <div className="text-primary-foreground flex-shrink-0 px-2 self-stretch flex items-center justify-center bg-primary">
-            <SearchIcon className="h-4 w-4" />
+          <div className="text-primary-foreground flex-shrink-0 px-4 self-stretch flex items-center justify-center bg-primary">
+            <SearchIcon className="h-5 w-5" />
           </div>
         ))
         .otherwise(() => null)}

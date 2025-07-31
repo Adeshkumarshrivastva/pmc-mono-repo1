@@ -90,20 +90,28 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
       </div>
 
       <div className="flex justify-between gap-15">
-        <div className="sticky top-30 h-fit z-10 flex-shrink-0">
+        <div className="sticky top-30 h-fit z-10 flex-shrink-0 w-80 max-w-80">
           <div className="flex flex-col gap-6">
-            <Input type="search" placeholder="Search" value={searchQuery} onChange={handleSearchChange} />
+            <Input
+              type="search"
+              placeholder="Search"
+              className="border border-primary text-xl h-12"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              style={{ fontFamily: 'Mulish, sans-serif' }}
+            />
             <div className="flex flex-col gap-6">
               <p className="font-semibold text-2xl text-primary">Blog Categories</p>
               <div className="space-y-4">
                 <div
                   className={cn(
-                    'py-2 px-4 rounded-sm cursor-pointer',
+                    'py-2 px-4 rounded-sm cursor-pointer truncate',
                     selectedCategory === 'View All'
                       ? 'bg-card text-primary-foreground'
                       : 'hover:bg-card hover:text-primary-foreground text-primary',
                   )}
                   onClick={() => handleCategoryChange('View All')}
+                  title="View All"
                 >
                   View All
                 </div>
@@ -112,12 +120,13 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                     <div
                       key={service.id}
                       className={cn(
-                        'py-2 px-4 rounded-sm cursor-pointer',
+                        'py-2 px-4 rounded-sm cursor-pointer truncate',
                         selectedCategory === service.name
                           ? 'bg-card text-primary-foreground'
                           : 'hover:bg-card hover:text-primary-foreground text-primary',
                       )}
                       onClick={() => handleCategoryChange(service.name)}
+                      title={service.name}
                     >
                       {service.name}
                     </div>
@@ -128,7 +137,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
           </div>
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           {loading ? (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">Loading blogs...</p>
