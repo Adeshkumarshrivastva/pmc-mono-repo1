@@ -121,7 +121,7 @@ const NAV_ITEMS = [
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
   { id: 'services', href: '/services', label: 'Services' },
-  { id: 'our-counselors', href: '/our-counselors', label: 'Our Counselors' },
+  { id: 'our-experts', href: '/our-experts', label: 'Our Experts' },
 ]
 
 const AWARENESS_ITEMS = [

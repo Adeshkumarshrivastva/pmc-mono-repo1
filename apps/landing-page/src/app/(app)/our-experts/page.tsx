@@ -6,15 +6,13 @@ import { getPayloadClient } from '@/lib/payload'
 import { Expert, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
-export default function OurCounselorsPage() {
+export default function OurExperts() {
   return (
     <div className="flex flex-col min-h-screen bg-accent" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
       <section className="w-full">
         <div className="max-w-7xl mx-auto px-4 py-10 sm:py-14 md:py-20 lg:py-24">
           <div className="mb-10 text-center sm:mb-12 md:mb-16">
-            <h2 className="text-3xl font-semibold tracking-tight text-primary sm:text-4xl md:text-5xl">
-              Our Counselors
-            </h2>
+            <h2 className="text-3xl font-semibold tracking-tight text-primary sm:text-4xl md:text-5xl">Our Experts</h2>
           </div>
           <ExpertsGrid />
         </div>
