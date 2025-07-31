@@ -10,15 +10,11 @@ type BlogCardProps = {
 export default function BlogCard({ blog }: BlogCardProps) {
   return (
     <article className="relative flex flex-col w-full max-w-sm mx-auto sm:max-w-none sm:mx-0">
-      <div className="relative aspect-[16/9] w-full">
-        <img
-          src={getURLFromMedia(blog?.image ?? '')}
-          alt={blog?.title ?? ''}
-          className="h-full w-full object-cover rounded-2xl"
-        />
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-gray-100">
+        <img src={getURLFromMedia(blog?.image ?? '')} alt={blog?.title ?? ''} className="h-full w-full object-cover" />
       </div>
 
-      <div className="bg-card rounded-3xl p-7 -mt-10 mx-3 sm:mx-4 shadow-lg lg:absolute lg:left-5 lg:right-5 lg:-bottom-16 lg:max-w-none lg:min-h-[160px] lg:flex lg:flex-col lg:justify-between z-10">
+      <div className="bg-card rounded-3xl p-7 -mt-10 mx-3 sm:mx-4 shadow-lg lg:absolute lg:left-3 lg:-right-6 lg:-bottom-16 lg:max-w-none lg:min-h-[160px] lg:flex lg:flex-col lg:justify-between z-10">
         <h3 className="text-base sm:text-lg text-primary-foreground mb-4 font-medium lg:line-clamp-2">{blog.title}</h3>
 
         <div className="flex items-center justify-between gap-2 lg:mt-auto">
@@ -36,7 +32,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
           </div>
 
           <Button
-            icon={<CircleArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />}
+            icon={<CircleArrowRightIcon className="w-5 h-5 sm:w-7 sm:h-7" />}
             className="bg-transparent hover:bg-transparent p-2 shrink-0"
           />
         </div>

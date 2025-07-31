@@ -101,7 +101,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                     'py-2 px-4 rounded-sm cursor-pointer',
                     selectedCategory === 'View All'
                       ? 'bg-card text-primary-foreground'
-                      : 'hover:bg-card hover:text-primary-foreground',
+                      : 'hover:bg-card hover:text-primary-foreground text-primary',
                   )}
                   onClick={() => handleCategoryChange('View All')}
                 >
@@ -115,7 +115,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                         'py-2 px-4 rounded-sm cursor-pointer',
                         selectedCategory === service.name
                           ? 'bg-card text-primary-foreground'
-                          : 'hover:bg-card hover:text-primary-foreground',
+                          : 'hover:bg-card hover:text-primary-foreground text-primary',
                       )}
                       onClick={() => handleCategoryChange(service.name)}
                     >
@@ -141,7 +141,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 space-y-18 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 gap-y-23">
                 {filteredBlogs.map((blog: any) => (
                   <BlogCard key={blog.id} blog={blog} />
                 ))}
@@ -150,9 +150,9 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
           )}
         </div>
       </div>
-      <div>
+      <div className="mt-12 flex justify-end">
         {blogs.totalPages > 1 && !searchQuery && selectedCategory === 'View All' && (
-          <div className="flex items-center justify-center gap-2 mt-8">
+          <div className="flex items-center justify-center gap-2">
             <Button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
