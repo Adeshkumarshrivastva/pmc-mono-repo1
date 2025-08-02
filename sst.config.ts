@@ -60,7 +60,10 @@ export default $config({
 
     const PayloadSecret = new sst.Secret('PAYLOAD_SECRET')
     const PayloadDBUrl = new sst.Secret('PAYLOAD_DB_URL')
+    const RazorpayKeyId = new sst.Secret('RAZORPAY_KEY_ID')
+    const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
     const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
+
     new sst.aws.Nextjs('PmcLandingPage', {
       link: [MediaBucket, PayloadDBUrl, PayloadSecret],
       path: 'apps/landing-page',
@@ -72,6 +75,9 @@ export default $config({
         PAYLOAD_SECRET: PayloadSecret.value,
         PAYLOAD_BUCKET: MediaBucket.name,
         PAYLOAD_DB_URL: PayloadDBUrl.value,
+        RAZORPAY_KEY_ID: RazorpayKeyId.value,
+        RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
+        NEXT_PUBLIC_RAZORPAY_KEY_ID: RazorpayKeyId.value,
       },
     })
   },

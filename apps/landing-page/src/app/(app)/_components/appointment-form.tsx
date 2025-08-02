@@ -42,8 +42,10 @@ function InputForm() {
     defaultValues: {
       fullName: '',
       phone: '',
-      date: '',
-      time: '',
+      serviceId: '',
+      subServiceId: '',
+      dateTime: new Date().toLocaleString(),
+      amount: 0,
     },
     resolver: zodResolver(appointmentFormInput),
   })
@@ -65,9 +67,14 @@ function InputForm() {
 
   return (
     <form
-      onSubmit={form.handleSubmit((values) => {
-        appointmentFormMutation.mutate(values)
-      })}
+      onSubmit={form.handleSubmit(
+        (values) => {
+          appointmentFormMutation.mutate(values)
+        },
+        (errors) => {
+          console.log('Form errors:', errors)
+        },
+      )}
       className="border border-border rounded-xl p-4 sm:p-6 lg:p-8"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -109,26 +116,13 @@ function InputForm() {
           />
         </div>
 
-        <div className="col-span-full sm:col-span-1">
-          <label htmlFor="date" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-            Date
+        <div className="col-span-full">
+          <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
+            Date and Time
           </label>
           <input
-            {...form.register('date')}
-            name="date"
-            type="date"
-            className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-          />
-        </div>
-
-        <div className="col-span-full sm:col-span-1">
-          <label htmlFor="time" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-            Time
-          </label>
-          <input
-            {...form.register('time')}
-            name="time"
-            type="time"
+            {...form.register('dateTime')}
+            type="datetime-local"
             className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
           />
         </div>
@@ -137,8 +131,9 @@ function InputForm() {
           <Button
             type="submit"
             className="w-full py-3 text-sm font-semibold tracking-wider hover:bg-primary/90 transition-colors"
+            disabled={appointmentFormMutation.isPending}
           >
-            MAKE APPOINTMENT
+            Make Appointment
           </Button>
         </div>
       </div>

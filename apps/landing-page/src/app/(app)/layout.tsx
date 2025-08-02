@@ -1,3 +1,4 @@
+import Script from 'next/script'
 import { Toaster } from '@/components/ui/sonner'
 import AppShell from './_components/app-shell'
 import Providers from './_components/providers'
@@ -22,6 +23,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
           <AppShell>{children}</AppShell>
         </Providers>
         <Toaster />
+        <Script id="razorpay-checkout" src="https://checkout.razorpay.com/v1/checkout.js" />
       </body>
     </html>
   )
