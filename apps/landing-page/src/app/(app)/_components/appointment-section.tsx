@@ -8,7 +8,10 @@ import { useMutation } from '@tanstack/react-query'
 import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '@/components/ui/icons'
 import { Home, Service } from '@/payload/types'
 import { Button } from '@/components/ui/button'
-import { createLead, leadFormInput, LeadFormInput } from '@/payload/actions'
+import { AppointmentFormInput, appointmentFormInput } from '@/payload/actions/appointments/appointments.input'
+import { createAppointment } from '@/payload/actions/appointments/appointments.actions'
+import { env } from '@/env'
+import { useRouter } from 'next/navigation'
 
 type AppointmentSectionProps = {
   data: Home['appointmentSection']
@@ -17,29 +20,51 @@ type AppointmentSectionProps = {
 
 export default function AppointmentSection({ data, services }: AppointmentSectionProps) {
   const appointmentData = data?.appointmentSection
+  const router = useRouter()
 
-  const form = useForm<LeadFormInput>({
+  const form = useForm<AppointmentFormInput>({
     defaultValues: {
       fullName: '',
-      email: '',
       phone: '',
       serviceId: '',
       subServiceId: '',
       message: '',
+      amount: '1000',
+      dateTime: new Date().toLocaleString(),
     },
-    resolver: zodResolver(leadFormInput),
+    resolver: zodResolver(appointmentFormInput),
   })
 
   const serviceId = useWatch({ control: form.control, name: 'serviceId' })
   const subServices = services.find((service) => service.id === serviceId)?.subservices?.docs ?? []
 
-  const contactFormMutation = useMutation({
-    mutationFn: createLead,
-    onSuccess: () => {
-      toast('Thank you for your interest!', {
-        description: 'We will get back to you as soon as possible.',
-      })
-      form.reset()
+  const appointmentFormMutation = useMutation({
+    mutationFn: createAppointment,
+    onSuccess: (data) => {
+      const { fullName, email, phone, dateTime } = form.getValues()
+      const options = {
+        key: env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: Number(data.amount) * 100,
+        currency: 'INR',
+        order_id: data.orderId,
+        name: 'Appointment Booking',
+        prefill: { fullName, email, phone, dateTime },
+        modal: {
+          escape: false,
+          ondismiss: () => {
+            toast.error('Payment was not completed. Please try again.')
+          },
+        },
+        handler: async () => {
+          router.push(`/appointment-success?appointmentId=${data.appointmentId}`)
+        },
+        description: 'Payment for appointment booking',
+        theme: {
+          color: '#385246',
+        },
+      }
+      const rzp = new (window as any).Razorpay(options)
+      rzp.open()
     },
     onError: () => {
       toast('Failed to submit the form. Please try again later.', {
@@ -51,7 +76,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
   return (
     <section className="w-full bg-primary py-8 px-4 sm:py-12 sm:px-6 lg:px-28" id="appointement-section">
       <div className="w-full max-w-7xl mx-auto">
-        <div className="bg-primary-foreground rounded-xl border border-border p-4 sm:p-8 lg:p-16 min-h-[600px] lg:h-[700px]">
+        <div className="bg-primary-foreground rounded-xl border border-border p-4 sm:p-8 lg:p-16 min-h-[600px] lg:min-h-[700px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24">
             <div className="flex flex-col h-full mb-8 lg:mb-0">
               <div className="space-y-4 sm:space-y-6 flex-1">
@@ -104,33 +129,38 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
 
             <div className="w-full lg:w-auto lg:min-w-[400px] xl:min-w-[450px]">
               <form
-                onSubmit={form.handleSubmit((values) => {
-                  contactFormMutation.mutate(values)
-                })}
+                onSubmit={form.handleSubmit(
+                  (values) => {
+                    appointmentFormMutation.mutate(values)
+                  },
+                  (error) => {
+                    console.log('Form errors:', error)
+                  },
+                )}
                 className="bg-primary-foreground border border-border rounded-xl p-4 sm:p-6 lg:p-8"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="col-span-1">
                     <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Full name
+                      Full name <span className="text-error">*</span>
                     </label>
                     <input
                       {...form.register('fullName')}
                       type="text"
-                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Enter your name"
                     />
                   </div>
 
                   <div className="col-span-1">
                     <label htmlFor="phone" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Phone Number
+                      Phone Number <span className="text-error">*</span>
                     </label>
                     <input
                       {...form.register('phone')}
                       type="tel"
-                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder="Ex. +91 9012 8934 78"
+                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      placeholder="+91 12345 67890"
                     />
                   </div>
 
@@ -141,18 +171,18 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     <input
                       {...form.register('email')}
                       type="email"
-                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Enter your email"
                     />
                   </div>
 
                   <div className="col-span-1">
                     <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Service
+                      Service <span className="text-error">*</span>
                     </label>
                     <select
                       {...form.register('serviceId')}
-                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     >
                       <option value={''}>Select Service</option>
                       {services?.map((service) => (
@@ -169,7 +199,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     </label>
                     <select
                       {...form.register('subServiceId')}
-                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     >
                       <option value={''}>Select Sub Service</option>
                       {subServices.map((service) => {
@@ -186,6 +216,37 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     </select>
                   </div>
 
+                  <div className="col-span-1">
+                    <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
+                      Date and Time <span className="text-error">*</span>
+                    </label>
+                    <input
+                      {...form.register('dateTime')}
+                      type="datetime-local"
+                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    />
+                  </div>
+
+                  <div className="col-span-1">
+                    <label htmlFor="phone" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
+                      Amount <span className="text-error">*</span>
+                    </label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sm text-muted-foreground pointer-events-none">
+                        ₹
+                      </span>
+
+                      <input
+                        {...form.register('amount')}
+                        id="amount"
+                        type="number"
+                        className="text-sm w-full border border-border rounded-lg pl-6 pr-3 py-3
+                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                        placeholder="1000"
+                      />
+                    </div>
+                  </div>
+
                   <div className="col-span-full sm:col-span-2">
                     <label
                       htmlFor="message"
@@ -196,7 +257,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     <textarea
                       {...form.register('message')}
                       rows={4}
-                      className="w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Write your message here..."
                     />
                   </div>
@@ -204,11 +265,11 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                   <div className="col-span-full sm:col-span-2 pt-2">
                     <Button
                       type="submit"
-                      disabled={contactFormMutation.isPending || contactFormMutation.isSuccess}
+                      disabled={appointmentFormMutation.isPending}
                       variant="secondary"
                       className="inline-flex items-center justify-center space-x-2 rounded-lg cursor-pointer bg-primary text-primary-foreground disabled:pointer-events-none disabled:opacity-50 h-12 px-4 w-full py-3 text-sm font-semibold tracking-wider hover:bg-primary/90 transition-colors"
                     >
-                      Submit
+                      Confirm & Pay
                     </Button>
                   </div>
                 </div>

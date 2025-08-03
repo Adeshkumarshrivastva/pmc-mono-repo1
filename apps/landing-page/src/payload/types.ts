@@ -343,8 +343,19 @@ export interface Appointment {
   fullName: string;
   phone: string;
   email?: string | null;
-  date?: string | null;
-  time?: string | null;
+  service?: (string | null) | Service;
+  subService?: (string | null) | Service;
+  message?: string | null;
+  dateTime: string;
+  /**
+   * Amount in INR
+   */
+  amount: number;
+  paymentStatus: 'unpaid' | 'pending' | 'paid' | 'failed';
+  /**
+   * Order ID from payment gateway
+   */
+  orderId?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -595,8 +606,13 @@ export interface AppointmentsSelect<T extends boolean = true> {
   fullName?: T;
   phone?: T;
   email?: T;
-  date?: T;
-  time?: T;
+  service?: T;
+  subService?: T;
+  message?: T;
+  dateTime?: T;
+  amount?: T;
+  paymentStatus?: T;
+  orderId?: T;
   updatedAt?: T;
   createdAt?: T;
 }

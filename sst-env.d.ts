@@ -34,6 +34,14 @@ declare module "sst" {
       "type": "sst.aws.Router"
       "url": string
     }
+    "RAZORPAY_KEY_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "RAZORPAY_KEY_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />
