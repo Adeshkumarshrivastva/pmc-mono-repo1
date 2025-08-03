@@ -63,6 +63,7 @@ export async function createAppointment({ serviceId, subServiceId, ...rest }: Ap
 
 export async function getAppointmentById(id: string) {
   const payload = await getPayloadClient()
+
   const appointment = await payload.findByID({
     collection: 'appointments',
     id,

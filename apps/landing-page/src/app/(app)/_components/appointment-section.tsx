@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { AppointmentFormInput, appointmentFormInput } from '@/payload/actions/appointments/appointments.input'
 import { createAppointment } from '@/payload/actions/appointments/appointments.actions'
 import { env } from '@/env'
+import { useRouter } from 'next/navigation'
 
 type AppointmentSectionProps = {
   data: Home['appointmentSection']
@@ -19,6 +20,7 @@ type AppointmentSectionProps = {
 
 export default function AppointmentSection({ data, services }: AppointmentSectionProps) {
   const appointmentData = data?.appointmentSection
+  const router = useRouter()
 
   const form = useForm<AppointmentFormInput>({
     defaultValues: {
@@ -27,6 +29,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
       serviceId: '',
       subServiceId: '',
       message: '',
+      amount: '1000',
       dateTime: new Date().toLocaleString(),
     },
     resolver: zodResolver(appointmentFormInput),
@@ -53,8 +56,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
           },
         },
         handler: async () => {
-          toast.success('Payment successful! Your appointment has been booked.')
-          // TODO: Redirect to success page
+          router.push(`/appointment-success?appointmentId=${data.appointmentId}`)
         },
         description: 'Payment for appointment booking',
         theme: {
@@ -267,7 +269,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                       variant="secondary"
                       className="inline-flex items-center justify-center space-x-2 rounded-lg cursor-pointer bg-primary text-primary-foreground disabled:pointer-events-none disabled:opacity-50 h-12 px-4 w-full py-3 text-sm font-semibold tracking-wider hover:bg-primary/90 transition-colors"
                     >
-                      Make Payment
+                      Confirm & Pay
                     </Button>
                   </div>
                 </div>

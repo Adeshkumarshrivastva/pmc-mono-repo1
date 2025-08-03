@@ -45,7 +45,7 @@ function InputForm() {
       serviceId: '',
       subServiceId: '',
       dateTime: new Date().toLocaleString(),
-      amount: 0,
+      amount: '0',
     },
     resolver: zodResolver(appointmentFormInput),
   })

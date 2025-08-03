@@ -2,7 +2,7 @@ import Script from 'next/script'
 import { Toaster } from '@/components/ui/sonner'
 import AppShell from './_components/app-shell'
 import Providers from './_components/providers'
-import './styles.css'
+import '@/app/styles.css'
 
 export const metadata = {
   description:
