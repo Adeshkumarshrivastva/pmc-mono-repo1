@@ -19,10 +19,10 @@ export default function ServicesSection({ data, services }: ServicesSectionProps
 
   return (
     <section className="w-full bg-accent">
-      <div className="px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-12 lg:py-24 xl:px-16 xl:py-28">
+      <div className="px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-12 lg:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="space-y-8 sm:space-y-12">
-            <header className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-start md:justify-between">
+            <div className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-start md:justify-between">
               <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-xl">{data?.title}</h2>
               <div className="flex space-x-2">
                 {/* TODO: Handle button text from CMS */}
@@ -35,7 +35,7 @@ export default function ServicesSection({ data, services }: ServicesSectionProps
                   </Link>
                 ) : null}
               </div>
-            </header>
+            </div>
 
             <Carousel
               opts={{

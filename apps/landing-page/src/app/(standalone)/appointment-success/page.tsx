@@ -1,7 +1,7 @@
+import { notFound } from 'next/navigation'
 import { CheckIcon } from '@/components/ui/icons'
 import { getAppointmentById } from '@/payload/actions/appointments/appointments.actions'
 import { Service } from '@/payload/types'
-import { notFound } from 'next/navigation'
 
 export default async function AppointmentSuccessPage({
   searchParams,

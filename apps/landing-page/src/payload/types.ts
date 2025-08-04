@@ -310,10 +310,15 @@ export interface TeamMember {
  */
 export interface Testimonial {
   id: string;
+  type?: ('text' | 'video') | null;
   authorName: string;
-  auhtorImage: string | Media;
-  title: string;
-  message: string;
+  auhtorImage?: (string | null) | Media;
+  title?: string | null;
+  message?: string | null;
+  /**
+   * YouTub video link
+   */
+  videoUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -561,10 +566,12 @@ export interface TeamMembersSelect<T extends boolean = true> {
  * via the `definition` "testimonial_select".
  */
 export interface TestimonialSelect<T extends boolean = true> {
+  type?: T;
   authorName?: T;
   auhtorImage?: T;
   title?: T;
   message?: T;
+  videoUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }

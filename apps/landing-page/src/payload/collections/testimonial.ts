@@ -2,11 +2,29 @@ import { CollectionConfig } from 'payload'
 
 export const Testimonial: CollectionConfig = {
   slug: 'testimonial',
-  access: {
-    create: () => true,
-    read: () => true,
+  admin: {
+    useAsTitle: 'authorName',
   },
   fields: [
+    {
+      name: 'type',
+      type: 'radio',
+      label: 'Testimonial Type',
+      options: [
+        {
+          label: 'Text Testimonial',
+          value: 'text',
+        },
+        {
+          label: 'Video Testimonial',
+          value: 'video',
+        },
+      ],
+      defaultValue: 'text',
+      admin: {
+        layout: 'horizontal',
+      },
+    },
     {
       name: 'authorName',
       type: 'text',
@@ -18,19 +36,35 @@ export const Testimonial: CollectionConfig = {
       type: 'upload',
       label: 'Author Image',
       relationTo: 'media',
-      required: true,
+      admin: {
+        condition: (data) => data.type === 'text',
+      },
     },
     {
       name: 'title',
       type: 'text',
       label: 'Title',
-      required: true,
+      admin: {
+        condition: (data) => data.type === 'text',
+      },
     },
     {
       name: 'message',
       type: 'text',
       label: 'Message',
-      required: true,
+      admin: {
+        condition: (data) => data.type === 'text',
+      },
+    },
+    {
+      name: 'videoUrl',
+      type: 'text',
+      label: 'Video URL',
+      admin: {
+        condition: (data) => data.type === 'video',
+        description: 'YouTub video link',
+        placeholder: 'https://www.youtube.com/embed/v=...',
+      },
     },
   ],
 }

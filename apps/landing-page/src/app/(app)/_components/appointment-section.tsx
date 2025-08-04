@@ -5,13 +5,13 @@ import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '@/components/ui/icons'
 import { Home, Service } from '@/payload/types'
 import { Button } from '@/components/ui/button'
 import { AppointmentFormInput, appointmentFormInput } from '@/payload/actions/appointments/appointments.input'
 import { createAppointment } from '@/payload/actions/appointments/appointments.actions'
 import { env } from '@/env'
-import { useRouter } from 'next/navigation'
 
 type AppointmentSectionProps = {
   data: Home['appointmentSection']
@@ -43,7 +43,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
     onSuccess: (data) => {
       const { fullName, email, phone, dateTime } = form.getValues()
       const options = {
-        key: env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? 'rzp_live_rmfc3SEgWtvd52',
         amount: Number(data.amount) * 100,
         currency: 'INR',
         order_id: data.orderId,
