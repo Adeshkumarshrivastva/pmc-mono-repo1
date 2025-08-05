@@ -1,7 +1,7 @@
+import Script from 'next/script'
 import { Toaster } from '@/components/ui/sonner'
 import AppShell from './_components/app-shell'
 import Providers from './_components/providers'
-import Script from 'next/script'
 import '@/app/styles.css'
 
 export const metadata = {
@@ -26,8 +26,9 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
 
         <Script id="razorpay-checkout" src="https://checkout.razorpay.com/v1/checkout.js" />
 
-        {/* 2️⃣  Zoho SalesIQ loader */}
+        {/* Zoho SalesIQ loader */}
         <Script
+          id="zoho-salesiq-init"
           dangerouslySetInnerHTML={{
             __html: `
               window.$zoho = window.$zoho || {};

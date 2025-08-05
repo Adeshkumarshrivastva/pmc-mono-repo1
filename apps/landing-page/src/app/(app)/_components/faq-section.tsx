@@ -17,8 +17,8 @@ export default function FAQSection({ data }: FAQSectionProps) {
   }
 
   return (
-    <section className="bg-accent py-8 sm:py-12 lg:py-16">
-      <div className="max-w-7xl mx-auto">
+    <section className="w-full bg-accent px-4 py-8 sm:px-6 sm:py-12 md:px-8 lg:px-12">
+      <div className="w-full max-w-7xl mx-auto">
         <h2 className="text-xl sm:text-2xl lg:text-5xl font-semibold mb-6 sm:mb-8 text-center sm:text-left">
           {data?.title}
         </h2>

@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button'
 import { CallIcon, OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
 import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import AppointmentForm from './appointment-form'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import AppointmentForm from './appointment-form'
 
 type ExpertsSectionProps = { data: Home['expertsSection'] }
 
@@ -35,7 +35,7 @@ export default function ExpertsSection({ data }: ExpertsSectionProps) {
         <div className="max-w-7xl mx-auto">
           <div className="space-y-6 sm:space-y-10 md:space-y-5 lg:space-y-15">
             <div className="flex flex-col lg:flex-row lg:justify-between gap-4 sm:gap-0">
-              <h2 className="font-semibold text-xl sm:text-2xl md:text-4xl max-w-full md:max-w-xl">{data?.title}</h2>
+              <h2 className="font-semibold text-xl sm:text-2xl md:text-5xl max-w-full md:max-w-2xl">{data?.title}</h2>
               <div className="md:flex md:justify-end md:pt-2">
                 <Tabs
                   value={activeTab}
@@ -73,6 +73,7 @@ export default function ExpertsSection({ data }: ExpertsSectionProps) {
                       className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 bg-card p-3 rounded-2xl"
                     >
                       <div className="flex justify-center sm:justify-start">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           alt="expert"
                           width={180}

@@ -19,7 +19,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
         <div className="max-w-7xl mx-auto">
           <div className="space-y-6 sm:space-y-9">
             <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-start">
-              <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl max-w-md">{data?.title}</h2>
+              <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-xl">{data?.title}</h2>
 
               {data?.action && (
                 <Link href={'/blogs'}>

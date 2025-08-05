@@ -76,11 +76,11 @@ export default function TestimonialSection({ data }: TestimonialSectionProps) {
                           </div>
                         ))
                         .with('video', () => (
-                          <div className="w-full h-full bg-primary-foreground">
+                          <div className="w-full h-full bg-primary-foreground rounded-lg">
                             <iframe
                               src={typedTestimonial.videoUrl ?? ''}
                               title={typedTestimonial.authorName}
-                              className="w-full h-full rounded-2xl aspect-video"
+                              className="w-full h-full rounded-lg aspect-video"
                             />
                           </div>
                         ))

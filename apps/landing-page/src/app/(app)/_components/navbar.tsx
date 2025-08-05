@@ -44,7 +44,7 @@ export default function Navbar({ services }: NavbarProps) {
           </div>
         </Link>
 
-        <div className="flex-1 hidden lg:flex items-center justify-center lg:space-x-2 xl:space-x-8">
+        <div className="flex-1 hidden xl:flex items-center justify-center xl:space-x-8">
           {NAV_ITEMS.map((item) => {
             const isActive = `/${pathname.split('/')[1]}` === item.href
             return item.id === 'services' ? (
@@ -64,12 +64,12 @@ export default function Navbar({ services }: NavbarProps) {
           })}
         </div>
 
-        <Button variant="secondary" icon={<CallIcon />} className="hidden lg:flex" onClick={handleBooking}>
+        <Button variant="secondary" icon={<CallIcon />} className="hidden xl:flex" onClick={handleBooking}>
           Book Appointment
         </Button>
 
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-          <SheetTrigger className="block lg:hidden">
+          <SheetTrigger className="block xl:hidden">
             <MenuIcon />
           </SheetTrigger>
           <SheetContent side="top">

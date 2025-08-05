@@ -74,10 +74,10 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
   })
 
   return (
-    <section className="w-full bg-primary py-8 px-4 sm:py-12 sm:px-6 lg:px-28" id="appointement-section">
+    <section className="w-full bg-primary px-4 py-8 sm:px-6 sm:py-12 md:px-8 lg:px-12" id="appointement-section">
       <div className="w-full max-w-7xl mx-auto">
-        <div className="bg-primary-foreground rounded-xl border border-border p-4 sm:p-8 lg:p-16 min-h-[600px] lg:min-h-[700px]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24">
+        <div className="bg-primary-foreground rounded-xl border border-border p-4 sm:p-8 xl:p-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-24">
             <div className="flex flex-col h-full mb-8 lg:mb-0">
               <div className="space-y-4 sm:space-y-6 flex-1">
                 <div className="text-primary text-xs sm:text-sm font-bold tracking-wider">APPOINTMENT</div>
@@ -127,7 +127,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
               )}
             </div>
 
-            <div className="w-full lg:w-auto lg:min-w-[400px] xl:min-w-[450px]">
+            <div className="w-full">
               <form
                 onSubmit={form.handleSubmit((values) => {
                   appointmentFormMutation.mutate(values)
