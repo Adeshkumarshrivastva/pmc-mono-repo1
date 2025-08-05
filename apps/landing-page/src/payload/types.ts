@@ -262,7 +262,7 @@ export interface Expert {
   id: string;
   expertName: string;
   image?: (string | null) | Media;
-  profession: string;
+  profession: 'Psychologist' | 'Psychiatrist';
   headline?: {
     root: {
       type: string;

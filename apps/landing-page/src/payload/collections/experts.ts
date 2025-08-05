@@ -21,7 +21,11 @@ export const Experts: CollectionConfig = {
     },
     {
       name: 'profession',
-      type: 'text',
+      type: 'select',
+      options: [
+        { value: 'Psychologist', label: 'Psychologist' },
+        { value: 'Psychiatrist', label: 'Psychiatrist' },
+      ],
       label: 'Expert Profession',
       required: true,
     },
