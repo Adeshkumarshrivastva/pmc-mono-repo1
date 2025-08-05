@@ -26,7 +26,13 @@ export default function ServicesSection({ data, services }: ServicesSectionProps
               <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-xl">{data?.title}</h2>
               <div className="flex space-x-2">
                 {/* TODO: Handle button text from CMS */}
-                <QuestionnaireModal trigger={<Button>Find the right expert</Button>} />
+                <QuestionnaireModal
+                  trigger={
+                    <Button icon={<ArrowRightIcon className="h-4 w-4" />} iconPosition="right">
+                      Find the right expert
+                    </Button>
+                  }
+                />
                 {data?.action ? (
                   <Link href={'/services'}>
                     <Button className="bg-accent border border-primary text-primary hover:border-transparent hover:text-primary-foreground">

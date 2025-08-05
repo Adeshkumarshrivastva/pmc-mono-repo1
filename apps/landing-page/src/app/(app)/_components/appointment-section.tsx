@@ -55,7 +55,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
             toast.error('Payment was not completed. Please try again.')
           },
         },
-        handler: async () => {
+        handler: () => {
           router.push(`/appointment-success?appointmentId=${data.appointmentId}`)
         },
         description: 'Payment for appointment booking',
@@ -86,7 +86,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                   {appointmentData?.title}
                 </h2>
 
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-6 sm:gap-4 pt-4">
+                <div className="flex flex-col md:flex-row sm:justify-between gap-6 sm:gap-4 pt-4">
                   <div className="flex-1">
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4">Our Contact</h3>
                     <div className="space-y-2">
@@ -115,10 +115,10 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     <a href={platform.url ?? ''} target="_blank" key={index}>
                       {match(platform.socialMediaPlatform)
                         .returnType<React.ReactNode>()
-                        .with('facebook', () => <FacebookIcon className="text-primary h-8 w-8 " />)
-                        .with('instagram', () => <InstagramIcon className="text-primary h-8 w-8 " />)
-                        .with('x', () => <TwitterIcon className="text-primary h-8 w-8" />)
-                        .with('linkedin', () => <LinkedinIcon className="text-primary h-8 w-8" />)
+                        .with('facebook', () => <FacebookIcon className="text-primary/60 h-8 w-8 " />)
+                        .with('instagram', () => <InstagramIcon className="text-primary/60 h-8 w-8 " />)
+                        .with('x', () => <TwitterIcon className="text-primary/60 h-8 w-8" />)
+                        .with('linkedin', () => <LinkedinIcon className="text-primary/60 h-8 w-8" />)
                         .with(P._, () => null)
                         .exhaustive()}
                     </a>
@@ -129,14 +129,9 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
 
             <div className="w-full lg:w-auto lg:min-w-[400px] xl:min-w-[450px]">
               <form
-                onSubmit={form.handleSubmit(
-                  (values) => {
-                    appointmentFormMutation.mutate(values)
-                  },
-                  (error) => {
-                    console.log('Form errors:', error)
-                  },
-                )}
+                onSubmit={form.handleSubmit((values) => {
+                  appointmentFormMutation.mutate(values)
+                })}
                 className="bg-primary-foreground border border-border rounded-xl p-4 sm:p-6 lg:p-8"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -223,6 +218,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     <input
                       {...form.register('dateTime')}
                       type="datetime-local"
+                      min={new Date().toISOString().slice(0, 16)}
                       className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     />
                   </div>
