@@ -7,9 +7,9 @@ export const appointmentFormInput = z.object({
   phone: z.string().min(10),
   serviceId: z.union([objectId, z.literal('')]),
   subServiceId: z.union([objectId, z.literal('')]),
-  dateTime: z.string(),
+  dateTime: z.string().min(1),
   amount: z.string().refine((val) => !isNaN(Number(val))),
-  message: z.string().min(1).optional(),
+  message: z.string().optional(),
 })
 
 export type AppointmentFormInput = z.infer<typeof appointmentFormInput>

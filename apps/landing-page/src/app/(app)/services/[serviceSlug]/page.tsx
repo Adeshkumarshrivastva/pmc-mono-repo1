@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Button } from '@/components/ui/button'
 import SquareArrowRightIcon from '@/components/ui/icons'
 import { getService, getServices } from '@/payload/actions'
@@ -26,6 +27,11 @@ export default async function MainServicePage({ params }: MainServicePageProps) 
                 <h2 className="text-primary text-2xl font-semibold leading-tight sm:text-3xl md:text-5xl">
                   {service?.name}
                 </h2>
+                {service?.description ? (
+                  <article className="prose prose-sm sm:prose-base lg:prose-lg">
+                    <RichText data={service?.description} />
+                  </article>
+                ) : null}
               </div>
               <div className="grid gap-6 md:grid-cols-3 md:gap-8 lg:gap-12">
                 {subServices?.docs.map((subService) => (

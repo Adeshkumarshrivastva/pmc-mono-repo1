@@ -115,10 +115,10 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     <a href={platform.url ?? ''} target="_blank" key={index}>
                       {match(platform.socialMediaPlatform)
                         .returnType<React.ReactNode>()
-                        .with('facebook', () => <FacebookIcon className="text-primary h-8 w-8 " />)
-                        .with('instagram', () => <InstagramIcon className="text-primary h-8 w-8 " />)
-                        .with('x', () => <TwitterIcon className="text-primary h-8 w-8" />)
-                        .with('linkedin', () => <LinkedinIcon className="text-primary h-8 w-8" />)
+                        .with('facebook', () => <FacebookIcon className="text-primary/60 h-8 w-8 " />)
+                        .with('instagram', () => <InstagramIcon className="text-primary/60 h-8 w-8 " />)
+                        .with('x', () => <TwitterIcon className="text-primary/60 h-8 w-8" />)
+                        .with('linkedin', () => <LinkedinIcon className="text-primary/60 h-8 w-8" />)
                         .with(P._, () => null)
                         .exhaustive()}
                     </a>
@@ -223,6 +223,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     <input
                       {...form.register('dateTime')}
                       type="datetime-local"
+                      min={new Date().toISOString().slice(0, 16)}
                       className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     />
                   </div>

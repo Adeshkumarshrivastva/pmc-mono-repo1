@@ -44,7 +44,7 @@ export default function Navbar({ services }: NavbarProps) {
           </div>
         </Link>
 
-        <div className="flex-1 hidden lg:flex items-center justify-center space-x-8">
+        <div className="flex-1 hidden lg:flex items-center justify-center lg:space-x-2 xl:space-x-8">
           {NAV_ITEMS.map((item) => {
             const isActive = `/${pathname.split('/')[1]}` === item.href
             return item.id === 'services' ? (
