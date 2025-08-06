@@ -24,13 +24,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
             <div>
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  alt="Deep TMS People"
-                  width={525}
-                  height={500}
-                  className="h-auto w-full object-contain"
-                  src={getURLFromMedia(data?.image ?? '')}
-                />
+                <iframe className="h-auto w-full aspect-video rounded-lg" src={data?.videoUrl ?? ''} />
               </div>
             </div>
           </div>

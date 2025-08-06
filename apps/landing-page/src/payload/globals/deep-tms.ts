@@ -29,6 +29,11 @@ export const DeepTms: GlobalConfig = {
           relationTo: 'media',
         },
         {
+          name: 'videoUrl',
+          label: 'Deep TMS Video URL',
+          type: 'text',
+        },
+        {
           name: 'statCards',
           label: 'Stat Cards',
           type: 'array',

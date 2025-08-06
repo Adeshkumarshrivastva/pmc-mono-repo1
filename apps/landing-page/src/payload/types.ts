@@ -877,6 +877,7 @@ export interface DeepTm {
       [k: string]: unknown;
     } | null;
     image?: (string | null) | Media;
+    videoUrl?: string | null;
     statCards?:
       | {
           title?: string | null;
@@ -1497,6 +1498,7 @@ export interface DeepTmsSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         image?: T;
+        videoUrl?: T;
         statCards?:
           | T
           | {
