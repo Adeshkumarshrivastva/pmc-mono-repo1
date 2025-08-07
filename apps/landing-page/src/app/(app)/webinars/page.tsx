@@ -7,7 +7,7 @@ import { Webinar } from '@/payload/types'
 export default async function WebinarsPage() {
   return (
     <section className="w-full bg-accent">
-      <div className="container mx-auto px-4 py-10 sm:py-14 md:py-20 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 py-10 sm:py-14 md:py-20 lg:py-24">
         <div className="mb-10 text-center sm:mb-12 md:mb-16">
           <h2 className="text-3xl font-semibold tracking-tight text-primary sm:text-4xl md:text-5xl">
             Explore Our Webinars
