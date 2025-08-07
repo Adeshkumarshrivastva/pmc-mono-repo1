@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { getHours } from 'date-fns'
 import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '@/components/ui/icons'
 import { Home, Service } from '@/payload/types'
 import { Button } from '@/components/ui/button'
@@ -73,6 +74,16 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
     },
   })
 
+  const handleSubmit = (values: AppointmentFormInput) => {
+    if (getHours(values.dateTime) < 9 || getHours(values.dateTime) > 17) {
+      toast.error('Please select a time between 9 AM and 5 PM.', {
+        position: 'top-right',
+      })
+      return
+    }
+    appointmentFormMutation.mutate(values)
+  }
+
   return (
     <section className="w-full bg-primary px-4 py-8 sm:px-6 sm:py-12 md:px-8 lg:px-12" id="appointement-section">
       <div className="w-full max-w-7xl mx-auto">
@@ -129,9 +140,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
 
             <div className="w-full">
               <form
-                onSubmit={form.handleSubmit((values) => {
-                  appointmentFormMutation.mutate(values)
-                })}
+                onSubmit={form.handleSubmit(handleSubmit)}
                 className="bg-primary-foreground border border-border rounded-xl p-4 sm:p-6 lg:p-8"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">

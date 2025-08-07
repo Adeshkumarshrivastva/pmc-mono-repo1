@@ -174,6 +174,11 @@ export const Home: GlobalConfig = {
             },
           ],
         },
+        {
+          name: 'videoUrl',
+          label: 'Deep TMS Video URL',
+          type: 'text',
+        },
       ],
     },
     {

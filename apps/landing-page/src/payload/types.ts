@@ -766,6 +766,7 @@ export interface Home {
           id?: string | null;
         }[]
       | null;
+    videoUrl?: string | null;
   };
   whyChooseSection?: {
     title?: string | null;
@@ -1379,6 +1380,7 @@ export interface HomeSelect<T extends boolean = true> {
               feature?: T;
               id?: T;
             };
+        videoUrl?: T;
       };
   whyChooseSection?:
     | T

@@ -1,6 +1,5 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { DeepTm } from '@/payload/types'
-import { getURLFromMedia } from '@/payload/utils'
 
 type HeroSectionProps = {
   // TODO: Rename DeepTm to DeepTms in payload and update accordingly

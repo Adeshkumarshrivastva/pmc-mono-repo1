@@ -51,34 +51,34 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
                 </div>
               ) : null}
 
-              <div className="hidden pt-6 lg:grid lg:grid-cols-1 xl:grid-cols-2">
-                {data?.featureList && data.featureList.length > 0 ? (
-                  <div className="space-y-4 lg:space-y-6">
-                    {data.featureList.map((feature, index) => (
-                      <div key={index} className="flex items-center space-x-3 lg:space-x-4">
-                        <div className="flex-shrink-0 pt-1">
-                          <MedalRibbonIcon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-9 lg:w-9" />
-                        </div>
-                        <span className="text-lg font-semibold sm:text-xl">{feature.title}</span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="hidden pt-6 lg:grid lg:grid-cols-1 xl:grid-cols-3 gap-2">
+                {data?.featureList?.length ? (
+                  <aside className="space-y-4 lg:space-y-6 xl:col-span-1">
+                    <h2 className="sr-only">Key features</h2>
+                    <ul role="list" className="space-y-4">
+                      {data.featureList.map(({ title }, idx) => (
+                        <li key={idx} className="flex items-center space-x-3 lg:space-x-4">
+                          <MedalRibbonIcon
+                            aria-hidden="true"
+                            className="h-6 w-6 flex-shrink-0 pt-1
+                         sm:h-8 sm:w-8 lg:h-9 lg:w-9"
+                          />
+                          <span className="text-lg font-semibold sm:text-xl">{title}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </aside>
                 ) : null}
 
-                {data?.secondryImage ? (
-                  <div>
-                    <div className="relative max-w-xs">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        width={356}
-                        height={280}
-                        alt={data.title ? `${data.title} secondary image` : 'Treatment secondary image'}
-                        src={getURLFromMedia(data.secondryImage)}
-                        className="h-auto w-full object-contain rounded-sm"
-                      />
-                    </div>
-                  </div>
-                ) : null}
+                <div className="xl:col-span-2">
+                  <iframe
+                    src={data?.videoUrl ?? ''}
+                    title="About Deep TMS"
+                    className="aspect-video w-full rounded-sm"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </div>
           </div>
