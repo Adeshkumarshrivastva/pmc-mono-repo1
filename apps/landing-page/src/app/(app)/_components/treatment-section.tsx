@@ -51,26 +51,8 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
                 </div>
               ) : null}
 
-              <div className="hidden pt-6 lg:grid lg:grid-cols-1 xl:grid-cols-3 gap-2">
-                {data?.featureList?.length ? (
-                  <aside className="space-y-4 lg:space-y-6 xl:col-span-1">
-                    <h2 className="sr-only">Key features</h2>
-                    <ul role="list" className="space-y-4">
-                      {data.featureList.map(({ title }, idx) => (
-                        <li key={idx} className="flex items-center space-x-3 lg:space-x-4">
-                          <MedalRibbonIcon
-                            aria-hidden="true"
-                            className="h-6 w-6 flex-shrink-0 pt-1
-                         sm:h-8 sm:w-8 lg:h-9 lg:w-9"
-                          />
-                          <span className="text-lg font-semibold sm:text-xl">{title}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </aside>
-                ) : null}
-
-                <div className="xl:col-span-2">
+              <div className="pt-6">
+                <div className="w-full">
                   <iframe
                     src={data?.videoUrl ?? ''}
                     title="About Deep TMS"
