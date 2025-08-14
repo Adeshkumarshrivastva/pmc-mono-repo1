@@ -30,13 +30,22 @@ export default $config({
             : undefined,
     })
 
+    const BetterAuthSecret = new sst.Secret('BETTER_AUTH_SECRET')
+    const DatabaseUrl = new sst.Secret('DATABASE_URL')
+
     new sst.aws.Function('PmcHonoServer', {
+      link: [BetterAuthSecret, DatabaseUrl],
       handler: 'apps/server/src/index.handler',
       url: {
         router: {
           instance: router,
           path: '/server',
         },
+      },
+      environment: {
+        DATABASE_URL: DatabaseUrl.value,
+        BETTER_AUTH_SECRET: BetterAuthSecret.value,
+        BETTER_AUTH_URL: router.url,
       },
     })
 
