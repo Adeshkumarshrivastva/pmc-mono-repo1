@@ -34,13 +34,14 @@ export default $config({
     const DatabaseUrl = new sst.Secret('DATABASE_URL')
 
     new sst.aws.Function('PmcHonoServer', {
-      link: [BetterAuthSecret, DatabaseUrl],
+      link: [router, BetterAuthSecret, DatabaseUrl],
       handler: 'apps/server/src/index.handler',
       url: {
         router: {
           instance: router,
           path: '/server',
         },
+        cors: false,
       },
       environment: {
         DATABASE_URL: DatabaseUrl.value,

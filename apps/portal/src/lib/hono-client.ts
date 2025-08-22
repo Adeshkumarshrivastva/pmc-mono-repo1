@@ -1,5 +1,5 @@
 import { hc } from 'hono/client'
 import { type App } from '@pmc/server'
-import { z } from 'zod/v4'
+import { env } from './env'
 
-export const honoClient = hc<App>(z.url().parse(import.meta.env.VITE_PUBLIC_API_BASE_URL))
+export const honoClient = hc<App>(env.VITE_PUBLIC_API_BASE_URL)
