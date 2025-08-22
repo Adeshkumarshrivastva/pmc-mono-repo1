@@ -3,7 +3,8 @@
   "scripts": {
     "prebuild": "prisma generate",
     "format": "prettier --write --ignore-path .gitignore --cache .",
-    "lint": "eslint --cache ."
+    "lint": "eslint --cache .",
+    "db:push": "prisma db push"
   },
   "types": "./src/types.ts",
   "module": "./src/types.ts",
