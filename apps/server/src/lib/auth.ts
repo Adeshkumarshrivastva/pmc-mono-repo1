@@ -5,7 +5,6 @@ import { phoneNumber } from 'better-auth/plugins'
 import { prisma } from './db'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
-console.log('is Development - ', isDevelopment)
 
 export const auth = betterAuth({
   basePath: '/server/auth',
@@ -14,6 +13,13 @@ export const auth = betterAuth({
     provider: 'mongodb',
   }),
   trustedOrigins: ['http://localhost:5173'],
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      // redirectURI: 'http://localhost:5173',
+    },
+  },
   plugins: [
     phoneNumber({
       sendOTP: ({ phoneNumber, code }) => {

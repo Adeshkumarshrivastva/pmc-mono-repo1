@@ -16,8 +16,8 @@ export const Route = createFileRoute('/_auth')({
 
 function AuthLayout() {
   return (
-    <div>
-      <div>Auth Layout</div>
+    <div className="relative">
+      {/* TODO: Navbar */}
       <Outlet />
     </div>
   )

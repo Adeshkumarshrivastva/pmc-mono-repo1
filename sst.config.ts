@@ -32,9 +32,11 @@ export default $config({
 
     const BetterAuthSecret = new sst.Secret('BETTER_AUTH_SECRET')
     const DatabaseUrl = new sst.Secret('DATABASE_URL')
+    const GoogleClientId = new sst.Secret('GOOGLE_CLIENT_ID')
+    const GoogleClientSecret = new sst.Secret('GOOGLE_CLIENT_SECRET')
 
     new sst.aws.Function('PmcHonoServer', {
-      link: [router, BetterAuthSecret, DatabaseUrl],
+      link: [router, BetterAuthSecret, DatabaseUrl, GoogleClientId, GoogleClientSecret],
       handler: 'apps/server/src/index.handler',
       url: {
         router: {
@@ -47,6 +49,8 @@ export default $config({
         DATABASE_URL: DatabaseUrl.value,
         BETTER_AUTH_SECRET: BetterAuthSecret.value,
         BETTER_AUTH_URL: router.url,
+        GOOGLE_CLIENT_ID: GoogleClientId.value,
+        GOOGLE_CLIENT_SECRET: GoogleClientSecret.value,
       },
     })
 

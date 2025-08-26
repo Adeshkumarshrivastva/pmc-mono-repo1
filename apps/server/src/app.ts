@@ -22,11 +22,9 @@ const app = new Hono<{ Variables: HonoContext }>()
     return auth.handler(c.req.raw)
   })
   .use(async (c, next) => {
-    console.log('headers - ', JSON.stringify(c.req.raw.headers))
     const session = await auth.api.getSession({
       headers: c.req.raw.headers,
     })
-    console.log('session here - ', session)
     if (!session) {
       return c.json({ error: 'Unauthorized' }, 403)
     }

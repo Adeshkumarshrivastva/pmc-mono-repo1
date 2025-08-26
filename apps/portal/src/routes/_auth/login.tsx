@@ -62,19 +62,36 @@ function LoginPage() {
     },
   })
 
+  const loginWithGoogleMutation = useMutation({
+    mutationFn: () => {
+      return authClient.signIn.social({
+        provider: 'google',
+        callbackURL: 'http://localhost:5173/portal',
+      })
+    },
+  })
+
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex flex-col gap-2 max-w-sm">
-        <Button onClick={() => loginMutation.mutate()}>Send OTP</Button>
+    <div className="h-screen flex flex-col items-center justify-center">
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-2 max-w-sm">
+          <Button onClick={() => loginMutation.mutate()}>Send OTP</Button>
 
-        <Input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
+          <Input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
 
-        <Button onClick={() => verifyMutation.mutate()} disabled={!otp || verifyMutation.isPending}>
-          Verify OTP
-        </Button>
-
-        {loginMutation.error && <p className="text-red-500">{loginMutation.error.message}</p>}
-        {verifyMutation.error && <p className="text-red-500">{verifyMutation.error.message}</p>}
+          <Button onClick={() => verifyMutation.mutate()} disabled={!otp || verifyMutation.isPending}>
+            Verify OTP
+          </Button>
+          <p>Or</p>
+          <Button
+            disabled={loginWithGoogleMutation.isPending}
+            onClick={() => {
+              loginWithGoogleMutation.mutate()
+            }}
+          >
+            Login with Google
+          </Button>
+        </div>
       </div>
     </div>
   )
