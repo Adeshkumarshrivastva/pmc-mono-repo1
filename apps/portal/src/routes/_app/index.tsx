@@ -1,4 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, invariant, redirect } from '@tanstack/react-router'
+import { honoClient } from '@/lib/hono-client'
 
 export const Route = createFileRoute('/_app/')({
   beforeLoad: async ({ context: { authClient } }) => {
@@ -9,9 +11,25 @@ export const Route = createFileRoute('/_app/')({
     }
     return { session: session.data }
   },
-  component: () => DashboardPage,
+  component: DashboardPage,
 })
 
 export default function DashboardPage() {
-  return <div>Dashboard Page</div>
+  const getCurrentUserQuery = useQuery({
+    queryKey: ['get-current-user'],
+    queryFn: fetchCurrentUser,
+  })
+
+  return (
+    <div>
+      <div>Dashboard Page</div>
+      <p>{getCurrentUserQuery.data ? JSON.stringify(getCurrentUserQuery.data) : null}</p>
+    </div>
+  )
+}
+
+const fetchCurrentUser = async () => {
+  const res = await honoClient.server.user.me.$get()
+  const user = await res.json()
+  return user
 }

@@ -4,6 +4,9 @@ import { Resource } from 'sst'
 import { phoneNumber } from 'better-auth/plugins'
 import { prisma } from './db'
 
+const isDevelopment = process.env.NODE_ENV !== 'production'
+console.log('is Development - ', isDevelopment)
+
 export const auth = betterAuth({
   basePath: '/server/auth',
   secret: Resource.BETTER_AUTH_SECRET.value,
@@ -25,6 +28,9 @@ export const auth = betterAuth({
     }),
   ],
   advanced: {
-    useSecureCookies: false,
+    defaultCookieAttributes: {
+      sameSite: isDevelopment ? 'None' : 'Lax',
+      secure: isDevelopment ? false : true,
+    },
   },
 })

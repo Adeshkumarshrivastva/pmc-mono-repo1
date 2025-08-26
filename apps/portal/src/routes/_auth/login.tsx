@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { createFileRoute, invariant, redirect } from '@tanstack/react-router'
+import { createFileRoute, invariant, redirect, useNavigate } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,13 +10,14 @@ export const Route = createFileRoute('/_auth/login')({
     invariant(authClient, 'authClient should be present')
     const session = await authClient?.getSession()
     if (session.data) {
-      redirect({ to: '/' })
+      throw redirect({ to: '/' })
     }
   },
   component: LoginPage,
 })
 
 function LoginPage() {
+  const navigate = useNavigate()
   const [otp, setOtp] = useState('')
   const [phoneNumber] = useState('+918076332196') // You might want to make this dynamic
 
@@ -31,11 +32,11 @@ function LoginPage() {
       }
       return res.data
     },
-    onSuccess: (data) => {
-      console.log('OTP sent successfully', data)
+    onSuccess: () => {
+      //TODO: add toast
     },
-    onError: (error) => {
-      console.error('Login failed:', error)
+    onError: () => {
+      // TODO: Add toast
     },
   })
 
@@ -52,10 +53,12 @@ function LoginPage() {
       }
       return res.data
     },
-    onSuccess: async (data) => {
-      console.log('OTP verified successfully', data)
-      const session = await authClient?.getSession()
-      console.log('session - ', JSON.stringify(session))
+    onSuccess: () => {
+      // TODO: Add toast
+      navigate({ to: '/', replace: true })
+    },
+    onError: () => {
+      // TODO: Add toast
     },
   })
 
