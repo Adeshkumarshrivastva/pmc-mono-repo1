@@ -4,6 +4,8 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { routeTree } from './routeTree.gen'
 import { queryClient } from './lib/query-client'
+import { honoClient } from './lib/hono-client'
+import { authClient } from './lib/auth-client'
 import './index.css'
 
 const router = createRouter({ routeTree, context: { queryClient } })
@@ -20,7 +22,11 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} basepath={import.meta.env.VITE_PUBLIC_BASE_PATH} />
+        <RouterProvider
+          router={router}
+          basepath={import.meta.env.VITE_PUBLIC_BASE_PATH}
+          context={{ honoClient, authClient, queryClient }}
+        />
       </QueryClientProvider>
     </StrictMode>,
   )

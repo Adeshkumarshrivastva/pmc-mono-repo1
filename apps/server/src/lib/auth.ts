@@ -17,6 +17,14 @@ export const auth = betterAuth({
         console.log(`Sending OTP code ${code} to phone number ${phoneNumber}`)
         // Implement sending OTP code via SMS
       },
+      signUpOnVerification: {
+        getTempEmail: (phoneNumber) => {
+          return `${phoneNumber}@pmc.com`
+        },
+      },
     }),
   ],
+  advanced: {
+    useSecureCookies: false,
+  },
 })

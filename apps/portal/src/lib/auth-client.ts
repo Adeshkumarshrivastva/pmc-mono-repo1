@@ -7,3 +7,5 @@ export const authClient = createAuthClient({
   plugins: [phoneNumberClient()],
   basePath: '/server/auth',
 })
+
+export type AuthClient = typeof authClient
