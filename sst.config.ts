@@ -77,7 +77,7 @@ export default $config({
         PAYLOAD_DB_URL: PayloadDBUrl.value,
         RAZORPAY_KEY_ID: RazorpayKeyId.value,
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
-        NEXT_PUBLIC_RAZORPAY_KEY_ID: RazorpayKeyId.value,
+        NEXT_PUBLIC_RAZORPAY_KEY_ID: $interpolate`${RazorpayKeyId.value}`,
       },
     })
   },
