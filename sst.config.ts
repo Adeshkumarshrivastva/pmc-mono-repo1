@@ -45,13 +45,6 @@ export default $config({
         },
         cors: false,
       },
-      environment: {
-        DATABASE_URL: DatabaseUrl.value,
-        BETTER_AUTH_SECRET: BetterAuthSecret.value,
-        BETTER_AUTH_URL: router.url,
-        GOOGLE_CLIENT_ID: GoogleClientId.value,
-        GOOGLE_CLIENT_SECRET: GoogleClientSecret.value,
-      },
     })
 
     new sst.aws.StaticSite('PmcPortal', {
@@ -91,7 +84,7 @@ export default $config({
         PAYLOAD_DB_URL: PayloadDBUrl.value,
         RAZORPAY_KEY_ID: RazorpayKeyId.value,
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
-        NEXT_PUBLIC_RAZORPAY_KEY_ID: RazorpayKeyId.value,
+        NEXT_PUBLIC_RAZORPAY_KEY_ID: $interpolate`${RazorpayKeyId.value}`,
       },
     })
   },

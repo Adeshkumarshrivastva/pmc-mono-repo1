@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { auth } from './lib/auth'
 import { userApp } from './routes/user'
-import { HonoContext } from './lib/context'
+import { type HonoContext } from './lib/context'
 
 const app = new Hono<{ Variables: HonoContext }>()
   .basePath('/server')

@@ -4,7 +4,7 @@ import { Resource } from 'sst'
 import { phoneNumber } from 'better-auth/plugins'
 import { prisma } from './db'
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment = Resource.App.stage !== 'production'
 
 export const auth = betterAuth({
   basePath: '/server/auth',
@@ -15,9 +15,8 @@ export const auth = betterAuth({
   trustedOrigins: ['http://localhost:5173'],
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      // redirectURI: 'http://localhost:5173',
+      clientId: Resource.GOOGLE_CLIENT_ID.value,
+      clientSecret: Resource.GOOGLE_CLIENT_SECRET.value,
     },
   },
   plugins: [
@@ -36,7 +35,7 @@ export const auth = betterAuth({
   advanced: {
     defaultCookieAttributes: {
       sameSite: isDevelopment ? 'None' : 'Lax',
-      secure: isDevelopment ? false : true,
+      secure: true,
     },
   },
 })

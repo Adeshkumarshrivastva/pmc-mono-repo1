@@ -1,4 +1,4 @@
-import { User, type Session } from 'better-auth'
+import { type User, type Session } from 'better-auth'
 
 export type HonoContext = {
   session?: Session

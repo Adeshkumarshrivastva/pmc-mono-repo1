@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { HonoContext } from '../lib/context'
+import { type HonoContext } from '../lib/context'
 import { invariant } from '../lib/utils'
 
 export const userApp = new Hono<{ Variables: HonoContext }>()
