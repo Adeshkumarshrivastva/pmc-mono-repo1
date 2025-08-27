@@ -45,6 +45,8 @@ export default $config({
         },
         cors: false,
       },
+      // TODO: Add all the variables in the environment
+      environment: {},
     })
 
     new sst.aws.StaticSite('PmcPortal', {
