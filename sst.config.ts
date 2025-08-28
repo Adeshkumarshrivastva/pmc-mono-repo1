@@ -45,8 +45,12 @@ export default $config({
         },
         cors: false,
       },
-      // TODO: Add all the variables in the environment
-      environment: {},
+      environment: {
+        BETTER_AUTH_SECRET: BetterAuthSecret.value,
+        DATABASE_URL: DatabaseUrl.value,
+        GOOGLE_CLIENT_ID: GoogleClientId.value,
+        GOOGLE_CLIENT_SECRET: GoogleClientSecret.value,
+      },
     })
 
     new sst.aws.StaticSite('PmcPortal', {

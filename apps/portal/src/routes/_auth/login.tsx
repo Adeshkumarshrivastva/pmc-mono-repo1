@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
 import { Logo } from '@/components/ui/logo'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Card, CardContent } from '@/components/ui/card'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 
@@ -54,7 +54,7 @@ function LoginPage() {
           <div className="text-xl font-medium tracking-tight">Positive Mind Care</div>
         </div>
         <Card>
-          <CardContent className="space-y-4 pt-6">
+          <CardContent className="space-y-4">
             <OtpLoginForm />
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -193,31 +193,31 @@ function OtpLoginForm() {
           <p className="text-sm text-muted-foreground">Enter the 6-digit code sent to</p>
           <p className="font-medium">+91 {phoneNumber}</p>
         </div>
-        <FormField
-          name="otp"
-          control={verifyOtpForm.control}
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>One-Time Password</FormLabel>
-                <FormControl>
-                  <InputOTP maxLength={6} onChange={field.onChange} value={field.value}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                </FormControl>
-                <FormDescription>Please enter the one-time password sent to your phone.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )
-          }}
-        />
+        <div className="flex justify-center">
+          <FormField
+            name="otp"
+            control={verifyOtpForm.control}
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormControl>
+                    <InputOTP maxLength={6} onChange={field.onChange} value={field.value}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )
+            }}
+          />
+        </div>
         <div className="space-y-2">
           <Button type="submit" className="w-full" disabled={verifyOtpMutation.isPending}>
             {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
