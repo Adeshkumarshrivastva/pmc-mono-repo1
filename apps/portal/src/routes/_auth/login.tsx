@@ -189,35 +189,33 @@ function OtpLoginForm() {
           verifyOtpMutation.mutate(value)
         })}
       >
-        <div className="text-center space-y-2">
+        <div className="space-y-2">
           <p className="text-sm text-muted-foreground">Enter the 6-digit code sent to</p>
           <p className="font-medium">+91 {phoneNumber}</p>
         </div>
-        <div className="flex justify-center">
-          <FormField
-            name="otp"
-            control={verifyOtpForm.control}
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormControl>
-                    <InputOTP maxLength={6} onChange={field.onChange} value={field.value}>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )
-            }}
-          />
-        </div>
+        <FormField
+          name="otp"
+          control={verifyOtpForm.control}
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormControl>
+                  <InputOTP maxLength={6} onChange={field.onChange} value={field.value}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )
+          }}
+        />
         <div className="space-y-2">
           <Button type="submit" className="w-full" disabled={verifyOtpMutation.isPending}>
             {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
