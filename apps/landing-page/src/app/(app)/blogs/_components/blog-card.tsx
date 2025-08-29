@@ -1,8 +1,8 @@
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { CircleArrowRightIcon } from '@/components/ui/icons'
 import { Blog } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import Link from 'next/link'
 
 type BlogCardProps = {
   blog: Blog
