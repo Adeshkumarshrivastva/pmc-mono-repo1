@@ -3,28 +3,31 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { Resource } from 'sst'
 import { phoneNumber } from 'better-auth/plugins'
 import { prisma } from './db'
-import { env } from './env'
+import { config } from '../config'
+import { invariant } from './utils'
+
+invariant(config, 'config should be present')
 
 const isDevelopment = Resource.App.stage !== 'production'
 
 export const auth = betterAuth({
   basePath: '/server/auth',
-  secret: env.BETTER_AUTH_SECRET,
+  secret: config.databaseUrl,
   database: prismaAdapter(prisma, {
     provider: 'mongodb',
   }),
-  trustedOrigins: ['http://localhost:5173'],
+  trustedOrigins: [config.cors.origin],
   socialProviders: {
     google: {
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: config.auth.google.clientId,
+      clientSecret: config.auth.google.clientSecret,
     },
   },
   plugins: [
     phoneNumber({
       sendOTP: ({ phoneNumber, code }) => {
         console.log(`Sending OTP code ${code} to phone number ${phoneNumber}`)
-        // Implement sending OTP code via SMS
+        // TODO: Implement sending OTP code via SMS
       },
       signUpOnVerification: {
         getTempEmail: (phoneNumber) => {

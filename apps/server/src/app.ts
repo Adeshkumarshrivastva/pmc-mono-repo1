@@ -3,12 +3,16 @@ import { cors } from 'hono/cors'
 import { auth } from './lib/auth'
 import { userApp } from './routes/user'
 import { type HonoContext } from './lib/context'
+import { config } from './config'
+import { invariant } from './lib/utils'
+
+invariant(config, 'config must be present')
 
 const app = new Hono<{ Variables: HonoContext }>()
   .basePath('/server')
   .use(
     cors({
-      origin: ['http://localhost:5173'],
+      origin: [config.cors.origin],
       credentials: true,
       exposeHeaders: ['Content-Length'],
       allowMethods: ['POST', 'GET', 'OPTIONS'],

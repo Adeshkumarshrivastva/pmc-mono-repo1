@@ -11,6 +11,7 @@ import { Logo } from '@/components/ui/logo'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Card, CardContent } from '@/components/ui/card'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
+import { env } from '@/lib/env'
 
 export const Route = createFileRoute('/_auth/login')({
   beforeLoad: async ({ context: { authClient } }) => {
@@ -41,7 +42,7 @@ function LoginPage() {
     mutationFn: () => {
       return authClient.signIn.social({
         provider: 'google',
-        callbackURL: 'http://localhost:5173/portal',
+        callbackURL: env.VITE_PUBLIC_OAUTH_CALLBACK_URL,
       })
     },
   })

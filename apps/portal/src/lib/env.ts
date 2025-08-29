@@ -4,5 +4,6 @@ export const env = z
   .object({
     VITE_PUBLIC_API_BASE_URL: z.url(),
     VITE_PUBLIC_BASE_PATH: z.string(),
+    VITE_PUBLIC_OAUTH_CALLBACK_URL: z.url().optional().default('http://localhost:5173/portal'),
   })
   .parse(import.meta.env)

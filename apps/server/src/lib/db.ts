@@ -1,5 +1,8 @@
 import { PrismaClient } from '../generated/prisma'
-import { env } from './env'
+import { config } from '../config'
+import { invariant } from './utils'
+
+invariant(config, 'config must be present')
 
 export { type PrismaClient }
 
@@ -8,7 +11,7 @@ const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
-    datasourceUrl: env.DATABASE_URL,
+    datasourceUrl: config.databaseUrl,
   })
 
 if (process.env.NODE_ENV !== 'production') {
