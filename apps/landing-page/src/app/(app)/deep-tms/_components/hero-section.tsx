@@ -1,7 +1,5 @@
-import Image from 'next/image'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { DeepTm } from '@/payload/types'
-import { getURLFromMedia } from '@/payload/utils'
 
 type HeroSectionProps = {
   // TODO: Rename DeepTm to DeepTms in payload and update accordingly
@@ -24,13 +22,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
             </div>
             <div>
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <Image
-                  alt="Deep TMS People"
-                  width={525}
-                  height={500}
-                  className="h-auto w-full object-contain"
-                  src={getURLFromMedia(data?.image ?? '')}
-                />
+                <iframe className="h-auto w-full aspect-video rounded-lg" src={data?.videoUrl ?? ''} />
               </div>
             </div>
           </div>
