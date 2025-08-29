@@ -8,6 +8,7 @@ import { honoClient } from './lib/hono-client'
 import { authClient } from './lib/auth-client'
 import { env } from './lib/env'
 import './index.css'
+import { Toaster } from './components/ui/sonner'
 
 const router = createRouter({ routeTree, context: { queryClient } })
 
@@ -28,6 +29,7 @@ if (!rootElement.innerHTML) {
           basepath={env.VITE_PUBLIC_BASE_PATH}
           context={{ honoClient, authClient, queryClient }}
         />
+        <Toaster />
       </QueryClientProvider>
     </StrictMode>,
   )

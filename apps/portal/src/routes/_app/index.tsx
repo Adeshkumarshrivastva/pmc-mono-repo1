@@ -1,8 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { createFileRoute, invariant, redirect, useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
 import { honoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
+import { getErrorMessage } from '@/lib/utils'
 
 export const Route = createFileRoute('/_app/')({
   beforeLoad: async ({ context: { authClient } }) => {
@@ -28,12 +30,14 @@ export default function DashboardPage() {
       await authClient.signOut()
     },
     onSuccess: () => {
-      // TODO: add toast
+      toast.success('Signed out successfully')
       navigation({ to: '/login', replace: true })
     },
-    onError: () => [
-      // TODO: add toast
-    ],
+    onError: (error) => {
+      toast.error('Failed to sign out', {
+        description: getErrorMessage(error),
+      })
+    },
   })
 
   return (

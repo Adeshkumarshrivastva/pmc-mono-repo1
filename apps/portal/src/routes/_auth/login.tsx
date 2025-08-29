@@ -1,9 +1,10 @@
 import { z } from 'zod'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { useForm, useWatch } from 'react-hook-form'
 import { createFileRoute, invariant, redirect, useNavigate } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
-import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
@@ -12,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent } from '@/components/ui/card'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { env } from '@/lib/env'
+import { getErrorMessage } from '@/lib/utils'
 
 export const Route = createFileRoute('/_auth/login')({
   beforeLoad: async ({ context: { authClient } }) => {
@@ -113,11 +115,13 @@ function OtpLoginForm() {
       return res.data
     },
     onSuccess: () => {
+      toast.success('OTP sent successfully')
       setStep('verify')
-      //TODO: add toast
     },
-    onError: () => {
-      // TODO: Add toast
+    onError: (error) => {
+      toast.error('Failed to send OTP', {
+        description: getErrorMessage(error.message) || 'Please try again later',
+      })
     },
   })
 
@@ -134,11 +138,13 @@ function OtpLoginForm() {
       return res.data
     },
     onSuccess: () => {
+      toast.success('Login successful')
       navigate({ to: '/', replace: true })
-      //TODO: add toast
     },
-    onError: () => {
-      // TODO: Add toast
+    onError: (error) => {
+      toast.error('Verification failed', {
+        description: getErrorMessage(error),
+      })
     },
   })
 
