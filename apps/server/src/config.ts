@@ -1,4 +1,4 @@
-import { z } from 'zod/v4'
+import { z } from 'zod'
 import { getErrorMessage } from './lib/utils'
 import { rootLogger } from './lib/logger'
 import { env } from './lib/env'

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       sst:
-        specifier: 3.17.10
-        version: 3.17.10
+        specifier: 3.17.12
+        version: 3.17.12
     devDependencies:
       '@pmc/config':
         specifier: workspace:*
@@ -86,7 +86,7 @@ importers:
         version: 1.1.9(@types/react-dom@19.1.2(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@t3-oss/env-nextjs':
         specifier: 0.13.8
-        version: 0.13.8(typescript@5.8.3)(zod@3.25.67)
+        version: 0.13.8(typescript@5.8.3)(zod@4.0.17)
       '@tailwindcss/postcss':
         specifier: 4.1.10
         version: 4.1.10
@@ -154,8 +154,8 @@ importers:
         specifier: 5.0.5
         version: 5.0.5
       zod:
-        specifier: 3.25.67
-        version: 3.25.67
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@eslint/eslintrc':
         specifier: 3.2.0
@@ -210,13 +210,16 @@ importers:
         version: 1.121.34(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       better-auth:
         specifier: 1.3.6
-        version: 1.3.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@3.25.67)
+        version: 1.3.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.0.17)
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
       clsx:
         specifier: 2.1.1
         version: 2.1.1
+      dayjs:
+        specifier: ^1.11.18
+        version: 1.11.18
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -224,7 +227,7 @@ importers:
         specifier: 0.523.0
         version: 0.523.0(react@19.1.0)
       next-themes:
-        specifier: ^0.4.6
+        specifier: 0.4.6
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: 19.1.0
@@ -235,6 +238,9 @@ importers:
       react-hook-form:
         specifier: 7.60.0
         version: 7.60.0(react@19.1.0)
+      react-timer-hook:
+        specifier: 4.0.5
+        version: 4.0.5(react@19.1.0)
       sonner:
         specifier: 2.0.6
         version: 2.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -244,9 +250,12 @@ importers:
       tailwindcss:
         specifier: 4.1.10
         version: 4.1.10
+      ts-pattern:
+        specifier: 5.0.5
+        version: 5.0.5
       zod:
-        specifier: 3.25.67
-        version: 3.25.67
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@pmc/config':
         specifier: workspace:*
@@ -304,7 +313,7 @@ importers:
         version: 6.14.0(prisma@6.14.0(typescript@5.8.3))(typescript@5.8.3)
       better-auth:
         specifier: 1.3.6
-        version: 1.3.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@3.25.67)
+        version: 1.3.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.0.17)
       hono:
         specifier: 4.8.0
         version: 4.8.0
@@ -318,8 +327,8 @@ importers:
         specifier: 6.14.0
         version: 6.14.0(typescript@5.8.3)
       zod:
-        specifier: 3.25.67
-        version: 3.25.67
+        specifier: 4.0.17
+        version: 4.0.17
     devDependencies:
       '@pmc/config':
         specifier: workspace:*
@@ -3252,6 +3261,9 @@ packages:
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
 
+  dayjs@1.11.18:
+    resolution: {integrity: sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==}
+
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -5059,6 +5071,11 @@ packages:
       '@types/react':
         optional: true
 
+  react-timer-hook@4.0.5:
+    resolution: {integrity: sha512-elDxx4OIxBTbm4rXSK5cjBHkq06prO2qY9JzoYxOa11AkL3ij69jp0VuDUOqcehEK38CV0uu7FzUKtPVISRLKA==}
+    peerDependencies:
+      react: '>=16.8.0'
+
   react-transition-group@4.4.5:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
     peerDependencies:
@@ -5331,48 +5348,48 @@ packages:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
 
-  sst-darwin-arm64@3.17.10:
-    resolution: {integrity: sha512-6yhDXvnN1CUR7Ygy9Y4AduXOgrcuUdvM5rLB/qJZN0yLTjx35PJH4pzKnvEro9iTifkzCs+1QJlVKPvdWAqm/g==}
+  sst-darwin-arm64@3.17.12:
+    resolution: {integrity: sha512-9Oky2ZmJoeEN97ALWtFRt3kvSIZLjYoQoOtJvTaNQJTFi/9OsUE/6I5zdedf5GhMKCT1JvY+Ngpv3U3Y6SEYOg==}
     cpu: [arm64]
     os: [darwin]
 
-  sst-darwin-x64@3.17.10:
-    resolution: {integrity: sha512-UlmvWtQqEJe6yvoJtzu5fBzkAkofBfgElOB+hpviCzxmnZgznymJXZA94uRe7ruNeKQQs7eCUl0w4iuW7i+ZYA==}
+  sst-darwin-x64@3.17.12:
+    resolution: {integrity: sha512-n6tWCjFF9Pb+QzxXJmuTGfQ4GW96Nf6ATtb7Wpa+9RDLRHrEBdOjXAp7osr7MB9djPRkt4942nwUZ7wX/EULpg==}
     cpu: [x64]
     os: [darwin]
 
-  sst-linux-arm64@3.17.10:
-    resolution: {integrity: sha512-CIiQg9Zt2ACbl95aFKiVqgcm9c1tGHWltGk1RF21lSffNE5hGrP4ZJcB8y6ASbMsObTkB+ezbUBVrlnIOl93ww==}
+  sst-linux-arm64@3.17.12:
+    resolution: {integrity: sha512-iMflBzQWhF5kmRdXu402dwVpQI9LfFR3yFok3HUTV0ema5Pq2kPphEatEEw1dyG2ZXCBLeKN+T3Ujjfer+ddRA==}
     cpu: [arm64]
     os: [linux]
 
-  sst-linux-x64@3.17.10:
-    resolution: {integrity: sha512-e4qZ7kVi5ReEy62/uS6pOZgAx1Bj377SclvGRtCXJQutYf/8DG3USHATrsWNg15FemEi8zoW6qeQThxFTcO6yg==}
+  sst-linux-x64@3.17.12:
+    resolution: {integrity: sha512-89rZXs3IfGrY9yiDNuLfcJvHnAUX1gRVeB+lqQ1M2sbJD2iMpN+fx93owcApAndtZYzYNfQYEZ/xYwI6HFfu4w==}
     cpu: [x64]
     os: [linux]
 
-  sst-linux-x86@3.17.10:
-    resolution: {integrity: sha512-qd/CCaFt+9US9ZnCBFQe6DlJsvEZGlSq9C73hBPNkVNRIMqJ9lY9aXLDWMyaqEk9NpZHpyKvog01YkH5Y+k2KQ==}
+  sst-linux-x86@3.17.12:
+    resolution: {integrity: sha512-Zc2nd2syaq/DfNxtDcn4NOh8RBCaCZ1qsjLFpvGGfMMRnGiWjofuE6eFX3fhchGL3uvaqwlENvtzj4UC/MF5wQ==}
     cpu: [x86]
     os: [linux]
 
-  sst-win32-arm64@3.17.10:
-    resolution: {integrity: sha512-Dlvc1JbD/Y2ZEm+y9oukoXmskbPkll8lbwID32n8Jlyw8yOJYFEn/YghFm5L5lMgvWIeHU6X4YPW0zNGFd1H/w==}
+  sst-win32-arm64@3.17.12:
+    resolution: {integrity: sha512-Bb7M6PoImmGeyzJu75QbNHBs0mDp21DsKFyMucn2dwxYwahuFPjjMbG+tlziWtxcNgdZMdEcy9jR8ot1jAIh0Q==}
     cpu: [arm64]
     os: [win32]
 
-  sst-win32-x64@3.17.10:
-    resolution: {integrity: sha512-jguun7b96U7fp+X95QT6mz7Fvnca0vgIwj9J0k7aTj2DA/S4uvDNrJzarmlSg9Qs66wGvBXDmTrZrAnhlhkP2A==}
+  sst-win32-x64@3.17.12:
+    resolution: {integrity: sha512-7f41o1WhxdcuLhHijoavkX5O3L/Pnma6zCoL3kG6f9Njc6Zyj8Oha2fQz6Tesb/Qt8deG04WU4bL3FmxgNHU6g==}
     cpu: [x64]
     os: [win32]
 
-  sst-win32-x86@3.17.10:
-    resolution: {integrity: sha512-weTAKEnSKIWiidBxMamAJL+qPb/sfOdPSBIY77fzYBNWghSc1N3tttPzHg6LcMAjwCVmBYN7zJS4MDHooPTFIg==}
+  sst-win32-x86@3.17.12:
+    resolution: {integrity: sha512-AfsNJQMTlefHitaVRWh5Uf3AaICIaomFbSo5qDbibgkvhbppCxgMFpW0IxiWySjWrCN5hMMkxdxlZP9IHqqxjQ==}
     cpu: [x86]
     os: [win32]
 
-  sst@3.17.10:
-    resolution: {integrity: sha512-+GBQ/G+I/UdcGHk6hnhUMGywb1e0rPsGghwBY3Yy8WlWx7FCzLI2aVTgT0SdRwa93G2+jdnlbhXPBrTPQRqz9w==}
+  sst@3.17.12:
+    resolution: {integrity: sha512-UwUbucNZRLp9GHgPAwkat1sBsNGaJfHsLXZHCMKsolCW7CEuugJfvBl2vOyJrhKP4N+Xnv1QFh0BGsOmN0kQeA==}
     hasBin: true
 
   stable-hash@0.0.5:
@@ -5979,6 +5996,9 @@ packages:
 
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+
+  zod@4.0.17:
+    resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -8565,17 +8585,17 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.13.8(typescript@5.8.3)(zod@3.25.67)':
+  '@t3-oss/env-core@0.13.8(typescript@5.8.3)(zod@4.0.17)':
     optionalDependencies:
       typescript: 5.8.3
-      zod: 3.25.67
+      zod: 4.0.17
 
-  '@t3-oss/env-nextjs@0.13.8(typescript@5.8.3)(zod@3.25.67)':
+  '@t3-oss/env-nextjs@0.13.8(typescript@5.8.3)(zod@4.0.17)':
     dependencies:
-      '@t3-oss/env-core': 0.13.8(typescript@5.8.3)(zod@3.25.67)
+      '@t3-oss/env-core': 0.13.8(typescript@5.8.3)(zod@4.0.17)
     optionalDependencies:
       typescript: 5.8.3
-      zod: 3.25.67
+      zod: 4.0.17
 
   '@tailwindcss/node@4.1.10':
     dependencies:
@@ -9231,7 +9251,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  better-auth@1.3.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@3.25.67):
+  better-auth@1.3.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod@4.0.17):
     dependencies:
       '@better-auth/utils': 0.2.6
       '@better-fetch/fetch': 1.1.18
@@ -9244,7 +9264,7 @@ snapshots:
       jose: 5.10.0
       kysely: 0.28.5
       nanostores: 0.11.4
-      zod: 3.25.67
+      zod: 4.0.17
     optionalDependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -9540,6 +9560,8 @@ snapshots:
 
   dateformat@4.6.3: {}
 
+  dayjs@1.11.18: {}
+
   debug@3.2.7:
     dependencies:
       ms: 2.1.3
@@ -9833,7 +9855,7 @@ snapshots:
       '@typescript-eslint/parser': 8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.29.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.29.0(jiti@2.4.2))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.29.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.29.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.5(eslint@9.29.0(jiti@2.4.2))
@@ -9853,7 +9875,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.29.0(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.1
@@ -9868,14 +9890,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.29.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.29.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.29.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -9890,7 +9912,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.29.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.29.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -11654,6 +11676,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.0
 
+  react-timer-hook@4.0.5(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+
   react-transition-group@4.4.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@babel/runtime': 7.27.6
@@ -12013,31 +12039,31 @@ snapshots:
 
   split2@4.2.0: {}
 
-  sst-darwin-arm64@3.17.10:
+  sst-darwin-arm64@3.17.12:
     optional: true
 
-  sst-darwin-x64@3.17.10:
+  sst-darwin-x64@3.17.12:
     optional: true
 
-  sst-linux-arm64@3.17.10:
+  sst-linux-arm64@3.17.12:
     optional: true
 
-  sst-linux-x64@3.17.10:
+  sst-linux-x64@3.17.12:
     optional: true
 
-  sst-linux-x86@3.17.10:
+  sst-linux-x86@3.17.12:
     optional: true
 
-  sst-win32-arm64@3.17.10:
+  sst-win32-arm64@3.17.12:
     optional: true
 
-  sst-win32-x64@3.17.10:
+  sst-win32-x64@3.17.12:
     optional: true
 
-  sst-win32-x86@3.17.10:
+  sst-win32-x86@3.17.12:
     optional: true
 
-  sst@3.17.10:
+  sst@3.17.12:
     dependencies:
       aws-sdk: 2.1692.0
       aws4fetch: 1.0.18
@@ -12045,14 +12071,14 @@ snapshots:
       opencontrol: 0.0.6
       openid-client: 5.6.4
     optionalDependencies:
-      sst-darwin-arm64: 3.17.10
-      sst-darwin-x64: 3.17.10
-      sst-linux-arm64: 3.17.10
-      sst-linux-x64: 3.17.10
-      sst-linux-x86: 3.17.10
-      sst-win32-arm64: 3.17.10
-      sst-win32-x64: 3.17.10
-      sst-win32-x86: 3.17.10
+      sst-darwin-arm64: 3.17.12
+      sst-darwin-x64: 3.17.12
+      sst-linux-arm64: 3.17.12
+      sst-linux-x64: 3.17.12
+      sst-linux-x86: 3.17.12
+      sst-win32-arm64: 3.17.12
+      sst-win32-x64: 3.17.12
+      sst-win32-x86: 3.17.12
     transitivePeerDependencies:
       - supports-color
 
@@ -12699,5 +12725,7 @@ snapshots:
   zod@3.24.2: {}
 
   zod@3.25.67: {}
+
+  zod@4.0.17: {}
 
   zwitch@2.0.4: {}

@@ -1,4 +1,4 @@
-import { ZodError } from 'zod/v4'
+import { ZodError } from 'zod'
 
 export function invariant(cond: unknown, message: string): asserts cond {
   if (!cond) {

@@ -1,7 +1,10 @@
 import { z } from 'zod'
+import { match } from 'ts-pattern'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { useTimer } from 'react-timer-hook'
+import dayjs from 'dayjs'
 import { createFileRoute, invariant, redirect, useNavigate } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -84,22 +87,40 @@ function LoginPage() {
   )
 }
 
+type Mode = { type: 'initial'; phoneNumber?: string } | { type: 'verify'; phoneNumber: string }
+
 function OtpLoginForm() {
   const navigate = useNavigate()
-  const [step, setStep] = useState<'send' | 'verify'>('send')
-  const sendOtpForm = useForm({
+  const [mode, setMode] = useState<Mode>({ type: 'initial' })
+
+  return match(mode)
+    .returnType<React.ReactNode>()
+    .with({ type: 'initial' }, () => (
+      <InitiateLoginForm
+        onSuccess={(phoneNumber) => {
+          setMode({ type: 'verify', phoneNumber })
+        }}
+      />
+    ))
+    .with({ type: 'verify' }, ({ phoneNumber }) => (
+      <VerifyOTP
+        phoneNumber={phoneNumber}
+        onSuccess={() => {
+          navigate({ to: '/', replace: true })
+        }}
+        onBack={() => {
+          setMode({ type: 'initial', phoneNumber: mode.phoneNumber })
+        }}
+      />
+    ))
+    .otherwise(() => null)
+}
+
+function InitiateLoginForm({ onSuccess }: { onSuccess: (phoneNumber: string) => void }) {
+  const form = useForm({
     resolver: zodResolver(phoneValidationSchema),
     defaultValues: {
       phoneNumber: '',
-    },
-  })
-
-  const phoneNumber = useWatch({ control: sendOtpForm.control, name: 'phoneNumber' })
-
-  const verifyOtpForm = useForm({
-    resolver: zodResolver(otpValidationSchema),
-    defaultValues: {
-      otp: '',
     },
   })
 
@@ -112,11 +133,84 @@ function OtpLoginForm() {
       if (res.error) {
         throw new Error(res.error.message)
       }
+      return { ...res.data, phoneNumber: value.phoneNumber }
+    },
+    onSuccess: (data) => {
+      toast.success('OTP sent successfully')
+      onSuccess(data.phoneNumber)
+    },
+    onError: (error) => {
+      toast.error('Failed to send OTP', {
+        description: getErrorMessage(error.message) || 'Please try again later',
+      })
+    },
+  })
+
+  return (
+    <Form {...form}>
+      <form
+        className="space-y-4"
+        onSubmit={form.handleSubmit((value) => {
+          sendOtpMutation.mutate(value)
+        })}
+      >
+        <FormField
+          name="phoneNumber"
+          control={form.control}
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>Phone Number</FormLabel>
+                <FormControl>
+                  <Input placeholder="9999988888" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )
+          }}
+        />
+        <Button type="submit" className="w-full" disabled={sendOtpMutation.isPending}>
+          {sendOtpMutation.isPending ? 'Sending...' : 'Send OTP'}
+        </Button>
+      </form>
+    </Form>
+  )
+}
+
+function VerifyOTP({
+  phoneNumber,
+  onSuccess,
+  onBack,
+}: {
+  phoneNumber: string
+  onBack: () => void
+  onSuccess: () => void
+}) {
+  const { seconds, restart } = useTimer({
+    expiryTimestamp: dayjs().add(30, 'second').toDate(),
+  })
+
+  const form = useForm({
+    resolver: zodResolver(otpValidationSchema),
+    defaultValues: {
+      otp: '',
+    },
+  })
+
+  const resendOtpMutation = useMutation({
+    mutationFn: async (value: z.infer<typeof phoneValidationSchema>) => {
+      const res = await authClient.phoneNumber.sendOtp({
+        phoneNumber: value.phoneNumber,
+      })
+
+      if (res.error) {
+        throw new Error(res.error.message)
+      }
       return res.data
     },
     onSuccess: () => {
+      restart(dayjs().add(30, 'second').toDate())
       toast.success('OTP sent successfully')
-      setStep('verify')
     },
     onError: (error) => {
       toast.error('Failed to send OTP', {
@@ -139,7 +233,7 @@ function OtpLoginForm() {
     },
     onSuccess: () => {
       toast.success('Login successful')
-      navigate({ to: '/', replace: true })
+      onSuccess()
     },
     onError: (error) => {
       toast.error('Verification failed', {
@@ -148,51 +242,11 @@ function OtpLoginForm() {
     },
   })
 
-  const handleBackToPhone = () => {
-    setStep('send')
-  }
-
-  const handleResendOtp = () => {
-    sendOtpMutation.mutate({ phoneNumber })
-  }
-
-  if (step === 'send') {
-    return (
-      <Form {...sendOtpForm}>
-        <form
-          className="space-y-4"
-          onSubmit={sendOtpForm.handleSubmit((value) => {
-            sendOtpMutation.mutate(value)
-          })}
-        >
-          <FormField
-            name="phoneNumber"
-            control={sendOtpForm.control}
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="9999988888" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )
-            }}
-          />
-          <Button type="submit" className="w-full" disabled={sendOtpMutation.isPending}>
-            {sendOtpMutation.isPending ? 'Sending...' : 'Send OTP'}
-          </Button>
-        </form>
-      </Form>
-    )
-  }
-
   return (
-    <Form {...verifyOtpForm}>
+    <Form {...form}>
       <form
         className="space-y-4"
-        onSubmit={verifyOtpForm.handleSubmit((value) => {
+        onSubmit={form.handleSubmit((value) => {
           verifyOtpMutation.mutate(value)
         })}
       >
@@ -202,7 +256,7 @@ function OtpLoginForm() {
         </div>
         <FormField
           name="otp"
-          control={verifyOtpForm.control}
+          control={form.control}
           render={({ field }) => {
             return (
               <FormItem>
@@ -228,20 +282,35 @@ function OtpLoginForm() {
             {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
           </Button>
 
-          <div className="flex justify-between text-sm">
-            <Button type="button" variant="link" className="p-0 h-auto" onClick={handleBackToPhone}>
-              Change number
-            </Button>
-
+          <div className="flex items-center justify-between text-sm">
             <Button
               type="button"
               variant="link"
               className="p-0 h-auto"
-              onClick={handleResendOtp}
-              disabled={sendOtpMutation.isPending}
+              onClick={() => {
+                onBack()
+              }}
             >
-              {sendOtpMutation.isPending ? 'Resending...' : 'Resend OTP'}
+              Change number
             </Button>
+
+            {seconds > 0 ? (
+              <p className="text-xs">
+                Resend OTP in <strong>{seconds}</strong> seconds
+              </p>
+            ) : (
+              <Button
+                type="button"
+                variant="link"
+                className="p-0 h-auto"
+                onClick={() => {
+                  resendOtpMutation.mutate({ phoneNumber })
+                }}
+                disabled={resendOtpMutation.isPending || seconds > 0 || resendOtpMutation.status === 'error'}
+              >
+                {resendOtpMutation.isPending ? 'Resending...' : 'Resend OTP'}
+              </Button>
+            )}
           </div>
         </div>
       </form>

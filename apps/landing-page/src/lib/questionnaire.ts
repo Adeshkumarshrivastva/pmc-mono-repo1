@@ -1,4 +1,4 @@
-import { z } from 'zod/v4'
+import { z } from 'zod'
 
 const baseQuestion = z.object({
   id: z.string(),
