@@ -6,16 +6,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function getErrorMessage(error: unknown, defaultMessage = 'Something went wrong. Please try again later') {
-  let message = defaultMessage
-
+export function getErrorMessage(error: unknown, defaultMessage = 'Something went wrong. Please try again') {
+  let errorMessage = defaultMessage
   if (error instanceof ZodError) {
-    message = error.message
+    errorMessage = error.issues.length ? error.issues.map((e) => e.message).join(', ') : error.message
   } else if (error instanceof Error) {
-    message = error.message
+    errorMessage = error.message
   }
-
-  return message
+  return errorMessage
 }
 
 export function fetchWithCredentials(...args: Parameters<typeof fetch>) {
