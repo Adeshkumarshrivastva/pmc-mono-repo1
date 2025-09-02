@@ -11,7 +11,7 @@ export function getErrorMessage(error: unknown, defaultMessage = 'Something went
   if (error instanceof Error) {
     message = error.message
   } else if (error instanceof ZodError) {
-    message = error.message
+    message = error.issues.length ? error.issues.map((e) => e.message).join(', ') : error.message
   }
   return message
 }
