@@ -1,6 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="./.sst/platform/config.d.ts" />
 
+import type { CdnArgs } from './.sst/platform/src/components/aws'
+
+type Domain = NonNullable<CdnArgs['domain']>
+
 export default $config({
   app(input) {
     return {
@@ -16,19 +20,21 @@ export default $config({
     }
   },
   async run() {
-    const router = new sst.aws.Router('PmcRouter', {
-      domain:
-        $app.stage === 'production'
-          ? {
-              name: 'positivemindcare.com',
-              redirects: ['www.positivemindcare.com'],
-            }
-          : $app.stage === 'development'
-            ? {
-                name: 'staging.positivemindcare.com',
-              }
-            : undefined,
-    })
+    let domain: Domain | undefined = undefined
+
+    if ($app.stage === 'production' && !$dev) {
+      domain = {
+        name: 'positivemindcare.com',
+        redirects: ['www.positivemindcare.com'],
+      }
+    } else if ($app.stage === 'development' && !$dev) {
+      domain = {
+        name: 'staging.positivemindcare.com',
+        redirects: ['www.staging.positivemindcare.com'],
+      }
+    }
+
+    const router = new sst.aws.Router('PmcRouter', { domain })
 
     const BetterAuthSecret = new sst.Secret('BETTER_AUTH_SECRET')
     const DatabaseUrl = new sst.Secret('DATABASE_URL')
@@ -36,7 +42,6 @@ export default $config({
     const GoogleClientSecret = new sst.Secret('GOOGLE_CLIENT_SECRET')
 
     new sst.aws.Function('PmcHonoServer', {
-      link: [router, BetterAuthSecret, DatabaseUrl, GoogleClientId, GoogleClientSecret],
       handler: 'apps/server/src/index.handler',
       url: {
         router: {
@@ -66,7 +71,7 @@ export default $config({
         path: '/portal',
       },
       environment: {
-        VITE_PUBLIC_API_BASE_URL: router.url,
+        VITE_PUBLIC_API_BASE_URL: $interpolate`${router.url}`,
         VITE_PUBLIC_BASE_PATH: '/portal',
       },
     })
@@ -78,7 +83,6 @@ export default $config({
     const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
 
     new sst.aws.Nextjs('PmcLandingPage', {
-      link: [MediaBucket, PayloadDBUrl, PayloadSecret, RazorpayKeyId, RazorpayKeySecret],
       path: 'apps/landing-page',
       router: {
         instance: router,
