@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import { RichText } from '@payloadcms/richtext-lexical/react'
 
 type TeamMembersSectionProps = {
   data: AboutUs['teamMembersSection']

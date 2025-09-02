@@ -1,4 +1,4 @@
-import { z } from 'zod/v4'
+import { z } from 'zod'
 import { objectId } from '@/lib/validation'
 
 export const appointmentFormInput = z.object({

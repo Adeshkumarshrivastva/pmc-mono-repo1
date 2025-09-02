@@ -22,7 +22,6 @@ export default function HeroSection({ data }: HeroSectionProps) {
             </div>
             <div>
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <iframe className="h-auto w-full aspect-video rounded-lg" src={data?.videoUrl ?? ''} />
               </div>
             </div>

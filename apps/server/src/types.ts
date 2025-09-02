@@ -1,3 +1,1 @@
-import { app } from './app'
-
-export type App = typeof app
+export { type App } from './app'

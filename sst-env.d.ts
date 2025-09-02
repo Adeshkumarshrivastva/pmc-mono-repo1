@@ -5,6 +5,22 @@
 
 declare module 'sst' {
   export interface Resource {
+    BETTER_AUTH_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    DATABASE_URL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_CLIENT_ID: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_CLIENT_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     PAYLOAD_DB_URL: {
       type: 'sst.sst.Secret'
       value: string
