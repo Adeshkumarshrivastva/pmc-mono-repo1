@@ -12,8 +12,6 @@ export async function seedExperts(prisma: PrismaClient) {
   const progressBar = new SingleBar({}, Presets.shades_classic)
   progressBar.start(experts.length, 0)
 
-  console.group('🕐 Seeding users...')
-
   for (const expert of experts) {
     const validatedExpert = z
       .object({
@@ -107,6 +105,4 @@ export async function seedExperts(prisma: PrismaClient) {
       console.log(`Error in creating Experts - ${item.name} - ${item.errorMessage}`)
     }
   }
-
-  console.groupEnd()
 }

@@ -16,43 +16,64 @@ export default function WhyChooseSection({ data }: WhyChooseSectionProps) {
   }
 
   return (
-    <div className="w-full flex justify-around bg-primary px-9 overflow-hidden py-2 flex-col lg:flex-row">
-      <div className="flex flex-col justify-between items-start space-y-6 pt-10">
-        <p className="text-5xl font-semibold text-primary-foreground max-w-[539px]">{data?.title ?? ''}</p>
-        <Button
-          icon={<CallIcon />}
-          variant={'secondary'}
-          className="font-normal"
-          onClick={() => {
-            handleBooking()
-          }}
-        >
-          {data?.action}
-        </Button>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          alt="Doctors"
-          width={564}
-          height={800}
-          className="object-contain h-auto"
-          src={getURLFromMedia(data?.image ?? '')}
-        />
+    <section className="bg-primary">
+      <div className="flex-col lg:flex-row w-full flex justify-between max-w-7xl mx-auto px-1 md:px-5 xl:px-0 lg:gap-2">
+        <div className="flex flex-col items-center lg:items-start pt-6 sm:pt-10 lg:flex-1">
+          <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-primary-foreground max-w-full lg:max-w-[539px] leading-tight">
+            {data?.title ?? ''}
+          </p>
+          <Button
+            icon={<CallIcon />}
+            variant={'secondary'}
+            className="font-normal mt-4 sm:mt-5 sm:w-auto"
+            onClick={() => {
+              handleBooking()
+            }}
+          >
+            {data?.action}
+          </Button>
+          {data?.image && (
+            <div className="w-full max-w-[800px] max-h-[500px] mt-6 lg:mt-0 overflow-hidden flex justify-center items-center lg:justify-start lg:pt-6">
+              <div
+                className="w-full aspect-[1/2] sm:aspect-[4/5] md:aspect-[3/4] lg:aspect-[1/2] bg-contain bg-no-repeat bg-center max-w-[400px] sm:max-w-[400px] md:max-w-[600px] lg:max-w-[600px] max-h-[300px] sm:max-h-[400px] md:max-h-[500px] lg:max-h-[700px]"
+                style={{
+                  backgroundImage: `url(${getURLFromMedia(data.image)})`,
+                }}
+                role="img"
+                aria-label={'Healthcare professionals'}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="pt-8 lg:pt-12 py-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-6 max-h-none lg:max-h-[800px] lg:overflow-auto">
+            {data?.featuresCards && data.featuresCards.length !== 0
+              ? data.featuresCards.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col bg-accent space-y-3 sm:space-y-4 p-4 sm:p-6 w-full max-w-[340px] mx-auto lg:mx-0 min-h-[180px] sm:min-h-[204px] rounded-md"
+                  >
+                    {feature.featureIcon ? (
+                      <SVGImageIcon
+                        src={getURLFromMedia(feature.featureIcon)}
+                        className="h-10 w-10 sm:h-12 sm:w-12 text-primary flex-shrink-0"
+                      />
+                    ) : (
+                      <ClipBoardNotesWithQuestionMark className="h-10 w-10 sm:h-12 sm:w-12 text-primary flex-shrink-0" />
+                    )}
+                    <p className="font-semibold text-base sm:text-lg md:text-xl text-primary leading-tight">
+                      {feature.featureTitle}
+                    </p>
+                    <p className="font-normal text-sm sm:text-base md:text-lg leading-relaxed flex-1">
+                      {feature.featureDescription}
+                    </p>
+                  </div>
+                ))
+              : null}
+          </div>
+        </div>
       </div>
-      <div className="space-y-6 pt-12 overflow-auto max-h-[800px] flex flex-wrap gap-2 md:block md:flex-nowrap md:gap-0">
-        {data?.featuresCards && data.featuresCards.length !== 0
-          ? data.featuresCards.map((feature, index) => (
-              <div key={index} className="flex flex-col bg-accent space-y-4 p-6 w-[340px] h-[204px] rounded-md">
-                {feature.featureIcon ? (
-                  <SVGImageIcon src={getURLFromMedia(feature.featureIcon)} className="h-12 w-12 text-primary" />
-                ) : (
-                  <ClipBoardNotesWithQuestionMark className="h-12 w-12 text-primary" />
-                )}
-                <p className="font-semibold md:text-xl text-primary text-lg">{feature.featureTitle}</p>
-                <p className="font-normal md:text-lg text-sm">{feature.featureDescription}</p>
-              </div>
-            ))
-          : null}
-      </div>
-    </div>
+    </section>
   )
 }

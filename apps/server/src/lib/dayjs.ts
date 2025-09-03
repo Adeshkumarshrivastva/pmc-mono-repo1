@@ -10,5 +10,4 @@ const plugins = [customParseFormat, localizedFormat, utc, timezone, isoWeek, min
 for (const plugin of plugins) {
   dayjs.extend(plugin)
 }
-
 export default dayjs
