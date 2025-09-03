@@ -96,7 +96,7 @@ model Expert {
   timezone         String               @default("Asia/Kolkata")
   // TODO: Add profile fields
   bio              String?
-  Qualifications   String?
+  qualifications   String?
   servicesProvided Service[]
   availability     ExpertAvailability[]
   blockedDates     ExpertBlockDates[]
