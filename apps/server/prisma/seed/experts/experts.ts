@@ -50,6 +50,10 @@ export async function seedExperts(prisma: PrismaClient) {
       const createdExpert = await prisma.expert.create({
         data: {
           type: validatedExpert.type,
+          name: expert.name,
+          city: 'GURGAON',
+          country: 'INDIA',
+          slug: `${expert.name}-${expert.type}-${nanoid(4)}`,
           qualifications: validatedExpert.qualification,
           userId: user.id,
         },
@@ -75,6 +79,8 @@ export async function seedExperts(prisma: PrismaClient) {
         data: {
           name: 'Initial Consultation',
           price: 1000,
+          city: 'GURGAON',
+          country: 'INDIA',
           expertId: createdExpert.id,
         },
       })
