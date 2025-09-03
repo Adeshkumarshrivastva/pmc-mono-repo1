@@ -64,11 +64,11 @@ export async function seedExperts(prisma: PrismaClient) {
       ])
 
       await prisma.expertAvailability.createMany({
-        data: availabilities.map((a) => ({
+        data: availabilities.map((availability) => ({
           expertId: createdExpert.id,
-          dayOfTheWeek: a.dayOfTheWeek,
-          startTime: baseDate.hour(a.start).minute(0).toDate(),
-          endTime: baseDate.hour(a.end).minute(0).toDate(),
+          dayOfTheWeek: availability.dayOfTheWeek,
+          startTime: baseDate.hour(availability.start).minute(0).toDate(),
+          endTime: baseDate.hour(availability.end).minute(0).toDate(),
         })),
       })
     } catch (error) {
