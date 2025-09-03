@@ -1,5 +1,5 @@
 import { hc } from 'hono/client'
-import { type App } from '@pmc/server'
+import type { App } from '@pmc/server'
 import { env } from './env'
 import { fetchWithCredentials } from './utils'
 
