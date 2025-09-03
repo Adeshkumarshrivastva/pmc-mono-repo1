@@ -100,6 +100,8 @@ model Expert {
   country          String
   avgRating        Int                  @default(5)
   // TODO: Add profile fields
+  bio              String?
+  qualifications   String?
   servicesProvided Service[]
   availability     ExpertAvailability[]
   blockedDates     ExpertBlockDates[]
