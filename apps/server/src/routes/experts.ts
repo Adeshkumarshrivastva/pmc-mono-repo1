@@ -4,6 +4,12 @@ import { zValidator } from '@hono/zod-validator'
 import { PrismaClient } from '@prisma/client'
 import { z } from 'zod'
 import { match } from 'ts-pattern'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const prisma = new PrismaClient()
 
@@ -106,7 +112,7 @@ type DayOfWeek = 'SUNDAY' | 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'F
 
 type SortBy = 'price' | 'rating' | 'availability' | 'name'
 
-function getDayOfWeek(date: Date): DayOfWeek {
+function getDayOfWeek(date: dayjs.Dayjs): DayOfWeek {
   const days: readonly DayOfWeek[] = [
     'SUNDAY',
     'MONDAY',
@@ -116,7 +122,7 @@ function getDayOfWeek(date: Date): DayOfWeek {
     'FRIDAY',
     'SATURDAY',
   ] as const
-  return days[date.getDay()]
+  return days[date.day()]
 }
 
 app.get('/experts', zValidator('query', expertSearchQuery), async (c) => {
@@ -143,8 +149,12 @@ app.get('/experts', zValidator('query', expertSearchQuery), async (c) => {
 
     if (query.minPrice !== undefined || query.maxPrice !== undefined) {
       serviceFilters.price = {}
-      if (query.minPrice !== undefined) serviceFilters.price.gte = query.minPrice
-      if (query.maxPrice !== undefined) serviceFilters.price.lte = query.maxPrice
+      if (query.minPrice !== undefined) {
+        serviceFilters.price.gte = query.minPrice
+      }
+      if (query.maxPrice !== undefined) {
+        serviceFilters.price.lte = query.maxPrice
+      }
     }
 
     if (query.tags) {
@@ -199,7 +209,7 @@ app.get('/experts', zValidator('query', expertSearchQuery), async (c) => {
         },
         availability: true,
         blockedDates: {
-          where: { date: { gte: new Date() } },
+          where: { date: { gte: dayjs().toDate() } },
         },
         bookings: {
           where: { status: { in: ['BOOKED', 'COMPLETED'] } },
@@ -211,7 +221,7 @@ app.get('/experts', zValidator('query', expertSearchQuery), async (c) => {
     })
 
     if (query.availableOn) {
-      const availableDate = new Date(query.availableOn)
+      const availableDate = dayjs(query.availableOn)
       const filteredExperts = []
 
       for (const expert of experts) {
@@ -307,7 +317,7 @@ app.get('/experts/:id', async (c) => {
         servicesProvided: true,
         availability: true,
         blockedDates: {
-          where: { date: { gte: new Date() } },
+          where: { date: { gte: dayjs().toDate() } },
         },
         bookings: {
           where: { status: { in: ['BOOKED', 'COMPLETED'] } },
@@ -368,14 +378,21 @@ app.get('/experts/:id/availability', zValidator('query', availabilityQuery), asy
     const expertId = c.req.param('id')
     const query = c.req.valid('query')
 
-    const startDate = query.startDate ? new Date(query.startDate) : new Date()
-    const endDate = query.endDate ? new Date(query.endDate) : new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000)
+    const startDate = query.startDate ? dayjs(query.startDate) : dayjs()
+    const endDate = query.endDate ? dayjs(query.endDate) : startDate.add(30, 'day')
 
     const expert = await prisma.expert.findUnique({
       where: { id: expertId },
       include: {
         availability: true,
-        blockedDates: true,
+        blockedDates: {
+          where: {
+            date: {
+              gte: startDate.toDate(),
+              lte: endDate.toDate(),
+            },
+          },
+        },
         servicesProvided: query.serviceId ? { where: { id: query.serviceId } } : undefined,
       },
     })
@@ -385,12 +402,12 @@ app.get('/experts/:id/availability', zValidator('query', availabilityQuery), asy
     }
 
     const slots: Array<{ startTime: Date; endTime: Date; available: boolean }> = []
-    const blockedDateSet = new Set(expert.blockedDates.map((bd: { date: Date }) => bd.date.toDateString()))
+    const blockedDateSet = new Set(expert.blockedDates.map((bd: { date: Date }) => dayjs(bd.date).format('YYYY-MM-DD')))
 
     const existingBookings = await prisma.booking.findMany({
       where: {
         expertId,
-        startDateTime: { gte: startDate, lte: endDate },
+        startDateTime: { gte: startDate.toDate(), lte: endDate.toDate() },
         status: { in: ['BOOKED', 'DRAFT'] },
       },
       select: { startDateTime: true, endDateTime: true },
@@ -399,39 +416,55 @@ app.get('/experts/:id/availability', zValidator('query', availabilityQuery), asy
     const serviceDuration =
       query.serviceId && expert.servicesProvided?.[0] ? expert.servicesProvided[0].durationInMinutes : 60
 
-    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-      if (blockedDateSet.has(date.toDateString())) continue
+    for (let currentDate = startDate; currentDate.diff(endDate, 'day') <= 0; currentDate = currentDate.add(1, 'day')) {
+      if (blockedDateSet.has(currentDate.format('YYYY-MM-DD'))) {
+        continue
+      }
 
-      const dayOfWeek = getDayOfWeek(date)
+      const dayOfWeek = getDayOfWeek(currentDate)
       const dayAvailability = expert.availability.find((a: { dayOfTheWeek: DayOfWeek }) => a.dayOfTheWeek === dayOfWeek)
 
       if (dayAvailability) {
-        const dayStart = new Date(date)
-        dayStart.setUTCHours(dayAvailability.startTime.getUTCHours(), dayAvailability.startTime.getUTCMinutes(), 0, 0)
+        const dayStart = currentDate
+          .hour(dayjs(dayAvailability.startTime).hour())
+          .minute(dayjs(dayAvailability.startTime).minute())
+          .second(0)
+          .millisecond(0)
 
-        const dayEnd = new Date(date)
-        dayEnd.setUTCHours(dayAvailability.endTime.getUTCHours(), dayAvailability.endTime.getUTCMinutes(), 0, 0)
+        const dayEnd = currentDate
+          .hour(dayjs(dayAvailability.endTime).hour())
+          .minute(dayjs(dayAvailability.endTime).minute())
+          .second(0)
+          .millisecond(0)
 
         for (
-          let slotStart = new Date(dayStart);
-          slotStart < dayEnd;
-          slotStart.setMinutes(slotStart.getMinutes() + 30)
+          let slotStart = dayStart;
+          slotStart.valueOf() < dayEnd.valueOf();
+          slotStart = slotStart.add(30, 'minute')
         ) {
-          const slotEnd = new Date(slotStart.getTime() + serviceDuration * 60 * 1000)
+          const slotEnd = slotStart.add(serviceDuration, 'minute')
 
-          if (slotEnd > dayEnd) break
+          if (slotEnd.valueOf() > dayEnd.valueOf()) {
+            break
+          }
 
-          const hasConflict = existingBookings.some(
-            (booking: BookingData) =>
-              (slotStart >= booking.startDateTime && slotStart < booking.endDateTime) ||
-              (slotEnd > booking.startDateTime && slotEnd <= booking.endDateTime) ||
-              (slotStart <= booking.startDateTime && slotEnd >= booking.endDateTime),
-          )
+          const hasConflict = existingBookings.some((booking: BookingData) => {
+            const bookingStartTime = dayjs(booking.startDateTime).valueOf()
+            const bookingEndTime = dayjs(booking.endDateTime).valueOf()
+            const slotStartTime = slotStart.valueOf()
+            const slotEndTime = slotEnd.valueOf()
 
-          if (!hasConflict && slotStart > new Date()) {
+            return (
+              (slotStartTime >= bookingStartTime && slotStartTime < bookingEndTime) ||
+              (slotEndTime > bookingStartTime && slotEndTime <= bookingEndTime) ||
+              (slotStartTime <= bookingStartTime && slotEndTime >= bookingEndTime)
+            )
+          })
+
+          if (!hasConflict && slotStart.valueOf() > dayjs().valueOf()) {
             slots.push({
-              startTime: new Date(slotStart),
-              endTime: new Date(slotEnd),
+              startTime: slotStart.toDate(),
+              endTime: slotEnd.toDate(),
               available: true,
             })
           }
@@ -441,7 +474,7 @@ app.get('/experts/:id/availability', zValidator('query', availabilityQuery), asy
 
     return c.json({
       expertId,
-      period: { start: startDate, end: endDate },
+      period: { start: startDate.toDate(), end: endDate.toDate() },
       serviceDuration,
       totalSlots: slots.length,
       availableSlots: slots,
@@ -475,7 +508,7 @@ app.notFound((c) => {
   return c.json({ error: 'Not Found' }, 404)
 })
 
-async function isExpertAvailable(expertId: string, targetDate: Date, targetTime?: string): Promise<boolean> {
+async function isExpertAvailable(expertId: string, targetDate: dayjs.Dayjs, targetTime?: string): Promise<boolean> {
   const dayOfWeek = getDayOfWeek(targetDate)
 
   const availability = await prisma.expertAvailability.findFirst({
@@ -485,33 +518,39 @@ async function isExpertAvailable(expertId: string, targetDate: Date, targetTime?
     },
   })
 
-  if (!availability) return false
+  if (!availability) {
+    return false
+  }
 
   const isBlocked = await prisma.expertBlockDates.findFirst({
     where: {
       expertId,
       date: {
-        gte: new Date(targetDate.toDateString()),
-        lt: new Date(new Date(targetDate.toDateString()).getTime() + 24 * 60 * 60 * 1000),
+        gte: targetDate.startOf('day').toDate(),
+        lt: targetDate.endOf('day').toDate(),
       },
     },
   })
 
-  if (isBlocked) return false
+  if (isBlocked) {
+    return false
+  }
 
   if (targetTime) {
     const [hours, minutes] = targetTime.split(':').map(Number)
-    const targetDateTime = new Date(availability.startTime)
-    targetDateTime.setUTCHours(hours, minutes, 0, 0)
+    const targetDateTime = targetDate.hour(hours).minute(minutes).second(0).millisecond(0)
+    const availabilityStartTime = dayjs(availability.startTime).valueOf()
+    const availabilityEndTime = dayjs(availability.endTime).valueOf()
+    const targetDateTimeValue = targetDateTime.valueOf()
 
-    return targetDateTime >= availability.startTime && targetDateTime <= availability.endTime
+    return targetDateTimeValue >= availabilityStartTime && targetDateTimeValue <= availabilityEndTime
   }
 
   return true
 }
 
 async function getNextAvailableSlot(expertId: string): Promise<Date | null> {
-  const now = new Date()
+  const now = dayjs()
   const availability = await prisma.expertAvailability.findMany({
     where: { expertId },
     orderBy: [{ dayOfTheWeek: 'asc' }, { startTime: 'asc' }],
@@ -520,27 +559,34 @@ async function getNextAvailableSlot(expertId: string): Promise<Date | null> {
   const blockedDates = await prisma.expertBlockDates.findMany({
     where: {
       expertId,
-      date: { gte: now },
+      date: { gte: now.toDate() },
     },
   })
 
-  const blockedDateSet = new Set(blockedDates.map((bd: { date: Date }) => bd.date.toDateString()))
+  const blockedDateSet = new Set(blockedDates.map((bd: { date: Date }) => dayjs(bd.date).format('YYYY-MM-DD')))
 
   for (let i = 0; i < 30; i++) {
-    const checkDate = new Date(now.getTime() + i * 24 * 60 * 60 * 1000)
+    const checkDate = now.add(i, 'day')
 
-    if (blockedDateSet.has(checkDate.toDateString())) continue
+    if (blockedDateSet.has(checkDate.format('YYYY-MM-DD'))) {
+      continue
+    }
 
     const dayOfWeek = getDayOfWeek(checkDate)
     const dayAvailability = availability.find((a: { dayOfTheWeek: DayOfWeek }) => a.dayOfTheWeek === dayOfWeek)
 
     if (dayAvailability) {
-      const slotDate = new Date(checkDate)
-      slotDate.setUTCHours(dayAvailability.startTime.getUTCHours(), dayAvailability.startTime.getUTCMinutes(), 0, 0)
+      const slotDate = checkDate
+        .hour(dayjs(dayAvailability.startTime).hour())
+        .minute(dayjs(dayAvailability.startTime).minute())
+        .second(0)
+        .millisecond(0)
 
-      if (i === 0 && slotDate <= now) continue
+      if (i === 0 && slotDate.valueOf() <= now.valueOf()) {
+        continue
+      }
 
-      return slotDate
+      return slotDate.toDate()
     }
   }
 
@@ -551,7 +597,7 @@ function getSortValue(sortBy: SortBy, expert: ExpertSearchResponse): string | nu
   return match(sortBy)
     .with('price', () => Math.min(...expert.services.map((s) => s.price)))
     .with('name', () => expert.user.name || '')
-    .with('availability', () => (expert.nextAvailableSlot ? expert.nextAvailableSlot.getTime() : Infinity))
+    .with('availability', () => (expert.nextAvailableSlot ? dayjs(expert.nextAvailableSlot).valueOf() : Infinity))
     .with('rating', () => expert.averageRating || 0)
     .exhaustive()
 }
