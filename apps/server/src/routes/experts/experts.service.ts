@@ -1,4 +1,5 @@
 import { match } from 'ts-pattern'
+import type { Dayjs } from 'dayjs'
 import type { DayOfWeek, Prisma } from '../../generated/prisma'
 import { type C } from '../../lib/context'
 import { prisma } from '../../lib/db'
@@ -126,6 +127,20 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
   }
 }
 
+const MINUTES_PER_HOUR = 60
+const DAY_MAP: Record<DayOfWeek, number> = {
+  SUNDAY: 0,
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
+}
+
+type TimeRange = { start: number; end: number }
+type Slot = { startTime: number; displayTime: string }
+
 export async function getMonthlyAvailableSlots(c: C, query: ExpertMonthlyAvailableSlotsQuery) {
   try {
     const { serviceId, expertId, month, year } = query
@@ -139,17 +154,12 @@ export async function getMonthlyAvailableSlots(c: C, query: ExpertMonthlyAvailab
       return c.json({ error: 'Service not found' }, 404)
     }
 
-    const serviceDurationInMinutes = service.durationInMinutes
+    const serviceDuration = service.durationInMinutes
 
-    const weeklyAvailability: {
-      startTime: number
-      endTime: number
-    }[][] = Array.from({ length: 7 }, () => [])
+    const startOfMonth = dayjs(`${year}-${month}-01`).startOf('month').toDate()
+    const endOfMonth = dayjs(`${year}-${month}-01`).endOf('month').toDate()
 
-    const startOfMonth = dayjs(`${year}-${month}-01`).startOf('month')
-    const endOfMonth = startOfMonth.endOf('month')
-
-    const [expertAvailability, expertBlockDates, expertExistingBookings] = await Promise.all([
+    const [weeklySchedule, blockDates, bookings] = await Promise.all([
       prisma.expertAvailability.findMany({
         where: {
           expertId,
@@ -158,93 +168,139 @@ export async function getMonthlyAvailableSlots(c: C, query: ExpertMonthlyAvailab
           dayOfTheWeek: true,
           startTime: true,
           endTime: true,
+          isActive: true,
         },
       }),
+
       prisma.expertBlockDates.findMany({
         where: {
           expertId,
           startDate: {
-            lte: endOfMonth.toDate(),
-            gte: startOfMonth.toDate(),
+            lte: endOfMonth,
+            gte: startOfMonth,
           },
         },
+        select: {
+          startDate: true,
+          endDate: true,
+        },
       }),
+
       prisma.booking.findMany({
         where: {
           expertId,
+          status: { in: ['BOOKED', 'DRAFT'] },
           startDateTime: {
-            gte: startOfMonth.toDate(),
-            lte: endOfMonth.toDate(),
+            gte: startOfMonth,
+            lte: endOfMonth,
           },
+        },
+        select: {
+          startDateTime: true,
+          endDateTime: true,
+          serviceBufferTimeBeforeInMinutes: true,
+          serviceBufferTimeAfterInMinutes: true,
+          status: true,
         },
       }),
     ])
 
-    expertAvailability.forEach((availability) => {
-      const day = availability.dayOfTheWeek
-      const startTime = dayjs(availability.startTime).get('hour') * 60 + dayjs(availability.startTime).get('minute')
-      const endTime = dayjs(availability.endTime).get('hour') * 60 + dayjs(availability.endTime).get('minute')
+    const weeklyTemplate: TimeRange[][] = Array.from({ length: 7 }, () => [])
 
-      weeklyAvailability[DAY_OF_WEEK_MAP[day]].push({
-        startTime,
-        endTime,
+    weeklySchedule
+      .filter((schedule) => schedule.isActive !== false)
+      .forEach((schedule) => {
+        const dayIndex = DAY_MAP[schedule.dayOfTheWeek]
+        const start = dateToMinutes(schedule.startTime)
+        const end = dateToMinutes(schedule.endTime)
+
+        if (end > start) {
+          weeklyTemplate[dayIndex].push({
+            start,
+            end,
+          })
+        }
       })
-    })
 
-    const monthlyAvailableSlots: { [date: string]: number[] } = {}
+    const baseAvailability: { [date: string]: Slot[] } = {}
 
     const dates = getDatesInMonth(year, month)
     dates.forEach((date) => {
-      monthlyAvailableSlots[date.format('YYYY-MM-DD')] = []
-      const dayAvailability = weeklyAvailability[date.day()]
+      const dayIndex = date.day()
+      const daySchedule = weeklyTemplate[dayIndex]
+      const dateStr = toDDMMYYYY(date)
 
-      dayAvailability.forEach((timeRange) => {
-        for (
-          let minutes = timeRange.startTime;
-          minutes + serviceDurationInMinutes <= timeRange.endTime;
-          minutes += serviceDurationInMinutes
-        ) {
-          monthlyAvailableSlots[date.format('YYYY-MM-DD')].push(minutes)
-        }
-      })
+      if (daySchedule.length === 0) {
+        baseAvailability[dateStr] = []
+        return
+      }
+      const slots = generateDaySlots(daySchedule, serviceDuration)
+
+      baseAvailability[dateStr] = slots
     })
 
-    expertBlockDates.forEach((block) => {
-      const blockStartDate = dayjs(block.startDate).format('YYYY-MM-DD')
-      const blockEndDate = dayjs(block.endDate).format('YYYY-MM-DD')
+    blockDates.forEach((block) => {
+      const start = dayjs(block.startDate).startOf('day')
+      const end = dayjs(block.endDate).startOf('day')
 
-      Object.keys(monthlyAvailableSlots).forEach((date) => {
-        if (date >= blockStartDate && date <= blockEndDate) {
-          monthlyAvailableSlots[date] = []
+      for (let current = start; !current.isAfter(end, 'day'); current = current.add(1, 'day')) {
+        const dateStr = toDDMMYYYY(current)
+
+        if (baseAvailability[dateStr]) {
+          baseAvailability[dateStr] = []
         }
-      })
-    })
-
-    expertExistingBookings.forEach((booking) => {
-      const bookingDate = dayjs(booking.startDateTime).format('YYYY-MM-DD')
-      const bufferTimeBefore = booking.serviceBufferTimeBeforeInMinutes
-      const bufferTimeAfter = booking.serviceBufferTimeAfterInMinutes
-      const bookingStartMinutes =
-        dayjs(booking.startDateTime).get('hour') * 60 + dayjs(booking.startDateTime).get('minute') - bufferTimeBefore
-      const bookingEndMinutes =
-        dayjs(booking.endDateTime).get('hour') * 60 + dayjs(booking.endDateTime).get('minute') + bufferTimeAfter
-
-      if (monthlyAvailableSlots[bookingDate]) {
-        monthlyAvailableSlots[bookingDate] = monthlyAvailableSlots[bookingDate].filter(
-          (slotStartMinutes) =>
-            !isSlotOverlapping(
-              { start: slotStartMinutes, end: slotStartMinutes + serviceDurationInMinutes },
-              { start: bookingStartMinutes, end: bookingEndMinutes },
-            ),
-        )
       }
     })
 
-    return c.json({ monthlyAvailableSlots })
+    bookings.forEach((booking) => {
+      const start = dayjs(booking.startDateTime)
+      const end = dayjs(booking.endDateTime)
+
+      const bufferBefore = booking.serviceBufferTimeBeforeInMinutes
+      const bufferAfter = booking.serviceBufferTimeAfterInMinutes
+
+      const startWithBuffer = start.subtract(bufferBefore, 'minute')
+      const endWithBuffer = end.add(bufferAfter, 'minute')
+
+      const startDate = toDDMMYYYY(startWithBuffer)
+      const endDate = toDDMMYYYY(endWithBuffer)
+
+      const startMinute = dateToMinutes(startDate)
+      const endMinute = dateToMinutes(endDate)
+
+      const slots = baseAvailability[startDate] || []
+
+      const isMultiDayBooking = !startWithBuffer.isSame(endWithBuffer, 'day')
+
+      if (!isMultiDayBooking) {
+        const filteredSlots = slots.filter(
+          (slot) =>
+            !isSlotOverlapping(
+              { start: slot.startTime, end: slot.startTime + serviceDuration },
+              { start: startMinute, end: endMinute },
+            ),
+        )
+
+        baseAvailability[startDate] = filteredSlots
+      } else {
+        // TODO: handle multi-day booking
+      }
+    })
+
+    return c.json({ availability: baseAvailability })
   } catch (error) {
     const errorMessage = getErrorMessage(error)
     return c.json({ error: `Failed to get monthly available slots - ${errorMessage}` }, 500)
   }
+}
+
+function dateToMinutes(date: Date | string): number {
+  const dt = dayjs(date)
+  return dt.hour() * MINUTES_PER_HOUR + dt.minute()
+}
+
+function minutesToTimeString(minutes: number): string {
+  return dayjs.duration(minutes, 'minutes').format('HH:mm')
 }
 
 function getDatesInMonth(year: number, month: number) {
@@ -254,16 +310,25 @@ function getDatesInMonth(year: number, month: number) {
   return Array.from({ length: daysInMonth }, (_, i) => startDate.add(i, 'day'))
 }
 
-function isSlotOverlapping(slotA: { start: number; end: number }, slotB: { start: number; end: number }) {
-  return slotA.start <= slotB.end && slotA.end >= slotB.start
+function generateDaySlots(daySchedule: TimeRange[], duration: number): Slot[] {
+  const slots: Slot[] = []
+
+  daySchedule.forEach((range) => {
+    for (let time = range.start; time + duration < range.end; time += duration) {
+      slots.push({
+        startTime: time,
+        displayTime: minutesToTimeString(time),
+      })
+    }
+  })
+
+  return slots
 }
 
-const DAY_OF_WEEK_MAP: { [key in DayOfWeek]: number } = {
-  SUNDAY: 0,
-  MONDAY: 1,
-  TUESDAY: 2,
-  WEDNESDAY: 3,
-  THURSDAY: 4,
-  FRIDAY: 5,
-  SATURDAY: 6,
+function isSlotOverlapping(slotA: TimeRange, slotB: TimeRange) {
+  return slotA.start < slotB.end && slotA.end > slotB.start
+}
+
+function toDDMMYYYY(date: Dayjs) {
+  return dayjs(date).format('DD-MM-YYYY')
 }

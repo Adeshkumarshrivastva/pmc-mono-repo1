@@ -28,7 +28,7 @@ model User {
   accounts            Account[]
   experts             Expert[]
   patients            Patient[]
-  role                UserRole
+  role                UserRole  @default(PATIENT)
 
   @@unique([email])
   @@unique([phoneNumber])
@@ -126,6 +126,7 @@ model ExpertAvailability {
   expert       Expert    @relation(fields: [expertId], references: [id])
   expertId     String    @db.ObjectId
   dayOfTheWeek DayOfWeek
+  isActive     Boolean   @default(true)
   // both startTime and endTime are the utc time value for the hour and minute of the day
   // the date would be 1 Jan 2025
   startTime    DateTime
