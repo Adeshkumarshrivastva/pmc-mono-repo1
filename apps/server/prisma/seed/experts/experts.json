@@ -4,7 +4,7 @@
     "phoneNumber": "9999999990",
     "email": "jyothi.rmai@pmc.com",
     "type": "PSYCHIATRIST",
-    "qualification": "MBBS,MD",
+    "qualification": "MBBS, MD",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/672b090a890959270cd38598/672b090a890959270cd385989b1765ea-f93e-48ca-b2be-299340d8702a.jpeg"
   },
   {
@@ -54,5 +54,21 @@
     "type": "PSYCHOLOGIST",
     "qualification": "M.Sc. / M.A.",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/67693633f61044e829733390/67693633f61044e8297333900e19954c-89c8-4897-98cc-619d3f4b4ec4.jpeg"
+  },
+  {
+    "name": "Ms. Sakshi Saini",
+    "phoneNumber": "9999999997",
+    "email": "sakshi.saini@pmc.com",
+    "type": "PSYCHOLOGIST",
+    "qualification": "N/A",
+    "image": "https://positivemindcare.com/api/media/file/WhatsApp%20Image%202025-08-24%20at%2014.30.36_8893f8e8.jpg"
+  },
+  {
+    "name": "Ms. Diksha Joshi",
+    "phoneNumber": "9999999998",
+    "email": "diksha.joshi@pmc.com",
+    "type": "PSYCHOLOGIST",
+    "qualification": "M.Sc. / M.A.",
+    "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/673c4323825951e5b6787d97/673c4323825951e5b6787d971d9f339f-1f35-4f87-b166-153d34dbfc88.jpg"
   }
 ]

@@ -52,6 +52,7 @@ export async function seedExperts(prisma: PrismaClient) {
       const createdExpert = await prisma.expert.create({
         data: {
           type: validatedExpert.type,
+          qualifications: validatedExpert.qualification,
           userId: user.id,
         },
       })
@@ -70,6 +71,14 @@ export async function seedExperts(prisma: PrismaClient) {
           startTime: baseDate.hour(availability.start).minute(0).toDate(),
           endTime: baseDate.hour(availability.end).minute(0).toDate(),
         })),
+      })
+
+      await prisma.service.create({
+        data: {
+          name: 'Initial Consultation',
+          price: 1000,
+          expertId: createdExpert.id,
+        },
       })
     } catch (error) {
       const errorMessage = getErrorMessage(error)
