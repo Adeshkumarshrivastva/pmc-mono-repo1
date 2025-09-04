@@ -1,3 +1,6 @@
 {
+  "compilerOptions": {
+    "jsx": "react"
+  },
   "extends": ["@pmc/config/tsconfig/base.json"]
 }
