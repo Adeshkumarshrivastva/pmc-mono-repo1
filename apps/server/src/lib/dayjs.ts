@@ -5,8 +5,9 @@ import minMax from 'dayjs/plugin/minMax'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import isoWeek from 'dayjs/plugin/isoWeek'
+import duration from 'dayjs/plugin/duration'
 
-const plugins = [customParseFormat, localizedFormat, utc, timezone, isoWeek, minMax]
+const plugins = [customParseFormat, localizedFormat, utc, timezone, isoWeek, minMax, duration]
 for (const plugin of plugins) {
   dayjs.extend(plugin)
 }
