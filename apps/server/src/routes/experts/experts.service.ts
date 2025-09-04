@@ -275,11 +275,10 @@ export async function getExpertMonthlyAvailableSlots(c: C, query: ExpertMonthlyA
 
       if (daySchedule.length === 0) {
         baseAvailability[dateStr] = []
-        return
+      } else {
+        const slots = generateDaySlots(daySchedule, serviceDuration)
+        baseAvailability[dateStr] = slots
       }
-      const slots = generateDaySlots(daySchedule, serviceDuration)
-
-      baseAvailability[dateStr] = slots
     })
 
     blockDates.forEach((block) => {
@@ -326,7 +325,7 @@ export async function getExpertMonthlyAvailableSlots(c: C, query: ExpertMonthlyA
 
         baseAvailability[startDate] = filteredSlots
       } else {
-        // TODO: handle multi-day booking
+        // TODO: handle multi-day booking edge-case
       }
     })
 
