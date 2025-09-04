@@ -262,15 +262,3 @@ model Payment {
   @@index([servicePrice])
   @@index([amountPaid])
 }
-
-model Otp {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  mobileNumber String
-  otp          String
-  attempts     Int      @default(0)
-  expiresAt    DateTime
-
-  @@index([mobileNumber, expiresAt])
-}
