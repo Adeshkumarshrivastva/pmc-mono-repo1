@@ -15,7 +15,7 @@ enum UserRole {
 }
 
 model User {
-  id                  String    @id @map("_id")
+  id                  String         @id @map("_id")
   name                String?
   email               String
   emailVerified       Boolean
@@ -28,7 +28,8 @@ model User {
   accounts            Account[]
   experts             Expert[]
   patients            Patient[]
-  role                UserRole  @default(PATIENT)
+  role                UserRole       @default(PATIENT)
+  Notification        Notification[]
 
   @@unique([email])
   @@unique([phoneNumber])
@@ -269,4 +270,26 @@ model Payment {
   @@index([isPartialPayment])
   @@index([servicePrice])
   @@index([amountPaid])
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  BOOKING_RESCHEDULED
+  PAYMENT_RECEIVED
+  PAYMENT_FAILED
+}
+
+model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type     NotificationType
+  metadata Json?
+
+  reciever   User   @relation(fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId String @unique
+
+  readAt DateTime?
 }
