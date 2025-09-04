@@ -27,6 +27,7 @@ const app = new Hono<{ Variables: HonoContext }>()
   .on(['POST', 'GET', 'OPTIONS'], '/auth/*', (c) => {
     return auth.handler(c.req.raw)
   })
+  .route('/expert', expertApp)
   .use(async (c, next) => {
     const session = await auth.api.getSession({
       headers: c.req.raw.headers,
