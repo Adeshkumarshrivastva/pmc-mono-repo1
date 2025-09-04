@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { AboutUs } from '@/payload/types'
+import type { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
 type TeamMembersSectionProps = {

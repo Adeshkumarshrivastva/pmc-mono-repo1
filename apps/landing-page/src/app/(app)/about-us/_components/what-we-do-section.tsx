@@ -1,5 +1,5 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import { AboutUs } from '@/payload/types'
+import type { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
 type WhatWeDoSectionProps = {
