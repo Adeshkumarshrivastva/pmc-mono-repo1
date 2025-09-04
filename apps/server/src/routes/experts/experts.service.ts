@@ -1,6 +1,7 @@
 import { match } from 'ts-pattern'
-import type { Prisma } from '../../generated/prisma'
-import { type C } from '../../lib/context'
+import type { Dayjs } from 'dayjs'
+import type { DayOfWeek, Prisma } from '../../generated/prisma'
+import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import { getErrorMessage } from '../../lib/utils'
 import {
@@ -8,7 +9,9 @@ import {
   type ExpertSearchQuery,
   type SortBy,
   type ExpertSearchResponse,
+  type ExpertMonthlyAvailableSlotsQuery,
 } from './experts.input'
+import dayjs from '../../lib/dayjs'
 
 export async function getExperts(c: C, query: ExpertSearchQuery) {
   try {
@@ -122,4 +125,249 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
     const errorMessage = getErrorMessage(error)
     return c.json({ error: `Failed to get expert details - ${errorMessage}` }, 500)
   }
+}
+
+export async function getExpertServiceFromSlug(c: C, expertSlug: string, serviceSlug: string) {
+  try {
+    const expert = await prisma.expert.findUnique({
+      where: { slug: expertSlug },
+      select: { id: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert not found' }, 404)
+    }
+
+    const service = await prisma.service.findFirst({
+      where: {
+        slug: serviceSlug,
+        expertId: expert.id,
+        isDeleted: { not: true },
+      },
+      include: { expert: true },
+    })
+
+    if (!service) {
+      return c.json({ error: 'Service not found' }, 404)
+    }
+
+    return c.json({ service })
+  } catch (error) {
+    const errorMessage = getErrorMessage(error)
+    return c.json({ error: `Failed to get service details - ${errorMessage}` }, 500)
+  }
+}
+
+const MINUTES_PER_HOUR = 60
+const DAY_MAP: Record<DayOfWeek, number> = {
+  SUNDAY: 0,
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
+}
+
+type TimeRange = { start: number; end: number }
+type Slot = { startTime: number; displayTime: string }
+
+export async function getExpertMonthlyAvailableSlots(
+  c: C,
+  expertId: string,
+  serviceId: string,
+  query: ExpertMonthlyAvailableSlotsQuery,
+) {
+  try {
+    const { month, year } = query
+
+    const service = await prisma.service.findUnique({
+      where: {
+        id: serviceId,
+        expertId,
+        isDeleted: { not: true },
+      },
+      select: { durationInMinutes: true },
+    })
+
+    if (!service) {
+      return c.json({ error: 'Service not found' }, 404)
+    }
+
+    const serviceDuration = service.durationInMinutes
+
+    const startOfMonth = dayjs(`${year}-${month}-01`).startOf('month').toDate()
+    const endOfMonth = dayjs(`${year}-${month}-01`).endOf('month').toDate()
+
+    const [weeklySchedule, blockDates, bookings] = await Promise.all([
+      prisma.expertAvailability.findMany({
+        where: {
+          expertId,
+        },
+        select: {
+          dayOfTheWeek: true,
+          startTime: true,
+          endTime: true,
+          isActive: true,
+        },
+      }),
+
+      prisma.expertBlockDates.findMany({
+        where: {
+          expertId,
+          startDate: {
+            lte: endOfMonth,
+            gte: startOfMonth,
+          },
+        },
+        select: {
+          startDate: true,
+          endDate: true,
+        },
+      }),
+
+      prisma.booking.findMany({
+        where: {
+          expertId,
+          status: { in: ['BOOKED', 'DRAFT'] },
+          startDateTime: {
+            gte: startOfMonth,
+            lte: endOfMonth,
+          },
+        },
+        select: {
+          startDateTime: true,
+          endDateTime: true,
+          serviceBufferTimeBeforeInMinutes: true,
+          serviceBufferTimeAfterInMinutes: true,
+          status: true,
+        },
+      }),
+    ])
+
+    const weeklyTemplate: TimeRange[][] = Array.from({ length: 7 }, () => [])
+
+    weeklySchedule
+      .filter((schedule) => schedule.isActive !== false)
+      .forEach((schedule) => {
+        const dayIndex = DAY_MAP[schedule.dayOfTheWeek]
+        const start = dateToMinutes(schedule.startTime)
+        const end = dateToMinutes(schedule.endTime)
+
+        if (end > start) {
+          weeklyTemplate[dayIndex].push({
+            start,
+            end,
+          })
+        }
+      })
+
+    const baseAvailability: { [date: string]: Slot[] } = {}
+
+    const dates = getDatesInMonth(year, month)
+
+    dates.forEach((date) => {
+      const dayIndex = date.day()
+      const daySchedule = weeklyTemplate[dayIndex]
+      const dateStr = toDDMMYYYY(date)
+
+      if (daySchedule.length === 0) {
+        baseAvailability[dateStr] = []
+      } else {
+        baseAvailability[dateStr] = generateDaySlots(daySchedule, serviceDuration)
+      }
+    })
+
+    blockDates.forEach((block) => {
+      const start = dayjs(block.startDate).startOf('day')
+      const end = dayjs(block.endDate).startOf('day')
+
+      for (let current = start; !current.isAfter(end, 'day'); current = current.add(1, 'day')) {
+        const dateStr = toDDMMYYYY(current)
+
+        if (baseAvailability[dateStr]) {
+          baseAvailability[dateStr] = []
+        }
+      }
+    })
+
+    bookings.forEach((booking) => {
+      const start = dayjs(booking.startDateTime)
+      const end = dayjs(booking.endDateTime)
+
+      const bufferBefore = booking.serviceBufferTimeBeforeInMinutes
+      const bufferAfter = booking.serviceBufferTimeAfterInMinutes
+
+      const startWithBuffer = start.subtract(bufferBefore, 'minute')
+      const endWithBuffer = end.add(bufferAfter, 'minute')
+
+      const startDate = toDDMMYYYY(startWithBuffer)
+      const endDate = toDDMMYYYY(endWithBuffer)
+
+      const startMinute = dateToMinutes(startDate)
+      const endMinute = dateToMinutes(endDate)
+
+      const slots = baseAvailability[startDate] || []
+
+      const isMultiDayBooking = !startWithBuffer.isSame(endWithBuffer, 'day')
+
+      if (!isMultiDayBooking) {
+        const filteredSlots = slots.filter(
+          (slot) =>
+            !isSlotOverlapping(
+              { start: slot.startTime, end: slot.startTime + serviceDuration },
+              { start: startMinute, end: endMinute },
+            ),
+        )
+
+        baseAvailability[startDate] = filteredSlots
+      } else {
+        // TODO: handle multi-day booking edge-case
+      }
+    })
+
+    return c.json({ availability: baseAvailability })
+  } catch (error) {
+    const errorMessage = getErrorMessage(error)
+    return c.json({ error: `Failed to get monthly available slots - ${errorMessage}` }, 500)
+  }
+}
+
+function dateToMinutes(date: Date | string): number {
+  const dt = dayjs(date)
+  return dt.hour() * MINUTES_PER_HOUR + dt.minute()
+}
+
+function getDatesInMonth(year: number, month: number) {
+  const startDate = dayjs(`${year}-${month}-01`)
+  const daysInMonth = startDate.daysInMonth()
+
+  return Array.from({ length: daysInMonth }, (_, i) => startDate.add(i, 'day'))
+}
+
+function generateDaySlots(daySchedule: TimeRange[], duration: number): Slot[] {
+  const slots: Slot[] = []
+
+  daySchedule.forEach((range) => {
+    for (let time = range.start; time + duration < range.end; time += duration) {
+      slots.push({
+        startTime: time,
+        displayTime: minutesToHHMM(time),
+      })
+    }
+  })
+
+  return slots
+}
+
+function minutesToHHMM(minutes: number): string {
+  return dayjs.duration(minutes, 'minutes').format('HH:mm')
+}
+
+function isSlotOverlapping(slotA: TimeRange, slotB: TimeRange) {
+  return slotA.start < slotB.end && slotA.end > slotB.start
+}
+
+function toDDMMYYYY(date: Dayjs) {
+  return dayjs(date).format('DD-MM-YYYY')
 }
