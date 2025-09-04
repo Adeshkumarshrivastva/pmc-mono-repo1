@@ -268,6 +268,7 @@ export async function getExpertMonthlyAvailableSlots(c: C, query: ExpertMonthlyA
     const baseAvailability: { [date: string]: Slot[] } = {}
 
     const dates = getDatesInMonth(year, month)
+
     dates.forEach((date) => {
       const dayIndex = date.day()
       const daySchedule = weeklyTemplate[dayIndex]
@@ -341,10 +342,6 @@ function dateToMinutes(date: Date | string): number {
   return dt.hour() * MINUTES_PER_HOUR + dt.minute()
 }
 
-function minutesToTimeString(minutes: number): string {
-  return dayjs.duration(minutes, 'minutes').format('HH:mm')
-}
-
 function getDatesInMonth(year: number, month: number) {
   const startDate = dayjs(`${year}-${month}-01`)
   const daysInMonth = startDate.daysInMonth()
@@ -359,12 +356,16 @@ function generateDaySlots(daySchedule: TimeRange[], duration: number): Slot[] {
     for (let time = range.start; time + duration < range.end; time += duration) {
       slots.push({
         startTime: time,
-        displayTime: minutesToTimeString(time),
+        displayTime: minutesToHHMM(time),
       })
     }
   })
 
   return slots
+}
+
+function minutesToHHMM(minutes: number): string {
+  return dayjs.duration(minutes, 'minutes').format('HH:mm')
 }
 
 function isSlotOverlapping(slotA: TimeRange, slotB: TimeRange) {
