@@ -29,7 +29,7 @@ model User {
   experts             Expert[]
   patients            Patient[]
   role                UserRole       @default(PATIENT)
-  Notification        Notification[]
+  notifications       Notification[]
 
   @@unique([email])
   @@unique([phoneNumber])
@@ -127,6 +127,8 @@ model ExpertAvailability {
   expert       Expert    @relation(fields: [expertId], references: [id])
   expertId     String    @db.ObjectId
   dayOfTheWeek DayOfWeek
+  // isActive is used to provide a toggle button to show whether is availability
+  // is active or not, instead of deleting the availability, expert can toggle its state
   isActive     Boolean   @default(true)
   // both startTime and endTime are the utc time value for the hour and minute of the day
   // the date would be 1 Jan 2025
@@ -167,8 +169,8 @@ model Service {
   city                      String
   country                   String
   description               String        @default("")
-  bufferTimeBeforeInMinutes Int           @default(0)
-  bufferTimeAfterInMinutes  Int           @default(0)
+  bufferTimeBeforeInMinutes Int           @default(30)
+  bufferTimeAfterInMinutes  Int           @default(30)
   price                     Float
   currency                  String        @default("INR")
   isPartialPaymentAvailable Boolean       @default(false)
@@ -283,15 +285,12 @@ enum NotificationType {
 }
 
 model Notification {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  type     NotificationType
-  metadata Json?
-
-  reciever   User   @relation(fields: [receiverId], references: [id], onDelete: Cascade)
-  receiverId String @unique
-
-  readAt DateTime?
+  id         String           @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  type       NotificationType
+  metadata   Json?
+  reciever   User             @relation(fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId String           @unique
+  readAt     DateTime?
 }

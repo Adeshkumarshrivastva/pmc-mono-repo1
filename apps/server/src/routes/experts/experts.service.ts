@@ -10,8 +10,6 @@ import {
   type SortBy,
   type ExpertSearchResponse,
   type ExpertMonthlyAvailableSlotsQuery,
-  type ExpertProfileSearchQuery,
-  type ExpertServiceSearchQuery,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 
@@ -109,9 +107,7 @@ function getSortValue(sortBy: SortBy, expert: ExpertSearchResponse): string | nu
     .exhaustive()
 }
 
-export async function getExpertFromSlug(c: C, query: ExpertProfileSearchQuery) {
-  const { expertSlug } = query
-
+export async function getExpertFromSlug(c: C, expertSlug: string) {
   try {
     const expert = await prisma.expert.findUnique({
       where: { slug: expertSlug },
@@ -131,15 +127,11 @@ export async function getExpertFromSlug(c: C, query: ExpertProfileSearchQuery) {
   }
 }
 
-export async function getExpertServiceFromSlug(c: C, query: ExpertServiceSearchQuery) {
-  const { expertSlug, serviceSlug } = query
-
+export async function getExpertServiceFromSlug(c: C, expertSlug: string, serviceSlug: string) {
   try {
     const expert = await prisma.expert.findUnique({
       where: { slug: expertSlug },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     })
 
     if (!expert) {
@@ -180,9 +172,14 @@ const DAY_MAP: Record<DayOfWeek, number> = {
 type TimeRange = { start: number; end: number }
 type Slot = { startTime: number; displayTime: string }
 
-export async function getExpertMonthlyAvailableSlots(c: C, query: ExpertMonthlyAvailableSlotsQuery) {
+export async function getExpertMonthlyAvailableSlots(
+  c: C,
+  expertId: string,
+  serviceId: string,
+  query: ExpertMonthlyAvailableSlotsQuery,
+) {
   try {
-    const { serviceId, expertId, month, year } = query
+    const { month, year } = query
 
     const service = await prisma.service.findUnique({
       where: {
@@ -277,8 +274,7 @@ export async function getExpertMonthlyAvailableSlots(c: C, query: ExpertMonthlyA
       if (daySchedule.length === 0) {
         baseAvailability[dateStr] = []
       } else {
-        const slots = generateDaySlots(daySchedule, serviceDuration)
-        baseAvailability[dateStr] = slots
+        baseAvailability[dateStr] = generateDaySlots(daySchedule, serviceDuration)
       }
     })
 
