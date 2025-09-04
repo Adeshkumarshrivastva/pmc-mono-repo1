@@ -159,11 +159,11 @@ model Service {
   createdAt                 DateTime      @default(now())
   updatedAt                 DateTime      @updatedAt
   name                      String
+  slug                      String
   expert                    Expert        @relation(fields: [expertId], references: [id])
   expertId                  String        @db.ObjectId
   availableModes            ServiceMode[] @default([IN_PERSON, VIRTUAL])
   inPersonLocation          Json?
-  // TODO: Add service detail field
   city                      String
   country                   String
   description               String        @default("")
@@ -177,7 +177,9 @@ model Service {
   booking                   Booking[]
   payments                  Payment[]
   tags                      String[]
+  isDeleted                 Boolean       @default(false)
 
+  @@unique([expertId, slug])
   @@index([expertId])
   @@index([tags])
   @@index([availableModes])

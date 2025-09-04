@@ -1,7 +1,7 @@
 import { match } from 'ts-pattern'
 import type { Dayjs } from 'dayjs'
 import type { DayOfWeek, Prisma } from '../../generated/prisma'
-import { type C } from '../../lib/context'
+import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import { getErrorMessage } from '../../lib/utils'
 import {
@@ -10,6 +10,8 @@ import {
   type SortBy,
   type ExpertSearchResponse,
   type ExpertMonthlyAvailableSlotsQuery,
+  type ExpertProfileSearchQuery,
+  type ExpertServiceSearchQuery,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 
@@ -107,7 +109,9 @@ function getSortValue(sortBy: SortBy, expert: ExpertSearchResponse): string | nu
     .exhaustive()
 }
 
-export async function getExpertFromSlug(c: C, expertSlug: string) {
+export async function getExpertFromSlug(c: C, query: ExpertProfileSearchQuery) {
+  const { expertSlug } = query
+
   try {
     const expert = await prisma.expert.findUnique({
       where: { slug: expertSlug },
@@ -127,6 +131,41 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
   }
 }
 
+export async function getExpertServiceFromSlug(c: C, query: ExpertServiceSearchQuery) {
+  const { expertSlug, serviceSlug } = query
+
+  try {
+    const expert = await prisma.expert.findUnique({
+      where: { slug: expertSlug },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert not found' }, 404)
+    }
+
+    const service = await prisma.service.findFirst({
+      where: {
+        slug: serviceSlug,
+        expertId: expert.id,
+        isDeleted: { not: true },
+      },
+      include: { expert: true },
+    })
+
+    if (!service) {
+      return c.json({ error: 'Service not found' }, 404)
+    }
+
+    return c.json({ service })
+  } catch (error) {
+    const errorMessage = getErrorMessage(error)
+    return c.json({ error: `Failed to get service details - ${errorMessage}` }, 500)
+  }
+}
+
 const MINUTES_PER_HOUR = 60
 const DAY_MAP: Record<DayOfWeek, number> = {
   SUNDAY: 0,
@@ -141,12 +180,16 @@ const DAY_MAP: Record<DayOfWeek, number> = {
 type TimeRange = { start: number; end: number }
 type Slot = { startTime: number; displayTime: string }
 
-export async function getMonthlyAvailableSlots(c: C, query: ExpertMonthlyAvailableSlotsQuery) {
+export async function getExpertMonthlyAvailableSlots(c: C, query: ExpertMonthlyAvailableSlotsQuery) {
   try {
     const { serviceId, expertId, month, year } = query
 
     const service = await prisma.service.findUnique({
-      where: { id: serviceId, expertId },
+      where: {
+        id: serviceId,
+        expertId,
+        isDeleted: { not: true },
+      },
       select: { durationInMinutes: true },
     })
 
