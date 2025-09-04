@@ -9,7 +9,7 @@ import {
   getExpertServiceFromSlug,
 } from './experts.service'
 
-export const expertApp = new Hono<{ Variables: HonoContext }>()
+export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .get('', zValidator('query', expertSearchQuery), async (c) => getExperts(c, c.req.valid('query')))
   .get(':expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
   .get(':expertSlug/service/:serviceSlug', async (c) =>

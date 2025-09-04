@@ -5,7 +5,8 @@ import { userApp } from './routes/user'
 import { type HonoContext } from './lib/context'
 import { config } from './config'
 import { invariant } from './lib/utils'
-import { expertApp } from './routes/experts/experts.routes'
+import { expertsApp } from './routes/experts/experts.routes'
+import { bookingApp } from './routes/booking/booking.routes'
 
 invariant(config, 'config must be present')
 
@@ -39,6 +40,8 @@ const app = new Hono<{ Variables: HonoContext }>()
     return next()
   })
   .route('/user', userApp)
+  .route('/experts', expertsApp)
+  .route('/booking', bookingApp)
 
 export { app }
 export type App = typeof app
