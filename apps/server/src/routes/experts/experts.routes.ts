@@ -16,8 +16,8 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
     getExpertServiceFromSlug(c, c.req.param('expertSlug'), c.req.param('serviceSlug')),
   )
   .get(
-    ':expertId/monthly-available-slots/:serviceId',
+    ':expertSlug/monthly-available-slots/:serviceSlug',
     zValidator('query', expertMonthlyAvailableSlotsQuery),
     async (c) =>
-      getExpertMonthlyAvailableSlots(c, c.req.param('expertId'), c.req.param('serviceId'), c.req.valid('query')),
+      getExpertMonthlyAvailableSlots(c, c.req.param('expertSlug'), c.req.param('serviceSlug'), c.req.valid('query')),
   )

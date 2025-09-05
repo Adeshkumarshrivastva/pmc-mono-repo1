@@ -29,16 +29,18 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
-const PublicExpertExpertSlugIndexRoute = PublicExpertExpertSlugIndexRouteImport.update({
-  id: '/_public/expert/$expertSlug/',
-  path: '/expert/$expertSlug/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicExpertExpertSlugServiceSlugRoute = PublicExpertExpertSlugServiceSlugRouteImport.update({
-  id: '/_public/expert/$expertSlug/$serviceSlug',
-  path: '/expert/$expertSlug/$serviceSlug',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const PublicExpertExpertSlugIndexRoute =
+  PublicExpertExpertSlugIndexRouteImport.update({
+    id: '/_public/expert/$expertSlug/',
+    path: '/expert/$expertSlug/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PublicExpertExpertSlugServiceSlugRoute =
+  PublicExpertExpertSlugServiceSlugRouteImport.update({
+    id: '/_public/expert/$expertSlug/$serviceSlug',
+    path: '/expert/$expertSlug/$serviceSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
@@ -62,9 +64,17 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/' | '/expert/$expertSlug/$serviceSlug' | '/expert/$expertSlug'
+  fullPaths:
+    | '/login'
+    | '/'
+    | '/expert/$expertSlug/$serviceSlug'
+    | '/expert/$expertSlug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/' | '/expert/$expertSlug/$serviceSlug' | '/expert/$expertSlug'
+  to:
+    | '/login'
+    | '/'
+    | '/expert/$expertSlug/$serviceSlug'
+    | '/expert/$expertSlug'
   id:
     | '__root__'
     | '/_auth'
@@ -134,7 +144,10 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
-  PublicExpertExpertSlugServiceSlugRoute: PublicExpertExpertSlugServiceSlugRoute,
+  PublicExpertExpertSlugServiceSlugRoute:
+    PublicExpertExpertSlugServiceSlugRoute,
   PublicExpertExpertSlugIndexRoute: PublicExpertExpertSlugIndexRoute,
 }
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
