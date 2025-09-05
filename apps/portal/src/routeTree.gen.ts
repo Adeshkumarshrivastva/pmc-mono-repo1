@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as PublicExpertExpertSlugIndexRouteImport } from './routes/_public/expert/$expertSlug/index'
+import { Route as PublicExpertExpertSlugServiceSlugRouteImport } from './routes/_public/expert/$expertSlug/$serviceSlug'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -27,32 +29,56 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+const PublicExpertExpertSlugIndexRoute = PublicExpertExpertSlugIndexRouteImport.update({
+  id: '/_public/expert/$expertSlug/',
+  path: '/expert/$expertSlug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicExpertExpertSlugServiceSlugRoute = PublicExpertExpertSlugServiceSlugRouteImport.update({
+  id: '/_public/expert/$expertSlug/$serviceSlug',
+  path: '/expert/$expertSlug/$serviceSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/': typeof AppIndexRoute
+  '/expert/$expertSlug/$serviceSlug': typeof PublicExpertExpertSlugServiceSlugRoute
+  '/expert/$expertSlug': typeof PublicExpertExpertSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/': typeof AppIndexRoute
+  '/expert/$expertSlug/$serviceSlug': typeof PublicExpertExpertSlugServiceSlugRoute
+  '/expert/$expertSlug': typeof PublicExpertExpertSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_app/': typeof AppIndexRoute
+  '/_public/expert/$expertSlug/$serviceSlug': typeof PublicExpertExpertSlugServiceSlugRoute
+  '/_public/expert/$expertSlug/': typeof PublicExpertExpertSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/'
+  fullPaths: '/login' | '/' | '/expert/$expertSlug/$serviceSlug' | '/expert/$expertSlug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/'
-  id: '__root__' | '/_auth' | '/_auth/login' | '/_app/'
+  to: '/login' | '/' | '/expert/$expertSlug/$serviceSlug' | '/expert/$expertSlug'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_auth/login'
+    | '/_app/'
+    | '/_public/expert/$expertSlug/$serviceSlug'
+    | '/_public/expert/$expertSlug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
+  PublicExpertExpertSlugServiceSlugRoute: typeof PublicExpertExpertSlugServiceSlugRoute
+  PublicExpertExpertSlugIndexRoute: typeof PublicExpertExpertSlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,6 +104,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_public/expert/$expertSlug/': {
+      id: '/_public/expert/$expertSlug/'
+      path: '/expert/$expertSlug'
+      fullPath: '/expert/$expertSlug'
+      preLoaderRoute: typeof PublicExpertExpertSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/expert/$expertSlug/$serviceSlug': {
+      id: '/_public/expert/$expertSlug/$serviceSlug'
+      path: '/expert/$expertSlug/$serviceSlug'
+      fullPath: '/expert/$expertSlug/$serviceSlug'
+      preLoaderRoute: typeof PublicExpertExpertSlugServiceSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -94,5 +134,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
+  PublicExpertExpertSlugServiceSlugRoute: PublicExpertExpertSlugServiceSlugRoute,
+  PublicExpertExpertSlugIndexRoute: PublicExpertExpertSlugIndexRoute,
 }
 export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
