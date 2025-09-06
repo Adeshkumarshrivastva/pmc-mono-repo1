@@ -32,25 +32,25 @@ export default function AvailableSlots({ expertSlug: expertId, serviceSlug: serv
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 flex-1">
-        {match(getMonthlyAvailableSlotsQuery)
-          .returnType<React.ReactNode>()
-          .with({ status: 'pending' }, () => <div>Loading...</div>)
-          .with({ status: 'error' }, () => <div>Error loading slots</div>)
-          .with({ status: 'success' }, ({ data }) => {
-            const slots = data.availability[toDDMMYYYY(selectedDate)] || []
+      {match(getMonthlyAvailableSlotsQuery)
+        .returnType<React.ReactNode>()
+        .with({ status: 'pending' }, () => <AvailableSlotsSkeleton />)
+        .with({ status: 'error' }, () => <div>Error loading slots</div>)
+        .with({ status: 'success' }, ({ data }) => {
+          const slots = data.availability[toDDMMYYYY(selectedDate)] || []
 
-            if (slots.length === 0) {
-              return (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 text-sm">No slots available for this date</p>
-                  <p className="text-gray-400 text-xs mt-1">Please select another date</p>
-                </div>
-              )
-            }
-
+          if (slots.length === 0) {
             return (
-              <div className="flex flex-col space-y-2 overflow-auto">
+              <div className="text-center py-8">
+                <p className="text-gray-500 text-sm">No slots available for this date</p>
+                <p className="text-gray-400 text-xs mt-1">Please select another date</p>
+              </div>
+            )
+          }
+
+          return (
+            <div className="flex flex-col h-full">
+              <div className="flex-1 p-4 flex flex-col space-y-2 overflow-auto">
                 {slots.map((slot) => {
                   let isSelected = false
 
@@ -78,21 +78,45 @@ export default function AvailableSlots({ expertSlug: expertId, serviceSlug: serv
                   )
                 })}
               </div>
-            )
-          })
-          .otherwise(() => null)}
+              <Separator />
+              <div className="flex justify-end p-4">
+                <Button
+                  disabled={!selectedSlot}
+                  onClick={() => {
+                    onNext()
+                  }}
+                  className="w-full sm:w-auto"
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          )
+        })
+        .otherwise(() => null)}
+    </div>
+  )
+}
+
+function AvailableSlotsSkeleton() {
+  return (
+    <div className="flex flex-col h-full">
+      <div className="p-4 flex-1 animate-pulse">
+        <div className="space-y-2">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-9 bg-gray-200 rounded"
+              style={{
+                opacity: 0.5 + index * 0.1,
+              }}
+            />
+          ))}
+        </div>
       </div>
       <Separator />
       <div className="flex justify-end p-4">
-        <Button
-          disabled={!selectedSlot}
-          onClick={() => {
-            onNext()
-          }}
-          className="w-full sm:w-auto"
-        >
-          Continue
-        </Button>
+        <div className="h-10 bg-gray-200 rounded w-24" />
       </div>
     </div>
   )

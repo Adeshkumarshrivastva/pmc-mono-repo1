@@ -1,9 +1,9 @@
 import z from 'zod'
 
-export const getPatientByMobileNumberInput = z.object({
-  mobileNumber: z.string(),
+export const initiatePatientAuthInput = z.object({
+  phoneNumber: z.string(),
 })
-export type GetPatientByMobileNumberInput = z.infer<typeof getPatientByMobileNumberInput>
+export type InitiatePatientAuthInput = z.infer<typeof initiatePatientAuthInput>
 
 export const verifyPatientInput = z.object({
   otp: z.string(),

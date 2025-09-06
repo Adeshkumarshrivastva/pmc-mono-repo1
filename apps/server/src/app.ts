@@ -28,6 +28,7 @@ const app = new Hono<{ Variables: HonoContext }>()
     return auth.handler(c.req.raw)
   })
   .route('/experts', expertsApp)
+  .route('/booking', bookingApp)
   .use(async (c, next) => {
     const session = await auth.api.getSession({
       headers: c.req.raw.headers,
@@ -40,7 +41,6 @@ const app = new Hono<{ Variables: HonoContext }>()
     return next()
   })
   .route('/user', userApp)
-  .route('/booking', bookingApp)
 
 export { app }
 export type App = typeof app

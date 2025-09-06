@@ -162,14 +162,19 @@ function InitiateLoginForm({ onSuccess }: { onSuccess: (phoneNumber: string) => 
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="9999988888" {...field} />
+                  <Input autoFocus placeholder="9999988888" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )
           }}
         />
-        <Button type="submit" className="w-full" disabled={sendOtpMutation.isPending}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={sendOtpMutation.isPending}
+          loading={sendOtpMutation.isPending}
+        >
           {sendOtpMutation.isPending ? 'Sending...' : 'Send OTP'}
         </Button>
       </form>
@@ -209,6 +214,7 @@ function VerifyOTP({
       return res.data
     },
     onSuccess: () => {
+      form.reset()
       restart(dayjs().add(30, 'second').toDate())
       toast.success('OTP sent successfully')
     },
@@ -261,7 +267,7 @@ function VerifyOTP({
             return (
               <FormItem>
                 <FormControl>
-                  <InputOTP maxLength={6} onChange={field.onChange} value={field.value}>
+                  <InputOTP autoFocus maxLength={6} onChange={field.onChange} value={field.value}>
                     <InputOTPGroup>
                       <InputOTPSlot index={0} />
                       <InputOTPSlot index={1} />
@@ -278,7 +284,12 @@ function VerifyOTP({
           }}
         />
         <div className="space-y-2">
-          <Button type="submit" className="w-full" disabled={verifyOtpMutation.isPending}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={verifyOtpMutation.isPending}
+            loading={verifyOtpMutation.isPending}
+          >
             {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
           </Button>
 
