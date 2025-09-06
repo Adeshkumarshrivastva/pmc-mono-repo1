@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { match } from 'ts-pattern'
 import { Spinner } from '@/components/ui/spinner'
 import BookingCalendar from './-components/booking-calendar'
 import AvailableSlots from './-components/available-slots'
 import ExpertService from './-components/expert-service'
+import SlotSummary from './-components/slot-summary'
 
 export const Route = createFileRoute('/_public/expert/$expertSlug/$serviceSlug')({
   component: ExpertServiceBookingPage,
@@ -19,8 +20,9 @@ export const Route = createFileRoute('/_public/expert/$expertSlug/$serviceSlug')
 })
 
 function ExpertServiceBookingPage() {
+  const navigate = useNavigate()
   const { expertSlug, serviceSlug } = Route.useParams()
-  const [mode, setMode] = useState<Mode>({ type: 'select_slot', backUrl: `/expert/${expertSlug}` })
+  const [mode, setMode] = useState<Mode>({ type: 'select_slot' })
 
   return (
     <div className="h-screen w-full bg-accent">
@@ -31,7 +33,13 @@ function ExpertServiceBookingPage() {
             return (
               <div className="h-full flex flex-col gap-4 xl:flex-row xl:gap-6 xl:justify-center">
                 <div className="w-full h-full xl:max-w-sm bg-background rounded-xl shadow-md p-4">
-                  <ExpertService serviceSlug={serviceSlug} expertSlug={expertSlug} />
+                  <ExpertService
+                    serviceSlug={serviceSlug}
+                    expertSlug={expertSlug}
+                    onBack={() => {
+                      navigate({ to: '/expert/$expertSlug', params: { expertSlug } })
+                    }}
+                  />
                 </div>
 
                 <div className="h-full xl:flex-1 flex justify-center bg-background rounded-xl shadow-md p-4">
@@ -54,7 +62,13 @@ function ExpertServiceBookingPage() {
             return (
               <div className="h-full flex flex-col gap-4 xl:flex-row xl:gap-6 xl:justify-center">
                 <div className="w-full h-full xl:max-w-sm bg-background rounded-xl shadow-md p-4">
-                  Service and Selected Slot Summary
+                  <SlotSummary
+                    onBack={() => {
+                      setMode({
+                        type: 'select_slot',
+                      })
+                    }}
+                  />
                 </div>
                 <div className="h-full xl:flex-1 flex justify-center bg-background rounded-xl shadow-md p-4">
                   Identity Verification Form
@@ -69,7 +83,7 @@ function ExpertServiceBookingPage() {
 }
 
 type Mode =
-  | { type: 'select_slot'; backUrl: string }
-  | { type: 'verify_identity'; backUrl?: string }
-  | { type: 'fill_prebooking_info'; backUrl?: string }
-  | { type: 'payment'; backUrl?: string }
+  | { type: 'select_slot' }
+  | { type: 'verify_identity' }
+  | { type: 'fill_prebooking_info' }
+  | { type: 'payment' }

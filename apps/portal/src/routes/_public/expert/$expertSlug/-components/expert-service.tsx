@@ -1,20 +1,30 @@
 import { match } from 'ts-pattern'
 import { useQuery } from '@tanstack/react-query'
+import { ArrowLeftIcon } from 'lucide-react'
 import { honoClient } from '@/lib/hono-client'
+import { Button } from '@/components/ui/button'
 
 type ExpertServiceProps = {
   expertSlug: string
   serviceSlug: string
+  onBack: () => void
 }
 
-export default function ExpertService({ expertSlug, serviceSlug }: ExpertServiceProps) {
+export default function ExpertService({ expertSlug, serviceSlug, onBack }: ExpertServiceProps) {
   const getServiceQuery = useQuery({
     queryKey: ['expert-service', expertSlug, serviceSlug],
     queryFn: () => fetchExpertService(expertSlug, serviceSlug),
   })
 
   return (
-    <>
+    <div className="space-y-2">
+      <Button
+        variant="ghost"
+        icon={<ArrowLeftIcon className="text-primary size-6" />}
+        onClick={() => {
+          onBack()
+        }}
+      />
       {match(getServiceQuery)
         .returnType<React.ReactNode>()
         .with({ status: 'pending' }, () => <div>Loading...</div>)
@@ -30,7 +40,7 @@ export default function ExpertService({ expertSlug, serviceSlug }: ExpertService
           )
         })
         .otherwise(() => null)}
-    </>
+    </div>
   )
 }
 

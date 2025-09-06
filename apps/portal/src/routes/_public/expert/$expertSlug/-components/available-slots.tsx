@@ -18,6 +18,8 @@ export default function AvailableSlots({ expertSlug: expertId, serviceSlug: serv
   const { month, year, getSelectedDate, getSelectedSlot, setSelectedSlot } = useBooking()
 
   const selectedDate = getSelectedDate()
+  const selectedSlot = getSelectedSlot()
+
   const getMonthlyAvailableSlotsQuery = useQuery({
     queryKey: ['monthly-available-slots', month, year],
     queryFn: () => fetchMonthlyAvailableSlots(expertId, serviceId, year, month),
@@ -50,7 +52,6 @@ export default function AvailableSlots({ expertSlug: expertId, serviceSlug: serv
             return (
               <div className="flex flex-col space-y-2 overflow-auto">
                 {slots.map((slot) => {
-                  const selectedSlot = getSelectedSlot()
                   let isSelected = false
 
                   if (selectedSlot) {
@@ -84,6 +85,7 @@ export default function AvailableSlots({ expertSlug: expertId, serviceSlug: serv
       <Separator />
       <div className="flex justify-end p-4">
         <Button
+          disabled={!selectedSlot}
           onClick={() => {
             onNext()
           }}
