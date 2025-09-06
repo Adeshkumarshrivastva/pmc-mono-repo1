@@ -10,6 +10,10 @@ import {
   type SortBy,
   type ExpertSearchResponse,
   type ExpertMonthlyAvailableSlotsQuery,
+  type ServiceSortBy,
+  type ServiceSearchResponse,
+  type ServiceSearchQuery,
+  EXPERT_SELECT_FIELDS,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 
@@ -62,7 +66,10 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
 
     const experts = await prisma.expert.findMany({
       where: whereClause,
-      include: { servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS } },
+      include: {
+        servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
+        user: { select: { id: true, name: true, image: true } },
+      },
       skip,
       take: limit,
     })
@@ -370,4 +377,85 @@ function isSlotOverlapping(slotA: TimeRange, slotB: TimeRange) {
 
 function toDDMMYYYY(date: Dayjs) {
   return dayjs(date).format('DD-MM-YYYY')
+}
+
+export async function getServices(c: C, query: ServiceSearchQuery) {
+  try {
+    const whereClause: Prisma.ServiceWhereInput = {}
+
+    if (query.expertId) {
+      whereClause.expertId = query.expertId
+    }
+
+    if (query.mode) {
+      whereClause.availableModes = { has: query.mode }
+    }
+
+    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+      whereClause.price = {}
+      if (query.minPrice !== undefined) {
+        whereClause.price.gte = query.minPrice
+      }
+      if (query.maxPrice !== undefined) {
+        whereClause.price.lte = query.maxPrice
+      }
+    }
+
+    if (query.minDuration !== undefined || query.maxDuration !== undefined) {
+      whereClause.durationInMinutes = {}
+      if (query.minDuration !== undefined) {
+        whereClause.durationInMinutes.gte = query.minDuration
+      }
+      if (query.maxDuration !== undefined) {
+        whereClause.durationInMinutes.lte = query.maxDuration
+      }
+    }
+
+    if (query.tags) {
+      const tagList = query.tags.split(',').map((tag) => tag.trim())
+      whereClause.tags = { hasSome: tagList }
+    }
+
+    if (query.location) {
+      whereClause.OR = [
+        { availableModes: { has: 'VIRTUAL' } },
+        { AND: [{ availableModes: { has: 'IN_PERSON' }, city: query.location }] },
+      ]
+    }
+
+    const services = await prisma.service.findMany({
+      where: whereClause,
+      include: {
+        expert: { select: EXPERT_SELECT_FIELDS },
+      },
+    })
+
+    if (query.sortBy) {
+      const sortBy = query.sortBy
+      services.sort((a, b) => {
+        const aValue = getServiceSortValue(sortBy, a)
+        const bValue = getServiceSortValue(sortBy, b)
+        return match(query.sortOrder)
+          .with('desc', () => (bValue > aValue ? 1 : bValue < aValue ? -1 : 0))
+          .with('asc', () => (aValue > bValue ? 1 : aValue < bValue ? -1 : 0))
+          .exhaustive()
+      })
+    }
+
+    return c.json({
+      services,
+      filters: query,
+    })
+  } catch (error) {
+    const errorMessage = getErrorMessage(error)
+    return c.json({ error: `Failed to search services - ${errorMessage}` }, 500)
+  }
+}
+
+function getServiceSortValue(sortBy: ServiceSortBy, service: ServiceSearchResponse): string | number {
+  return match(sortBy)
+    .with('price', () => service.price)
+    .with('duration', () => service.durationInMinutes)
+    .with('name', () => service.name || '')
+    .exhaustive()
 }

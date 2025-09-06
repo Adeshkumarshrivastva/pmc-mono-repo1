@@ -58,6 +58,13 @@ export const EXPERT_SELECT_FIELDS = {
   qualifications: true,
   createdAt: true,
   updatedAt: true,
+  user: {
+    select: {
+      id: true,
+      name: true,
+      image: true,
+    },
+  },
 } satisfies Prisma.ExpertSelect
 
 export const SERVICE_SELECT_FIELDS = {
@@ -87,3 +94,8 @@ export const expertMonthlyAvailableSlotsQuery = z.object({
 })
 
 export type ExpertMonthlyAvailableSlotsQuery = z.infer<typeof expertMonthlyAvailableSlotsQuery>
+
+export type ServiceSearchResponse = Prisma.ServiceGetPayload<{
+  select: typeof SERVICE_SELECT_FIELDS
+  include: { expert: { select: typeof EXPERT_SELECT_FIELDS } }
+}>
