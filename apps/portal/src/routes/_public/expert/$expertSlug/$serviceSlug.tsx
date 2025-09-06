@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { match } from 'ts-pattern'
-import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import BookingCalendar from './-components/booking-calendar'
 import AvailableSlots from './-components/available-slots'
@@ -39,24 +38,29 @@ function ExpertServiceBookingPage() {
                   <BookingCalendar />
                 </div>
 
-                <div className="w-full h-full flex flex-col xl:max-w-sm bg-background rounded-xl shadow-md p-4">
-                  <AvailableSlots serviceSlug={serviceSlug} expertSlug={expertSlug} />
-                  <div className="flex justify-end pt-4">
-                    <Button
-                      onClick={() => {
-                        setMode({ type: 'verify_identity' })
-                      }}
-                      className="w-full sm:w-auto"
-                    >
-                      Continue
-                    </Button>
-                  </div>
+                <div className="w-full h-full flex flex-col xl:max-w-sm bg-background rounded-xl shadow-md ">
+                  <AvailableSlots
+                    serviceSlug={serviceSlug}
+                    expertSlug={expertSlug}
+                    onNext={() => {
+                      setMode({ type: 'verify_identity' })
+                    }}
+                  />
                 </div>
               </div>
             )
           })
           .with({ type: 'verify_identity' }, () => {
-            return <div className="h-full flex flex-col gap-4 xl:flex-row xl:gap-6 xl:justify-center"></div>
+            return (
+              <div className="h-full flex flex-col gap-4 xl:flex-row xl:gap-6 xl:justify-center">
+                <div className="w-full h-full xl:max-w-sm bg-background rounded-xl shadow-md p-4">
+                  Service and Selected Slot Summary
+                </div>
+                <div className="h-full xl:flex-1 flex justify-center bg-background rounded-xl shadow-md p-4">
+                  Identity Verification Form
+                </div>
+              </div>
+            )
           })
           .otherwise(() => null)}
       </div>

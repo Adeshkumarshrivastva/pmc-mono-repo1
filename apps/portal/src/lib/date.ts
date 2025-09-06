@@ -1,6 +1,8 @@
 import type { Dayjs } from 'dayjs'
 import dayjs from './dayjs'
 
+const MINUTES_PER_HOUR = 60
+
 export const today = dayjs().toDate()
 
 export function toDDMMYYYY(date: Date | Dayjs) {
@@ -11,6 +13,27 @@ export function toDDMMYYYY(date: Date | Dayjs) {
   }
 }
 
-export function minutesToHHMMA(minutes: number): string {
-  return dayjs().utc().startOf('day').add(minutes, 'minute').tz('Asia/Kolkata').format('hh:mm A')
+export function toHHMMA(date: Date | Dayjs) {
+  if (dayjs.isDayjs(date)) {
+    return date.format('hh:mm A')
+  } else {
+    return dayjs(date).format('hh:mm A')
+  }
+}
+
+export function utcMinutesToLocalMinutes(utcMinutes: number, timeZone: string = 'Asia/Kolkata') {
+  const utcTime = dayjs.utc().startOf('day').add(utcMinutes, 'minute')
+
+  const localTime = utcTime.tz(timeZone)
+
+  return localTime.hour() * MINUTES_PER_HOUR + localTime.minute()
+}
+
+export function minutesToDate(minutes: number, baseDate: Date, timeZone: string = 'Asia/Kolkata') {
+  return dayjs.tz(baseDate, timeZone).startOf('day').add(minutes, 'minute').toDate()
+}
+
+export function dateToUtcMinutes(date: Date | string): number {
+  const dt = dayjs(date).utc()
+  return dt.hour() * MINUTES_PER_HOUR + dt.minute()
 }

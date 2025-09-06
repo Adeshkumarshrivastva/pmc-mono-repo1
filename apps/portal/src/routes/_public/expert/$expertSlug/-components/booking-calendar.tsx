@@ -4,11 +4,13 @@ import { useBooking } from '../-hooks/use-booking'
 import { today } from '@/lib/date'
 
 export default function BookingCalendar() {
-  const { month, year, getSelectedDate, setSelectedYear, setSelectedMonth, setSelectedDate } = useBooking()
+  const { month, year, getSelectedDate, setSelectedYear, setSelectedMonth, setSelectedDate, setSelectedSlot } =
+    useBooking()
 
   return (
     <Calendar
       key={`${month}-${year}`}
+      timeZone="Asia/Kolkata"
       mode="single"
       showOutsideDays={false}
       month={dayjs()
@@ -20,6 +22,7 @@ export default function BookingCalendar() {
       disabled={(date) => dayjs(date).isBefore(dayjs(), 'day')}
       onDayClick={(date) => {
         setSelectedDate(date)
+        setSelectedSlot(null)
       }}
       onNextClick={(date) => {
         setSelectedYear(date)

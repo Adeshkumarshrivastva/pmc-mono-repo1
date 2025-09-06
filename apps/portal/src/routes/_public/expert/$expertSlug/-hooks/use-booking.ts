@@ -14,6 +14,15 @@ const dateSchema = z
     },
     { message: 'Invalid date' },
   )
+const slotSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+  .refine(
+    (slotStr) => {
+      return dayjs(slotStr).isValid()
+    },
+    { message: 'Invalid slot datetime' },
+  )
 
 export const useBooking = () => {
   const today = dayjs()
@@ -48,6 +57,14 @@ export const useBooking = () => {
     clearOnDefault: false,
   })
 
+  const [slot, setSlot] = useQueryState('slot', {
+    parse: (value) => {
+      const parsedSlot = slotSchema.safeParse(value)
+      return parsedSlot.success ? parsedSlot.data : null
+    },
+    defaultValue: null,
+  })
+
   const getSelectedDate = () => {
     return dayjs(date, 'DD-MM-YYYY').toDate()
   }
@@ -74,5 +91,29 @@ export const useBooking = () => {
     }
   }
 
-  return { month, year, getSelectedDate, setSelectedYear, setSelectedMonth, setSelectedDate }
+  const getSelectedSlot = () => {
+    if (slot) {
+      return dayjs(slot).utc().toDate()
+    }
+    return null
+  }
+
+  const setSelectedSlot = (newDateTime: Date | null) => {
+    const newSlot = newDateTime ? dayjs(newDateTime).utc().toISOString() : null
+
+    if (slot !== newSlot) {
+      setSlot(newSlot)
+    }
+  }
+
+  return {
+    month,
+    year,
+    getSelectedDate,
+    setSelectedYear,
+    setSelectedMonth,
+    setSelectedDate,
+    getSelectedSlot,
+    setSelectedSlot,
+  }
 }
