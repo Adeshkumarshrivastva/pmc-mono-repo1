@@ -88,7 +88,6 @@ function InitiateVerificationForm({ onSuccess }: { onSuccess: (phoneNumber: stri
           sendOtpMutation.mutate(value.phoneNumber)
         })}
       >
-        <div className="text-sm">Verify your phone number to create or access your account</div>
         <FormField
           name="phoneNumber"
           control={form.control}
@@ -97,7 +96,7 @@ function InitiateVerificationForm({ onSuccess }: { onSuccess: (phoneNumber: stri
               <FormItem>
                 <FormLabel>Phone Number*</FormLabel>
                 <FormControl>
-                  <Input autoFocus placeholder="9999988888" {...field} />
+                  <Input autoFocus autoComplete="off" placeholder="9999988888" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -159,7 +158,6 @@ function VerifyOTP({ phoneNumber, onSuccess }: { phoneNumber: string; onBack: ()
           verifyOtpMutation.mutate({ otp: value.otp })
         })}
       >
-        <div className="text-xl">Verify Phone Number</div>
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">Enter the 6-digit code sent to</p>
           <p className="font-medium">+91 {phoneNumber}</p>

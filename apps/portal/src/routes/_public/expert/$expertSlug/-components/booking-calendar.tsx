@@ -38,7 +38,7 @@ export default function BookingCalendar() {
           setSelectedDate(today)
         }
       }}
-      className="w-full bg-transparent p-0 [--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
+      className="w-full bg-transparent p-0 [--cell-size:--spacing(8)]"
     />
   )
 }

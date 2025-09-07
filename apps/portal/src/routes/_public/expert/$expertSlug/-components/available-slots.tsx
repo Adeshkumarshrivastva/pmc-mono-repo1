@@ -50,45 +50,52 @@ export default function AvailableSlots({ expertSlug: expertId, serviceSlug: serv
 
           return (
             <div className="flex flex-col h-full">
-              <div className="flex-1 p-4 flex flex-col space-y-2 overflow-auto">
-                {slots.map((slot) => {
-                  let isSelected = false
+              <div className="h-full flex-1 p-4 flex flex-col space-y-4 xl:overflow-hidden">
+                <div> {dayjs(selectedDate).format('dddd, MMMM D')}</div>
+                <div className="space-y-2 h-full flex-1 overflow-auto pb-20 xl:pb-0">
+                  {slots.map((slot) => {
+                    let isSelected = false
 
-                  if (selectedSlot) {
-                    const isSameDate = dayjs(selectedSlot).tz('Asia/Kolkata').isSame(dayjs(selectedDate), 'date')
-                    const isSameTime = dateToUtcMinutes(selectedSlot) === slot.startTime
-                    isSelected = isSameDate && isSameTime
-                  }
+                    if (selectedSlot) {
+                      const isSameDate = dayjs(selectedSlot).tz('Asia/Kolkata').isSame(dayjs(selectedDate), 'date')
+                      const isSameTime = dateToUtcMinutes(selectedSlot) === slot.startTime
+                      isSelected = isSameDate && isSameTime
+                    }
 
-                  return (
-                    <Button
-                      size="lg"
-                      onClick={() => {
-                        handleSelectedSlot(slot.startTime)
-                      }}
-                      variant="outline"
-                      key={`slot-${selectedDate}-${slot.startTime}`}
-                      className={cn(
-                        'w-full',
-                        isSelected ? 'bg-primary text-secondary hover:bg-primary hover:text-primary-foreground' : null,
-                      )}
-                    >
-                      <div>{toHHMMA(minutesToDate(utcMinutesToLocalMinutes(slot.startTime), selectedDate))}</div>
-                    </Button>
-                  )
-                })}
+                    return (
+                      <Button
+                        size="lg"
+                        onClick={() => {
+                          handleSelectedSlot(slot.startTime)
+                        }}
+                        variant="outline"
+                        key={`slot-${selectedDate}-${slot.startTime}`}
+                        className={cn(
+                          'w-full',
+                          isSelected
+                            ? 'bg-primary text-secondary hover:bg-primary hover:text-primary-foreground'
+                            : null,
+                        )}
+                      >
+                        <div>{toHHMMA(minutesToDate(utcMinutesToLocalMinutes(slot.startTime), selectedDate))}</div>
+                      </Button>
+                    )
+                  })}
+                </div>
               </div>
-              <Separator />
-              <div className="flex justify-end p-4">
-                <Button
-                  disabled={!selectedSlot}
-                  onClick={() => {
-                    onNext()
-                  }}
-                  className="w-full sm:w-auto"
-                >
-                  Continue
-                </Button>
+              <div className="fixed xl:static bottom-0 left-0 right-0 bg-background border-t xl:border-t-0 xl:bg-transparent">
+                <Separator className="hidden xl:block" />
+                <div className="flex justify-end p-4">
+                  <Button
+                    disabled={!selectedSlot}
+                    onClick={() => {
+                      onNext()
+                    }}
+                    className="w-full sm:w-auto xl:w-auto"
+                  >
+                    Continue
+                  </Button>
+                </div>
               </div>
             </div>
           )
@@ -114,9 +121,11 @@ function AvailableSlotsSkeleton() {
           ))}
         </div>
       </div>
-      <Separator />
-      <div className="flex justify-end p-4">
-        <div className="h-10 bg-gray-200 rounded w-24" />
+      <div className="fixed xl:static bottom-0 left-0 right-0 bg-background border-t xl:border-t-0 xl:bg-transparent">
+        <Separator className="hidden xl:block" />
+        <div className="flex justify-end p-4">
+          <div className="h-10 bg-gray-200 rounded w-24" />
+        </div>
       </div>
     </div>
   )

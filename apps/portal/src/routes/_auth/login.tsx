@@ -162,7 +162,7 @@ function InitiateLoginForm({ onSuccess }: { onSuccess: (phoneNumber: string) => 
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input autoFocus placeholder="9999988888" {...field} />
+                  <Input autoFocus autoComplete="off" placeholder="9999988888" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

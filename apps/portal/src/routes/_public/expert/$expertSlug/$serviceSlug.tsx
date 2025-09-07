@@ -38,27 +38,27 @@ function ExpertServiceBookingPage() {
 
   return (
     <div className="h-screen w-full bg-accent">
-      <div className="container h-full mx-auto px-4 py-4 md:py-8 max-w-7xl">
+      <div className="container h-full mx-auto px-0 py-0 md:px-4 md:py-8 max-w-7xl">
         {match(mode)
           .returnType<React.ReactNode>()
           .with({ type: 'select_slot' }, () => {
             return (
-              <div className="h-full flex flex-col gap-4 xl:flex-row xl:gap-6 xl:justify-center">
-                <div className="w-full h-full xl:max-w-sm bg-background rounded-xl shadow-md p-4">
+              <div className="h-full flex flex-col xl:flex-row xl:gap-6 xl:justify-center">
+                <div className="w-full h-full xl:max-w-sm bg-background xl:rounded-xl xl:shadow-md p-4">
                   <ExpertService
                     serviceSlug={serviceSlug}
                     expertSlug={expertSlug}
                     onBack={() => {
-                      navigate({ to: '/expert/$expertSlug', params: { expertSlug } })
+                      navigate({ to: '/expert/$expertSlug', params: { expertSlug }, replace: true })
                     }}
                   />
                 </div>
 
-                <div className="h-full xl:flex-1 flex justify-center bg-background rounded-xl shadow-md p-4">
+                <div className="h-full xl:flex-1 flex justify-center bg-background rounded-none xl:rounded-xl xl:shadow-md p-4 md:p-16 xl:p-4">
                   <BookingCalendar />
                 </div>
 
-                <div className="w-full h-full flex flex-col xl:max-w-sm bg-background rounded-xl shadow-md ">
+                <div className="w-full h-full flex flex-col xl:max-w-sm bg-background rounded-none xl:rounded-xl xl:shadow-md">
                   <AvailableSlots
                     serviceSlug={serviceSlug}
                     expertSlug={expertSlug}
@@ -76,8 +76,8 @@ function ExpertServiceBookingPage() {
           })
           .with({ type: 'verify_identity' }, () => {
             return (
-              <div className="h-full flex flex-col gap-4 xl:flex-row xl:gap-6 xl:justify-center">
-                <div className="w-full h-full xl:max-w-sm bg-background rounded-xl shadow-md p-4">
+              <div className="h-full flex flex-col xl:flex-row xl:gap-6 xl:justify-center">
+                <div className="w-full xl:h-full xl:max-w-sm bg-background xl:rounded-xl xl:shadow-md p-4">
                   <SlotSummary
                     onBack={() => {
                       setMode({
@@ -86,16 +86,21 @@ function ExpertServiceBookingPage() {
                     }}
                   />
                 </div>
-                <div className="h-full xl:flex-1 bg-background rounded-xl shadow-md p-4">
-                  <PhoneVerificationForm />
+                <div className="h-full w-full xl:max-w-xl flex-1 bg-background xl:rounded-xl xl:shadow-md p-4 space-y-4">
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-semibold text-foreground">Verify Your Identity</h2>
+                  </div>
+                  <div className="w-full">
+                    <PhoneVerificationForm />
+                  </div>
                 </div>
               </div>
             )
           })
           .with({ type: 'fill_prebooking_info' }, () => {
             return (
-              <div className="h-full flex flex-col gap-4 xl:flex-row xl:gap-6 xl:justify-center">
-                <div className="w-full h-full xl:max-w-sm bg-background rounded-xl shadow-md p-4">
+              <div className="h-full flex flex-col xl:flex-row xl:gap-6 xl:justify-center">
+                <div className="w-full h-full xl:max-w-sm bg-background xl:rounded-xl xl:shadow-md p-4">
                   <SlotSummary
                     onBack={() => {
                       setMode({
@@ -104,7 +109,7 @@ function ExpertServiceBookingPage() {
                     }}
                   />
                 </div>
-                <div className="h-full xl:flex-1 bg-background rounded-xl shadow-md p-4">
+                <div className="h-full xl:flex-1 bg-background xl:rounded-xl xl:shadow-md p-4">
                   <div>Prebooking Info Form</div>
                 </div>
               </div>

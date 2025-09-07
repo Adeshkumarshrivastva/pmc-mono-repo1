@@ -35,7 +35,7 @@ export type ExpertSearchResponse = Prisma.ExpertGetPayload<{
 }>
 
 export const expertMonthlyAvailableSlotsQuery = z.object({
-  month: z.coerce.number().min(0).max(11),
+  month: z.coerce.number().min(1).max(12),
   year: z.coerce.number(),
 })
 
