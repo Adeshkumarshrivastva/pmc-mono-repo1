@@ -118,7 +118,10 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
   try {
     const expert = await prisma.expert.findUnique({
       where: { slug: expertSlug },
-      include: { servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS } },
+      include: {
+        servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
+        user: { select: { id: true, name: true, image: true, email: true } },
+      },
     })
 
     if (!expert) {

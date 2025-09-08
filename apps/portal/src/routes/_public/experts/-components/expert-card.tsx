@@ -1,23 +1,13 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import {
-  Search,
-  Filter,
-  Star,
-  Calendar,
-  Video,
-  ChevronDown,
-  MapPin,
-  Clock,
-  BadgeCheck,
-  Users,
-  User,
-} from 'lucide-react'
+import { Search, Filter, Star, Calendar, Video, MapPin, X } from 'lucide-react'
 import type { ExpertType, ServiceMode, Prisma } from '@pmc/server/src/generated/prisma/client'
 import type { SortBy } from '@pmc/server/src/routes/experts/experts.input'
+import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
 import { honoClient } from '@/lib/hono-client'
+import { Combobox } from '@/components/ui/combo-box'
 
 type ExpertWithRelations = Prisma.ExpertGetPayload<{
   include: {
@@ -85,15 +75,6 @@ async function fetchExperts(filters: FilterState) {
   return response.json()
 }
 
-function formatExpertType(type: ExpertType): string {
-  const typeMap = {
-    PSYCHOLOGIST: 'Psychologist',
-    PSYCHIATRIST: 'Psychiatrist',
-    CLINICAL_PSYCHOLOGIST: 'Clinical Psychologist',
-  }
-  return typeMap[type] || type
-}
-
 function formatServiceModes(modes: ServiceMode[]): { icon: any; text: string }[] {
   const modeMap = {
     VIRTUAL: { icon: Video, text: 'Online' },
@@ -136,19 +117,25 @@ function ExpertsGridSkeleton() {
 
 function ExpertCardSkeleton() {
   return (
-    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 animate-pulse">
+    <div className="bg-background rounded-3xl border border-border shadow-sm p-6 animate-pulse">
       <div className="flex items-start gap-4 mb-6">
-        <div className="w-16 h-16 bg-gray-200 rounded-2xl flex-shrink-0"></div>
+        <div className="w-36 h-48 bg-gray-200 rounded-xl flex-shrink-0"></div>
         <div className="flex-1">
           <div className="h-5 bg-gray-200 rounded mb-2"></div>
           <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+          <div className="h-3 bg-gray-200 rounded w-2/3"></div>
         </div>
       </div>
       <div className="space-y-4">
         <div className="h-4 bg-gray-200 rounded"></div>
         <div className="h-4 bg-gray-200 rounded"></div>
         <div className="h-12 bg-gray-200 rounded-xl"></div>
+        <div className="flex gap-2">
+          <div className="h-6 bg-gray-200 rounded w-16"></div>
+          <div className="h-6 bg-gray-200 rounded w-20"></div>
+          <div className="h-6 bg-gray-200 rounded w-14"></div>
+        </div>
       </div>
     </div>
   )
@@ -168,20 +155,25 @@ function ExpertCard({ expert }: { expert: ExpertWithRelations }) {
   const { servicesProvided, user, name, slug, type, avgRating, city, country, bio, qualifications, availability } =
     expert
   const [selectedMode, setSelectedMode] = useState<ServiceMode>('VIRTUAL')
+  const [showAllServices, setShowAllServices] = useState(false)
 
   const allServiceModes = [...new Set(servicesProvided?.flatMap((s) => s.availableModes) || [])]
   const availableModes = formatServiceModes(allServiceModes)
 
-  const prices = servicesProvided?.map((s) => s.price) || []
-  const minPrice = prices.length > 0 ? Math.min(...prices) : 0
-  const maxPrice = prices.length > 0 ? Math.max(...prices) : 0
-  const priceRange =
-    minPrice === maxPrice ? formatCurrency(minPrice) : `${formatCurrency(minPrice)} - ${formatCurrency(maxPrice)}`
+  const filteredServices = servicesProvided?.filter((service) => service.availableModes.includes(selectedMode)) || []
 
-  const durations = servicesProvided?.map((s) => s.durationInMinutes) || []
-  const minDuration = durations.length > 0 ? Math.min(...durations) : 60
-  const maxDuration = durations.length > 0 ? Math.max(...durations) : 60
-  const durationText = minDuration === maxDuration ? `${minDuration} mins` : `${minDuration}-${maxDuration} mins`
+  const prices = servicesProvided?.map((s) => s.price) || []
+  const { minPrice, maxPrice, priceRange } = match(prices)
+    .with([], () => ({ minPrice: 0, maxPrice: 0, priceRange: 'N/A' }))
+    .otherwise((priceList) => {
+      const min = Math.min(...priceList)
+      const max = Math.max(...priceList)
+      return {
+        minPrice: min,
+        maxPrice: max,
+        priceRange: min === max ? formatCurrency(min) : `${formatCurrency(min)} - ${formatCurrency(max)}`,
+      }
+    })
 
   const allTags = [...new Set(servicesProvided?.flatMap((s) => s.tags) || [])]
   const topTags = allTags.slice(0, 3)
@@ -192,66 +184,79 @@ function ExpertCard({ expert }: { expert: ExpertWithRelations }) {
   const nextSlot = getNextAvailableSlot(availability || [])
 
   return (
-    <div className="bg-card text-card-foreground rounded-3xl border border-border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+    <div className="bg-card rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
       {/* Header */}
       <div className="p-6 pb-4">
         <div className="flex items-start gap-4 mb-4">
           <div className="relative w-36 h-48 shrink-0">
             <img src={imageUrl} alt={name} className="w-full h-full object-cover rounded-xl" />
             <Link
-              to={`/expert/${slug}`}
-              className="absolute bottom-0 left-0 right-0 bg-foreground text-background text-xs font-medium py-1.5 text-center rounded-b-xl hover:opacity-90 transition"
+              to={`/experts/${slug}`}
+              className="absolute bottom-0 left-0 right-0 bg-gray-900 text-white text-xs font-medium py-1.5 text-center rounded-b-xl hover:opacity-90 transition"
             >
               VIEW PROFILE
             </Link>
           </div>
 
+          {/* Expert Info */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-1">
-              <h3 className="text-lg font-semibold text-foreground truncate font-display">{name}</h3>
-              <div className="flex items-center gap-1 bg-accent px-2 py-1 rounded-full">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="text-xl font-bold text-gray-900 truncate">{name}</h3>
+              <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
                 <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                <span className="text-sm font-medium text-accent-foreground">{avgRating || '—'}</span>
+                <span className="text-sm font-medium text-yellow-700">{avgRating || '—'}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mb-2">
-              <BadgeCheck className="w-4 h-4 text-primary" />
-              <span className="text-sm text-muted-foreground">{formatExpertType(type)}</span>
+            {/* Pricing Range */}
+            <div className="text-sm text-gray-600 mb-2">
+              Price Range: <span className="font-semibold text-gray-900">{priceRange}</span>
             </div>
 
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <MapPin className="w-4 h-4" />
-              <span>
-                {city}, {country}
-              </span>
-            </div>
+            {/* Expertise Tags */}
+            {topTags.length > 0 && (
+              <div className="mb-3">
+                <div className="text-sm text-gray-600 mb-1">Expertise:</div>
+                <div className="flex flex-wrap gap-1">
+                  {(topTags as string[]).slice(0, 2).map((tag, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Qualifications */}
+            {qualifications && qualifications.length > 0 && (
+              <div className="mb-4">
+                <div className="text-sm text-gray-600 mb-1">Qualifications:</div>
+                <div className="flex flex-wrap gap-1">
+                  {(typeof qualifications === 'string'
+                    ? [qualifications]
+                    : Array.isArray(qualifications)
+                      ? qualifications
+                      : []
+                  )
+                    .slice(0, 2)
+                    .map((qual: string, index: number) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200"
+                      >
+                        {qual}
+                      </span>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Bio */}
-        {bio && <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{bio}</p>}
-
-        {/* Tags */}
-        {topTags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-4">
-            {topTags.map((tag, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-accent text-accent-foreground"
-              >
-                {tag}
-              </span>
-            ))}
-            {allTags.length > 3 && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
-                +{allTags.length - 3} more
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Modes */}
+        {/* Service Mode Selection */}
         {availableModes.length > 0 && (
           <div className="flex gap-2 mb-4">
             {availableModes.map((mode, i) => {
@@ -262,10 +267,10 @@ function ExpertCard({ expert }: { expert: ExpertWithRelations }) {
                 <button
                   key={i}
                   onClick={() => setSelectedMode(mode.text === 'Online' ? 'VIRTUAL' : 'IN_PERSON')}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-accent text-accent-foreground hover:opacity-90'
+                      ? 'bg-orange-100 text-orange-700 border border-orange-300'
+                      : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
                   }`}
                 >
                   <mode.icon className="w-4 h-4" />
@@ -275,55 +280,84 @@ function ExpertCard({ expert }: { expert: ExpertWithRelations }) {
             })}
           </div>
         )}
-      </div>
 
-      {/* Pricing + Availability */}
-      <div className="px-6 pb-4">
-        <div className="bg-accent rounded-2xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Session fee</div>
-              <div className="text-lg font-semibold text-foreground">{priceRange}</div>
+        {/* Services Available for Selected Mode */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-sm font-medium text-gray-700">
+              Available Services ({selectedMode === 'VIRTUAL' ? 'Online' : 'In-person'})
             </div>
-            <div className="text-right">
-              <div className="text-sm text-muted-foreground mb-1">Duration</div>
-              <div className="text-sm font-medium text-foreground flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                {durationText}
-              </div>
-            </div>
+            {filteredServices.length > 2 && (
+              <button
+                onClick={() => setShowAllServices(!showAllServices)}
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              >
+                {showAllServices ? 'Show Less' : `Show All (${filteredServices.length})`}
+              </button>
+            )}
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-border">
+          <div className="space-y-2">
+            {(showAllServices ? filteredServices : filteredServices.slice(0, 2)).map((service) => (
+              <div key={service.id} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                <div className="flex justify-between items-start mb-1">
+                  <h4 className="font-medium text-gray-900 text-sm">{service.name}</h4>
+                  <div className="text-right">
+                    <div className="font-bold text-gray-900">{formatCurrency(service.price, service.currency)}</div>
+                    <div className="text-xs text-gray-500">{service.durationInMinutes} mins</div>
+                  </div>
+                </div>
+                {service.description && (
+                  <p className="text-xs text-gray-600 mb-2 line-clamp-2">{service.description}</p>
+                )}
+                {service.city && service.country && selectedMode === 'IN_PERSON' && (
+                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <MapPin className="w-3 h-3" />
+                    {service.city}, {service.country}
+                  </div>
+                )}
+                {service.tags && service.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {service.tags.slice(0, 3).map((tag: string, index: number) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-blue-50 text-blue-600 border border-blue-200"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {service.tags.length > 3 && (
+                      <span className="text-xs text-gray-500">+{service.tags.length - 3} more</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {filteredServices.length === 0 && (
+            <div className="text-center py-4 text-gray-500 text-sm bg-gray-50 rounded-lg">
+              No services available for {selectedMode === 'VIRTUAL' ? 'online' : 'in-person'} sessions
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Info Bar */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+          <div className="flex items-center gap-4">
             <div>
-              <div className="text-sm text-muted-foreground mb-1">Next available</div>
-              <div className="text-sm font-medium text-primary flex items-center gap-1">
+              <div className="text-xs text-gray-500 mb-1">Next online slot:</div>
+              <div className="text-sm font-medium text-orange-600 flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 {nextSlot}
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-sm text-muted-foreground mb-1">Services</div>
-              <div className="text-sm font-medium text-foreground flex items-center gap-1">
-                <Users className="w-4 h-4" />
-                {servicesProvided?.length || 0} available
-              </div>
-            </div>
           </div>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div className="px-6 pb-6">
-        <div className="flex gap-3">
-          <Link to={`/expert/${slug}`} className="flex-1">
-            <Button className="w-full bg-primary text-primary-foreground hover:opacity-90 rounded-xl py-3 font-medium transition-colors">
-              Book Appointment
+          <Link to={`/expert/${slug}`}>
+            <Button className="bg-primary hover:bg-primary/70 text-primary-foreground px-6 py-2 rounded-lg font-medium transition-colors">
+              BOOK
             </Button>
           </Link>
-          <Button variant="outline" className="px-4 rounded-xl border-border text-foreground hover:bg-accent">
-            <User className="w-4 h-4" />
-          </Button>
         </div>
       </div>
     </div>
@@ -344,7 +378,35 @@ export default function ExpertCardsWithFilters() {
     queryFn: () => fetchExperts(filters),
   })
 
-  function updateFilter(key: keyof FilterState, value: any) {
+  // Options for the comboboxes
+  const expertTypeOptions = [
+    { value: '', label: 'All Types' },
+    { value: 'PSYCHOLOGIST', label: 'Psychologist' },
+    { value: 'PSYCHIATRIST', label: 'Psychiatrist' },
+    { value: 'CLINICAL_PSYCHOLOGIST', label: 'Clinical Psychologist' },
+  ]
+
+  const serviceModeOptions = [
+    { value: '', label: 'All Modes' },
+    { value: 'VIRTUAL', label: 'Online Only' },
+    { value: 'IN_PERSON', label: 'In-Person Only' },
+  ]
+
+  const sortByOptions = [
+    { value: 'rating', label: 'Rating' },
+    { value: 'price', label: 'Price' },
+    { value: 'name', label: 'Name' },
+  ]
+
+  const sortOrderOptions = [
+    { value: 'desc', label: 'descending' },
+    { value: 'asc', label: 'accending' },
+  ]
+
+  function updateFilter(
+    key: keyof FilterState,
+    value: string | number | ExpertType | ServiceMode | SortBy | 'asc' | 'desc' | undefined,
+  ) {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
@@ -366,204 +428,217 @@ export default function ExpertCardsWithFilters() {
   const experts = data?.experts || []
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-accent">
       {/* Header */}
-      <div className="bg-background border-b border-border sticky top-0 z-10">
+      <div className="bg-accent border-gray-200">
         <div className="container mx-auto px-4 py-6">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-foreground mb-2 font-display">Our Distinguished Experts</h1>
-            <div className="w-20 h-0.5 bg-primary mx-auto mb-3"></div>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-3">Our Distinguished Experts</h1>
+            <div className="w-24 h-1 bg-primary/50 mx-auto mb-4 rounded-full"></div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Connect with our qualified mental health professionals who are here to support your journey to wellness.
             </p>
           </div>
-
-          {/* Search and Filter Bar */}
-          <div className="flex flex-col lg:flex-row gap-4 max-w-4xl mx-auto">
-            {/* Search Bar */}
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search by name, specialization, or location..."
-                className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
-                value={filters.search}
-                onChange={(e) => updateFilter('search', e.target.value)}
-              />
-            </div>
-
-            {/* Filter Toggle */}
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-6 py-4 rounded-2xl border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
-              icon={<Filter className="w-5 h-5 shrink-0" />}
-            >
-              <span className="truncate">Filters </span>
-            </Button>
-          </div>
-
-          {/* Expanded Filters */}
-          {showFilters && (
-            <div className="mt-6 p-6 bg-white rounded-2xl border border-gray-100 max-w-4xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Expert Type */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Professional Type</label>
-                  <select
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                    value={filters.type || ''}
-                    onChange={(e) => updateFilter('type', e.target.value || undefined)}
-                  >
-                    <option value="">All Types</option>
-                    <option value="PSYCHOLOGIST">Psychologist</option>
-                    <option value="PSYCHIATRIST">Psychiatrist</option>
-                    <option value="CLINICAL_PSYCHOLOGIST">Clinical Psychologist</option>
-                  </select>
-                </div>
-
-                {/* Service Mode */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Session Type</label>
-                  <select
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                    value={filters.serviceMode || ''}
-                    onChange={(e) => updateFilter('serviceMode', e.target.value || undefined)}
-                  >
-                    <option value="">All Modes</option>
-                    <option value="VIRTUAL">Online Only</option>
-                    <option value="IN_PERSON">In-Person Only</option>
-                  </select>
-                </div>
-
-                {/* Price Range */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Price Range (₹)</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      placeholder="Min"
-                      className="w-full px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                      value={filters.minPrice || ''}
-                      onChange={(e) => updateFilter('minPrice', e.target.value ? parseInt(e.target.value) : undefined)}
-                    />
-                    <input
-                      type="number"
-                      placeholder="Max"
-                      className="w-full px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                      value={filters.maxPrice || ''}
-                      onChange={(e) => updateFilter('maxPrice', e.target.value ? parseInt(e.target.value) : undefined)}
-                    />
-                  </div>
-                </div>
-
-                {/* Sort By */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
-                  <div className="flex gap-2">
-                    <select
-                      className="flex-1 px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                      value={filters.sortBy || 'rating'}
-                      onChange={(e) => updateFilter('sortBy', e.target.value)}
-                    >
-                      <option value="rating">Rating</option>
-                      <option value="price">Price</option>
-                      <option value="name">Name</option>
-                    </select>
-                    <select
-                      className="px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                      value={filters.sortOrder || 'desc'}
-                      onChange={(e) => updateFilter('sortOrder', e.target.value)}
-                    >
-                      <option value="desc">↓</option>
-                      <option value="asc">↑</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Tags and Location */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Specializations (comma-separated)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="anxiety, depression, trauma..."
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                    value={filters.tags || ''}
-                    onChange={(e) => updateFilter('tags', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                  <input
-                    type="text"
-                    placeholder="City name..."
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-                    value={filters.location || ''}
-                    onChange={(e) => updateFilter('location', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Clear Filters */}
-              <div className="flex justify-end mt-6">
-                <Button
-                  variant="outline"
-                  onClick={clearFilters}
-                  className="px-6 py-3 bg-white text-gray-700 border-gray-200 hover:bg-gray-50 rounded-xl"
-                >
-                  Clear All Filters
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
       {/* Results */}
       <div className="container mx-auto px-4 py-8">
-        {isLoading && <ExpertsGridSkeleton />}
-
-        {isError && (
-          <div className="text-center py-16">
-            <div className="bg-white border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
-              <div className="text-red-600 mb-4 font-medium">
-                Error loading experts: {error instanceof Error ? error.message : 'Unknown error'}
-              </div>
-              <Button onClick={handleReload} className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-6 py-2">
-                Try Again
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {!isLoading && !isError && experts.length === 0 && (
-          <div className="text-center py-16">
-            <div className="bg-white border border-gray-200 rounded-2xl p-12 max-w-md mx-auto">
-              <div className="text-gray-900 text-xl mb-3 font-semibold">No experts found</div>
-              <p className="text-gray-600">
-                Try adjusting your filters or search criteria to find the right professional for you.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {!isLoading && !isError && experts.length > 0 && (
-          <>
-            <div className="flex justify-between items-center mb-8">
+        {/* Search and Filter Bar */}
+        {match({ isLoading, isError })
+          .with({ isLoading: false, isError: false }, () => (
+            <div className="flex flex-col lg:flex-row gap-4 items-center justify-between mb-8">
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-1">Available Experts</h2>
                 <p className="text-gray-600">
                   Showing {experts.length} expert{experts.length !== 1 ? 's' : ''} ready to help
                 </p>
               </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                {/* Search Bar */}
+                <div className="relative lg:w-96">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search by name, specialization..."
+                    className="w-full h-12 pl-12 pr-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
+                    value={filters.search}
+                    onChange={(e) => updateFilter('search', e.target.value)}
+                  />
+                </div>
+
+                {/* Filter Toggle Button */}
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={`flex items-center justify-center gap-2 h-12 px-6 rounded-xl border-2 font-medium transition-all duration-200 min-w-[120px] ${
+                    showFilters
+                      ? 'bg-primary/25 border-primary text-primary hover:bg-primary/10'
+                      : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                  }`}
+                >
+                  <Filter className="w-4 h-4 flex-shrink-0" />
+                  <span>Filters</span>
+                </button>
+              </div>
             </div>
-            <ExpertsGrid experts={experts} />
-          </>
-        )}
+          ))
+          .otherwise(() => null)}
+
+        {/* Expanded Filters - Sticky when open */}
+        {match(showFilters)
+          .with(true, () => (
+            <div className="sticky top-25 z-20 bg-white border border-gray-200 rounded-xl shadow-lg mb-8 overflow-hidden">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-gray-900">Filter Experts</h3>
+                  <button
+                    onClick={() => setShowFilters(false)}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5 text-gray-500" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Expert Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Professional Type</label>
+                    <Combobox
+                      placeholder="All Types"
+                      options={expertTypeOptions}
+                      value={filters.type || ''}
+                      onValueChange={(value) => updateFilter('type', (value as string) || undefined)}
+                      className="w-full h-12 rounded-lg border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                    />
+                  </div>
+
+                  {/* Service Mode */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Session Type</label>
+                    <Combobox
+                      placeholder="All Modes"
+                      options={serviceModeOptions}
+                      value={filters.serviceMode || ''}
+                      onValueChange={(value) => updateFilter('serviceMode', (value as string) || undefined)}
+                      className="w-full h-12 rounded-lg border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                    />
+                  </div>
+
+                  {/* Price Range */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Price Range (₹)</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="number"
+                        placeholder="Min"
+                        className="w-full h-12 px-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                        value={filters.minPrice || ''}
+                        onChange={(e) =>
+                          updateFilter('minPrice', e.target.value ? parseInt(e.target.value) : undefined)
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="Max"
+                        className="w-full h-12 px-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                        value={filters.maxPrice || ''}
+                        onChange={(e) =>
+                          updateFilter('maxPrice', e.target.value ? parseInt(e.target.value) : undefined)
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* Sort By */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                    <div className="flex gap-1">
+                      <Combobox
+                        placeholder="Rating"
+                        options={sortByOptions}
+                        value={filters.sortBy || 'rating'}
+                        onValueChange={(value) => updateFilter('sortBy', value as string)}
+                        className="flex-1 h-12 rounded-lg border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      />
+                      <Combobox
+                        placeholder="asc/desc"
+                        options={sortOrderOptions}
+                        value={filters.sortOrder || 'desc'}
+                        onValueChange={(value) => updateFilter('sortOrder', value as string)}
+                        className="w- h-12 rounded-lg border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tags and Location */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Specializations (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="anxiety, depression, trauma..."
+                      className="w-full h-12 px-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      value={filters.tags || ''}
+                      onChange={(e) => updateFilter('tags', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <input
+                      type="text"
+                      placeholder="City name..."
+                      className="w-full h-12 px-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      value={filters.location || ''}
+                      onChange={(e) => updateFilter('location', e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Clear Filters */}
+                <div className="flex justify-end mt-6">
+                  <button
+                    onClick={clearFilters}
+                    className="px-6 py-3 bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200 rounded-lg font-medium transition-colors"
+                  >
+                    Clear All Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+          .otherwise(() => null)}
+
+        {/* Loading, Error, and Results */}
+        {match({ isLoading, isError, expertsCount: experts.length })
+          .with({ isLoading: true }, () => <ExpertsGridSkeleton />)
+          .with({ isError: true }, () => (
+            <div className="text-center py-16">
+              <div className="bg-white border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
+                <div className="text-red-600 mb-4 font-medium">
+                  Error loading experts: {error instanceof Error ? error.message : 'Unknown error'}
+                </div>
+                <Button onClick={handleReload} className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-6 py-2">
+                  Try Again
+                </Button>
+              </div>
+            </div>
+          ))
+          .with({ isLoading: false, isError: false, expertsCount: 0 }, () => (
+            <div className="text-center py-16">
+              <div className="bg-white border border-gray-200 rounded-2xl p-12 max-w-md mx-auto">
+                <div className="text-gray-900 text-xl mb-3 font-semibold">No experts found</div>
+                <p className="text-gray-600">
+                  Try adjusting your filters or search criteria to find the right professional for you.
+                </p>
+              </div>
+            </div>
+          ))
+          .with({ isLoading: false, isError: false }, () => <ExpertsGrid experts={experts} />)
+          .otherwise(() => null)}
       </div>
     </div>
   )
