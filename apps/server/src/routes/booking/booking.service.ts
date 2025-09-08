@@ -3,7 +3,7 @@ import { getCookie, setCookie } from 'hono/cookie'
 import z from 'zod'
 import { BetterAuthError } from 'better-auth'
 import type { C } from '../../lib/context'
-import type { InitiatePatientAuthInput, VerifyPatientInput } from './booking.input'
+import type { CreateBookingInput, InitiatePatientAuthInput, VerifyPatientInput } from './booking.input'
 import { getErrorMessage, MINUTE } from '../../lib/utils'
 import { env } from '../../lib/env'
 import { auth } from '../../lib/auth'
@@ -15,7 +15,7 @@ export async function initiatePatientAuth(c: C, input: InitiatePatientAuthInput)
     setCookie(c, 'OTP_VERIFICATION_COOKIE', jwtToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'Strict',
+      sameSite: env.NODE_ENV === 'production' ? 'Lax' : 'None',
       maxAge: 10 * MINUTE,
     })
     return c.json({ success: true, phoneNumber: input.phoneNumber })
@@ -55,4 +55,12 @@ export async function verifyPatientAuth(c: C, input: VerifyPatientInput) {
     const errorMessage = getErrorMessage(error)
     return c.json({ error: errorMessage }, 500)
   }
+}
+
+export async function createBooking(c: C, input: CreateBookingInput) {
+  // TODO: Fetch expert, service, patient details
+  // TODO: Check slot availability
+  // TODO: Create booking with status DRAFT in DB
+  // TODO: Generate payment link
+  // TODO: redirect to payment gateway
 }

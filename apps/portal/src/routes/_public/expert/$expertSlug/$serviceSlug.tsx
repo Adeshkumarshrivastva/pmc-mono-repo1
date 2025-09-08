@@ -91,7 +91,11 @@ function ExpertServiceBookingPage() {
                     <h2 className="text-2xl font-semibold text-foreground">Verify Your Identity</h2>
                   </div>
                   <div className="w-full">
-                    <PhoneVerificationForm />
+                    <PhoneVerificationForm
+                      onNext={() => {
+                        setMode({ type: 'fill_prebooking_info' })
+                      }}
+                    />
                   </div>
                 </div>
               </div>

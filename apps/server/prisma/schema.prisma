@@ -179,6 +179,7 @@ model Service {
   booking                   Booking[]
   payments                  Payment[]
   tags                      String[]
+  prebookingQuestions       Json?
   isDeleted                 Boolean       @default(false)
 
   @@unique([expertId, slug])
@@ -224,6 +225,7 @@ model Booking {
   serviceBufferTimeBeforeInMinutes Int
   serviceBufferTimeAfterInMinutes  Int
   parentBookingId                  String?       @db.ObjectId
+  preBookingQnA                    Json?
   // utc format
   startDateTime                    DateTime
   endDateTime                      DateTime

@@ -29,7 +29,11 @@ const otpValidationSchema = z.object({
   otp: z.string().min(6, { message: 'Your one-time password must be 6 characters.' }),
 })
 
-export default function PhoneVerificationForm() {
+type PhoneVerificationFormProps = {
+  onNext: () => void
+}
+
+export default function PhoneVerificationForm({ onNext }: PhoneVerificationFormProps) {
   const [mode, setMode] = useState<Mode>({ type: 'initial' })
 
   return (
@@ -47,7 +51,9 @@ export default function PhoneVerificationForm() {
           .with({ type: 'verify' }, ({ phoneNumber }) => (
             <VerifyOTP
               phoneNumber={phoneNumber}
-              onSuccess={() => {}}
+              onSuccess={() => {
+                onNext()
+              }}
               onBack={() => {
                 setMode({ type: 'initial', phoneNumber: mode.phoneNumber })
               }}
