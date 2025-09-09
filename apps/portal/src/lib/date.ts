@@ -29,11 +29,15 @@ export function utcMinutesToLocalMinutes(utcMinutes: number, timeZone: string = 
   return localTime.hour() * MINUTES_PER_HOUR + localTime.minute()
 }
 
+export function utcDateToLocalDate(date: Date, timeZone: string = 'Asia/Kolkata') {
+  return dayjs.utc(date).tz(timeZone).toDate()
+}
+
 export function minutesToDate(minutes: number, baseDate: Date, timeZone: string = 'Asia/Kolkata') {
   return dayjs.tz(baseDate, timeZone).startOf('day').add(minutes, 'minute').toDate()
 }
 
-export function dateToUtcMinutes(date: Date | string): number {
+export function dateToUtcMinutes(date: Date | string) {
   const dt = dayjs(date).utc()
   return dt.hour() * MINUTES_PER_HOUR + dt.minute()
 }

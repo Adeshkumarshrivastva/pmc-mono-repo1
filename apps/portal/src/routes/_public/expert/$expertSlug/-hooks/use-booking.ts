@@ -24,9 +24,9 @@ const slotSchema = z
     { message: 'Invalid slot datetime' },
   )
 
-export const useBooking = () => {
-  const today = dayjs()
+const today = dayjs()
 
+export const useBooking = () => {
   const [month, setMonth] = useQueryState('month', {
     parse: (value) => {
       const parsedMonth = monthSchema.safeParse(value)
