@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Search, Filter, Star, Calendar, Video, MapPin, X, type LucideIcon } from 'lucide-react'
 import type { ExpertType, ServiceMode, Prisma, DayOfWeek } from '@pmc/server/src/generated/prisma/client'
@@ -9,35 +9,41 @@ import { Button } from '@/components/ui/button'
 import { honoClient } from '@/lib/hono-client'
 import { Combobox } from '@/components/ui/combo-box'
 
-type ExpertWithRelations = Prisma.ExpertGetPayload<{
-  include: {
-    servicesProvided: {
-      select: {
-        id: true
-        name: true
-        price: true
-        currency: true
-        durationInMinutes: true
-        availableModes: true
-        city: true
-        country: true
+type ExpertWithRelations = Omit<
+  Prisma.ExpertGetPayload<{
+    include: {
+      servicesProvided: {
+        select: {
+          id: true
+          name: true
+          price: true
+          currency: true
+          durationInMinutes: true
+          availableModes: true
+          city: true
+          country: true
+        }
+      }
+      user: {
+        select: {
+          id: true
+          name: true
+          image: true
+        }
       }
     }
-    user: {
-      select: {
-        id: true
-        name: true
-        image: true
-      }
-    }
-  }
+  }>,
+  'createdAt' | 'updatedAt'
+> & {
+  createdAt: string
+  updatedAt: string
   availability?: {
     dayOfTheWeek: DayOfWeek
-    startTime: Date
-    endTime: Date
+    startTime: string
+    endTime: string
     isActive: boolean
-  }
-}>
+  }[]
+}
 
 type FilterState = {
   search: string
@@ -78,14 +84,14 @@ function formatServiceModes(modes: ServiceMode[]): { icon: unknown; text: string
   return modes.map((mode) => modeMap[mode]).filter(Boolean)
 }
 
-type Slot = {
-  isActive: boolean
-  startTime: Date
-  endTime: Date
-  dayOfTheWeek: DayOfWeek
-}
-
-function getNextAvailableSlot(availability?: Slot[]): string {
+function getNextAvailableSlot(
+  availability?: {
+    isActive: boolean
+    startTime: string
+    endTime: string
+    dayOfTheWeek: DayOfWeek
+  }[],
+): string {
   if (!availability || availability.length === 0) {
     return 'Schedule upon request'
   }
@@ -163,6 +169,7 @@ function ExpertCard({ expert }: { expert: ExpertWithRelations }) {
   const { servicesProvided, user, name, slug, type, city, country, bio, qualifications, availability } = expert
   const [selectedMode, setSelectedMode] = useState<ServiceMode>('VIRTUAL')
   const [showAllServices, setShowAllServices] = useState(false)
+  const navigate = useNavigate()
 
   const allServiceModes = [...new Set(servicesProvided?.flatMap((s) => s.availableModes) || [])]
   const availableModes = formatServiceModes(allServiceModes)
@@ -331,11 +338,13 @@ function ExpertCard({ expert }: { expert: ExpertWithRelations }) {
               </div>
             </div>
           </div>
-          <Link to="/experts/$expertId" params={{ expertId: slug || expert.id }}>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg font-medium transition-colors">
-              BOOK
-            </Button>
-          </Link>
+
+          <Button
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg font-medium transition-colors"
+            onClick={() => navigate({ to: `/experts/${slug}` })}
+          >
+            BOOK
+          </Button>
         </div>
       </div>
     </div>
@@ -390,18 +399,6 @@ export default function ExpertCardsWithFilters() {
     }))
   }
 
-  function clearFilters() {
-    setFilters({
-      search: '',
-      sortBy: 'rating',
-      sortOrder: 'desc',
-    })
-  }
-
-  function handleReload() {
-    window.location.reload()
-  }
-
   return (
     <div className="min-h-screen bg-accent">
       <div className="bg-accent border-border">
@@ -426,7 +423,9 @@ export default function ExpertCardsWithFilters() {
                   Error loading experts: {error instanceof Error ? error.message : 'Unknown error'}
                 </div>
                 <Button
-                  onClick={handleReload}
+                  onClick={() => {
+                    window.location.reload()
+                  }}
                   className="bg-destructive hover:bg-destructive/90 text-primary-foreground rounded-xl px-6 py-2"
                 >
                   Try Again
@@ -455,12 +454,16 @@ export default function ExpertCardsWithFilters() {
                         placeholder="Search by name, specialization..."
                         className="w-full h-12 pl-12 pr-4 border border-border rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground"
                         value={filters.search}
-                        onChange={(e) => updateFilter('search', e.target.value)}
+                        onChange={(e) => {
+                          updateFilter('search', e.target.value)
+                        }}
                       />
                     </div>
 
                     <Button
-                      onClick={() => setShowFilters(!showFilters)}
+                      onClick={() => {
+                        setShowFilters(!showFilters)
+                      }}
                       className={`flex items-center justify-center gap-2 h-12 px-6 rounded-xl border-2 font-medium transition-all duration-200 min-w-[120px] ${
                         showFilters
                           ? 'bg-primary/25 border-primary text-primary hover:bg-primary/10'
@@ -479,7 +482,9 @@ export default function ExpertCardsWithFilters() {
                       <div className="flex items-center justify-between mb-6">
                         <h3 className="text-xl font-semibold text-foreground">Filter Experts</h3>
                         <button
-                          onClick={() => setShowFilters(false)}
+                          onClick={() => {
+                            setShowFilters(false)
+                          }}
                           className="p-2 hover:bg-accent rounded-lg transition-colors"
                         >
                           <X className="w-5 h-5 text-muted-foreground" />
@@ -493,7 +498,9 @@ export default function ExpertCardsWithFilters() {
                             placeholder="All Types"
                             options={expertTypeOptions}
                             value={filters.type || ''}
-                            onValueChange={(value) => updateFilter('type', (value as ExpertType) || undefined)}
+                            onValueChange={(value) => {
+                              updateFilter('type', (value as ExpertType) || undefined)
+                            }}
                             className="w-full h-12 rounded-lg border-border focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
                           />
                         </div>
@@ -504,7 +511,9 @@ export default function ExpertCardsWithFilters() {
                             placeholder="All Modes"
                             options={serviceModeOptions}
                             value={filters.serviceMode || ''}
-                            onValueChange={(value) => updateFilter('serviceMode', (value as ServiceMode) || undefined)}
+                            onValueChange={(value) => {
+                              updateFilter('serviceMode', (value as ServiceMode) || undefined)
+                            }}
                             className="w-full h-12 rounded-lg border-border focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
                           />
                         </div>
@@ -540,14 +549,18 @@ export default function ExpertCardsWithFilters() {
                               placeholder="Rating"
                               options={sortByOptions}
                               value={filters.sortBy || 'rating'}
-                              onValueChange={(value) => updateFilter('sortBy', value as SortBy)}
+                              onValueChange={(value) => {
+                                updateFilter('sortBy', value as SortBy)
+                              }}
                               className="flex-1 h-12 rounded-lg border-border focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
                             />
                             <Combobox
                               placeholder="asc/desc"
                               options={sortOrderOptions}
                               value={filters.sortOrder || 'desc'}
-                              onValueChange={(value) => updateFilter('sortOrder', value as 'asc' | 'desc')}
+                              onValueChange={(value) => {
+                                updateFilter('sortOrder', value as 'asc' | 'desc')
+                              }}
                               className="w-32 h-12 rounded-lg border-border focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
                             />
                           </div>
@@ -564,7 +577,9 @@ export default function ExpertCardsWithFilters() {
                             placeholder="anxiety, depression, trauma..."
                             className="w-full h-12 px-4 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
                             value={filters.tags || ''}
-                            onChange={(e) => updateFilter('tags', e.target.value)}
+                            onChange={(e) => {
+                              updateFilter('tags', e.target.value)
+                            }}
                           />
                         </div>
                         <div>
@@ -574,14 +589,22 @@ export default function ExpertCardsWithFilters() {
                             placeholder="City name..."
                             className="w-full h-12 px-4 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
                             value={filters.location || ''}
-                            onChange={(e) => updateFilter('location', e.target.value)}
+                            onChange={(e) => {
+                              updateFilter('location', e.target.value)
+                            }}
                           />
                         </div>
                       </div>
 
                       <div className="flex justify-end mt-6">
                         <button
-                          onClick={clearFilters}
+                          onClick={() => {
+                            setFilters({
+                              search: '',
+                              sortBy: 'rating',
+                              sortOrder: 'desc',
+                            })
+                          }}
                           className="px-6 py-3 bg-muted text-muted-foreground border border-border hover:bg-accent rounded-lg font-medium transition-colors"
                         >
                           Clear All Filters

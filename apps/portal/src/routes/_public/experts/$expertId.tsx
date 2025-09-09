@@ -258,7 +258,7 @@ function RouteComponent() {
 
           <div className="container mx-auto px-4 py-6 relative">
             <Link
-              to="/experts/page"
+              to="/experts"
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors font-medium text-sm"
             >
               <span className="flex items-center gap-1">
