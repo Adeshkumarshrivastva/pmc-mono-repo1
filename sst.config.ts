@@ -40,6 +40,7 @@ export default $config({
     const DatabaseUrl = new sst.Secret('DATABASE_URL')
     const GoogleClientId = new sst.Secret('GOOGLE_CLIENT_ID')
     const GoogleClientSecret = new sst.Secret('GOOGLE_CLIENT_SECRET')
+    const JwtSecret = new sst.Secret('JWT_SECRET')
 
     new sst.aws.Function('PmcHonoServer', {
       handler: 'apps/server/src/index.handler',
@@ -55,6 +56,7 @@ export default $config({
         DATABASE_URL: DatabaseUrl.value,
         GOOGLE_CLIENT_ID: GoogleClientId.value,
         GOOGLE_CLIENT_SECRET: GoogleClientSecret.value,
+        JWT_SECRET: JwtSecret.value,
       },
     })
 
