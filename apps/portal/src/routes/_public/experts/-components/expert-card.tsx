@@ -66,7 +66,7 @@ async function fetchExperts(filters: FilterState) {
     }
   })
 
-  const response = await honoClient.server.expert.$get({
+  const response = await honoClient.server.experts.$get({
     query: Object.fromEntries(queryParams.entries()),
   })
 
@@ -518,6 +518,29 @@ export default function ExpertCardsWithFilters() {
                           />
                         </div>
 
+                        <div>
+                          <label className="block text-sm font-medium text-foreground mb-2">Price Range (₹)</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="number"
+                              placeholder="Min"
+                              className="w-full h-12 px-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
+                              value={filters.minPrice || ''}
+                              onChange={(e) =>
+                                updateFilter('minPrice', e.target.value ? parseInt(e.target.value) : undefined)
+                              }
+                            />
+                            <input
+                              type="number"
+                              placeholder="Max"
+                              className="w-full h-12 px-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
+                              value={filters.maxPrice || ''}
+                              onChange={(e) =>
+                                updateFilter('maxPrice', e.target.value ? parseInt(e.target.value) : undefined)
+                              }
+                            />
+                          </div>
+                        </div>
                         <div>
                           <label className="block text-sm font-medium text-foreground mb-2">Price Range (₹)</label>
                           <div className="flex gap-2">

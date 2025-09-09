@@ -46,7 +46,7 @@ type ExpertWithDetails = Prisma.ExpertGetPayload<{
 }>
 
 async function fetchExpertDetails(expertId: string) {
-  const response = await honoClient.server.expert[':expertSlug'].$get({
+  const response = await honoClient.server.experts[':expertSlug'].$get({
     param: { expertSlug: expertId },
   })
 
@@ -101,7 +101,7 @@ function ServiceCard({
         </div>
         <div className="text-right ml-4 flex-shrink-0">
           <div className="text-xl font-bold text-primary">{formatCurrency(service.price, service.currency)}</div>
-          <div className="text-xs text-muted-foreground flex items-center gap-1 justify-end">
+          <div className="text-sm text-muted-foreground flex items-center gap-1 justify-end">
             <Clock className="w-3 h-3" />
             {service.durationInMinutes}min
           </div>
@@ -112,7 +112,7 @@ function ServiceCard({
         {(availableModes as { icon: LucideIcon; text: string }[]).map((mode, i) => (
           <div
             key={i}
-            className="flex items-center gap-1 px-2 py-1 bg-muted/50 border border-border rounded-md text-xs"
+            className="flex items-center gap-1 px-2 py-1 bg-muted/50 border border-border rounded-md text-sm"
           >
             <mode.icon className="w-3 h-3 text-muted-foreground" />
             <span className="text-foreground">{mode.text}</span>
@@ -121,7 +121,7 @@ function ServiceCard({
       </div>
 
       {service.availableModes.includes('IN_PERSON') && service.city ? (
-        <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+        <div className="flex items-center gap-1 text-sm text-muted-foreground mb-3">
           <MapPin className="w-3 h-3" />
           {service.city}, {service.country}
         </div>
@@ -253,7 +253,7 @@ function RouteComponent() {
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full opacity-50"></div>
             <div className="absolute top-1/2 -left-40 w-60 h-60 bg-accent-foreground/20 rounded-full opacity-50"></div>
-            <div className="absolute bottom-20 right-1/4 w-40 h-40 bg-primary/30 rounded-full opacity-40"></div>
+            <div className="absolute bottom-70 right-1/4 w-40 h-40 bg-primary/30 rounded-full opacity-40"></div>
           </div>
 
           <div className="container mx-auto px-4 py-6 relative">
@@ -309,7 +309,7 @@ function RouteComponent() {
                         <div className="text-center lg:text-left">
                           <div className="flex items-center gap-1 text-muted-foreground mb-1">
                             <MapPin className="w-4 h-4" />
-                            <span className="text-xs">Location</span>
+                            <span className="text-sm">Location</span>
                           </div>
                           <p className="text-sm font-semibold text-foreground">
                             {city}, {country}
@@ -319,7 +319,7 @@ function RouteComponent() {
                         {minPrice > 0 ? (
                           <div className="text-center lg:text-left">
                             <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                              <span className="text-xs">Starting at</span>
+                              <span className="text-sm">Starting at</span>
                             </div>
                             <p className="text-sm font-semibold text-primary">{formatCurrency(minPrice)}</p>
                           </div>
