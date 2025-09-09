@@ -94,8 +94,3 @@ export const expertMonthlyAvailableSlotsQuery = z.object({
 })
 
 export type ExpertMonthlyAvailableSlotsQuery = z.infer<typeof expertMonthlyAvailableSlotsQuery>
-
-export type ServiceSearchResponse = Prisma.ServiceGetPayload<{
-  select: typeof SERVICE_SELECT_FIELDS
-  include: { expert: { select: typeof EXPERT_SELECT_FIELDS } }
-}>

@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as PublicExpertsPageRouteImport } from './routes/_public/experts/page'
+import { Route as PublicExpertsIndexRouteImport } from './routes/_public/experts/index'
 import { Route as PublicExpertsExpertIdRouteImport } from './routes/_public/experts/$expertId'
 
 const AuthRoute = AuthRouteImport.update({
@@ -29,9 +29,9 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
-const PublicExpertsPageRoute = PublicExpertsPageRouteImport.update({
-  id: '/_public/experts/page',
-  path: '/experts/page',
+const PublicExpertsIndexRoute = PublicExpertsIndexRouteImport.update({
+  id: '/_public/experts/',
+  path: '/experts/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicExpertsExpertIdRoute = PublicExpertsExpertIdRouteImport.update({
@@ -44,13 +44,13 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/': typeof AppIndexRoute
   '/experts/$expertId': typeof PublicExpertsExpertIdRoute
-  '/experts/page': typeof PublicExpertsPageRoute
+  '/experts': typeof PublicExpertsIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/': typeof AppIndexRoute
   '/experts/$expertId': typeof PublicExpertsExpertIdRoute
-  '/experts/page': typeof PublicExpertsPageRoute
+  '/experts': typeof PublicExpertsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -58,27 +58,27 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_app/': typeof AppIndexRoute
   '/_public/experts/$expertId': typeof PublicExpertsExpertIdRoute
-  '/_public/experts/page': typeof PublicExpertsPageRoute
+  '/_public/experts/': typeof PublicExpertsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/' | '/experts/$expertId' | '/experts/page'
+  fullPaths: '/login' | '/' | '/experts/$expertId' | '/experts'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/' | '/experts/$expertId' | '/experts/page'
+  to: '/login' | '/' | '/experts/$expertId' | '/experts'
   id:
     | '__root__'
     | '/_auth'
     | '/_auth/login'
     | '/_app/'
     | '/_public/experts/$expertId'
-    | '/_public/experts/page'
+    | '/_public/experts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
   PublicExpertsExpertIdRoute: typeof PublicExpertsExpertIdRoute
-  PublicExpertsPageRoute: typeof PublicExpertsPageRoute
+  PublicExpertsIndexRoute: typeof PublicExpertsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -104,11 +104,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_public/experts/page': {
-      id: '/_public/experts/page'
-      path: '/experts/page'
-      fullPath: '/experts/page'
-      preLoaderRoute: typeof PublicExpertsPageRouteImport
+    '/_public/experts/': {
+      id: '/_public/experts/'
+      path: '/experts'
+      fullPath: '/experts'
+      preLoaderRoute: typeof PublicExpertsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/experts/$expertId': {
@@ -135,7 +135,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
   PublicExpertsExpertIdRoute: PublicExpertsExpertIdRoute,
-  PublicExpertsPageRoute: PublicExpertsPageRoute,
+  PublicExpertsIndexRoute: PublicExpertsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

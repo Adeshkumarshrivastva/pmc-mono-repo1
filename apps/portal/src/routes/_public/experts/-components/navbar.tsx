@@ -14,12 +14,12 @@ type NavbarProps = { services: Service[] }
 
 const NAV_ITEMS = [
   { id: 'home', href: 'https://positivemindcare.com/', label: 'Home' },
-  { id: 'about', href: '/landing-page/about-us', label: 'About Us' },
-  { id: 'deepTms', href: '/landing-page/deep-tms', label: 'Deep TMS' },
-  { id: 'services', href: '/landing-page/services', label: 'Services' },
-  { id: 'our-experts', href: '/landing-page/experts', label: 'Our Experts' },
-  { id: 'webinars', href: '/landing-page/webinars', label: 'Awareness' },
-  { id: 'contact-us', href: '/landing-page/contact-us', label: 'Contact' },
+  { id: 'about', href: 'https://positivemindcare.com/landing-page/about-us', label: 'About Us' },
+  { id: 'deepTms', href: 'https://positivemindcare.com/landing-page/deep-tms', label: 'Deep TMS' },
+  { id: 'services', href: 'https://positivemindcare.com/landing-page/services', label: 'Services' },
+  { id: 'our-experts', href: 'portal/experts', label: 'Our Experts' },
+  { id: 'webinars', href: 'https://positivemindcare.com/landing-page/webinars', label: 'Awareness' },
+  { id: 'contact-us', href: 'https://positivemindcare.com/landing-page/contact-us', label: 'Contact' },
 ] as const
 
 const HOVER_DELAY = 400
@@ -50,7 +50,6 @@ export default function Navbar({ services }: NavbarProps) {
             ) : (
               <Link
                 key={item.id}
-                // @ts-expect-error: The route may not be typed in the router config yet
                 to={item.href}
                 className={cn(
                   'text-lg font-semibold rounded-md px-2 py-1 transition-colors',
