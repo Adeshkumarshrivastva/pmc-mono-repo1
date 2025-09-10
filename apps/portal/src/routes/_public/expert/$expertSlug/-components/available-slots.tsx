@@ -14,7 +14,7 @@ type AvailableSlotsProps = {
   onNext: () => void
 }
 
-export default function AvailableSlots({ expertSlug: expertId, serviceSlug: serviceId, onNext }: AvailableSlotsProps) {
+export default function AvailableSlots({ expertSlug, serviceSlug, onNext }: AvailableSlotsProps) {
   const { month, year, getSelectedDate, getSelectedSlot, setSelectedSlot } = useBooking()
 
   const selectedDate = getSelectedDate()
@@ -22,7 +22,7 @@ export default function AvailableSlots({ expertSlug: expertId, serviceSlug: serv
 
   const getMonthlyAvailableSlotsQuery = useQuery({
     queryKey: ['monthly-available-slots', month, year],
-    queryFn: () => fetchMonthlyAvailableSlots(expertId, serviceId, year, month),
+    queryFn: () => fetchMonthlyAvailableSlots(expertSlug, serviceSlug, year, month),
   })
 
   const handleSelectedSlot = (startTime: number) => {

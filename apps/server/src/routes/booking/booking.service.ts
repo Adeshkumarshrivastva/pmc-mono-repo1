@@ -65,11 +65,22 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     })
   }
 
-  const endDateTime = dayjs(input.startDateTime).add(service.durationInMinutes).toDate()
+  const startDateTime = new Date(input.startDateTime)
+  const endDateTime = dayjs(startDateTime).add(service.durationInMinutes, 'minutes').toDate()
 
-  const slotCheck = await isSlotAvailable(expert.id, input.startDateTime, endDateTime)
+  const slotCheck = await isSlotAvailable(expert.id, startDateTime, endDateTime)
   if (!slotCheck.isAvailable) {
     return c.json({ error: slotCheck.reason || 'Slot not available' }, 404)
+  }
+
+  let virtualLocation = null
+  let inPersonLocation = null
+
+  if (input.mode === 'VIRTUAL') {
+    // TODO: Generate Google Meet link here
+    virtualLocation = null // Will be populated when Google Meet integration is implemented
+  } else if (input.mode === 'IN_PERSON') {
+    inPersonLocation = service.inPersonLocation
   }
 
   try {
@@ -77,7 +88,6 @@ export async function createBooking(c: C, input: CreateBookingInput) {
       const draftBooking = await tx.booking.create({
         data: {
           status: 'DRAFT',
-          mode: 'VIRTUAL',
           startDateTime: input.startDateTime,
           endDateTime: endDateTime,
           expertId: expert.id,
@@ -92,6 +102,9 @@ export async function createBooking(c: C, input: CreateBookingInput) {
           serviceBufferTimeBeforeInMinutes: service.bufferTimeBeforeInMinutes,
           serviceCurrency: service.currency,
           preBookingQnA: input.prebookingQnA,
+          mode: input.mode,
+          virtualLocation,
+          inPersonLocation,
         },
       })
 

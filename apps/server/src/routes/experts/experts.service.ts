@@ -314,13 +314,12 @@ export async function getExpertMonthlyAvailableSlots(
       const startWithBuffer = start.subtract(bufferBefore, 'minute')
       const endWithBuffer = end.add(bufferAfter, 'minute')
 
-      const startDate = toDDMMYYYY(startWithBuffer)
-      const endDate = toDDMMYYYY(endWithBuffer)
+      const startMinute = dateToMinutes(booking.startDateTime)
+      const endMinute = dateToMinutes(booking.endDateTime)
 
-      const startMinute = dateToMinutes(startDate)
-      const endMinute = dateToMinutes(endDate)
+      const startDateStr = toDDMMYYYY(startWithBuffer)
 
-      const slots = baseAvailability[startDate] || []
+      const slots = baseAvailability[startDateStr] || []
 
       const isMultiDayBooking = !startWithBuffer.isSame(endWithBuffer, 'day')
 
@@ -333,7 +332,7 @@ export async function getExpertMonthlyAvailableSlots(
             ),
         )
 
-        baseAvailability[startDate] = filteredSlots
+        baseAvailability[startDateStr] = filteredSlots
       } else {
         // TODO: handle multi-day booking edge-case
       }

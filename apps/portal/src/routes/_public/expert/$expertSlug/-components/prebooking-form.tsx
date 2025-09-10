@@ -1,27 +1,102 @@
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { invariant } from '@tanstack/react-router'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { SERVICE_MODES, type ServiceMode } from '@/lib/booking'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { honoClient } from '@/lib/hono-client'
+import { getErrorMessage } from '@/lib/utils'
+import { useBooking } from '../-hooks/use-booking'
+import { env } from '@/lib/env'
+import { loadRazorpayScript } from '@/lib/razorpay'
 
 type PrebookingFormProps = {
-  onNext: () => void
+  serviceId?: string
+  expertId?: string
+  phoneNumber: string
 }
 
 const prebookingFormSchema = z.object({
-  patientName: z.string().min(3).max(100),
-  patientEmail: z.email().optional(),
+  patientName: z.string({ message: 'Patient Name is required' }).min(3).max(100),
+  patientEmail: z.email().optional().or(z.literal('')),
+  serviceMode: z.enum(SERVICE_MODES),
 })
 
-export default function PrebookingForm({}: PrebookingFormProps) {
+export default function PrebookingForm({ serviceId, expertId }: PrebookingFormProps) {
+  invariant(serviceId, 'service id must be present')
+  invariant(expertId, 'expert Id must be present')
+
+  const { getSelectedSlot } = useBooking()
+  const selectedSlot = getSelectedSlot()
+  invariant(selectedSlot, 'selectedSlot must be present')
+
   const form = useForm({
+    defaultValues: {
+      serviceMode: 'VIRTUAL',
+    },
     resolver: zodResolver(prebookingFormSchema),
+  })
+
+  const createBookingMutation = useMutation({
+    mutationFn: createBooking,
+    onSuccess: async (data) => {
+      const scriptLoaded = await loadRazorpayScript()
+      if (!scriptLoaded) {
+        toast.error('Failed to load payment gateway')
+        return
+      }
+
+      const { patientName, patientEmail } = form.getValues()
+      const options = {
+        key: env.VITE_PUBLIC_RAZORPAY_KEY_ID,
+        amount: Number(data.amount),
+        currency: 'INR',
+        name: 'Service Booking',
+        prefill: { fullName: patientName, email: patientEmail },
+        modal: {
+          escape: false,
+          ondismiss: () => {
+            toast.error('Payment was not completed. Please try again.')
+            // TODO: redirect to service booking initial page
+          },
+        },
+        handler: () => {
+          //TODO: redirect to booking confirmation page
+        },
+        description: 'Payment for service booking',
+        theme: {
+          color: '#385246',
+        },
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const razorpay = new (window as any).Razorpay(options)
+      razorpay.open()
+    },
+    onError: (error) => {
+      toast.error('Failed to create booking', {
+        description: getErrorMessage(error),
+      })
+    },
   })
 
   return (
     <Form {...form}>
-      <form className="space-y-4">
+      <form
+        className="space-y-6"
+        onSubmit={form.handleSubmit((values: z.infer<typeof prebookingFormSchema>) => {
+          createBookingMutation.mutate({
+            formInput: values,
+            serviceId: serviceId,
+            expertId: expertId,
+            startDateTime: new Date(selectedSlot).toString(),
+          })
+        })}
+      >
         <FormField
           name="patientName"
           render={({ field }) => {
@@ -49,9 +124,76 @@ export default function PrebookingForm({}: PrebookingFormProps) {
             )
           }}
         />
-        {/* TODO: Render Custom Fields */}
-        <Button>Confirm & Pay</Button>
+        <FormField
+          name="serviceMode"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>Location*</FormLabel>
+                <FormControl>
+                  <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
+                    {SERVICE_MODES.map((mode) => (
+                      <FormItem key={SERVICE_MODE_CONFIG[mode].value} className="flex items-center gap-3">
+                        <FormControl>
+                          <RadioGroupItem value={SERVICE_MODE_CONFIG[mode].value} />
+                        </FormControl>
+                        <FormLabel className="font-normal">{SERVICE_MODE_CONFIG[mode].label}</FormLabel>
+                      </FormItem>
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </FormItem>
+            )
+          }}
+        />
+        {/* TODO: Render Custom Form Fields of Service */}
+
+        <Button
+          loading={createBookingMutation.isPending}
+          disabled={createBookingMutation.isPending}
+          type="submit"
+          className="mt-4"
+        >
+          Confirm & Pay
+        </Button>
       </form>
     </Form>
   )
+}
+
+export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: ServiceMode }> = {
+  IN_PERSON: {
+    label: 'In Person',
+    value: 'IN_PERSON',
+  },
+  VIRTUAL: {
+    label: 'Google Meet',
+    value: 'VIRTUAL',
+  },
+}
+
+type CreateBookingInput = {
+  formInput: z.infer<typeof prebookingFormSchema>
+  expertId: string
+  serviceId: string
+  startDateTime: string
+}
+
+const createBooking = async ({ formInput, expertId, serviceId, startDateTime }: CreateBookingInput) => {
+  const res = await honoClient.server.booking.create.$post({
+    json: {
+      patientName: formInput.patientName,
+      patientEmail: formInput?.patientEmail,
+      mode: formInput.serviceMode,
+      expertId,
+      serviceId,
+      startDateTime,
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error('Failed to create booking')
+  }
+
+  return res.json()
 }

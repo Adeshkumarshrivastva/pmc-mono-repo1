@@ -79,6 +79,7 @@ export default $config({
       environment: {
         VITE_PUBLIC_API_BASE_URL: $interpolate`${router.url}`,
         VITE_PUBLIC_BASE_PATH: '/portal',
+        VITE_PUBLIC_RAZORPAY_KEY_ID: RazorpayKeyId.value,
       },
     })
 

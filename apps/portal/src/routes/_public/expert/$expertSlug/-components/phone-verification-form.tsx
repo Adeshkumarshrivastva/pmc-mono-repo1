@@ -30,7 +30,7 @@ const otpValidationSchema = z.object({
 })
 
 type PhoneVerificationFormProps = {
-  onNext: () => void
+  onNext: (phoneNumber: string) => void
 }
 
 export default function PhoneVerificationForm({ onNext }: PhoneVerificationFormProps) {
@@ -52,7 +52,7 @@ export default function PhoneVerificationForm({ onNext }: PhoneVerificationFormP
             <VerifyOTP
               phoneNumber={phoneNumber}
               onSuccess={() => {
-                onNext()
+                onNext(phoneNumber)
               }}
               onBack={() => {
                 setMode({ type: 'initial', phoneNumber: mode.phoneNumber })

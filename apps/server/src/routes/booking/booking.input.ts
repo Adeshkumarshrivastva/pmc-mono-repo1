@@ -4,7 +4,7 @@ import { ServiceMode } from '../../generated/prisma'
 export const createBookingInput = z.object({
   expertId: z.string(),
   serviceId: z.string(),
-  startDateTime: z.date(),
+  startDateTime: z.string(),
   mode: z.enum(ServiceMode),
   patientName: z.string().min(3).max(100),
   patientEmail: z.email().optional(),
