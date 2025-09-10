@@ -2,7 +2,7 @@
 
 import Razorpay from 'razorpay'
 import { env } from '@/env'
-import { CreateOrderInput } from './payments.input'
+import type { CreateOrderInput } from './payments.input'
 
 const razorpay = new Razorpay({
   key_id: env.RAZORPAY_KEY_ID,

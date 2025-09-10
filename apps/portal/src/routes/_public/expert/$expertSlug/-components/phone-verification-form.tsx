@@ -221,7 +221,7 @@ function VerifyOTP({ phoneNumber, onSuccess }: { phoneNumber: string; onBack: ()
 }
 
 const initiatePatientAuth = async (phoneNumber: string) => {
-  const res = await honoClient.server.booking.initiate.$post({
+  const res = await honoClient.server.verification.initiate.$post({
     json: { phoneNumber },
   })
   if (!res.ok) {
@@ -231,7 +231,7 @@ const initiatePatientAuth = async (phoneNumber: string) => {
 }
 
 const verifyPatientOtp = async ({ otp }: { otp: string }) => {
-  const res = await honoClient.server.booking.verify.$post({
+  const res = await honoClient.server.verification.verify.$post({
     json: { otp },
   })
   if (!res.ok) {

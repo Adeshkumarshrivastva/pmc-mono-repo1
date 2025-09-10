@@ -1,7 +1,7 @@
 'use server'
 
 import { getPayloadClient } from '@/lib/payload'
-import { AppointmentFormInput, AppointmentFormUpdateInput, DeleteAppointmentInput } from './appointments.input'
+import type { AppointmentFormInput, AppointmentFormUpdateInput, DeleteAppointmentInput } from './appointments.input'
 import { createOrder } from '../payments/payments.action'
 
 export async function createAppointment({ serviceId, subServiceId, ...rest }: AppointmentFormInput) {

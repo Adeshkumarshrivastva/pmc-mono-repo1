@@ -41,6 +41,8 @@ export default $config({
     const GoogleClientId = new sst.Secret('GOOGLE_CLIENT_ID')
     const GoogleClientSecret = new sst.Secret('GOOGLE_CLIENT_SECRET')
     const JwtSecret = new sst.Secret('JWT_SECRET')
+    const RazorpayKeyId = new sst.Secret('RAZORPAY_KEY_ID')
+    const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
 
     new sst.aws.Function('PmcHonoServer', {
       handler: 'apps/server/src/index.handler',
@@ -56,6 +58,8 @@ export default $config({
         DATABASE_URL: DatabaseUrl.value,
         GOOGLE_CLIENT_ID: GoogleClientId.value,
         GOOGLE_CLIENT_SECRET: GoogleClientSecret.value,
+        RAZORPAY_KEY_ID: RazorpayKeyId.value,
+        RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
         JWT_SECRET: JwtSecret.value,
       },
     })
@@ -80,8 +84,6 @@ export default $config({
 
     const PayloadSecret = new sst.Secret('PAYLOAD_SECRET')
     const PayloadDBUrl = new sst.Secret('PAYLOAD_DB_URL')
-    const RazorpayKeyId = new sst.Secret('RAZORPAY_KEY_ID')
-    const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
     const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
 
     new sst.aws.Nextjs('PmcLandingPage', {

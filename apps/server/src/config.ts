@@ -24,6 +24,12 @@ export const configSchema = z.object({
       clientSecret: z.string(),
     }),
   }),
+  payment: z.object({
+    razorpay: z.object({
+      keyId: z.string(),
+      keySecret: z.string(),
+    }),
+  }),
 })
 
 export type ConfigSchema = z.infer<typeof configSchema>
@@ -39,6 +45,12 @@ function getConfig() {
         google: {
           clientId: env.GOOGLE_CLIENT_ID,
           clientSecret: env.GOOGLE_CLIENT_SECRET,
+        },
+      },
+      payment: {
+        razorpay: {
+          keyId: env.RAZORPAY_KEY_ID,
+          keySecret: env.RAZORPAY_KEY_SECRET,
         },
       },
     })

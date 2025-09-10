@@ -350,6 +350,9 @@ importers:
       prisma:
         specifier: 6.14.0
         version: 6.14.0(typescript@5.8.3)
+      razorpay:
+        specifier: 2.9.6
+        version: 2.9.6
       ts-pattern:
         specifier: 5.0.5
         version: 5.0.5

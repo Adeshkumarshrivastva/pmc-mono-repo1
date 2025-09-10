@@ -1,6 +1,5 @@
 import { match } from 'ts-pattern'
-import type { Dayjs } from 'dayjs'
-import type { DayOfWeek, Prisma } from '../../generated/prisma'
+import type { Prisma } from '../../generated/prisma'
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import { getErrorMessage } from '../../lib/utils'
@@ -12,6 +11,15 @@ import {
   type ExpertMonthlyAvailableSlotsQuery,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
+import {
+  DAY_MAP,
+  generateDaySlots,
+  getDatesInMonth,
+  isSlotOverlapping,
+  type Slot,
+  type TimeRange,
+} from '../../lib/booking'
+import { dateToMinutes, toDDMMYYYY } from '../../lib/date'
 
 export async function getExperts(c: C, query: ExpertSearchQuery) {
   try {
@@ -158,20 +166,6 @@ export async function getExpertServiceFromSlug(c: C, expertSlug: string, service
   }
 }
 
-const MINUTES_PER_HOUR = 60
-const DAY_MAP: Record<DayOfWeek, number> = {
-  SUNDAY: 0,
-  MONDAY: 1,
-  TUESDAY: 2,
-  WEDNESDAY: 3,
-  THURSDAY: 4,
-  FRIDAY: 5,
-  SATURDAY: 6,
-}
-
-type TimeRange = { start: number; end: number }
-type Slot = { startTime: number; displayTime: string }
-
 export async function getExpertMonthlyAvailableSlots(
   c: C,
   expertSlug: string,
@@ -212,6 +206,7 @@ export async function getExpertMonthlyAvailableSlots(
       prisma.expertAvailability.findMany({
         where: {
           expertId: expert.id,
+          isActive: { not: false },
         },
         select: {
           dayOfTheWeek: true,
@@ -256,24 +251,22 @@ export async function getExpertMonthlyAvailableSlots(
 
     const weeklyTemplate: TimeRange[][] = Array.from({ length: 7 }, () => [])
 
-    weeklySchedule
-      .filter((schedule) => schedule.isActive !== false)
-      .forEach((schedule) => {
-        const dayIndex = DAY_MAP[schedule.dayOfTheWeek]
-        const start = dateToMinutes(schedule.startTime)
-        const end = dateToMinutes(schedule.endTime)
+    weeklySchedule.forEach((schedule) => {
+      const dayIndex = DAY_MAP[schedule.dayOfTheWeek]
+      const start = dateToMinutes(schedule.startTime)
+      const end = dateToMinutes(schedule.endTime)
 
-        if (end > start) {
-          weeklyTemplate[dayIndex].push({
-            start,
-            end,
-          })
-        }
-      })
+      if (end > start) {
+        weeklyTemplate[dayIndex].push({
+          start,
+          end,
+        })
+      }
+    })
 
     const baseAvailability: { [date: string]: Slot[] } = {}
 
-    const now = dayjs()
+    const now = dayjs().utc()
     const currentMinutes = dateToMinutes(now.toDate())
 
     const dates = getDatesInMonth(year, month)
@@ -355,43 +348,4 @@ export async function getExpertMonthlyAvailableSlots(
     const errorMessage = getErrorMessage(error)
     return c.json({ error: `Failed to get monthly available slots - ${errorMessage}` }, 500)
   }
-}
-
-function dateToMinutes(date: Date | string): number {
-  const dt = dayjs(date)
-  return dt.hour() * MINUTES_PER_HOUR + dt.minute()
-}
-
-function getDatesInMonth(year: number, month: number) {
-  const startDate = dayjs(`${year}-${month}-01`)
-  const daysInMonth = startDate.daysInMonth()
-
-  return Array.from({ length: daysInMonth }, (_, i) => startDate.add(i, 'day'))
-}
-
-function generateDaySlots(daySchedule: TimeRange[], duration: number): Slot[] {
-  const slots: Slot[] = []
-
-  daySchedule.forEach((range) => {
-    for (let time = range.start; time + duration <= range.end; time += duration) {
-      slots.push({
-        startTime: time,
-        displayTime: minutesToHHMM(time),
-      })
-    }
-  })
-
-  return slots
-}
-
-function minutesToHHMM(minutes: number): string {
-  return dayjs.duration(minutes, 'minutes').format('HH:mm')
-}
-
-function isSlotOverlapping(slotA: TimeRange, slotB: TimeRange) {
-  return slotA.start < slotB.end && slotA.end > slotB.start
-}
-
-function toDDMMYYYY(date: Dayjs) {
-  return dayjs(date).format('DD-MM-YYYY')
 }

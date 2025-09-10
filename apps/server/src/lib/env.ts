@@ -13,5 +13,7 @@ export const env = z
     GOOGLE_CLIENT_SECRET: z.string(),
     JWT_SECRET: z.string(),
     NODE_ENV: z.enum([NodeEnv.development, NodeEnv.production]).default(NodeEnv.development),
+    RAZORPAY_KEY_ID: z.string(),
+    RAZORPAY_KEY_SECRET: z.string(),
   })
   .parse(process.env)

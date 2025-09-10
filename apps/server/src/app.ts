@@ -6,6 +6,7 @@ import { type HonoContext } from './lib/context'
 import { config } from './config'
 import { invariant } from './lib/utils'
 import { expertsApp } from './routes/experts/experts.routes'
+import { verificationApp } from './routes/verification/verification.routes'
 import { bookingApp } from './routes/booking/booking.routes'
 
 invariant(config, 'config must be present')
@@ -28,7 +29,7 @@ const app = new Hono<{ Variables: HonoContext }>()
     return auth.handler(c.req.raw)
   })
   .route('/experts', expertsApp)
-  .route('/booking', bookingApp)
+  .route('/verification', verificationApp)
   .use(async (c, next) => {
     const session = await auth.api.getSession({
       headers: c.req.raw.headers,
@@ -41,6 +42,7 @@ const app = new Hono<{ Variables: HonoContext }>()
     return next()
   })
   .route('/user', userApp)
+  .route('/booking', bookingApp)
 
 export { app }
 export type App = typeof app
