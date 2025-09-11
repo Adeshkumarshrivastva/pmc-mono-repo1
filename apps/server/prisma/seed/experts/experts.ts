@@ -61,7 +61,7 @@ export async function seedExperts(prisma: PrismaClient) {
       })
 
       const baseDate = dayjs.utc('2025-01-01')
-      const days: DayOfWeek[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']
+      const days: DayOfWeek[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']
       const availabilities = days.flatMap((day) => [
         { dayOfTheWeek: day, startHour: 4, startMinute: 30, endHour: 6, endMinute: 30 }, //  10:00 AM to 12:00 PM IST
         { dayOfTheWeek: day, startHour: 8, startMinute: 30, endHour: 11, endMinute: 30 }, //  2:00 PM to 5:00 PM IST

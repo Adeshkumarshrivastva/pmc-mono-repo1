@@ -2,6 +2,7 @@ import { useQueryState } from 'nuqs'
 import { z } from 'zod'
 import dayjs from '@/lib/dayjs'
 import { toDDMMYYYY } from '@/lib/date'
+import { DATE_FORMAT } from '@/lib/booking'
 
 const monthSchema = z.coerce.number().int().min(1).max(12)
 const yearSchema = z.coerce.number().int().min(2000).max(2100)
@@ -10,7 +11,7 @@ const dateSchema = z
   .regex(/^\d{2}-\d{2}-\d{4}$/)
   .refine(
     (dateStr) => {
-      return dayjs(dateStr, 'DD-MM-YYYY', true).isValid()
+      return dayjs(dateStr, DATE_FORMAT, true).isValid()
     },
     { message: 'Invalid date' },
   )
@@ -66,11 +67,11 @@ export const useBooking = () => {
   })
 
   const getSelectedDate = () => {
-    return dayjs(date, 'DD-MM-YYYY').toDate()
+    return dayjs(date, DATE_FORMAT).toDate()
   }
 
   const setSelectedDate = (newDate: Date) => {
-    const currentDate = dayjs(date, 'DD-MM-YYYY')
+    const currentDate = dayjs(date, DATE_FORMAT)
 
     if (!dayjs(newDate).isSame(currentDate)) {
       setDate(toDDMMYYYY(newDate))

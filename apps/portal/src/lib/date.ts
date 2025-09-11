@@ -1,7 +1,7 @@
 import type { Dayjs } from 'dayjs'
 import dayjs from './dayjs'
 
-const MINUTES_PER_HOUR = 60
+export const MINUTES_PER_HOUR = 60
 
 export const today = dayjs().toDate()
 

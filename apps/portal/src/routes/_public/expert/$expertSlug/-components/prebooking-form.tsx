@@ -18,6 +18,8 @@ import { loadRazorpayScript } from '@/lib/razorpay'
 type PrebookingFormProps = {
   serviceId?: string
   expertId?: string
+  expertSlug: string
+  serviceSlug: string
   phoneNumber: string
 }
 
@@ -27,7 +29,13 @@ const prebookingFormSchema = z.object({
   serviceMode: z.enum(SERVICE_MODES),
 })
 
-export default function PrebookingForm({ serviceId, expertId, phoneNumber }: PrebookingFormProps) {
+export default function PrebookingForm({
+  serviceId,
+  expertId,
+  phoneNumber,
+  expertSlug,
+  serviceSlug,
+}: PrebookingFormProps) {
   invariant(serviceId, 'service id must be present')
   invariant(expertId, 'expert Id must be present')
 
@@ -65,7 +73,7 @@ export default function PrebookingForm({ serviceId, expertId, phoneNumber }: Pre
           escape: false,
           ondismiss: () => {
             toast.error('Payment was not completed. Please try again.')
-            // TODO: redirect to service booking initial page
+            navigate({ to: '/expert/$expertSlug/$serviceSlug', params: { expertSlug, serviceSlug }, replace: true })
           },
         },
         handler: () => {
