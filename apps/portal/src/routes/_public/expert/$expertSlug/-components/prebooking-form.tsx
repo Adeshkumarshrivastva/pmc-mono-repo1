@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { invariant } from '@tanstack/react-router'
+import { invariant, useNavigate } from '@tanstack/react-router'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -27,11 +27,13 @@ const prebookingFormSchema = z.object({
   serviceMode: z.enum(SERVICE_MODES),
 })
 
-export default function PrebookingForm({ serviceId, expertId }: PrebookingFormProps) {
+export default function PrebookingForm({ serviceId, expertId, phoneNumber }: PrebookingFormProps) {
   invariant(serviceId, 'service id must be present')
   invariant(expertId, 'expert Id must be present')
 
+  const navigate = useNavigate()
   const { getSelectedSlot } = useBooking()
+
   const selectedSlot = getSelectedSlot()
   invariant(selectedSlot, 'selectedSlot must be present')
 
@@ -57,7 +59,8 @@ export default function PrebookingForm({ serviceId, expertId }: PrebookingFormPr
         amount: Number(data.amount),
         currency: 'INR',
         name: 'Service Booking',
-        prefill: { fullName: patientName, email: patientEmail },
+        prefill: { fullName: patientName, email: patientEmail, contact: phoneNumber },
+        order_id: data.id,
         modal: {
           escape: false,
           ondismiss: () => {
@@ -66,13 +69,20 @@ export default function PrebookingForm({ serviceId, expertId }: PrebookingFormPr
           },
         },
         handler: () => {
-          //TODO: redirect to booking confirmation page
+          navigate({
+            to: '/bookings/$bookingId',
+            params: {
+              bookingId: data.bookingId,
+            },
+            replace: true,
+          })
         },
         description: 'Payment for service booking',
         theme: {
           color: '#385246',
         },
       }
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const razorpay = new (window as any).Razorpay(options)
       razorpay.open()
@@ -93,7 +103,7 @@ export default function PrebookingForm({ serviceId, expertId }: PrebookingFormPr
             formInput: values,
             serviceId: serviceId,
             expertId: expertId,
-            startDateTime: new Date(selectedSlot).toString(),
+            startDateTime: `${selectedSlot.toJSON()}`,
           })
         })}
       >

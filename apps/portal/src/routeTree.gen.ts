@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as PublicBookingsBookingIdRouteImport } from './routes/_public/bookings/$bookingId'
 import { Route as PublicExpertExpertSlugIndexRouteImport } from './routes/_public/expert/$expertSlug/index'
 import { Route as PublicExpertExpertSlugServiceSlugRouteImport } from './routes/_public/expert/$expertSlug/$serviceSlug'
 
@@ -29,6 +30,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+const PublicBookingsBookingIdRoute = PublicBookingsBookingIdRouteImport.update({
+  id: '/_public/bookings/$bookingId',
+  path: '/bookings/$bookingId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicExpertExpertSlugIndexRoute =
   PublicExpertExpertSlugIndexRouteImport.update({
     id: '/_public/expert/$expertSlug/',
@@ -45,12 +51,14 @@ const PublicExpertExpertSlugServiceSlugRoute =
 export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/': typeof AppIndexRoute
+  '/bookings/$bookingId': typeof PublicBookingsBookingIdRoute
   '/expert/$expertSlug/$serviceSlug': typeof PublicExpertExpertSlugServiceSlugRoute
   '/expert/$expertSlug': typeof PublicExpertExpertSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/': typeof AppIndexRoute
+  '/bookings/$bookingId': typeof PublicBookingsBookingIdRoute
   '/expert/$expertSlug/$serviceSlug': typeof PublicExpertExpertSlugServiceSlugRoute
   '/expert/$expertSlug': typeof PublicExpertExpertSlugIndexRoute
 }
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_app/': typeof AppIndexRoute
+  '/_public/bookings/$bookingId': typeof PublicBookingsBookingIdRoute
   '/_public/expert/$expertSlug/$serviceSlug': typeof PublicExpertExpertSlugServiceSlugRoute
   '/_public/expert/$expertSlug/': typeof PublicExpertExpertSlugIndexRoute
 }
@@ -67,12 +76,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/login'
     | '/'
+    | '/bookings/$bookingId'
     | '/expert/$expertSlug/$serviceSlug'
     | '/expert/$expertSlug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/'
+    | '/bookings/$bookingId'
     | '/expert/$expertSlug/$serviceSlug'
     | '/expert/$expertSlug'
   id:
@@ -80,6 +91,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_auth/login'
     | '/_app/'
+    | '/_public/bookings/$bookingId'
     | '/_public/expert/$expertSlug/$serviceSlug'
     | '/_public/expert/$expertSlug/'
   fileRoutesById: FileRoutesById
@@ -87,6 +99,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
+  PublicBookingsBookingIdRoute: typeof PublicBookingsBookingIdRoute
   PublicExpertExpertSlugServiceSlugRoute: typeof PublicExpertExpertSlugServiceSlugRoute
   PublicExpertExpertSlugIndexRoute: typeof PublicExpertExpertSlugIndexRoute
 }
@@ -113,6 +126,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/_public/bookings/$bookingId': {
+      id: '/_public/bookings/$bookingId'
+      path: '/bookings/$bookingId'
+      fullPath: '/bookings/$bookingId'
+      preLoaderRoute: typeof PublicBookingsBookingIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/expert/$expertSlug/': {
       id: '/_public/expert/$expertSlug/'
@@ -144,6 +164,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
+  PublicBookingsBookingIdRoute: PublicBookingsBookingIdRoute,
   PublicExpertExpertSlugServiceSlugRoute:
     PublicExpertExpertSlugServiceSlugRoute,
   PublicExpertExpertSlugIndexRoute: PublicExpertExpertSlugIndexRoute,

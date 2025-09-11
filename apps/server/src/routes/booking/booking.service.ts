@@ -118,7 +118,7 @@ export async function createBooking(c: C, input: CreateBookingInput) {
           serviceCurrency: service.currency,
           servicePrice: service.price,
           bookingId: draftBooking.id,
-          // TODO: take partial amount from patient
+          // TODO: Later, we will take the partial payment amount as input from the patient
           amountPaid: service.price,
           isPartialPayment: false,
           amountCurrency: 'INR',
@@ -132,6 +132,7 @@ export async function createBooking(c: C, input: CreateBookingInput) {
       amount: result.pendingPayment.amountPaid * 100,
       currency: result.pendingPayment.serviceCurrency,
       notes: {
+        bookingId: result.draftBooking.id,
         serviceId: service.id,
         serviceName: service.name,
         servicePrice: service.price,
@@ -141,10 +142,17 @@ export async function createBooking(c: C, input: CreateBookingInput) {
       },
     })
 
-    return c.json({ success: true, ...razorpayOrder })
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error creating booking:', error)
+    await prisma.payment.update({
+      where: {
+        id: result.pendingPayment.id,
+      },
+      data: {
+        razorpayOrderId: razorpayOrder.id,
+      },
+    })
+
+    return c.json({ success: true, bookingId: result.draftBooking.id, ...razorpayOrder })
+  } catch {
     return c.json({ error: 'Failed to create booking' }, 500)
   }
 }

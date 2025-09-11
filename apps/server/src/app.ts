@@ -8,6 +8,7 @@ import { invariant } from './lib/utils'
 import { expertsApp } from './routes/experts/experts.routes'
 import { verificationApp } from './routes/verification/verification.routes'
 import { bookingApp } from './routes/booking/booking.routes'
+import { webhooksApp } from './routes/webhooks/webhooks.routes'
 
 invariant(config, 'config must be present')
 
@@ -30,6 +31,7 @@ const app = new Hono<{ Variables: HonoContext }>()
   })
   .route('/experts', expertsApp)
   .route('/verification', verificationApp)
+  .route('/webhooks', webhooksApp)
   .use(async (c, next) => {
     const session = await auth.api.getSession({
       headers: c.req.raw.headers,

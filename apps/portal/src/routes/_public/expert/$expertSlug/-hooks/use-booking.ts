@@ -99,7 +99,7 @@ export const useBooking = () => {
   }
 
   const setSelectedSlot = (newDateTime: Date | null) => {
-    const newSlot = newDateTime ? dayjs(newDateTime).utc().toISOString() : null
+    const newSlot = newDateTime ? dayjs(newDateTime).utc().toJSON() : null
 
     if (slot !== newSlot) {
       setSlot(newSlot)
