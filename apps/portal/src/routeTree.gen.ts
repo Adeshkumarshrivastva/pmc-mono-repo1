@@ -65,7 +65,13 @@ export interface FileRouteTypes {
   fullPaths: '/login' | '/' | '/experts/$expertId' | '/experts'
   fileRoutesByTo: FileRoutesByTo
   to: '/login' | '/' | '/experts/$expertId' | '/experts'
-  id: '__root__' | '/_auth' | '/_auth/login' | '/_app/' | '/_public/experts/$expertId' | '/_public/experts/'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_auth/login'
+    | '/_app/'
+    | '/_public/experts/$expertId'
+    | '/_public/experts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -131,4 +137,6 @@ const rootRouteChildren: RootRouteChildren = {
   PublicExpertsExpertIdRoute: PublicExpertsExpertIdRoute,
   PublicExpertsIndexRoute: PublicExpertsIndexRoute,
 }
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
