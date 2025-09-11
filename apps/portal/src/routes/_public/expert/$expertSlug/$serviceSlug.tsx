@@ -59,13 +59,13 @@ function ExpertServiceBookingPage() {
           .with({ status: 'error' }, () => <div>Error loading service</div>)
           .with({ status: 'success' }, ({ data: service }) => {
             return (
-              <div className="h-full xl:max-h-[700px] flex flex-col xl:flex-row xl:justify-center xl:rounded-md xl:shadow-md">
+              <div className="h-full xl:max-h-[700px] flex flex-col xl:flex-row xl:justify-center xl:rounded-md xl:shadow-md bg-background">
                 {match(mode)
                   .returnType<React.ReactNode>()
                   .with({ type: 'select_slot' }, () => {
                     return (
                       <>
-                        <div className="w-full h-full xl:max-w-sm bg-background xl:rounded-l-xl">
+                        <div className="w-full h-full xl:max-w-sm  xl:rounded-l-xl">
                           <BookingSummary
                             mode={mode}
                             service={service}
@@ -75,11 +75,11 @@ function ExpertServiceBookingPage() {
                           />
                         </div>
 
-                        <div className="h-full xl:flex-1 flex justify-center bg-background rounded-none xl:border-l xl:border-r p-4 md:p-16 xl:p-4">
+                        <div className="h-full xl:flex-1 flex justify-center  rounded-none xl:border-l xl:border-r p-4 md:p-16 xl:p-4">
                           <BookingCalendar />
                         </div>
 
-                        <div className="w-full h-full flex flex-col xl:max-w-sm bg-background rounded-none xl:rounded-r-xl">
+                        <div className="w-full h-full flex flex-col xl:max-w-sm  rounded-none xl:rounded-r-xl">
                           <AvailableSlots
                             serviceSlug={serviceSlug}
                             expertSlug={expertSlug}
@@ -98,7 +98,7 @@ function ExpertServiceBookingPage() {
                   .with({ type: 'verify_identity' }, () => {
                     return (
                       <>
-                        <div className="w-full xl:max-w-sm bg-background xl:rounded-l-xl">
+                        <div className="w-full xl:max-w-sm  xl:rounded-l-xl">
                           <BookingSummary
                             service={service}
                             mode={mode}
@@ -110,7 +110,7 @@ function ExpertServiceBookingPage() {
                           />
                         </div>
                         <Separator className="hidden xl:block" orientation="vertical" />
-                        <div className="w-full h-full flex flex-col space-y-4 bg-background rounded-none xl:rounded-r-xl p-6">
+                        <div className="w-full h-full flex flex-col space-y-4  rounded-none xl:rounded-r-xl p-6">
                           <h2 className="text-2xl font-semibold text-foreground">Verify Your Identity</h2>
                           <div className="w-full">
                             <PhoneVerificationForm
@@ -126,7 +126,7 @@ function ExpertServiceBookingPage() {
                   .with({ type: 'fill_prebooking_info' }, (mode) => {
                     return (
                       <>
-                        <div className="w-full xl:max-w-sm bg-background xl:rounded-l-xl">
+                        <div className="w-full xl:max-w-sm  xl:rounded-l-xl">
                           <BookingSummary
                             service={service}
                             mode={mode}
@@ -138,7 +138,7 @@ function ExpertServiceBookingPage() {
                           />
                         </div>
                         <Separator className="hidden xl:block" orientation="vertical" />
-                        <div className="w-full h-full bg-background rounded-none xl:rounded-r-xl space-y-4 p-6">
+                        <div className="w-full h-full  rounded-none xl:rounded-r-xl space-y-4 p-6">
                           <h2 className="text-2xl font-semibold text-foreground">Enter Details</h2>
                           <div className="w-full max-w-sm">
                             <PrebookingForm

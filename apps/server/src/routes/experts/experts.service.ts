@@ -348,3 +348,20 @@ export async function getExpertMonthlyAvailableSlots(
     return c.json({ error: `Failed to get monthly available slots - ${errorMessage}` }, 500)
   }
 }
+
+export async function getExpertBooking(c: C, bookingId: string) {
+  const booking = await prisma.booking.findUnique({
+    where: {
+      id: bookingId,
+    },
+    include: {
+      expert: true,
+    },
+  })
+
+  if (!booking) {
+    return c.json({ error: 'Booking not found' }, 404)
+  }
+
+  return c.json({ success: true, booking })
+}

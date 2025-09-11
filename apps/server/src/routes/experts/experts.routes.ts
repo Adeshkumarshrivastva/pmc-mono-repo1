@@ -7,6 +7,7 @@ import {
   getExperts,
   getExpertMonthlyAvailableSlots,
   getExpertServiceFromSlug,
+  getExpertBooking,
 } from './experts.service'
 
 export const expertsApp = new Hono<{ Variables: HonoContext }>()
@@ -21,3 +22,4 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
     async (c) =>
       getExpertMonthlyAvailableSlots(c, c.req.param('expertSlug'), c.req.param('serviceSlug'), c.req.valid('query')),
   )
+  .get('/bookings/:bookingId', async (c) => getExpertBooking(c, c.req.param('bookingId')))

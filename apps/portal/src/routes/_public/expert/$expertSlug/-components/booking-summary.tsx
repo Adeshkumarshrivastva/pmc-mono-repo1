@@ -4,9 +4,9 @@ import type { HonoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
 import { useBooking } from '../-hooks/use-booking'
 import type { BookingMode } from '@/lib/booking'
-import { toHHMMA, utcDateToLocalDate } from '@/lib/date'
-import dayjs from '@/lib/dayjs'
 import { Separator } from '@/components/ui/separator'
+import { formatDateTimeRange } from '@/lib/date'
+import dayjs from '@/lib/dayjs'
 
 type BookingSummaryProps = {
   mode: BookingMode
@@ -17,16 +17,6 @@ type BookingSummaryProps = {
 export default function BookingSummary({ mode, onBack, service }: BookingSummaryProps) {
   const { getSelectedSlot } = useBooking()
   const selectedSlot = getSelectedSlot()
-
-  const formatSelectedSlot = (slot: Date, serviceDuration: number) => {
-    const localDate = utcDateToLocalDate(slot)
-    const startTime = dayjs(localDate)
-    const endTime = startTime.add(serviceDuration, 'minute')
-    const dateStr = startTime.format('dddd, MMMM D, YYYY')
-    const startTimeStr = toHHMMA(startTime)
-    const endTimeStr = toHHMMA(endTime)
-    return `${startTimeStr} - ${endTimeStr}, ${dateStr}`
-  }
 
   return (
     <div className="space-y-4">
@@ -60,7 +50,10 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
             <div className="flex items-center gap-2">
               <CalendarIcon className="size-5 text-gray-600" />
               <div className="text-gray-600 font-medium">
-                {formatSelectedSlot(selectedSlot, service.durationInMinutes)}
+                {formatDateTimeRange({
+                  startDateTime: selectedSlot,
+                  endDateTime: dayjs(selectedSlot).add(service.durationInMinutes, 'minutes').toDate(),
+                })}
               </div>
             </div>
           ) : null}
