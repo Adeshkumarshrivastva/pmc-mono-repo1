@@ -1,7 +1,14 @@
 import type { UseQueryResult } from '@tanstack/react-query'
 import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
-import { dateToUtcMinutes, minutesToDate, toDDMMYYYY, toHHMMA, utcMinutesToLocalMinutes } from '@/lib/date'
+import {
+  dateToUtcMinutes,
+  DEFAULT_TIMEZONE,
+  minutesToDate,
+  toDDMMYYYY,
+  toHHMMA,
+  utcMinutesToLocalMinutes,
+} from '@/lib/date'
 import { Separator } from '@/components/ui/separator'
 import { useBooking } from '../-hooks/use-booking'
 import { cn } from '@/lib/utils'
@@ -22,6 +29,15 @@ export default function AvailableSlots({ onNext, getMonthlyAvailableSlotsQuery }
   const handleSelectedSlot = (startTime: number) => {
     const selectedSlot = minutesToDate(utcMinutesToLocalMinutes(startTime), selectedDate)
     setSelectedSlot(selectedSlot)
+  }
+
+  const isSlotSelected = (slotStartTime: number): boolean => {
+    if (!selectedSlot) return false
+
+    const isSameDate = dayjs(selectedSlot).tz(DEFAULT_TIMEZONE).isSame(dayjs(selectedDate), 'date')
+    const isSameTime = dateToUtcMinutes(selectedSlot) === slotStartTime
+
+    return isSameDate && isSameTime
   }
 
   return (
@@ -45,31 +61,14 @@ export default function AvailableSlots({ onNext, getMonthlyAvailableSlotsQuery }
                     </div>
                   ) : (
                     slots.map((slot) => {
-                      let isSelected = false
-
-                      if (selectedSlot) {
-                        const isSameDate = dayjs(selectedSlot).tz('Asia/Kolkata').isSame(dayjs(selectedDate), 'date')
-                        const isSameTime = dateToUtcMinutes(selectedSlot) === slot.startTime
-                        isSelected = isSameDate && isSameTime
-                      }
-
                       return (
-                        <Button
-                          size="lg"
-                          onClick={() => {
-                            handleSelectedSlot(slot.startTime)
-                          }}
-                          variant="outline"
+                        <TimeSlotButton
                           key={`slot-${selectedDate}-${slot.startTime}`}
-                          className={cn(
-                            'w-full',
-                            isSelected
-                              ? 'bg-primary text-secondary hover:bg-primary hover:text-primary-foreground'
-                              : null,
-                          )}
-                        >
-                          <div>{toHHMMA(minutesToDate(utcMinutesToLocalMinutes(slot.startTime), selectedDate))}</div>
-                        </Button>
+                          startTime={slot.startTime}
+                          isSelected={isSlotSelected(slot.startTime)}
+                          selectedDate={selectedDate}
+                          onSelect={handleSelectedSlot}
+                        />
                       )
                     })
                   )}
@@ -94,6 +93,38 @@ export default function AvailableSlots({ onNext, getMonthlyAvailableSlotsQuery }
         })
         .otherwise(() => null)}
     </div>
+  )
+}
+
+function TimeSlotButton({
+  startTime,
+  isSelected,
+  selectedDate,
+  onSelect,
+}: {
+  startTime: number
+  isSelected: boolean
+  selectedDate: Date
+  onSelect: (startTime: number) => void
+}) {
+  const startTimeFormatted = toHHMMA(minutesToDate(utcMinutesToLocalMinutes(startTime), selectedDate))
+
+  return (
+    <Button
+      size="lg"
+      onClick={() => onSelect(startTime)}
+      variant={isSelected ? 'default' : 'outline'}
+      className={cn(
+        'w-full transition-all duration-200 group',
+        isSelected ? 'bg-primary text-secondary hover:bg-primary hover:text-primary-foreground' : null,
+      )}
+    >
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center gap-2">
+          <span className="font-medium">{startTimeFormatted}</span>
+        </div>
+      </div>
+    </Button>
   )
 }
 

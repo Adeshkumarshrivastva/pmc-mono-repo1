@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { match } from 'ts-pattern'
 import { DATE_FORMAT, type MonthlyAvailableSlots } from '@/lib/booking'
 import dayjs from '@/lib/dayjs'
-import { today } from '@/lib/date'
+import { DEFAULT_TIMEZONE, today } from '@/lib/date'
 import { Calendar } from '@/components/ui/calendar'
 import { useBooking } from '../-hooks/use-booking'
 
@@ -55,7 +55,7 @@ export default function BookingCalendar({ getMonthlyAvailableSlotsQuery }: Booki
       return (
         <Calendar
           key={`${month}-${year}`}
-          timeZone="Asia/Kolkata"
+          timeZone={DEFAULT_TIMEZONE}
           mode="single"
           showOutsideDays={false}
           weekStartsOn={1}
