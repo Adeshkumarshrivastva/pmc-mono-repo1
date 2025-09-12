@@ -13,7 +13,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { appointmentFormInput, AppointmentFormInput } from '@/payload/actions/appointments/appointments.input'
+import { appointmentFormInput, type AppointmentFormInput } from '@/payload/actions/appointments/appointments.input'
 import { createAppointment } from '@/payload/actions/appointments/appointments.actions'
 
 type AppointmentFormProps = {

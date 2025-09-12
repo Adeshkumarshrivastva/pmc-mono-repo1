@@ -73,7 +73,7 @@ export default function PrebookingForm({
           escape: false,
           ondismiss: () => {
             toast.error('Payment was not completed. Please try again.')
-            navigate({ to: '/expert/$expertSlug/$serviceSlug', params: { expertSlug, serviceSlug }, replace: true })
+            navigate({ to: '/experts/$expertSlug/$serviceSlug', params: { expertSlug, serviceSlug }, replace: true })
           },
         },
         handler: () => {

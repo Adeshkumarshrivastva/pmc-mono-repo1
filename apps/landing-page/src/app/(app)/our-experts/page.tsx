@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { getPayloadClient } from '@/lib/payload'
-import { Expert, Service } from '@/payload/types'
+import type { Expert, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
 export default function OurExperts() {

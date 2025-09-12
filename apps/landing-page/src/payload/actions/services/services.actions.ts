@@ -1,7 +1,7 @@
 'use server'
 
 import { getPayloadClient } from '@/lib/payload'
-import { GetServiceInput, GetServicesInput } from './services.input'
+import type { GetServiceInput, GetServicesInput } from './services.input'
 
 export async function getServices({ parentServiceSlug }: GetServicesInput) {
   const payload = await getPayloadClient()

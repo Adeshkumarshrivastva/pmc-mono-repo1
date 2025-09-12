@@ -13,7 +13,7 @@ import PrebookingForm from './-components/prebooking-form'
 import type { BookingMode } from '@/lib/booking'
 import { useBooking } from './-hooks/use-booking'
 
-export const Route = createFileRoute('/_public/expert/$expertSlug/$serviceSlug')({
+export const Route = createFileRoute('/_public/experts/$expertSlug/$serviceSlug')({
   component: ExpertServiceBookingPage,
   loader: async ({ context: { authClient } }) => {
     invariant(authClient, 'authClient should be present')
@@ -82,7 +82,7 @@ function ExpertServiceBookingPage() {
                             mode={mode}
                             service={service}
                             onBack={() => {
-                              navigate({ to: '/expert/$expertSlug', params: { expertSlug }, replace: true })
+                              navigate({ to: '/experts/$expertSlug', params: { expertSlug }, replace: true })
                             }}
                           />
                         </div>

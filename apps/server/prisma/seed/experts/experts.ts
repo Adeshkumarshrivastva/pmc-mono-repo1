@@ -46,6 +46,7 @@ export async function seedExperts(prisma: PrismaClient) {
           email: validatedExpert.email,
           emailVerified: true,
           role: 'EXPERT',
+          image: validatedExpert.image,
         },
       })
       const createdExpert = await prisma.expert.create({
