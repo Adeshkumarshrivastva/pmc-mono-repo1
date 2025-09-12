@@ -8,6 +8,7 @@ import { match } from 'ts-pattern'
 import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
+import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/_public/experts/$expertId')({
   component: ExpertCard,
@@ -107,7 +108,10 @@ function ExpertCard() {
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                className={`w-4 h-4 ${i < Math.floor(avgRating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                                className={cn(
+                                  'w-4 h-4',
+                                  i < Math.floor(avgRating) ? 'text-yellow-400 fill-current' : 'text-gray-300',
+                                )}
                               />
                             ))}
                           </div>

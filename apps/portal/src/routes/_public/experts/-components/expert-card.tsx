@@ -25,7 +25,7 @@ type FilterState = {
 
 type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
 
-function ExpertCard({ expert }: { expert: ExpertWithRelations }) {
+function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
   const { servicesProvided, user, name, slug, city, country, qualifications, availability } = expert
   const [selectedMode, setSelectedMode] = useState<ServiceMode>('VIRTUAL')
   const [showAllServices, setShowAllServices] = useState(false)
@@ -469,7 +469,7 @@ function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6">
       {experts.map((expert) => (
-        <ExpertCard key={expert.id} expert={expert} />
+        <ExpertPage key={expert.id} expert={expert} />
       ))}
     </div>
   )
