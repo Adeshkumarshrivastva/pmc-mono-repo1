@@ -44,6 +44,10 @@ export default $config({
     const RazorpayKeyId = new sst.Secret('RAZORPAY_KEY_ID')
     const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
 
+    const SenderEmail = new sst.aws.Email('SenderEmail', {
+      sender: $app.stage === 'production' ? 'no-reply@positivemindcare.com' : 'no-reply-dev@positivemindcare.com',
+    })
+
     new sst.aws.Function('PmcHonoServer', {
       handler: 'apps/server/src/index.handler',
       url: {
@@ -61,6 +65,7 @@ export default $config({
         RAZORPAY_KEY_ID: RazorpayKeyId.value,
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
         JWT_SECRET: JwtSecret.value,
+        EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
       },
     })
 
