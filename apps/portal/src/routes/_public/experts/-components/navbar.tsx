@@ -1,34 +1,32 @@
-'use client'
-
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { Link, useLocation } from '@tanstack/react-router'
 import { useState } from 'react'
 import { ChevronDown, ChevronRight, MenuIcon } from 'lucide-react'
+import type { Service } from '@pmc/server/src/generated/prisma/client'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { CallIcon } from '@/components/ui/icons'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import type { Service } from '@/payload/types'
 import { cn } from '@/lib/utils'
 
 type NavbarProps = { services: Service[] }
 
 const NAV_ITEMS = [
-  { id: 'home', href: '/', label: 'Home' },
-  { id: 'about', href: '/about-us', label: 'About Us' },
-  { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
-  { id: 'services', href: '/services', label: 'Services' },
-  { id: 'our-experts', href: '/our-experts', label: 'Our Experts' },
-  { id: 'webinars', href: '/webinars', label: 'Awareness' },
-  { id: 'contact-us', href: '/contact-us', label: 'Contact' },
+  { id: 'home', href: 'https://positivemindcare.com/', label: 'Home' },
+  { id: 'about', href: 'https://positivemindcare.com/landing-page/about-us', label: 'About Us' },
+  { id: 'deepTms', href: 'https://positivemindcare.com/landing-page/deep-tms', label: 'Deep TMS' },
+  { id: 'services', href: 'https://positivemindcare.com/landing-page/services', label: 'Services' },
+  { id: 'our-experts', href: 'portal/experts', label: 'Our Experts' },
+  { id: 'webinars', href: 'https://positivemindcare.com/landing-page/webinars', label: 'Awareness' },
+  { id: 'contact-us', href: 'https://positivemindcare.com/landing-page/contact-us', label: 'Contact' },
 ] as const
 
 const HOVER_DELAY = 400
 
 export default function Navbar({ services }: NavbarProps) {
-  const pathname = usePathname()
+  const location = useLocation()
+  const pathname = location.pathname
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const handleBooking = () => document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
@@ -36,7 +34,7 @@ export default function Navbar({ services }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
       <nav className="flex items-center justify-between h-full px-4 py-2 mx-auto">
-        <Link href="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <Logo className="size-16" />
           <div className="text-left">
             <div className="text-2xl font-semibold leading-tight">Positive</div>
@@ -52,7 +50,7 @@ export default function Navbar({ services }: NavbarProps) {
             ) : (
               <Link
                 key={item.id}
-                href={item.href}
+                to={item.href}
                 className={cn(
                   'text-lg font-semibold rounded-md px-2 py-1 transition-colors',
                   isActive ? 'text-primary-foreground' : 'text-primary-foreground/50 hover:text-primary-foreground',
@@ -79,7 +77,7 @@ export default function Navbar({ services }: NavbarProps) {
                 <div className="space-y-6">
                   {NAV_ITEMS.map((link) => (
                     <div key={link.id} className="text-lg">
-                      <Link href={link.href} onClick={() => setSheetOpen(false)}>
+                      <Link to={link.href} onClick={() => setSheetOpen(false)}>
                         {link.label}
                       </Link>
                     </div>
@@ -96,7 +94,7 @@ export default function Navbar({ services }: NavbarProps) {
 
 function ServicesMenu({ services, isActive }: { services: Service[]; isActive: boolean }) {
   const [isHovered, setIsHovered] = useState(false)
-  const [activeServiceId, setActiveServiceId] = useState<string | undefined>(services[0].id)
+  const [activeServiceId, setActiveServiceId] = useState<string | undefined>(services[0]?.id)
   const activeService = services.find((service) => service.id === activeServiceId)
 
   return (
@@ -105,14 +103,14 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
       openDelay={HOVER_DELAY}
       onOpenChange={(value) => {
         if (!value) {
-          setActiveServiceId(services[0].id)
+          setActiveServiceId(services[0]?.id)
           setIsHovered(false)
         }
       }}
     >
       <HoverCardTrigger asChild>
         <Link
-          href={'/services'}
+          to={'/services'}
           className={cn(
             'transition-colors rounded-md px-2 py-1',
             isActive || isHovered
@@ -143,7 +141,7 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
                   setActiveServiceId(service.id)
                 }}
               >
-                <Link href={`/services/${service.slug}`} className="group flex w-full">
+                <Link to={`/services/${service.name}`} className="group flex w-full">
                   <button
                     className={cn(
                       'flex w-full justify-between text-left items-center py-2 px-4 space-x-2 cursor-pointer',
@@ -168,7 +166,7 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
                 return (
                   <Link
                     key={typedSubService.id}
-                    href={`/services/${activeService.slug}/${typedSubService.slug}`}
+                    to={`/services/${activeService.slug}/${typedSubService.slug}`}
                     className="flex w-full"
                   >
                     <button className="flex w-full text-left items-center py-2 px-4 hover:font-medium space-x-2 cursor-pointer">

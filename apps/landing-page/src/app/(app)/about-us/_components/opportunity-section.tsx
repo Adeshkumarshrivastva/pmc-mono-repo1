@@ -1,7 +1,7 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Button } from '@/components/ui/button'
 import { SolarBag4Linear } from '@/components/ui/icons'
-import { AboutUs } from '@/payload/types'
+import { type AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
 type OpportunitySectionProps = {

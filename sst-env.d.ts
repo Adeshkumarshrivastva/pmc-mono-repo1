@@ -4,7 +4,65 @@
 /* deno-fmt-ignore-file */
 
 declare module 'sst' {
-  export interface Resource {}
+  export interface Resource {
+    BETTER_AUTH_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    DATABASE_URL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_CLIENT_ID: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_CLIENT_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    JWT_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    PAYLOAD_DB_URL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    PAYLOAD_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    PMC_LANDING_PAGE_MEDIA_BUCKET: {
+      name: string
+      type: 'sst.aws.Bucket'
+    }
+    PmcHonoServer: {
+      name: string
+      type: 'sst.aws.Function'
+      url: string
+    }
+    PmcLandingPage: {
+      type: 'sst.aws.Nextjs'
+      url: string
+    }
+    PmcPortal: {
+      type: 'sst.aws.StaticSite'
+      url: string
+    }
+    PmcRouter: {
+      type: 'sst.aws.Router'
+      url: string
+    }
+    RAZORPAY_KEY_ID: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    RAZORPAY_KEY_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+  }
 }
 /// <reference path="sst-env.d.ts" />
 

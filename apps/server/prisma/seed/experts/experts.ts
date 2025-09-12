@@ -45,6 +45,7 @@ export async function seedExperts(prisma: PrismaClient) {
           email: validatedExpert.email,
           emailVerified: true,
           role: 'EXPERT',
+          image: validatedExpert.image,
         },
       })
       const createdExpert = await prisma.expert.create({
@@ -53,7 +54,11 @@ export async function seedExperts(prisma: PrismaClient) {
           name: expert.name,
           city: 'GURGAON',
           country: 'INDIA',
-          slug: `${expert.name}-${expert.type}-${nanoid(4)}`,
+          slug: `${expert.name
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')}-${expert.type}-${nanoid(4)}`,
           qualifications: validatedExpert.qualification,
           userId: user.id,
         },
@@ -82,6 +87,7 @@ export async function seedExperts(prisma: PrismaClient) {
           city: 'GURGAON',
           country: 'INDIA',
           expertId: createdExpert.id,
+          slug: `initial-consultation-${createdExpert.id}-${nanoid(4)}`,
         },
       })
     } catch (error) {
