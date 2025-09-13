@@ -9,6 +9,7 @@ import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { cn } from '@/lib/utils'
+import { CURRENCY_CONFIG } from '@/lib/booking'
 
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
@@ -326,12 +327,6 @@ export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: Se
     icon: Video,
   },
 }
-
-export const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
-  INR: { symbol: '₹' },
-  USD: { symbol: '$' },
-  EUR: { symbol: '€' },
-} as const
 
 const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType }> = {
   PSYCHOLOGIST: {

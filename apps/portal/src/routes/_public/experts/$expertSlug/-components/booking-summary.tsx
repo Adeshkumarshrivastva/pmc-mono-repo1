@@ -1,9 +1,9 @@
-import { ArrowLeftIcon, UserIcon, ClockIcon, IndianRupeeIcon, CalendarIcon } from 'lucide-react'
+import { ArrowLeftIcon, UserIcon, ClockIcon, CreditCardIcon, Calendar1Icon } from 'lucide-react'
 import type { InferResponseType } from 'hono'
 import type { HonoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
 import { useBooking } from '../-hooks/use-booking'
-import type { BookingMode } from '@/lib/booking'
+import { CURRENCY_CONFIG, type BookingMode } from '@/lib/booking'
 import { Separator } from '@/components/ui/separator'
 import { formatDateTimeRange } from '@/lib/date'
 import dayjs from '@/lib/dayjs'
@@ -44,12 +44,19 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
         <div className="space-y-4 px-6">
           <div className="flex items-center gap-2">
             <ClockIcon className="size-5 text-gray-600" />
-            <div className="text-gray-600 font-medium">{service.durationInMinutes} minutes</div>
+            <div className="text-gray-600 font-bold text-sm">{service.durationInMinutes} minutes</div>
+          </div>
+          <div className="flex items-center gap-2">
+            <CreditCardIcon className="size-5 text-gray-600" />
+            <div className="text-gray-600 font-bold text-sm">
+              {CURRENCY_CONFIG[service.currency].symbol}
+              {service.price}
+            </div>
           </div>
           {mode.type !== 'select_slot' && selectedSlot ? (
             <div className="flex items-center gap-2">
-              <CalendarIcon className="size-5 text-gray-600" />
-              <div className="text-gray-600 font-medium">
+              <Calendar1Icon className="size-5 text-gray-600" />
+              <div className="text-gray-600 font-bold text-sm">
                 {formatDateTimeRange({
                   startDateTime: selectedSlot,
                   endDateTime: dayjs(selectedSlot).add(service.durationInMinutes, 'minutes').toDate(),
@@ -57,10 +64,6 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
               </div>
             </div>
           ) : null}
-          <div className="flex items-center gap-2">
-            <IndianRupeeIcon className="size-5 text-gray-600" />
-            <div className="text-gray-600 font-medium">{service.price}</div>
-          </div>
         </div>
       </div>
     </div>

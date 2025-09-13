@@ -66,7 +66,7 @@ export default function PrebookingForm({
         key: env.VITE_PUBLIC_RAZORPAY_KEY_ID,
         amount: Number(data.amount),
         currency: 'INR',
-        name: 'Service Booking',
+        name: 'Positive Mind Care',
         prefill: { fullName: patientName, email: patientEmail, contact: phoneNumber },
         order_id: data.id,
         modal: {
@@ -172,7 +172,7 @@ export default function PrebookingForm({
           type="submit"
           className="mt-4"
         >
-          Confirm & Pay
+          Make Payment
         </Button>
       </form>
     </Form>

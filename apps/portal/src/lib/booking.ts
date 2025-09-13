@@ -16,3 +16,9 @@ export type MonthlyAvailableSlots = InferResponseType<
 >
 
 export const DATE_FORMAT = 'DD-MM-YYYY'
+
+export const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
+  INR: { symbol: '₹' },
+  USD: { symbol: '$' },
+  EUR: { symbol: '€' },
+} as const

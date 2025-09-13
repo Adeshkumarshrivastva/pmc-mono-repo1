@@ -9,7 +9,8 @@ import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { Combobox } from '@/components/ui/combo-box'
-import { CURRENCY_CONFIG, SERVICE_MODE_CONFIG } from '../$expertSlug'
+import { SERVICE_MODE_CONFIG } from '../$expertSlug'
+import { CURRENCY_CONFIG } from '@/lib/booking'
 
 type FilterState = {
   search: string
