@@ -46,7 +46,6 @@ export async function seedExperts(prisma: PrismaClient) {
           email: validatedExpert.email,
           emailVerified: true,
           role: 'EXPERT',
-          image: validatedExpert.image,
         },
       })
       const createdExpert = await prisma.expert.create({
@@ -57,6 +56,7 @@ export async function seedExperts(prisma: PrismaClient) {
           country: 'INDIA',
           slug: `${generateExpertSlug(expert.name)}`,
           qualifications: validatedExpert.qualification,
+          image: validatedExpert.image,
           userId: user.id,
         },
       })

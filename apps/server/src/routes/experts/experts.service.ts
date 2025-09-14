@@ -125,7 +125,6 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
       where: { slug: expertSlug },
       include: {
         servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
-        user: { select: { id: true, name: true, image: true, email: true } },
       },
     })
 

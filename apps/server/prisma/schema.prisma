@@ -95,6 +95,7 @@ model Expert {
   userId           String               @unique
   slug             String               @unique
   name             String
+  image            String?
   type             ExpertType
   timezone         String               @default("Asia/Kolkata")
   city             String

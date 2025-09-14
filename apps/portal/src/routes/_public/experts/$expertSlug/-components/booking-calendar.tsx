@@ -58,7 +58,6 @@ export default function BookingCalendar({ getMonthlyAvailableSlotsQuery }: Booki
           timeZone={DEFAULT_TIMEZONE}
           mode="single"
           showOutsideDays={false}
-          weekStartsOn={1}
           month={currentMonthDate}
           startMonth={dayjs().toDate()}
           selected={getSelectedDate()}

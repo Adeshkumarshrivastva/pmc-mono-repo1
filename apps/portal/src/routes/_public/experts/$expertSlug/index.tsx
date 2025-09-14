@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Calendar, Video, MapPin, Clock, Star, type LucideIcon, ArrowLeft, UserIcon } from 'lucide-react'
+import { Video, MapPin, Clock, Star, type LucideIcon, ArrowLeft, UserIcon } from 'lucide-react'
 import type { ExpertType, ServiceMode } from '@pmc/server/src/generated/prisma/client'
 import { match } from 'ts-pattern'
 import type { InferResponseType } from 'hono'
@@ -54,7 +54,7 @@ function ExpertPage() {
     })
 
     .with({ status: 'success' }, ({ data }) => {
-      const { servicesProvided, user, name, type, city, country, bio, qualifications, avgRating } = data.expert
+      const { servicesProvided, name, type, city, country, bio, qualifications, avgRating, image } = data.expert
 
       const filteredServices = servicesProvided.filter((service) => service.availableModes.includes(selectedMode)) || []
 
@@ -87,10 +87,10 @@ function ExpertPage() {
               <div className="relative bg-card/90 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6 lg:p-8">
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
                   <div className="relative flex-shrink-0">
-                    {user.image ? (
+                    {image ? (
                       <div className="relative flex-shrink-0">
                         <div className="w-36 h-48">
-                          <img src={user.image} alt={name} className="w-full h-full object-cover rounded-xl" />
+                          <img src={image} alt={name} className="w-full h-full object-cover rounded-xl" />
                         </div>
                       </div>
                     ) : (
@@ -154,15 +154,6 @@ function ExpertPage() {
                           </p>
                         </div>
                       ) : null}
-                    </div>
-
-                    <div className="flex  justiy-end sm:flex-row gap-3">
-                      <Button
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg font-medium text-sm shadow-md"
-                        icon={<Calendar className="w-4 h-4 mr-2" />}
-                      >
-                        Book Session
-                      </Button>
                     </div>
                   </div>
                 </div>

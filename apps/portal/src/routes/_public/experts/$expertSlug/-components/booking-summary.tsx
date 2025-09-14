@@ -34,9 +34,13 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
         <div className="space-y-2 px-6">
           <div className="text-xl font-semibold">{service.name}</div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-200 rounded-full">
-              <UserIcon className="size-6 text-gray-400" />
-            </div>
+            {service.expert.image ? (
+              <img src={service.expert.image} alt={service.expert.name} className="size-12 rounded-full" />
+            ) : (
+              <div className="flex items-center justify-center w-12 h-12 bg-gray-200 rounded-full">
+                <UserIcon className="size-6 text-gray-400" />{' '}
+              </div>
+            )}
             <div className="text-gray-600">{service.expert.name}</div>
           </div>
         </div>
