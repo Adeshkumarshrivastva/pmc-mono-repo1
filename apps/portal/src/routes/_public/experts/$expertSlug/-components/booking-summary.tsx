@@ -1,11 +1,11 @@
-import { ArrowLeftIcon, UserIcon, ClockIcon, CreditCardIcon, Calendar1Icon } from 'lucide-react'
+import { ArrowLeftIcon, UserIcon, ClockIcon, CreditCardIcon, GlobeIcon, CalendarIcon } from 'lucide-react'
 import type { InferResponseType } from 'hono'
 import type { HonoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
 import { useBooking } from '../-hooks/use-booking'
 import { CURRENCY_CONFIG, type BookingMode } from '@/lib/booking'
 import { Separator } from '@/components/ui/separator'
-import { formatDateTimeRange } from '@/lib/date'
+import { DEFAULT_TIMEZONE, formatDateTimeRange } from '@/lib/date'
 import dayjs from '@/lib/dayjs'
 
 type BookingSummaryProps = {
@@ -41,32 +41,38 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
                 <UserIcon className="size-6 text-gray-400" />{' '}
               </div>
             )}
-            <div className="text-gray-600">{service.expert.name}</div>
+            <div className="text-muted-foreground font-bold">{service.expert.name}</div>
           </div>
         </div>
         <Separator className="hidden xl:block" />
         <div className="space-y-4 px-6">
           <div className="flex items-center gap-2">
-            <ClockIcon className="size-5 text-gray-600" />
-            <div className="text-gray-600 font-bold text-sm">{service.durationInMinutes} minutes</div>
+            <ClockIcon className="size-5 text-muted-foreground" />
+            <div className="text-muted-foreground font-bold text-sm">{service.durationInMinutes} minutes</div>
           </div>
           <div className="flex items-center gap-2">
-            <CreditCardIcon className="size-5 text-gray-600" />
-            <div className="text-gray-600 font-bold text-sm">
+            <CreditCardIcon className="size-5 text-muted-foreground" />
+            <div className="text-muted-foreground font-bold text-sm">
               {CURRENCY_CONFIG[service.currency].symbol}
               {service.price}
             </div>
           </div>
           {mode.type !== 'select_slot' && selectedSlot ? (
-            <div className="flex items-center gap-2">
-              <Calendar1Icon className="size-5 text-gray-600" />
-              <div className="text-gray-600 font-bold text-sm">
-                {formatDateTimeRange({
-                  startDateTime: selectedSlot,
-                  endDateTime: dayjs(selectedSlot).add(service.durationInMinutes, 'minutes').toDate(),
-                })}
+            <>
+              <div className="flex items-center gap-2">
+                <CalendarIcon className="size-5 text-muted-foreground" />
+                <div className="text-muted-foreground font-bold text-sm">
+                  {formatDateTimeRange({
+                    startDateTime: selectedSlot,
+                    endDateTime: dayjs(selectedSlot).add(service.durationInMinutes, 'minutes').toDate(),
+                  })}
+                </div>
               </div>
-            </div>
+              <div className="flex items-center gap-2">
+                <GlobeIcon className="size-5 text-muted-foreground" />
+                <div className="text-muted-foreground font-bold text-sm">{DEFAULT_TIMEZONE}</div>
+              </div>
+            </>
           ) : null}
         </div>
       </div>
