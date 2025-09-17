@@ -46,7 +46,27 @@ export default function BookingCalendar({ getMonthlyAvailableSlotsQuery }: Booki
   return match(getMonthlyAvailableSlotsQuery)
     .returnType<React.ReactNode>()
     .with({ status: 'pending' }, () => {
-      return <CalendarSkeleton />
+      return (
+        <div className="w-full animate-pulse">
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-8 w-8 bg-gray-200 rounded-md" />
+            <div className="h-6 w-28 bg-gray-200 rounded-md" />
+            <div className="h-8 w-8 bg-gray-200 rounded-md" />
+          </div>
+
+          <div className="grid grid-cols-7 gap-1">
+            {Array.from({ length: 31 }).map((_, i) => (
+              <div
+                key={i}
+                className="aspect-square bg-gray-200 rounded"
+                style={{
+                  opacity: 0.4 + i * 0.1,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )
     })
     .with({ status: 'error' }, () => {
       return <div>Error Loading slots</div>
@@ -75,28 +95,4 @@ export default function BookingCalendar({ getMonthlyAvailableSlotsQuery }: Booki
       )
     })
     .otherwise(() => null)
-}
-
-function CalendarSkeleton() {
-  return (
-    <div className="w-full animate-pulse">
-      <div className="flex items-center justify-between mb-4">
-        <div className="h-8 w-8 bg-gray-200 rounded-md" />
-        <div className="h-6 w-28 bg-gray-200 rounded-md" />
-        <div className="h-8 w-8 bg-gray-200 rounded-md" />
-      </div>
-
-      <div className="grid grid-cols-7 gap-1">
-        {Array.from({ length: 31 }).map((_, i) => (
-          <div
-            key={i}
-            className="aspect-square bg-gray-200 rounded"
-            style={{
-              opacity: 0.4 + i * 0.1,
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  )
 }

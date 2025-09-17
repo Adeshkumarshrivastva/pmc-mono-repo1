@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { createFileRoute, invariant, redirect, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { honoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
-import { getErrorMessage } from '@/lib/utils'
+import { getErrorMessage, invariant } from '@/lib/utils'
 
 export const Route = createFileRoute('/_app/')({
-  beforeLoad: async ({ context: { authClient } }) => {
+  beforeLoad: async () => {
     invariant(authClient, 'authClient should be present')
     const session = await authClient.getSession()
     if (!session.data) {
