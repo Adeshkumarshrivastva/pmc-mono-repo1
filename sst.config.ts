@@ -45,6 +45,7 @@ export default $config({
     const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
 
     new sst.aws.Function('PmcHonoServer', {
+      architecture: 'arm64',
       handler: 'apps/server/src/index.handler',
       url: {
         router: {
@@ -62,6 +63,12 @@ export default $config({
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
         JWT_SECRET: JwtSecret.value,
       },
+      copyFiles: [
+        {
+          from: 'apps/server/src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
+          to: 'src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
+        },
+      ],
     })
 
     new sst.aws.StaticSite('PmcPortal', {
