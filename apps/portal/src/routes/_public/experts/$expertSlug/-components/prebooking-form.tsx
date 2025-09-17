@@ -83,6 +83,7 @@ export default function PrebookingForm({
               bookingId: data.bookingId,
             },
             replace: true,
+            reloadDocument: true,
           })
         },
         description: 'Payment for service booking',
