@@ -1,27 +1,28 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Calendar, Video, MapPin, Clock, Star, type LucideIcon, ArrowLeft, UserIcon } from 'lucide-react'
+import { Video, MapPin, Clock, Star, type LucideIcon, ArrowLeft, UserIcon } from 'lucide-react'
 import type { ExpertType, ServiceMode } from '@pmc/server/src/generated/prisma/client'
 import { match } from 'ts-pattern'
 import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { cn } from '@/lib/utils'
+import { CURRENCY_CONFIG } from '@/lib/booking'
 
-export const Route = createFileRoute('/_public/experts/$expertId')({
-  component: ExpertCard,
+export const Route = createFileRoute('/_public/experts/$expertSlug/')({
+  component: ExpertPage,
 })
 
-function ExpertCard() {
-  const { expertId } = Route.useParams()
-
+function ExpertPage() {
+  const { expertSlug } = Route.useParams()
+  const navigate = useNavigate()
   const [selectedMode] = useState<ServiceMode>('VIRTUAL')
 
   const getExpertQuery = useQuery({
-    queryKey: ['expert', expertId],
-    queryFn: () => fetchExpertDetails(expertId),
+    queryKey: ['expert', expertSlug],
+    queryFn: () => fetchExpertDetails(expertSlug),
   })
 
   return match(getExpertQuery)
@@ -53,7 +54,7 @@ function ExpertCard() {
     })
 
     .with({ status: 'success' }, ({ data }) => {
-      const { servicesProvided, user, name, type, city, country, bio, qualifications, avgRating } = data?.expert
+      const { servicesProvided, name, type, city, country, bio, qualifications, avgRating, image } = data.expert
 
       const filteredServices = servicesProvided.filter((service) => service.availableModes.includes(selectedMode)) || []
 
@@ -86,10 +87,10 @@ function ExpertCard() {
               <div className="relative bg-card/90 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6 lg:p-8">
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
                   <div className="relative flex-shrink-0">
-                    {user.image ? (
+                    {image ? (
                       <div className="relative flex-shrink-0">
                         <div className="w-36 h-48">
-                          <img src={user.image} alt={name} className="w-full h-full object-cover rounded-xl" />
+                          <img src={image} alt={name} className="w-full h-full object-cover rounded-xl" />
                         </div>
                       </div>
                     ) : (
@@ -154,15 +155,6 @@ function ExpertCard() {
                         </div>
                       ) : null}
                     </div>
-
-                    <div className="flex  justiy-end sm:flex-row gap-3">
-                      <Button
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg font-medium text-sm shadow-md"
-                        icon={<Calendar className="w-4 h-4 mr-2" />}
-                      >
-                        Book Session
-                      </Button>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -181,7 +173,19 @@ function ExpertCard() {
               {servicesProvided && servicesProvided.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {filteredServices.map((service, index) => (
-                    <ServiceCard key={service.id || index} service={service} onBook={() => {}} />
+                    <ServiceCard
+                      key={service.id || index}
+                      service={service}
+                      onBook={() => {
+                        navigate({
+                          to: '/experts/$expertSlug/$serviceSlug',
+                          params: {
+                            expertSlug: expertSlug,
+                            serviceSlug: service.slug,
+                          },
+                        })
+                      }}
+                    />
                   ))}
                 </div>
               ) : (
@@ -201,53 +205,6 @@ function ExpertCard() {
       )
     })
     .otherwise(() => null)
-}
-
-type ExpertWithDetails = InferResponseType<HonoClient['server']['experts'][':expertSlug']['$get'], 200>['expert']
-
-async function fetchExpertDetails(expertId: string) {
-  const response = await honoClient.server.experts[':expertSlug'].$get({
-    param: { expertSlug: expertId },
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch expert details')
-  }
-  return response.json()
-}
-
-export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: ServiceMode; icon: LucideIcon }> = {
-  IN_PERSON: {
-    label: 'In Person',
-    value: 'IN_PERSON',
-    icon: MapPin,
-  },
-  VIRTUAL: {
-    label: 'Google Meet',
-    value: 'VIRTUAL',
-    icon: Video,
-  },
-}
-
-export const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
-  INR: { symbol: '₹' },
-  USD: { symbol: '$' },
-  EUR: { symbol: '€' },
-} as const
-
-const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType }> = {
-  PSYCHOLOGIST: {
-    label: 'Psychologist',
-    value: 'PSYCHOLOGIST',
-  },
-  PSYCHIATRIST: {
-    label: 'Psychiatrist',
-    value: 'PSYCHIATRIST',
-  },
-  CLINICAL_PSYCHOLOGIST: {
-    label: 'Clinical Psychologist',
-    value: 'CLINICAL_PSYCHOLOGIST',
-  },
 }
 
 function ServiceCard({
@@ -334,4 +291,45 @@ function ExpertDetailSkeleton() {
       </div>
     </div>
   )
+}
+
+async function fetchExpertDetails(expertId: string) {
+  const response = await honoClient.server.experts[':expertSlug'].$get({
+    param: { expertSlug: expertId },
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch expert details')
+  }
+  return response.json()
+}
+
+type ExpertWithDetails = InferResponseType<HonoClient['server']['experts'][':expertSlug']['$get'], 200>['expert']
+
+export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: ServiceMode; icon: LucideIcon }> = {
+  IN_PERSON: {
+    label: 'In Person',
+    value: 'IN_PERSON',
+    icon: MapPin,
+  },
+  VIRTUAL: {
+    label: 'Google Meet',
+    value: 'VIRTUAL',
+    icon: Video,
+  },
+}
+
+const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType }> = {
+  PSYCHOLOGIST: {
+    label: 'Psychologist',
+    value: 'PSYCHOLOGIST',
+  },
+  PSYCHIATRIST: {
+    label: 'Psychiatrist',
+    value: 'PSYCHIATRIST',
+  },
+  CLINICAL_PSYCHOLOGIST: {
+    label: 'Clinical Psychologist',
+    value: 'CLINICAL_PSYCHOLOGIST',
+  },
 }

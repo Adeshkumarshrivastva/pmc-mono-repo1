@@ -42,10 +42,10 @@ export async function seedExperts(prisma: PrismaClient) {
           updatedAt: dayjs().toDate(),
           name: validatedExpert.name,
           phoneNumber: validatedExpert.phoneNumber,
+          phoneNumberVerified: true,
           email: validatedExpert.email,
           emailVerified: true,
           role: 'EXPERT',
-          image: validatedExpert.image,
         },
       })
       const createdExpert = await prisma.expert.create({
@@ -54,29 +54,26 @@ export async function seedExperts(prisma: PrismaClient) {
           name: expert.name,
           city: 'GURGAON',
           country: 'INDIA',
-          slug: `${expert.name
-            .toLowerCase()
-            .trim()
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '')}-${expert.type}-${nanoid(4)}`,
+          slug: `${generateExpertSlug(expert.name)}`,
           qualifications: validatedExpert.qualification,
+          image: validatedExpert.image,
           userId: user.id,
         },
       })
 
       const baseDate = dayjs.utc('2025-01-01')
-      const days: DayOfWeek[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']
+      const days: DayOfWeek[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY']
       const availabilities = days.flatMap((day) => [
-        { dayOfTheWeek: day, start: 10, end: 12 },
-        { dayOfTheWeek: day, start: 14, end: 17 },
+        { dayOfTheWeek: day, startHour: 4, startMinute: 30, endHour: 6, endMinute: 30 }, //  10:00 AM to 12:00 PM IST
+        { dayOfTheWeek: day, startHour: 8, startMinute: 30, endHour: 11, endMinute: 30 }, //  2:00 PM to 5:00 PM IST
       ])
 
       await prisma.expertAvailability.createMany({
         data: availabilities.map((availability) => ({
           expertId: createdExpert.id,
           dayOfTheWeek: availability.dayOfTheWeek,
-          startTime: baseDate.hour(availability.start).minute(0).toDate(),
-          endTime: baseDate.hour(availability.end).minute(0).toDate(),
+          startTime: baseDate.hour(availability.startHour).minute(availability.startMinute).toDate(),
+          endTime: baseDate.hour(availability.endHour).minute(availability.endMinute).toDate(),
         })),
       })
 
@@ -87,7 +84,7 @@ export async function seedExperts(prisma: PrismaClient) {
           city: 'GURGAON',
           country: 'INDIA',
           expertId: createdExpert.id,
-          slug: `initial-consultation-${createdExpert.id}-${nanoid(4)}`,
+          slug: 'initial-consultation',
         },
       })
     } catch (error) {
@@ -117,4 +114,16 @@ export async function seedExperts(prisma: PrismaClient) {
       console.log(`Error in creating Experts - ${item.name} - ${item.errorMessage}`)
     }
   }
+}
+
+function generateExpertSlug(name: string): string {
+  const formattedName = name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+
+  const id = nanoid(4)
+
+  return `${formattedName}-${id}`
 }

@@ -1,58 +1,254 @@
-import { sign, verify } from 'hono/jwt'
-import { getCookie, setCookie } from 'hono/cookie'
-import z from 'zod'
-import { BetterAuthError } from 'better-auth'
 import type { C } from '../../lib/context'
-import type { GetPatientByMobileNumberInput, VerifyPatientInput } from './booking.input'
-import { getErrorMessage, MINUTE } from '../../lib/utils'
-import { env } from '../../lib/env'
-import { auth } from '../../lib/auth'
+import { prisma } from '../../lib/db'
+import dayjs from '../../lib/dayjs'
+import type { CreateBookingInput } from './booking.input'
+import { DAY_MAP } from '../../lib/booking'
+import { DayOfWeek } from '../../generated/prisma'
+import { dateToMinutes } from '../../lib/date'
+import { razorpayInstance } from '../../lib/razorpay'
 
-export async function initiatePatientAuth(c: C, input: GetPatientByMobileNumberInput) {
-  try {
-    await auth.api.sendPhoneNumberOTP({ body: { phoneNumber: input.mobileNumber }, asResponse: true })
-    const jwtToken = await sign({ mobileNumber: input.mobileNumber }, env.JWT_SECRET)
-    setCookie(c, 'OTP_VERIFICATION_COOKIE', jwtToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Strict',
-      maxAge: 10 * MINUTE,
+export async function createBooking(c: C, input: CreateBookingInput) {
+  const userId = c.var.user?.id
+  if (!userId) {
+    return c.json({ error: 'Missing userId' }, 400)
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  })
+
+  if (!user) {
+    return c.json({ error: 'User not found' }, 404)
+  }
+
+  const expert = await prisma.expert.findUnique({
+    where: {
+      id: input.expertId,
+    },
+  })
+
+  if (!expert) {
+    return c.json({ error: 'Expert not found' }, 404)
+  }
+
+  if (expert.userId === user.id) {
+    return c.json({ error: 'Expert can not book their own service' }, 403)
+  }
+
+  const service = await prisma.service.findUnique({
+    where: {
+      id: input.serviceId,
+    },
+  })
+
+  if (!service) {
+    return c.json({ error: 'Service not found' }, 404)
+  }
+
+  if (service.expertId !== expert.id) {
+    return c.json({ error: 'Service does not belong to the provided expert' }, 409)
+  }
+
+  let patient = await prisma.patient.findUnique({
+    where: {
+      userId: user.id,
+    },
+  })
+
+  if (!patient) {
+    patient = await prisma.patient.create({
+      data: {
+        userId: user.id,
+      },
     })
-    return c.json({ success: true })
-  } catch (error) {
-    const errorMessage = getErrorMessage(error)
-    return c.json({ error: `Failed to send OTP : ${errorMessage}` }, 500)
+  }
+
+  const startDateTime = new Date(input.startDateTime)
+  const endDateTime = dayjs(startDateTime).add(service.durationInMinutes, 'minutes').toDate()
+
+  const slotCheck = await isSlotAvailable(expert.id, startDateTime, endDateTime)
+  if (!slotCheck.isAvailable) {
+    return c.json({ error: slotCheck.reason || 'Slot not available' }, 404)
+  }
+
+  let virtualLocation = null
+  let inPersonLocation = null
+
+  if (input.mode === 'VIRTUAL') {
+    // TODO: Generate Google Meet link here
+    virtualLocation = null // Will be populated when Google Meet integration is implemented
+  } else if (input.mode === 'IN_PERSON') {
+    inPersonLocation = service.inPersonLocation
+  }
+
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      const draftBooking = await tx.booking.create({
+        data: {
+          status: 'DRAFT',
+          startDateTime: input.startDateTime,
+          endDateTime: endDateTime,
+          expertId: expert.id,
+          patientId: patient.id,
+          patientName: input.patientName,
+          patientEmail: input.patientEmail,
+          serviceId: service.id,
+          serviceName: service.name,
+          servicePrice: service.price,
+          serviceDurationInMinutes: service.durationInMinutes,
+          serviceBufferTimeAfterInMinutes: service.bufferTimeAfterInMinutes,
+          serviceBufferTimeBeforeInMinutes: service.bufferTimeBeforeInMinutes,
+          serviceCurrency: service.currency,
+          preBookingQnA: input.prebookingQnA,
+          mode: input.mode,
+          virtualLocation,
+          inPersonLocation,
+        },
+      })
+
+      const pendingPayment = await tx.payment.create({
+        data: {
+          status: 'PENDING',
+          expertId: expert.id,
+          patientId: patient.id,
+          serviceId: service.id,
+          serviceName: service.name,
+          serviceCurrency: service.currency,
+          servicePrice: service.price,
+          bookingId: draftBooking.id,
+          // TODO: Later, we will take the partial payment amount as input from the patient
+          amountPaid: service.price,
+          isPartialPayment: false,
+          amountCurrency: 'INR',
+        },
+      })
+
+      return { draftBooking, pendingPayment }
+    })
+
+    const razorpayOrder = await razorpayInstance.orders.create({
+      amount: result.pendingPayment.amountPaid * 100,
+      currency: result.pendingPayment.serviceCurrency,
+      notes: {
+        bookingId: result.draftBooking.id,
+        serviceId: service.id,
+        serviceName: service.name,
+        servicePrice: service.price,
+        expertId: expert.id,
+        patientId: patient.id,
+        paymentId: result.pendingPayment.id,
+      },
+    })
+
+    await prisma.payment.update({
+      where: {
+        id: result.pendingPayment.id,
+      },
+      data: {
+        razorpayOrderId: razorpayOrder.id,
+      },
+    })
+
+    return c.json({ success: true, bookingId: result.draftBooking.id, ...razorpayOrder })
+  } catch {
+    return c.json({ error: 'Failed to create booking' }, 500)
   }
 }
 
-export async function verifyPatientAuth(c: C, input: VerifyPatientInput) {
-  const jwtToken = getCookie(c, 'OTP_VERIFICATION_COOKIE')
-  if (!jwtToken) {
-    return c.json({ error: 'Missing JWT token' }, 400)
+async function isSlotAvailable(
+  expertId: string,
+  startDateTime: Date,
+  endDateTime: Date,
+): Promise<{ isAvailable: boolean; reason?: string }> {
+  const now = dayjs().utc()
+
+  const slotStart = dayjs(startDateTime)
+
+  if (slotStart.isBefore(now)) {
+    return { isAvailable: false, reason: 'Slot is in the past' }
   }
 
-  const parseResult = z.object({ mobileNumber: z.string() }).safeParse(await verify(jwtToken, env.JWT_SECRET))
-  if (!parseResult.success) {
-    return c.json({ error: 'Missing JWT token' }, 400)
+  const slotEnd = dayjs(endDateTime)
+
+  const dayOfTheWeek = Object.keys(DAY_MAP).find((key) => DAY_MAP[key as DayOfWeek] === slotStart.day()) as DayOfWeek
+
+  const weeklySchedule = await prisma.expertAvailability.findMany({
+    where: {
+      expertId,
+      dayOfTheWeek,
+      isActive: { not: false },
+    },
+    select: {
+      startTime: true,
+      endTime: true,
+    },
+  })
+
+  if (weeklySchedule.length === 0) {
+    return { isAvailable: false, reason: 'No availability on this day of the week' }
   }
 
-  try {
-    const { headers } = await auth.api.verifyPhoneNumber({
-      body: {
-        phoneNumber: parseResult.data.mobileNumber,
-        code: input.otp,
-      },
-      returnHeaders: true,
-    })
-    headers.forEach((value, key) => {
-      c.header(key, value)
-    })
-    return c.json({ success: true })
-  } catch (error) {
-    if (error instanceof BetterAuthError) {
-      return c.json({ error: 'Patient not found' }, 404)
-    }
-    const errorMessage = getErrorMessage(error)
-    return c.json({ error: errorMessage }, 500)
+  const slotStartMinutes = dateToMinutes(startDateTime)
+  const slotEndMinutes = dateToMinutes(endDateTime)
+
+  const fitsInSchedule = weeklySchedule.some((schedule) => {
+    const scheduleStartMinutes = dateToMinutes(schedule.startTime)
+    const scheduleEndMinutes = dateToMinutes(schedule.endTime)
+
+    return slotStartMinutes >= scheduleStartMinutes && slotEndMinutes <= scheduleEndMinutes
+  })
+
+  if (!fitsInSchedule) {
+    return { isAvailable: false, reason: 'Slot is outside of available hours' }
   }
+
+  const blockDates = await prisma.expertBlockDates.findMany({
+    where: {
+      expertId: expertId,
+      startDate: { lte: endDateTime },
+      endDate: { gte: startDateTime },
+    },
+  })
+
+  if (blockDates.length > 0) {
+    return { isAvailable: false, reason: 'Date is blocked' }
+  }
+
+  const conflictingBookings = await prisma.booking.findMany({
+    where: {
+      expertId: expertId,
+      status: { in: ['BOOKED', 'DRAFT'] },
+      OR: [
+        {
+          // Booking starts during our slot
+          startDateTime: {
+            gte: slotStart.toDate(),
+            lt: slotEnd.toDate(),
+          },
+        },
+        {
+          // Booking ends during our slot
+          endDateTime: {
+            gt: slotStart.toDate(),
+            lte: slotEnd.toDate(),
+          },
+        },
+        {
+          // Booking completely overlaps our slot
+          AND: [{ startDateTime: { lte: slotStart.toDate() } }, { endDateTime: { gte: slotEnd.toDate() } }],
+        },
+      ],
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  if (conflictingBookings.length > 0) {
+    return { isAvailable: false, reason: 'Slot conflicts with existing bookings' }
+  }
+
+  return { isAvailable: true }
 }

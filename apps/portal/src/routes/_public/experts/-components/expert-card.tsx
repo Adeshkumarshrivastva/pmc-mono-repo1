@@ -9,7 +9,8 @@ import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { Combobox } from '@/components/ui/combo-box'
-import { CURRENCY_CONFIG, SERVICE_MODE_CONFIG } from '../$expertId'
+import { SERVICE_MODE_CONFIG } from '../$expertSlug'
+import { CURRENCY_CONFIG } from '@/lib/booking'
 
 type FilterState = {
   search: string
@@ -26,7 +27,7 @@ type FilterState = {
 type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
 
 function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
-  const { servicesProvided, user, name, slug, city, country, qualifications, availability } = expert
+  const { servicesProvided, name, slug, city, country, qualifications, availability } = expert
   const [selectedMode, setSelectedMode] = useState<ServiceMode>('VIRTUAL')
   const [showAllServices, setShowAllServices] = useState(false)
   const navigate = useNavigate()
@@ -51,18 +52,18 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
       <div className="p-6 pb-4">
         <div className="flex items-start gap-4 mb-4">
           <div className="relative w-36 h-48 shrink-0">
-            {user.image ? (
+            {expert.image ? (
               <div className="relative flex-shrink-0">
                 <div className="w-36 h-48">
-                  <img src={user.image} alt={name} className="w-full h-full object-cover rounded-xl" />
+                  <img src={expert.image} alt={name} className="w-full h-full object-cover rounded-xl" />
                 </div>
               </div>
             ) : (
               <UserIcon className="size-6 text-gray-400" />
             )}
             <Link
-              to="/experts/$expertId"
-              params={{ expertId: slug || expert.id }}
+              to="/experts/$expertSlug"
+              params={{ expertSlug: slug }}
               className="absolute bottom-0 left-0 right-0 bg-foreground text-background text-xs font-medium py-1.5 text-center rounded-b-xl hover:opacity-90 transition"
             >
               VIEW PROFILE
@@ -195,7 +196,14 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
 
           <Button
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg font-medium transition-colors"
-            onClick={() => navigate({ to: `/experts/${slug}` })}
+            onClick={() =>
+              navigate({
+                to: '/experts/$expertSlug',
+                params: {
+                  expertSlug: expert.slug,
+                },
+              })
+            }
           >
             BOOK
           </Button>
@@ -264,7 +272,7 @@ export default function OurExperts() {
             </div>
           ))
           .with({ status: 'success' }, ({ data }) => {
-            const experts = data?.experts || []
+            const experts = data.experts || []
 
             return (
               <>

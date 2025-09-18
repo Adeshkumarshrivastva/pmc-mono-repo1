@@ -1,11 +1,20 @@
 import z from 'zod'
+import { ServiceMode } from '../../generated/prisma'
 
-export const getPatientByMobileNumberInput = z.object({
-  mobileNumber: z.string(),
+export const createBookingInput = z.object({
+  expertId: z.string(),
+  serviceId: z.string(),
+  startDateTime: z.string(),
+  mode: z.enum(ServiceMode),
+  patientName: z.string().min(3).max(100),
+  patientEmail: z.email().optional(),
+  prebookingQnA: z
+    .object({
+      question: z.string(),
+      format: z.enum(['TEXT', 'LONG_TEXT']),
+      answer: z.string(),
+    })
+    .optional(),
 })
-export type GetPatientByMobileNumberInput = z.infer<typeof getPatientByMobileNumberInput>
 
-export const verifyPatientInput = z.object({
-  otp: z.string(),
-})
-export type VerifyPatientInput = z.infer<typeof verifyPatientInput>
+export type CreateBookingInput = z.infer<typeof createBookingInput>

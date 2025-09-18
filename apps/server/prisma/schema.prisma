@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -95,6 +96,7 @@ model Expert {
   userId           String               @unique
   slug             String               @unique
   name             String
+  image            String?
   type             ExpertType
   timezone         String               @default("Asia/Kolkata")
   city             String
@@ -179,6 +181,7 @@ model Service {
   booking                   Booking[]
   payments                  Payment[]
   tags                      String[]
+  prebookingQuestions       Json?
   isDeleted                 Boolean       @default(false)
 
   @@unique([expertId, slug])
@@ -215,6 +218,8 @@ model Booking {
   expertId                         String        @db.ObjectId
   patient                          Patient       @relation(fields: [patientId], references: [id])
   patientId                        String        @db.ObjectId
+  patientName                      String
+  patientEmail                     String?
   service                          Service       @relation(fields: [serviceId], references: [id])
   serviceId                        String        @db.ObjectId
   serviceName                      String
@@ -224,6 +229,7 @@ model Booking {
   serviceBufferTimeBeforeInMinutes Int
   serviceBufferTimeAfterInMinutes  Int
   parentBookingId                  String?       @db.ObjectId
+  preBookingQnA                    Json?
   // utc format
   startDateTime                    DateTime
   endDateTime                      DateTime
@@ -265,7 +271,7 @@ model Payment {
   booking          Booking       @relation(fields: [bookingId], references: [id])
   bookingId        String        @db.ObjectId
   // TODO: Add razorpay fields
-  razorpayOrderId  String        @unique
+  razorpayOrderId  String?       @unique
   amountPaid       Float
   amountCurrency   String
   isPartialPayment Boolean

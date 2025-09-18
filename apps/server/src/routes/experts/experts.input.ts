@@ -43,6 +43,7 @@ export const EXPERT_SERVICE_SELECT_FIELDS = {
   availableModes: true,
   city: true,
   country: true,
+  slug: true,
 } satisfies Prisma.ServiceSelect
 
 export const EXPERT_SELECT_FIELDS = {
@@ -89,8 +90,8 @@ export type ExpertSearchResponse = Prisma.ExpertGetPayload<{
 }>
 
 export const expertMonthlyAvailableSlotsQuery = z.object({
-  month: z.number().min(0).max(11),
-  year: z.number(),
+  month: z.coerce.number().min(1).max(12),
+  year: z.coerce.number(),
 })
 
 export type ExpertMonthlyAvailableSlotsQuery = z.infer<typeof expertMonthlyAvailableSlotsQuery>

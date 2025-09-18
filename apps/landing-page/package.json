@@ -9,7 +9,7 @@
     "build": "next build --experimental-build-mode compile",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --cache --write --no-error-on-unmatched-pattern \"src/**/*.{ts,tsx,js}\" *.{ts,tsx,js}",
+    "format": "prettier --cache --write --ignore-path .gitignore --no-error-on-unmatched-pattern \"src/**/*.{ts,tsx,js}\" *.{ts,tsx,js}",
     "payload:generate-types": "cross-env PAYLOAD_CONFIG_PATH=src/payload/config.ts payload generate:types",
     "payload:generate-importmap": "cross-env PAYLOAD_CONFIG_PATH=src/payload/config.ts payload generate:importmap",
     "typecheck": "tsc --noEmit",
