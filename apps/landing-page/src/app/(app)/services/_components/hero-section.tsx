@@ -3,7 +3,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import SVGImageIcon from '@/components/svg-image-icon'
 import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
-import { OurService } from '@/payload/types'
+import type { OurService } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 
 type HeroSectionProps = {

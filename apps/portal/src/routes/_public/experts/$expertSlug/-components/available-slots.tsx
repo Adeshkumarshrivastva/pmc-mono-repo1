@@ -44,7 +44,29 @@ export default function AvailableSlots({ onNext, getMonthlyAvailableSlotsQuery }
     <div className="flex flex-col h-full">
       {match(getMonthlyAvailableSlotsQuery)
         .returnType<React.ReactNode>()
-        .with({ status: 'pending' }, () => <AvailableSlotsSkeleton />)
+        .with({ status: 'pending' }, () => (
+          <div className="flex flex-col h-full">
+            <div className="p-4 flex-1 animate-pulse">
+              <div className="space-y-2">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-9 bg-gray-200 rounded"
+                    style={{
+                      opacity: 0.5 + index * 0.1,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="fixed xl:static bottom-0 left-0 right-0 bg-background border-t xl:border-t-0 xl:bg-transparent">
+              <Separator className="hidden xl:block" />
+              <div className="flex justify-end p-4">
+                <div className="h-10 bg-gray-200 rounded w-24" />
+              </div>
+            </div>
+          </div>
+        ))
         .with({ status: 'error' }, () => <div>Error loading slots</div>)
         .with({ status: 'success' }, ({ data }) => {
           const slots = data.availability[toDDMMYYYY(selectedDate)] || []
@@ -125,31 +147,5 @@ function TimeSlotButton({
         </div>
       </div>
     </Button>
-  )
-}
-
-function AvailableSlotsSkeleton() {
-  return (
-    <div className="flex flex-col h-full">
-      <div className="p-4 flex-1 animate-pulse">
-        <div className="space-y-2">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-9 bg-gray-200 rounded"
-              style={{
-                opacity: 0.5 + index * 0.1,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-      <div className="fixed xl:static bottom-0 left-0 right-0 bg-background border-t xl:border-t-0 xl:bg-transparent">
-        <Separator className="hidden xl:block" />
-        <div className="flex justify-end p-4">
-          <div className="h-10 bg-gray-200 rounded w-24" />
-        </div>
-      </div>
-    </div>
   )
 }

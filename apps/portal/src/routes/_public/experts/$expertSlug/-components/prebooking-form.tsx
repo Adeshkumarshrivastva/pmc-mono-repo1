@@ -3,14 +3,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { invariant, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { SERVICE_MODES, type ServiceMode } from '@/lib/booking'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { honoClient } from '@/lib/hono-client'
-import { getErrorMessage } from '@/lib/utils'
+import { getErrorMessage, invariant } from '@/lib/utils'
 import { useBooking } from '../-hooks/use-booking'
 import { env } from '@/lib/env'
 import { loadRazorpayScript } from '@/lib/razorpay'
@@ -66,7 +66,7 @@ export default function PrebookingForm({
         key: env.VITE_PUBLIC_RAZORPAY_KEY_ID,
         amount: Number(data.amount),
         currency: 'INR',
-        name: 'Service Booking',
+        name: 'Positive Mind Care',
         prefill: { fullName: patientName, email: patientEmail, contact: phoneNumber },
         order_id: data.id,
         modal: {
@@ -83,6 +83,7 @@ export default function PrebookingForm({
               bookingId: data.bookingId,
             },
             replace: true,
+            reloadDocument: true,
           })
         },
         description: 'Payment for service booking',
@@ -172,7 +173,7 @@ export default function PrebookingForm({
           type="submit"
           className="mt-4"
         >
-          Confirm & Pay
+          Make Payment
         </Button>
       </form>
     </Form>

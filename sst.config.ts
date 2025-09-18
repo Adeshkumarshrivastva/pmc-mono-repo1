@@ -49,6 +49,7 @@ export default $config({
     })
 
     new sst.aws.Function('PmcHonoServer', {
+      architecture: 'arm64',
       handler: 'apps/server/src/index.handler',
       url: {
         router: {
@@ -67,6 +68,12 @@ export default $config({
         JWT_SECRET: JwtSecret.value,
         EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
       },
+      copyFiles: [
+        {
+          from: 'apps/server/src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
+          to: 'src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
+        },
+      ],
     })
 
     new sst.aws.StaticSite('PmcPortal', {
