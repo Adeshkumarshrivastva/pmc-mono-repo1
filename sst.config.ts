@@ -43,6 +43,8 @@ export default $config({
     const JwtSecret = new sst.Secret('JWT_SECRET')
     const RazorpayKeyId = new sst.Secret('RAZORPAY_KEY_ID')
     const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
+    const WhatsappApiKeySecret = new sst.Secret('WHATSAPP_API_KEY_SECRET')
+    const WhatsappLicenceNumberSecret = new sst.Secret('WHATSAPP_LICENCE_NUMBER_SECRET')
 
     new sst.aws.Function('PmcHonoServer', {
       architecture: 'arm64',
@@ -62,6 +64,8 @@ export default $config({
         RAZORPAY_KEY_ID: RazorpayKeyId.value,
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
         JWT_SECRET: JwtSecret.value,
+        WHATSAPP_API_KEY_SECRET: WhatsappApiKeySecret.value,
+        WHATSAPP_LICENCE_NUMBER_SECRET: WhatsappLicenceNumberSecret.value,
       },
       copyFiles: [
         {

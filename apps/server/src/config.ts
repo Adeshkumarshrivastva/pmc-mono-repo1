@@ -30,6 +30,10 @@ export const configSchema = z.object({
       keySecret: z.string(),
     }),
   }),
+  whatsapp: z.object({
+    apiKey: z.string(),
+    licenceNumber: z.string(),
+  }),
 })
 
 export type ConfigSchema = z.infer<typeof configSchema>
@@ -52,6 +56,10 @@ function getConfig() {
           keyId: env.RAZORPAY_KEY_ID,
           keySecret: env.RAZORPAY_KEY_SECRET,
         },
+      },
+      whatsapp: {
+        apiKey: env.WHATSAPP_API_KEY_SECRET,
+        licenceNumber: env.WHATSAPP_LICENCE_NUMBER_SECRET,
       },
     })
 
