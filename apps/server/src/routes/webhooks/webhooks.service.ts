@@ -1,11 +1,11 @@
+import { render } from '@react-email/components'
+import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
+import z from 'zod'
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import type { PaymentConfirmationInput } from './webhooks.input'
-import { render } from '@react-email/components'
-import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
 import BookingConfirmationForExpert from '../../emails/booking-confirmation-expert'
 import BookingConfirmationForPatient from '../../emails/booking-confirmation-patient'
-import z from 'zod'
 
 const { EMAIL_SENDER } = z.object({ EMAIL_SENDER: z.email() }).parse(process.env)
 
@@ -74,7 +74,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
 
     // TODO: Create Google Calendar event
 
-    await Promise.allSettled([
+    const emailPromises = [
       sesClient.send(
         new SendEmailCommand({
           FromEmailAddress: EMAIL_SENDER,
@@ -95,28 +95,35 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
           },
         }),
       ),
+    ]
 
-      sesClient.send(
-        new SendEmailCommand({
-          FromEmailAddress: EMAIL_SENDER,
-          Destination: {
-            ToAddresses: [booking.patientEmail || booking.patient.user.email],
-          },
-          Content: {
-            Simple: {
-              Subject: {
-                Data: `Booking Confirmed - ${booking.serviceName} with Dr. ${booking.expert.user.name}`,
-              },
-              Body: {
-                Html: {
-                  Data: await render(BookingConfirmationForPatient({ booking })),
+    const patientEmail = booking.patientEmail || booking.patient.user.email
+    if (patientEmail) {
+      emailPromises.push(
+        sesClient.send(
+          new SendEmailCommand({
+            FromEmailAddress: EMAIL_SENDER,
+            Destination: {
+              ToAddresses: [patientEmail],
+            },
+            Content: {
+              Simple: {
+                Subject: {
+                  Data: `Booking Confirmed - ${booking.serviceName} with Dr. ${booking.expert.user.name}`,
+                },
+                Body: {
+                  Html: {
+                    Data: await render(BookingConfirmationForPatient({ booking })),
+                  },
                 },
               },
             },
-          },
-        }),
-      ),
-    ])
+          }),
+        ),
+      )
+    }
+
+    await Promise.allSettled(emailPromises)
 
     return c.json({ success: true, message: 'Payment confirmed and emails sent' })
   } catch (error) {
