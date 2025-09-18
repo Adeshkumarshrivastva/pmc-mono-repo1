@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { useTimer } from 'react-timer-hook'
 import dayjs from 'dayjs'
-import { createFileRoute, invariant, redirect, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -16,10 +16,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent } from '@/components/ui/card'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { env } from '@/lib/env'
-import { getErrorMessage } from '@/lib/utils'
+import { getErrorMessage, invariant } from '@/lib/utils'
 
 export const Route = createFileRoute('/_auth/login')({
-  beforeLoad: async ({ context: { authClient } }) => {
+  beforeLoad: async () => {
     invariant(authClient, 'authClient should be present')
     const session = await authClient?.getSession()
     if (session.data) {

@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { z } from 'zod'
 import { useQueryState } from 'nuqs'
 import dayjs from '@/lib/dayjs'
@@ -27,7 +28,7 @@ const slotSchema = z
 
 const today = dayjs()
 
-export const useBooking = () => {
+export function useBooking() {
   const [month, setMonth] = useQueryState('month', {
     parse: (value) => {
       const parsedMonth = monthSchema.safeParse(value)
@@ -66,9 +67,9 @@ export const useBooking = () => {
     defaultValue: null,
   })
 
-  const getSelectedDate = () => {
+  const getSelectedDate = useCallback(() => {
     return dayjs(date, DATE_FORMAT).toDate()
-  }
+  }, [date])
 
   const setSelectedDate = (newDate: Date) => {
     const currentDate = dayjs(date, DATE_FORMAT)

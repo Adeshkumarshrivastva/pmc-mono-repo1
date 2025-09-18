@@ -1,10 +1,9 @@
 import { Link, useLocation } from '@tanstack/react-router'
 import { useState } from 'react'
-import { ChevronDown, ChevronRight, MenuIcon } from 'lucide-react'
+import { MenuIcon } from 'lucide-react'
 import type { Service } from '@pmc/server/src/generated/prisma/client'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { CallIcon } from '@/components/ui/icons'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -17,14 +16,12 @@ const NAV_ITEMS = [
   { id: 'about', href: 'https://positivemindcare.com/landing-page/about-us', label: 'About Us' },
   { id: 'deepTms', href: 'https://positivemindcare.com/landing-page/deep-tms', label: 'Deep TMS' },
   { id: 'services', href: 'https://positivemindcare.com/landing-page/services', label: 'Services' },
-  { id: 'our-experts', href: 'portal/experts', label: 'Our Experts' },
+  { id: 'our-experts', href: '/portal/experts', label: 'Our Experts' },
   { id: 'webinars', href: 'https://positivemindcare.com/landing-page/webinars', label: 'Awareness' },
   { id: 'contact-us', href: 'https://positivemindcare.com/landing-page/contact-us', label: 'Contact' },
 ] as const
 
-const HOVER_DELAY = 400
-
-export default function Navbar({ services }: NavbarProps) {
+export default function Navbar({}: NavbarProps) {
   const location = useLocation()
   const pathname = location.pathname
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -45,19 +42,17 @@ export default function Navbar({ services }: NavbarProps) {
         <div className="flex-1 hidden xl:flex items-center justify-center xl:space-x-8">
           {NAV_ITEMS.map((item) => {
             const isActive = `/${pathname.split('/')[1]}` === item.href
-            return item.id === 'services' ? (
-              <ServicesMenu key={item.id} services={services} isActive={isActive} />
-            ) : (
-              <Link
+            return (
+              <a
                 key={item.id}
-                to={item.href}
+                href={item.href}
                 className={cn(
                   'text-lg font-semibold rounded-md px-2 py-1 transition-colors',
                   isActive ? 'text-primary-foreground' : 'text-primary-foreground/50 hover:text-primary-foreground',
                 )}
               >
                 {item.label}
-              </Link>
+              </a>
             )
           })}
         </div>
@@ -77,9 +72,9 @@ export default function Navbar({ services }: NavbarProps) {
                 <div className="space-y-6">
                   {NAV_ITEMS.map((link) => (
                     <div key={link.id} className="text-lg">
-                      <Link to={link.href} onClick={() => setSheetOpen(false)}>
+                      <a href={link.href} onClick={() => setSheetOpen(false)}>
                         {link.label}
-                      </Link>
+                      </a>
                     </div>
                   ))}
                 </div>
@@ -89,95 +84,5 @@ export default function Navbar({ services }: NavbarProps) {
         </Sheet>
       </nav>
     </header>
-  )
-}
-
-function ServicesMenu({ services, isActive }: { services: Service[]; isActive: boolean }) {
-  const [isHovered, setIsHovered] = useState(false)
-  const [activeServiceId, setActiveServiceId] = useState<string | undefined>(services[0]?.id)
-  const activeService = services.find((service) => service.id === activeServiceId)
-
-  return (
-    <HoverCard
-      open={isHovered}
-      openDelay={HOVER_DELAY}
-      onOpenChange={(value) => {
-        if (!value) {
-          setActiveServiceId(services[0]?.id)
-          setIsHovered(false)
-        }
-      }}
-    >
-      <HoverCardTrigger asChild>
-        <Link
-          to={'/services'}
-          className={cn(
-            'transition-colors rounded-md px-2 py-1',
-            isActive || isHovered
-              ? 'text-primary-foreground'
-              : 'text-primary-foreground/50 hover:text-primary-foreground',
-          )}
-          onMouseEnter={() => {
-            setIsHovered(true)
-          }}
-        >
-          <button className="flex w-full justify-between text-left items-center text-lg font-semibold space-x-2 cursor-pointer">
-            <span>Services</span>
-            <ChevronDown
-              className={cn('size-4 flex-shrink-0 transition-transform duration-200', isHovered ? 'rotate-180' : null)}
-            />
-          </button>
-        </Link>
-      </HoverCardTrigger>
-      <HoverCardContent align="center" className="p-0 flex w-lg">
-        <div className="cursor-pointer w-full flex flex-col bg-primary-foreground">
-          {services.map((service) => {
-            const isActiveService = service.id === activeServiceId
-            return (
-              <div
-                className={cn('flex w-full justify-between', isActiveService ? 'bg-accent' : null)}
-                key={service.id}
-                onMouseEnter={() => {
-                  setActiveServiceId(service.id)
-                }}
-              >
-                <Link to={`/services/${service.name}`} className="group flex w-full">
-                  <button
-                    className={cn(
-                      'flex w-full justify-between text-left items-center py-2 px-4 space-x-2 cursor-pointer',
-                      isActiveService ? 'font-medium' : null,
-                    )}
-                  >
-                    <span>{service.name}</span>
-                    <ChevronRight
-                      className={cn('size-4 flex-shrink-0 text-primary', isActiveService ? 'opacity-100' : 'opacity-0')}
-                    />
-                  </button>
-                </Link>
-              </div>
-            )
-          })}
-        </div>
-        <div className="cursor-pointer w-full flex flex-col bg-primary-foreground shadow-xl">
-          {activeService
-            ? activeService.subservices?.docs?.map((subService) => {
-                const typedSubService = subService as Service
-
-                return (
-                  <Link
-                    key={typedSubService.id}
-                    to={`/services/${activeService.slug}/${typedSubService.slug}`}
-                    className="flex w-full"
-                  >
-                    <button className="flex w-full text-left items-center py-2 px-4 hover:font-medium space-x-2 cursor-pointer">
-                      <span>{typedSubService.name}</span>
-                    </button>
-                  </Link>
-                )
-              })
-            : null}
-        </div>
-      </HoverCardContent>
-    </HoverCard>
   )
 }

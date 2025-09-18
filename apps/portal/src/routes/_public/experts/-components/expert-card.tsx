@@ -9,7 +9,8 @@ import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { Combobox } from '@/components/ui/combo-box'
-import { CURRENCY_CONFIG, SERVICE_MODE_CONFIG } from '../$expertSlug'
+import { SERVICE_MODE_CONFIG } from '../$expertSlug'
+import { CURRENCY_CONFIG } from '@/lib/booking'
 
 type FilterState = {
   search: string
@@ -26,7 +27,7 @@ type FilterState = {
 type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
 
 function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
-  const { servicesProvided, user, name, slug, city, country, qualifications, availability } = expert
+  const { servicesProvided, name, slug, city, country, qualifications, availability } = expert
   const [selectedMode, setSelectedMode] = useState<ServiceMode>('VIRTUAL')
   const [showAllServices, setShowAllServices] = useState(false)
   const navigate = useNavigate()
@@ -51,10 +52,10 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
       <div className="p-6 pb-4">
         <div className="flex items-start gap-4 mb-4">
           <div className="relative w-36 h-48 shrink-0">
-            {user.image ? (
+            {expert.image ? (
               <div className="relative flex-shrink-0">
                 <div className="w-36 h-48">
-                  <img src={user.image} alt={name} className="w-full h-full object-cover rounded-xl" />
+                  <img src={expert.image} alt={name} className="w-full h-full object-cover rounded-xl" />
                 </div>
               </div>
             ) : (
@@ -271,7 +272,7 @@ export default function OurExperts() {
             </div>
           ))
           .with({ status: 'success' }, ({ data }) => {
-            const experts = data?.experts || []
+            const experts = data.experts || []
 
             return (
               <>

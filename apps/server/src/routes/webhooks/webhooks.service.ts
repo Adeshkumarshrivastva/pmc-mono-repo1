@@ -21,18 +21,16 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
     if (existingPayment.status !== 'PENDING') {
       return c.json({ success: true, message: 'Existing payment is not in pending state' })
     }
-
-    await prisma.$transaction(async (tx) => {
-      await tx.booking.update({
+    await prisma.$transaction([
+      prisma.booking.update({
         where: {
           id: bookingId,
         },
         data: {
           status: 'BOOKED',
         },
-      })
-
-      await tx.payment.update({
+      }),
+      prisma.payment.update({
         where: {
           id: paymentId,
           bookingId: bookingId,
@@ -40,8 +38,11 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
         data: {
           status: 'COMPLETED',
         },
-      })
-    })
+      }),
+    ])
+
+    // TODO: Create Google Calendar event
+
     // TODO: Send email & whatsapp message to expert
 
     // TODO: Send email & whatsapp message to patient
