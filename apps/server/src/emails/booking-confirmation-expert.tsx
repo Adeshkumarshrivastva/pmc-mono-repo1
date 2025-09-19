@@ -56,7 +56,7 @@ export default function BookingConfirmationForExpert({ booking }: BookingConfirm
           </Section>
 
           <Section className="p-8">
-            <Text className="text-lg mb-6">Hi Dr. {booking.expert.user.name || 'Doctor'},</Text>
+            <Text className="text-lg mb-6">Hi {booking.expert.user.name || 'Doctor'},</Text>
 
             <Text className="text-base mb-6">
               You have a new booking for <strong>{booking.serviceName}</strong>. Here are the details:

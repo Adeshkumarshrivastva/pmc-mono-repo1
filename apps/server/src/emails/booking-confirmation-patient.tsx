@@ -53,7 +53,7 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
             <Text className="text-lg mb-6">Hi {booking.patientName || booking.patient.user.name},</Text>
 
             <Text className="text-base mb-6">
-              Your appointment for <strong>{booking.serviceName}</strong> has been confirmed with Dr.{' '}
+              Your appointment for <strong>{booking.serviceName}</strong> has been confirmed with{' '}
               {booking.expert.user.name}. Here are your booking details:
             </Text>
 
@@ -74,7 +74,7 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
                   <Text className="text-sm text-gray-600 font-semibold m-0">Doctor:</Text>
                 </Column>
                 <Column className="w-2/3">
-                  <Text className="text-sm text-gray-900 m-0">Dr. {booking.expert.user.name}</Text>
+                  <Text className="text-sm text-gray-900 m-0"> {booking.expert.user.name}</Text>
                 </Column>
               </Row>
 
@@ -193,12 +193,6 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
                 className="bg-blue-600 text-white py-3.5 px-8 rounded-lg text-base font-semibold no-underline mr-4 mb-2 inline-block"
               >
                 View Booking Details
-              </Button>
-              <Button
-                href={`https://positivemindcare.com/bookings/${booking.id}/reschedule`}
-                className="bg-gray-200 text-gray-800 py-3.5 px-8 rounded-lg text-base font-semibold no-underline mb-2 inline-block"
-              >
-                Reschedule Appointment
               </Button>
             </Section>
 

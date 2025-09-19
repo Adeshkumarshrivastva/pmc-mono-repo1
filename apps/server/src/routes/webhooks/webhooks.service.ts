@@ -78,7 +78,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
         new SendEmailCommand({
           FromEmailAddress: env.EMAIL_SENDER,
           Destination: {
-            ToAddresses: ['rekhasingh9607@gmail.com'],
+            ToAddresses: [booking.expert.user.email],
           },
           Content: {
             Simple: {
@@ -96,7 +96,8 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
       ),
     ]
 
-    const patientEmail = 'rekhasingh9607@gmail.com'
+    const patientEmail = booking.patientEmail || booking.patient.user.email
+
     if (patientEmail) {
       emailPromises.push(
         sesClient.send(

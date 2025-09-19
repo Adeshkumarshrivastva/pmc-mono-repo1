@@ -45,7 +45,10 @@ export default $config({
     const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
 
     const SenderEmail = new sst.aws.Email('SenderEmail', {
-      sender: $app.stage === 'production' ? 'no-reply@positivemindcare.com' : 'no-reply-dev@positivemindcare.com',
+      sender:
+        $app.stage === 'production'
+          ? 'no-reply@positivemindcare.com'
+          : $interpolate`no-reply-${$app.stage}@positivemindcare.com`,
     })
 
     new sst.aws.Function('PmcHonoServer', {
