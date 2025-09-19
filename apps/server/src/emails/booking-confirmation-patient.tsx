@@ -1,48 +1,17 @@
 /** @jsxImportSource react */
 
-import {
-  Container,
-  Font,
-  Html,
-  Heading,
-  Img,
-  Text,
-  Section,
-  Row,
-  Column,
-  Button,
-  Tailwind,
-} from '@react-email/components'
-import { type Booking, type Expert, type Service, type Patient, ServiceMode } from '../generated/prisma'
+import { Container, Font, Html, Heading, Text, Section, Row, Column, Button, Tailwind } from '@react-email/components'
+import { type Booking, type Expert, type Service, type Patient, type User, ServiceMode } from '../generated/prisma'
+import { formatDateTime, formatCurrency, getInPersonAddress, getVirtualMeetingLink, getPreBookingQnA } from './lib'
 
 type BookingWithRelations = Booking & {
   expert: Expert & {
-    user: {
-      name: string | null
-      email: string
-    }
+    user: User
   }
   patient: Patient & {
-    user: {
-      name: string | null
-      email: string | null
-    }
+    user: User
   }
   service: Service
-}
-
-type InPersonLocation = {
-  address?: string
-  city?: string
-}
-
-type VirtualLocation = {
-  meetingLink?: string
-}
-
-type PreBookingQnA = {
-  question: string
-  answer: string
 }
 
 type BookingConfirmationProps = {
@@ -50,25 +19,6 @@ type BookingConfirmationProps = {
 }
 
 export default function BookingConfirmationForPatient({ booking }: BookingConfirmationProps) {
-  const formatDateTime = (dateTime: string) => {
-    return new Date(dateTime).toLocaleString('en-IN', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'Asia/Kolkata',
-    })
-  }
-
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: currency,
-    }).format(amount)
-  }
-
   return (
     <Tailwind
       config={{
@@ -91,252 +41,94 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
             format: 'woff2',
           }}
         />
-        <Container style={{ backgroundColor: 'var(--color-background)', maxWidth: '672px', margin: '0 auto' }}>
-          <Section
-            style={{
-              backgroundColor: 'var(--color-primary)',
-              padding: '32px',
-              textAlign: 'center',
-              color: 'var(--color-primary-foreground)',
-            }}
-          >
-            <Heading
-              style={{
-                fontFamily: '"Figtree", sans-serif',
-                fontSize: '24px',
-                margin: '0',
-                color: 'var(--color-primary-foreground)',
-              }}
-            >
-              Booking Confirmed!
-            </Heading>
-            <Text
-              style={{
-                fontSize: '18px',
-                opacity: '0.9',
-                margin: '8px 0 0 0',
-                color: 'var(--color-primary-foreground)',
-              }}
-            >
+        <Container className="bg-white max-w-2xl mx-auto">
+          <Section className="bg-blue-600 p-8 text-center text-white">
+            <Heading className="font-display text-2xl m-0 text-white">Booking Confirmed!</Heading>
+            <Text className="text-lg opacity-90 mt-2 mb-0 text-white">
               Your appointment has been successfully booked
             </Text>
           </Section>
 
-          <Section style={{ padding: '32px' }}>
-            <Text style={{ fontSize: '18px', marginBottom: '24px' }}>
-              Hi {booking.patientName || booking.patient.user.name},
-            </Text>
+          <Section className="p-8">
+            <Text className="text-lg mb-6">Hi {booking.patientName || booking.patient.user.name},</Text>
 
-            <Text style={{ fontSize: '16px', marginBottom: '24px' }}>
+            <Text className="text-base mb-6">
               Your appointment for <strong>{booking.serviceName}</strong> has been confirmed with Dr.{' '}
               {booking.expert.user.name}. Here are your booking details:
             </Text>
 
-            <Section
-              style={{
-                backgroundColor: 'var(--color-muted)',
-                borderRadius: '8px',
-                padding: '24px',
-                marginBottom: '24px',
-              }}
-            >
-              <Heading
-                style={{
-                  fontFamily: '"Figtree", sans-serif',
-                  fontSize: '20px',
-                  color: 'var(--color-foreground)',
-                  marginBottom: '16px',
-                }}
-              >
-                Appointment Details
-              </Heading>
+            <Section className="bg-gray-50 rounded-lg p-6 mb-6">
+              <Heading className="font-sans text-xl text-gray-900 mb-4">Appointment Details</Heading>
 
-              <Row style={{ marginBottom: '12px' }}>
-                <Column style={{ width: '33.33%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-muted-foreground)',
-                      fontWeight: '600',
-                      margin: '0',
-                    }}
-                  >
-                    Service:
-                  </Text>
+              <Row className="mb-3">
+                <Column className="w-1/3">
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Service:</Text>
                 </Column>
-                <Column style={{ width: '66.67%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-foreground)',
-                      margin: '0',
-                    }}
-                  >
-                    {booking.serviceName}
+                <Column className="w-2/3">
+                  <Text className="text-sm text-gray-900 m-0">{booking.serviceName}</Text>
+                </Column>
+              </Row>
+
+              <Row className="mb-3">
+                <Column className="w-1/3">
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Doctor:</Text>
+                </Column>
+                <Column className="w-2/3">
+                  <Text className="text-sm text-gray-900 m-0">Dr. {booking.expert.user.name}</Text>
+                </Column>
+              </Row>
+
+              <Row className="mb-3">
+                <Column className="w-1/3">
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Date & Time:</Text>
+                </Column>
+                <Column className="w-2/3">
+                  <Text className="text-sm text-gray-900 m-0 font-semibold">
+                    {formatDateTime(booking.startDateTime)}
                   </Text>
                 </Column>
               </Row>
 
-              <Row style={{ marginBottom: '12px' }}>
-                <Column style={{ width: '33.33%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-muted-foreground)',
-                      fontWeight: '600',
-                      margin: '0',
-                    }}
-                  >
-                    Doctor:
-                  </Text>
+              <Row className="mb-3">
+                <Column className="w-1/3">
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Duration:</Text>
                 </Column>
-                <Column style={{ width: '66.67%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-foreground)',
-                      margin: '0',
-                    }}
-                  >
-                    Dr. {booking.expert.user.name}
-                  </Text>
+                <Column className="w-2/3">
+                  <Text className="text-sm text-gray-900 m-0">{booking.serviceDurationInMinutes} minutes</Text>
                 </Column>
               </Row>
 
-              <Row style={{ marginBottom: '12px' }}>
-                <Column style={{ width: '33.33%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-muted-foreground)',
-                      fontWeight: '600',
-                      margin: '0',
-                    }}
-                  >
-                    Date & Time:
-                  </Text>
+              <Row className="mb-3">
+                <Column className="w-1/3">
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Mode:</Text>
                 </Column>
-                <Column style={{ width: '66.67%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-foreground)',
-                      margin: '0',
-                      fontWeight: '600',
-                    }}
-                  >
-                    {formatDateTime(booking.startDateTime.toISOString())}
-                  </Text>
-                </Column>
-              </Row>
-
-              <Row style={{ marginBottom: '12px' }}>
-                <Column style={{ width: '33.33%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-muted-foreground)',
-                      fontWeight: '600',
-                      margin: '0',
-                    }}
-                  >
-                    Duration:
-                  </Text>
-                </Column>
-                <Column style={{ width: '66.67%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-foreground)',
-                      margin: '0',
-                    }}
-                  >
-                    {booking.serviceDurationInMinutes} minutes
-                  </Text>
-                </Column>
-              </Row>
-
-              <Row style={{ marginBottom: '12px' }}>
-                <Column style={{ width: '33.33%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-muted-foreground)',
-                      fontWeight: '600',
-                      margin: '0',
-                    }}
-                  >
-                    Mode:
-                  </Text>
-                </Column>
-                <Column style={{ width: '66.67%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-foreground)',
-                      margin: '0',
-                    }}
-                  >
+                <Column className="w-2/3">
+                  <Text className="text-sm text-gray-900 m-0">
                     {booking.mode === ServiceMode.VIRTUAL ? 'Virtual Session' : 'In-Person'}
                   </Text>
                 </Column>
               </Row>
 
-              {booking.mode === ServiceMode.IN_PERSON && booking.inPersonLocation && (
-                <Row style={{ marginBottom: '12px' }}>
-                  <Column style={{ width: '33.33%' }}>
-                    <Text
-                      style={{
-                        fontSize: '14px',
-                        color: 'var(--color-muted-foreground)',
-                        fontWeight: '600',
-                        margin: '0',
-                      }}
-                    >
-                      Location:
-                    </Text>
+              {booking.mode === ServiceMode.IN_PERSON && getInPersonAddress({ booking }) && (
+                <Row className="mb-3">
+                  <Column className="w-1/3">
+                    <Text className="text-sm text-gray-600 font-semibold m-0">Location:</Text>
                   </Column>
-                  <Column style={{ width: '66.67%' }}>
-                    <Text
-                      style={{
-                        fontSize: '14px',
-                        color: 'var(--color-foreground)',
-                        margin: '0',
-                      }}
-                    >
-                      {(booking.inPersonLocation as InPersonLocation)?.address},{' '}
-                      {(booking.inPersonLocation as InPersonLocation)?.city}
-                    </Text>
+                  <Column className="w-2/3">
+                    <Text className="text-sm text-gray-900 m-0">{getInPersonAddress({ booking })}</Text>
                   </Column>
                 </Row>
               )}
 
-              {booking.mode === ServiceMode.VIRTUAL && booking.virtualLocation && (
-                <Row style={{ marginBottom: '12px' }}>
-                  <Column style={{ width: '33.33%' }}>
-                    <Text
-                      style={{
-                        fontSize: '14px',
-                        color: 'var(--color-muted-foreground)',
-                        fontWeight: '600',
-                        margin: '0',
-                      }}
-                    >
-                      Meeting Link:
-                    </Text>
+              {booking.mode === ServiceMode.VIRTUAL && getVirtualMeetingLink({ booking }) && (
+                <Row className="mb-3">
+                  <Column className="w-1/3">
+                    <Text className="text-sm text-gray-600 font-semibold m-0">Meeting Link:</Text>
                   </Column>
-                  <Column style={{ width: '66.67%' }}>
+                  <Column className="w-2/3">
                     <Button
-                      href={(booking.virtualLocation as VirtualLocation)?.meetingLink}
-                      style={{
-                        backgroundColor: 'var(--color-primary)',
-                        color: 'var(--color-primary-foreground)',
-                        padding: '10px 20px',
-                        borderRadius: '6px',
-                        textDecoration: 'none',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                      }}
+                      href={getVirtualMeetingLink({ booking }) || undefined}
+                      className="bg-blue-600 text-white py-2 px-5 rounded text-sm no-underline font-semibold"
                     >
                       Join Meeting
                     </Button>
@@ -344,232 +136,88 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
                 </Row>
               )}
 
-              <Row style={{ marginBottom: '12px' }}>
-                <Column style={{ width: '33.33%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-muted-foreground)',
-                      fontWeight: '600',
-                      margin: '0',
-                    }}
-                  >
-                    Total Fee:
-                  </Text>
+              <Row className="mb-3">
+                <Column className="w-1/3">
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Total Fee:</Text>
                 </Column>
-                <Column style={{ width: '66.67%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-foreground)',
-                      margin: '0',
-                      fontWeight: '600',
-                    }}
-                  >
+                <Column className="w-2/3">
+                  <Text className="text-sm text-gray-900 m-0 font-semibold">
                     {formatCurrency(booking.servicePrice, booking.serviceCurrency)}
                   </Text>
                 </Column>
               </Row>
 
               <Row>
-                <Column style={{ width: '33.33%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-muted-foreground)',
-                      fontWeight: '600',
-                      margin: '0',
-                    }}
-                  >
-                    Booking ID:
-                  </Text>
+                <Column className="w-1/3">
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Booking ID:</Text>
                 </Column>
-                <Column style={{ width: '66.67%' }}>
-                  <Text
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--color-foreground)',
-                      margin: '0',
-                      fontFamily: 'monospace',
-                    }}
-                  >
-                    #{booking.id.slice(-8).toUpperCase()}
-                  </Text>
+                <Column className="w-2/3">
+                  <Text className="text-sm text-gray-900 m-0 font-mono">#{booking.id.slice(-8).toUpperCase()}</Text>
                 </Column>
               </Row>
             </Section>
 
-            <Section
-              style={{
-                backgroundColor: 'var(--color-accent)',
-                borderRadius: '8px',
-                padding: '20px',
-                marginBottom: '24px',
-              }}
-            >
-              <Heading
-                style={{
-                  fontFamily: '"Figtree", sans-serif',
-                  fontSize: '18px',
-                  color: 'var(--color-foreground)',
-                  marginBottom: '12px',
-                }}
-              >
-                Important Instructions
-              </Heading>
-              <Text
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--color-foreground)',
-                  marginBottom: '8px',
-                  lineHeight: '1.5',
-                }}
-              >
+            <Section className="bg-yellow-50 rounded-lg p-5 mb-6">
+              <Heading className="font-sans text-lg text-gray-900 mb-3">Important Instructions</Heading>
+              <Text className="text-sm text-gray-800 mb-2 leading-relaxed">
                 • Please arrive 10 minutes early for in-person appointments
               </Text>
-              <Text
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--color-foreground)',
-                  marginBottom: '8px',
-                  lineHeight: '1.5',
-                }}
-              >
+              <Text className="text-sm text-gray-800 mb-2 leading-relaxed">
                 • Test your internet connection before virtual sessions
               </Text>
-              <Text
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--color-foreground)',
-                  marginBottom: '8px',
-                  lineHeight: '1.5',
-                }}
-              >
+              <Text className="text-sm text-gray-800 mb-2 leading-relaxed">
                 • Bring a valid ID and any relevant medical documents
               </Text>
-              <Text
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--color-foreground)',
-                  lineHeight: '1.5',
-                }}
-              >
+              <Text className="text-sm text-gray-800 leading-relaxed">
                 • Cancel or reschedule at least 24 hours in advance to avoid charges
               </Text>
             </Section>
 
-            {booking.preBookingQnA && (
-              <Section
-                style={{
-                  backgroundColor: 'var(--color-background)',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  marginBottom: '24px',
-                }}
-              >
-                <Heading
-                  style={{
-                    fontFamily: '"Figtree", sans-serif',
-                    fontSize: '18px',
-                    color: 'var(--color-foreground)',
-                    marginBottom: '16px',
-                  }}
-                >
-                  Your Pre-booking Information
-                </Heading>
-                {Array.isArray(booking.preBookingQnA) &&
-                  (booking.preBookingQnA as PreBookingQnA[]).map((qa: PreBookingQnA, index: number) => (
-                    <div key={index} style={{ marginBottom: '16px' }}>
-                      <Text
-                        style={{
-                          fontSize: '14px',
-                          fontWeight: '600',
-                          color: 'var(--color-foreground)',
-                          marginBottom: '4px',
-                        }}
-                      >
-                        {qa.question}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: '14px',
-                          color: 'var(--color-muted-foreground)',
-                          backgroundColor: 'var(--color-muted)',
-                          padding: '12px',
-                          borderRadius: '4px',
-                          borderLeft: '4px solid var(--color-accent-foreground)',
-                          fontStyle: 'italic',
-                        }}
-                      >
-                        "{qa.answer}"
-                      </Text>
-                    </div>
-                  ))}
+            {getPreBookingQnA({ booking }).length > 0 && (
+              <Section className="bg-white border border-gray-200 rounded-lg p-5 mb-6">
+                <Heading className="font-sans text-lg text-gray-900 mb-4">Your Pre-booking Information</Heading>
+                {getPreBookingQnA({ booking }).map((qa, index) => (
+                  <div key={index} className="mb-4">
+                    <Text className="text-sm font-semibold text-gray-900 mb-1">{qa.question}</Text>
+                    <Text className="text-sm text-gray-700 bg-gray-50 p-3 rounded border-l-4 border-blue-400 italic">
+                      "{qa.answer}"
+                    </Text>
+                  </div>
+                ))}
               </Section>
             )}
 
-            <Section style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <Section className="text-center mb-8">
               <Button
                 href={`https://positivemindcare.com/bookings/${booking.id}`}
-                style={{
-                  backgroundColor: 'var(--color-primary)',
-                  color: 'var(--color-primary-foreground)',
-                  padding: '14px 32px',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  textDecoration: 'none',
-                  marginRight: '16px',
-                  marginBottom: '8px',
-                  display: 'inline-block',
-                }}
+                className="bg-blue-600 text-white py-3.5 px-8 rounded-lg text-base font-semibold no-underline mr-4 mb-2 inline-block"
               >
                 View Booking Details
               </Button>
               <Button
                 href={`https://positivemindcare.com/bookings/${booking.id}/reschedule`}
-                style={{
-                  backgroundColor: 'var(--color-secondary)',
-                  color: 'var(--color-secondary-foreground)',
-                  padding: '14px 32px',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  textDecoration: 'none',
-                  marginBottom: '8px',
-                  display: 'inline-block',
-                }}
+                className="bg-gray-200 text-gray-800 py-3.5 px-8 rounded-lg text-base font-semibold no-underline mb-2 inline-block"
               >
                 Reschedule Appointment
               </Button>
             </Section>
 
-            <Text
-              style={{
-                fontSize: '16px',
-                color: 'var(--color-muted-foreground)',
-                marginBottom: '16px',
-                textAlign: 'center',
-              }}
-            >
+            <Text className="text-base text-gray-600 mb-4 text-center">
               We're looking forward to helping you on your journey to better mental health.
             </Text>
 
-            <Text style={{ fontSize: '16px', textAlign: 'center' }}>
+            <Text className="text-base text-center">
               Warm regards,
               <br />
-              <span style={{ color: 'var(--color-primary)', fontWeight: '600' }}>Positive Mind Care Team</span>
+              <span className="text-blue-600 font-semibold">Positive Mind Care Team</span>
             </Text>
           </Section>
 
-          <Section style={{ backgroundColor: 'var(--color-muted)', padding: '24px', textAlign: 'center' }}>
-            <Text style={{ fontSize: '14px', color: 'var(--color-muted-foreground)', marginBottom: '8px' }}>
-              Need help or have questions?
-            </Text>
-            <Text style={{ fontSize: '14px', color: 'var(--color-muted-foreground)' }}>
+          <Section className="bg-gray-100 p-6 text-center">
+            <Text className="text-sm text-gray-600 mb-2">Need help or have questions?</Text>
+            <Text className="text-sm text-gray-600">
               Contact us at{' '}
-              <a href="tel:+918920530832" style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>
+              <a href="tel:+918920530832" className="text-blue-600 no-underline">
                 +91 89205 30832
               </a>
             </Text>

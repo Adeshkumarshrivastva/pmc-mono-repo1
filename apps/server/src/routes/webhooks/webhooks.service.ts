@@ -1,13 +1,12 @@
-import { render } from '@react-email/components'
+import { render } from '@react-email/render'
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
-import z from 'zod'
+
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import type { PaymentConfirmationInput } from './webhooks.input'
 import BookingConfirmationForExpert from '../../emails/booking-confirmation-expert'
 import BookingConfirmationForPatient from '../../emails/booking-confirmation-patient'
-
-const { EMAIL_SENDER } = z.object({ EMAIL_SENDER: z.email() }).parse(process.env)
+import { env } from '../../lib/env'
 
 const sesClient = new SESv2Client()
 
@@ -77,9 +76,9 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
     const emailPromises = [
       sesClient.send(
         new SendEmailCommand({
-          FromEmailAddress: EMAIL_SENDER,
+          FromEmailAddress: env.EMAIL_SENDER,
           Destination: {
-            ToAddresses: [booking.expert.user.email],
+            ToAddresses: ['rekhasingh9607@gmail.com'],
           },
           Content: {
             Simple: {
@@ -97,12 +96,12 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
       ),
     ]
 
-    const patientEmail = booking.patientEmail || booking.patient.user.email
+    const patientEmail = 'rekhasingh9607@gmail.com'
     if (patientEmail) {
       emailPromises.push(
         sesClient.send(
           new SendEmailCommand({
-            FromEmailAddress: EMAIL_SENDER,
+            FromEmailAddress: env.EMAIL_SENDER,
             Destination: {
               ToAddresses: [patientEmail],
             },

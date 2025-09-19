@@ -15,5 +15,6 @@ export const env = z
     NODE_ENV: z.enum([NodeEnv.development, NodeEnv.production]).default(NodeEnv.development),
     RAZORPAY_KEY_ID: z.string(),
     RAZORPAY_KEY_SECRET: z.string(),
+    EMAIL_SENDER: z.string(),
   })
   .parse(process.env)
