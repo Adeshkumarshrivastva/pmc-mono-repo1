@@ -1,7 +1,7 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { Resource } from 'sst'
-import { phoneNumber, role } from 'better-auth/plugins'
+import { phoneNumber } from 'better-auth/plugins'
 import { prisma } from './db'
 import { config } from '../config'
 import { invariant } from './utils'
@@ -45,8 +45,8 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        type: 'string',
-        required: true,
+        type: ['EXPERT', 'PATIENT', 'ADMIN'],
+        input: false,
       },
     },
   },

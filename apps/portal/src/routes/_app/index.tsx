@@ -1,11 +1,11 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import { honoClient } from '@/lib/hono-client'
-import { Button } from '@/components/ui/button'
-import { getErrorMessage } from '@/lib/utils'
+// import { useMutation, useQuery } from '@tanstack/react-query'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+// import { toast } from 'sonner'
+// import { honoClient } from '@/lib/hono-client'
+// import { Button } from '@/components/ui/button'
+// import { getErrorMessage } from '@/lib/utils'
 import { CURRENT_SESSION_QUERY_KEY, getUserSession } from '@/queries/session'
-import { authClient } from '@/lib/auth-client'
+// import { authClient } from '@/lib/auth-client'
 
 export const Route = createFileRoute('/_app/')({
   beforeLoad: async ({ context: { queryClient } }) => {
@@ -16,9 +16,10 @@ export const Route = createFileRoute('/_app/')({
     if (!session.data) {
       throw redirect({ to: '/login' })
     }
+
     return { session: session.data }
   },
-  // component: DashboardPage,
+  component: () => null,
 })
 
 // export default function DashboardPage() {

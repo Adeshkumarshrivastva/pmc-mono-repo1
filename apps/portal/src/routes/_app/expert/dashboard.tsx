@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Spinner } from '@/components/ui/spinner'
 
-const Route = createFileRoute('/_app/expert/dashboard')({
+export const Route = createFileRoute('/_app/expert/dashboard')({
   component: ExpertDashboard,
   pendingComponent: () => {
     return (
