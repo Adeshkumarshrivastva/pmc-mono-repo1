@@ -22,7 +22,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
       },
     })
 
-    if (!existingPayment) {
+    if (!existingPayment || !existingPayment.razorpayOrderId) {
       return c.json({ error: 'Payment not found' }, 404)
     }
 
@@ -44,7 +44,6 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
           },
         },
         service: true,
-        payments: true,
       },
     })
 
@@ -88,7 +87,9 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
               },
               Body: {
                 Html: {
-                  Data: await render(BookingConfirmationForExpert({ booking })),
+                  Data: await render(
+                    BookingConfirmationForExpert({ booking, orderId: existingPayment.razorpayOrderId }),
+                  ),
                 },
               },
             },
@@ -97,7 +98,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
       ),
     ]
 
-    const patientEmail = booking.patientEmail || booking.patient.user.email
+    const patientEmail = booking.patientEmail
 
     if (patientEmail) {
       emailPromises.push(
@@ -114,7 +115,9 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
                 },
                 Body: {
                   Html: {
-                    Data: await render(BookingConfirmationForPatient({ booking })),
+                    Data: await render(
+                      BookingConfirmationForPatient({ booking, orderId: existingPayment.razorpayOrderId }),
+                    ),
                   },
                 },
               },

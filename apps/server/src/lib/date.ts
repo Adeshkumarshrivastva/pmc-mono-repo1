@@ -12,10 +12,6 @@ export function minutesToHHMM(minutes: number): string {
   return dayjs.duration(minutes, 'minutes').format('HH:mm')
 }
 
-export const DEFAULT_TIMEZONE = dayjs.tz.guess() || 'Asia/Kolkata'
-
-export const today = dayjs().tz(DEFAULT_TIMEZONE).toDate()
-
 export function toDDMMYYYY(date: Date | Dayjs) {
   if (dayjs.isDayjs(date)) {
     return date.format('DD-MM-YYYY')
@@ -32,30 +28,12 @@ export function toHHMMA(date: Date | Dayjs) {
   }
 }
 
-export function utcMinutesToLocalMinutes(utcMinutes: number, timeZone: string = DEFAULT_TIMEZONE) {
-  const utcTime = dayjs.utc().startOf('day').add(utcMinutes, 'minute')
-
-  const localTime = utcTime.tz(timeZone)
-
-  return localTime.hour() * MINUTES_PER_HOUR + localTime.minute()
-}
-
-export function utcDateToLocalDate(date: Date, timeZone: string = DEFAULT_TIMEZONE) {
-  return dayjs.utc(date).tz(timeZone).toDate()
-}
-
-export function minutesToDate(minutes: number, baseDate: Date, timeZone: string = DEFAULT_TIMEZONE) {
-  return dayjs.tz(baseDate, timeZone).startOf('day').add(minutes, 'minute').toDate()
-}
-
-export function dateToUtcMinutes(date: Date | string) {
-  const dt = dayjs(date).utc()
-  return dt.hour() * MINUTES_PER_HOUR + dt.minute()
-}
-
-export function formatDateTimeRange({ startDateTime, endDateTime }: { startDateTime: Date; endDateTime: Date }) {
-  const localStartDateTime = dayjs(utcDateToLocalDate(startDateTime))
-  const localEndDateTime = dayjs(utcDateToLocalDate(endDateTime))
+export function formatDateTimeRange(
+  { startDateTime, endDateTime }: { startDateTime: Date; endDateTime: Date },
+  timeZone = 'Asia/Calcutta',
+) {
+  const localStartDateTime = dayjs(startDateTime).tz(timeZone)
+  const localEndDateTime = dayjs(endDateTime).tz(timeZone)
 
   const dateStr = localStartDateTime.format('dddd, MMMM D, YYYY')
   const startTimeStr = toHHMMA(localStartDateTime)

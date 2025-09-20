@@ -2,17 +2,8 @@
 
 import { Container, Font, Html, Heading, Text, Section, Row, Column, Button, Tailwind } from '@react-email/components'
 import { match } from 'ts-pattern'
-import {
-  type Booking,
-  type Expert,
-  type Service,
-  type Patient,
-  type User,
-  type Payment,
-  ServiceMode,
-} from '../generated/prisma'
+import { type Booking, type Expert, type Service, type Patient, type User, ServiceMode } from '../generated/prisma'
 import { formatCurrency, getInPersonAddress, getVirtualMeetingLink } from '../lib/booking'
-import { env } from '../lib/env'
 import { formatDateTimeRange } from '../lib/date'
 
 type BookingWithRelations = Booking & {
@@ -23,14 +14,14 @@ type BookingWithRelations = Booking & {
     user: User
   }
   service: Service
-  payments: Payment[]
 }
 
 type BookingConfirmationProps = {
   booking: BookingWithRelations
+  orderId: string
 }
 
-export default function BookingConfirmationForPatient({ booking }: BookingConfirmationProps) {
+export default function BookingConfirmationForPatient({ booking, orderId }: BookingConfirmationProps) {
   return (
     <Tailwind
       config={{
@@ -173,7 +164,7 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
                   <Text className="text-sm text-gray-600 font-semibold m-0">Order ID:</Text>
                 </Column>
                 <Column className="w-2/3">
-                  <Text className="text-sm text-gray-900 m-0">#{booking.payments[0].razorpayOrderId}</Text>
+                  <Text className="text-sm text-gray-900 m-0">#{orderId}</Text>
                 </Column>
               </Row>
             </Section>
@@ -196,7 +187,7 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
 
             <Section className="text-center mb-8">
               <Button
-                href={`${env.VITE_PUBLIC_BASE_PATH}/bookings/${booking.id}`}
+                href={`https://positivemindcare.com/portal/bookings/${booking.id}`}
                 className="bg-blue-600 text-white py-3.5 px-8 rounded-lg text-base font-semibold no-underline mr-4 mb-2 inline-block"
               >
                 View Booking Details

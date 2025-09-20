@@ -1,15 +1,7 @@
 /** @jsxImportSource react */
 
 import { Container, Font, Html, Heading, Text, Section, Row, Column, Button, Tailwind } from '@react-email/components'
-import {
-  type Booking,
-  type Expert,
-  type Service,
-  type Patient,
-  type User,
-  ServiceMode,
-  type Payment,
-} from '../generated/prisma'
+import { type Booking, type Expert, type Service, type Patient, type User, ServiceMode } from '../generated/prisma'
 import { formatCurrency, getInPersonAddress, getVirtualMeetingLink } from '../lib/booking'
 import { formatDateTimeRange } from '../lib/date'
 
@@ -21,14 +13,14 @@ type BookingWithRelations = Booking & {
     user: User
   }
   service: Service
-  payments: Payment[]
 }
 
 type BookingConfirmationProps = {
   booking: BookingWithRelations
+  orderId: string
 }
 
-export default function BookingConfirmationForExpert({ booking }: BookingConfirmationProps) {
+export default function BookingConfirmationForExpert({ booking, orderId }: BookingConfirmationProps) {
   return (
     <Tailwind
       config={{
@@ -157,7 +149,7 @@ export default function BookingConfirmationForExpert({ booking }: BookingConfirm
                   <Text className="text-sm text-gray-600 font-semibold m-0">Order ID:</Text>
                 </Column>
                 <Column className="w-2/3">
-                  <Text className="text-sm text-gray-900 m-0">#{booking.payments[0].razorpayOrderId}</Text>
+                  <Text className="text-sm text-gray-900 m-0">#{orderId}</Text>
                 </Column>
               </Row>
             </Section>
