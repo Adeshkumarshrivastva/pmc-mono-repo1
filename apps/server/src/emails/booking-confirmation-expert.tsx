@@ -1,8 +1,17 @@
 /** @jsxImportSource react */
 
 import { Container, Font, Html, Heading, Text, Section, Row, Column, Button, Tailwind } from '@react-email/components'
-import { type Booking, type Expert, type Service, type Patient, type User, ServiceMode } from '../generated/prisma'
-import { formatDateTime, formatCurrency, getInPersonAddress, getVirtualMeetingLink, getPreBookingQnA } from './lib'
+import {
+  type Booking,
+  type Expert,
+  type Service,
+  type Patient,
+  type User,
+  ServiceMode,
+  type Payment,
+} from '../generated/prisma'
+import { formatCurrency, getInPersonAddress, getVirtualMeetingLink } from '../lib/booking'
+import { formatDateTimeRange } from '../lib/date'
 
 type BookingWithRelations = Booking & {
   expert: Expert & {
@@ -12,6 +21,7 @@ type BookingWithRelations = Booking & {
     user: User
   }
   service: Service
+  payments: Payment[]
 }
 
 type BookingConfirmationProps = {
@@ -25,30 +35,16 @@ export default function BookingConfirmationForExpert({ booking }: BookingConfirm
         theme: {
           extend: {
             fontFamily: {
-              display: ['"Bricolage Grotesque"', 'sans-serif'],
-              sans: ['"Geist"', 'sans-serif'],
+              display: ['"Barlow"', 'sans-serif'],
+              sans: ['"Figtree"', 'sans-serif'],
             },
           },
         },
       }}
     >
       <Html className="font-sans">
-        <Font
-          fontFamily="Bricolage Grotesque"
-          fallbackFontFamily="sans-serif"
-          webFont={{
-            url: 'https://fonts.gstatic.com/s/bricolagegrotesque/v8/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInE.woff2',
-            format: 'woff2',
-          }}
-        />
-        <Font
-          fontFamily="Geist"
-          fallbackFontFamily="sans-serif"
-          webFont={{
-            url: 'https://fonts.gstatic.com/s/geist/v3/gyByhwUxId8gMEwcGFU.woff2',
-            format: 'woff2',
-          }}
-        />
+        <Font fontFamily="Figtree" fallbackFontFamily="sans-serif" />
+        <Font fontFamily="Barlow" fallbackFontFamily="sans-serif" />
         <Container className="bg-white max-w-2xl mx-auto">
           <Section className="bg-emerald-500 p-8 text-center text-white">
             <Heading className="font-display text-2xl m-0 text-white">New Booking Confirmation</Heading>
@@ -101,7 +97,9 @@ export default function BookingConfirmationForExpert({ booking }: BookingConfirm
                   <Text className="text-sm text-gray-600 font-semibold m-0">Date & Time:</Text>
                 </Column>
                 <Column className="w-2/3">
-                  <Text className="text-sm text-gray-900 m-0">{formatDateTime(booking.startDateTime)}</Text>
+                  <Text className="text-sm text-gray-900 m-0">
+                    {formatDateTimeRange({ startDateTime: booking.startDateTime, endDateTime: booking.endDateTime })}
+                  </Text>
                 </Column>
               </Row>
 
@@ -156,41 +154,12 @@ export default function BookingConfirmationForExpert({ booking }: BookingConfirm
 
               <Row>
                 <Column className="w-1/3">
-                  <Text className="text-sm text-gray-600 font-semibold m-0">Booking ID:</Text>
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Order ID:</Text>
                 </Column>
                 <Column className="w-2/3">
-                  <Text className="text-sm text-gray-900 m-0">#{booking.id.slice(-8).toUpperCase()}</Text>
+                  <Text className="text-sm text-gray-900 m-0">#{booking.payments[0].razorpayOrderId}</Text>
                 </Column>
               </Row>
-            </Section>
-
-            {getPreBookingQnA({ booking }).length > 0 && (
-              <Section className="bg-blue-50 rounded-lg p-6 mb-6">
-                <Heading className="font-display text-lg text-gray-800 mb-4">Pre-booking Information</Heading>
-                {getPreBookingQnA({ booking }).map((qa, index) => (
-                  <div key={index} className="mb-4">
-                    <Text className="text-sm font-semibold text-gray-700 mb-1">{qa.question}</Text>
-                    <Text className="text-sm text-gray-800 bg-white p-3 rounded border-l-4 border-blue-400">
-                      {qa.answer}
-                    </Text>
-                  </div>
-                ))}
-              </Section>
-            )}
-
-            <Section className="text-center mb-6">
-              <Button
-                href={`https://positivemindcare.com/dashboard/bookings/${booking.id}`}
-                className="bg-emerald-500 text-white py-3 px-8 rounded-lg text-base font-semibold no-underline mr-4"
-              >
-                View Booking Details
-              </Button>
-              <Button
-                href={`https://positivemindcare.com/dashboard/calendar`}
-                className="bg-gray-200 text-gray-800 py-3 px-8 rounded-lg text-base font-semibold no-underline"
-              >
-                Open Calendar
-              </Button>
             </Section>
 
             <Text className="text-base text-gray-600 mb-4">

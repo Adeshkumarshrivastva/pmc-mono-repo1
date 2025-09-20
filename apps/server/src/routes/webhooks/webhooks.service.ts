@@ -44,6 +44,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
           },
         },
         service: true,
+        payments: true,
       },
     })
 
@@ -109,7 +110,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
             Content: {
               Simple: {
                 Subject: {
-                  Data: `Booking Confirmed - ${booking.serviceName} with Dr. ${booking.expert.user.name}`,
+                  Data: `Booking Confirmed - ${booking.serviceName} with ${booking.expert.user.name}`,
                 },
                 Body: {
                   Html: {
@@ -126,8 +127,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
     await Promise.allSettled(emailPromises)
 
     return c.json({ success: true, message: 'Payment confirmed and emails sent' })
-  } catch (error) {
-    console.error('Error in payment confirmation:', error)
+  } catch {
     return c.json({ error: 'Internal server error' }, 500)
   }
 }

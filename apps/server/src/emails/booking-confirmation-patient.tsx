@@ -1,8 +1,19 @@
 /** @jsxImportSource react */
 
 import { Container, Font, Html, Heading, Text, Section, Row, Column, Button, Tailwind } from '@react-email/components'
-import { type Booking, type Expert, type Service, type Patient, type User, ServiceMode } from '../generated/prisma'
-import { formatDateTime, formatCurrency, getInPersonAddress, getVirtualMeetingLink, getPreBookingQnA } from './lib'
+import { match } from 'ts-pattern'
+import {
+  type Booking,
+  type Expert,
+  type Service,
+  type Patient,
+  type User,
+  type Payment,
+  ServiceMode,
+} from '../generated/prisma'
+import { formatCurrency, getInPersonAddress, getVirtualMeetingLink } from '../lib/booking'
+import { env } from '../lib/env'
+import { formatDateTimeRange } from '../lib/date'
 
 type BookingWithRelations = Booking & {
   expert: Expert & {
@@ -12,6 +23,7 @@ type BookingWithRelations = Booking & {
     user: User
   }
   service: Service
+  payments: Payment[]
 }
 
 type BookingConfirmationProps = {
@@ -83,8 +95,8 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
                   <Text className="text-sm text-gray-600 font-semibold m-0">Date & Time:</Text>
                 </Column>
                 <Column className="w-2/3">
-                  <Text className="text-sm text-gray-900 m-0 font-semibold">
-                    {formatDateTime(booking.startDateTime)}
+                  <Text className="text-sm text-gray-900 m-0">
+                    {formatDateTimeRange({ startDateTime: booking.startDateTime, endDateTime: booking.endDateTime })}
                   </Text>
                 </Column>
               </Row>
@@ -109,32 +121,41 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
                 </Column>
               </Row>
 
-              {booking.mode === ServiceMode.IN_PERSON && getInPersonAddress({ booking }) && (
-                <Row className="mb-3">
-                  <Column className="w-1/3">
-                    <Text className="text-sm text-gray-600 font-semibold m-0">Location:</Text>
-                  </Column>
-                  <Column className="w-2/3">
-                    <Text className="text-sm text-gray-900 m-0">{getInPersonAddress({ booking })}</Text>
-                  </Column>
-                </Row>
-              )}
-
-              {booking.mode === ServiceMode.VIRTUAL && getVirtualMeetingLink({ booking }) && (
-                <Row className="mb-3">
-                  <Column className="w-1/3">
-                    <Text className="text-sm text-gray-600 font-semibold m-0">Meeting Link:</Text>
-                  </Column>
-                  <Column className="w-2/3">
-                    <Button
-                      href={getVirtualMeetingLink({ booking }) || undefined}
-                      className="bg-blue-600 text-white py-2 px-5 rounded text-sm no-underline font-semibold"
-                    >
-                      Join Meeting
-                    </Button>
-                  </Column>
-                </Row>
-              )}
+              {match(booking.mode)
+                .with(
+                  ServiceMode.IN_PERSON,
+                  () =>
+                    getInPersonAddress({ booking }) && (
+                      <Row className="mb-3">
+                        <Column className="w-1/3">
+                          <Text className="text-sm text-gray-600 font-semibold m-0">Location:</Text>
+                        </Column>
+                        <Column className="w-2/3">
+                          <Text className="text-sm text-gray-900 m-0">{getInPersonAddress({ booking })}</Text>
+                        </Column>
+                      </Row>
+                    ),
+                )
+                .with(
+                  ServiceMode.VIRTUAL,
+                  () =>
+                    getVirtualMeetingLink({ booking }) && (
+                      <Row className="mb-3">
+                        <Column className="w-1/3">
+                          <Text className="text-sm text-gray-600 font-semibold m-0">Meeting Link:</Text>
+                        </Column>
+                        <Column className="w-2/3">
+                          <Button
+                            href={getVirtualMeetingLink({ booking }) || undefined}
+                            className="bg-blue-600 text-white py-2 px-5 rounded text-sm no-underline font-semibold"
+                          >
+                            Join Meeting
+                          </Button>
+                        </Column>
+                      </Row>
+                    ),
+                )
+                .otherwise(() => null)}
 
               <Row className="mb-3">
                 <Column className="w-1/3">
@@ -149,10 +170,10 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
 
               <Row>
                 <Column className="w-1/3">
-                  <Text className="text-sm text-gray-600 font-semibold m-0">Booking ID:</Text>
+                  <Text className="text-sm text-gray-600 font-semibold m-0">Order ID:</Text>
                 </Column>
                 <Column className="w-2/3">
-                  <Text className="text-sm text-gray-900 m-0 font-mono">#{booking.id.slice(-8).toUpperCase()}</Text>
+                  <Text className="text-sm text-gray-900 m-0">#{booking.payments[0].razorpayOrderId}</Text>
                 </Column>
               </Row>
             </Section>
@@ -173,23 +194,9 @@ export default function BookingConfirmationForPatient({ booking }: BookingConfir
               </Text>
             </Section>
 
-            {getPreBookingQnA({ booking }).length > 0 && (
-              <Section className="bg-white border border-gray-200 rounded-lg p-5 mb-6">
-                <Heading className="font-sans text-lg text-gray-900 mb-4">Your Pre-booking Information</Heading>
-                {getPreBookingQnA({ booking }).map((qa, index) => (
-                  <div key={index} className="mb-4">
-                    <Text className="text-sm font-semibold text-gray-900 mb-1">{qa.question}</Text>
-                    <Text className="text-sm text-gray-700 bg-gray-50 p-3 rounded border-l-4 border-blue-400 italic">
-                      "{qa.answer}"
-                    </Text>
-                  </div>
-                ))}
-              </Section>
-            )}
-
             <Section className="text-center mb-8">
               <Button
-                href={`https://positivemindcare.com/bookings/${booking.id}`}
+                href={`${env.VITE_PUBLIC_BASE_PATH}/bookings/${booking.id}`}
                 className="bg-blue-600 text-white py-3.5 px-8 rounded-lg text-base font-semibold no-underline mr-4 mb-2 inline-block"
               >
                 View Booking Details
