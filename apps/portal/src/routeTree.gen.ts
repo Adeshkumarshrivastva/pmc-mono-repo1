@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as PublicExpertsIndexRouteImport } from './routes/_public/experts/index'
@@ -23,10 +24,14 @@ const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/_app/',
-  path: '/',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
@@ -44,14 +49,14 @@ const PublicBookingsBookingIdRoute = PublicBookingsBookingIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppPatientDashboardRoute = AppPatientDashboardRouteImport.update({
-  id: '/_app/patient/dashboard',
+  id: '/patient/dashboard',
   path: '/patient/dashboard',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 const AppExpertDashboardRoute = AppExpertDashboardRouteImport.update({
-  id: '/_app/expert/dashboard',
+  id: '/expert/dashboard',
   path: '/expert/dashboard',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 const PublicExpertsExpertSlugIndexRoute =
   PublicExpertsExpertSlugIndexRouteImport.update({
@@ -88,6 +93,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_app/': typeof AppIndexRoute
@@ -121,6 +127,7 @@ export interface FileRouteTypes {
     | '/experts/$expertSlug'
   id:
     | '__root__'
+    | '/_app'
     | '/_auth'
     | '/_auth/login'
     | '/_app/'
@@ -133,10 +140,8 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
-  AppIndexRoute: typeof AppIndexRoute
-  AppExpertDashboardRoute: typeof AppExpertDashboardRoute
-  AppPatientDashboardRoute: typeof AppPatientDashboardRoute
   PublicBookingsBookingIdRoute: typeof PublicBookingsBookingIdRoute
   PublicExpertsIndexRoute: typeof PublicExpertsIndexRoute
   PublicExpertsExpertSlugServiceSlugRoute: typeof PublicExpertsExpertSlugServiceSlugRoute
@@ -152,12 +157,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/': {
       id: '/_app/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_auth/login': {
       id: '/_auth/login'
@@ -185,14 +197,14 @@ declare module '@tanstack/react-router' {
       path: '/patient/dashboard'
       fullPath: '/patient/dashboard'
       preLoaderRoute: typeof AppPatientDashboardRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/expert/dashboard': {
       id: '/_app/expert/dashboard'
       path: '/expert/dashboard'
       fullPath: '/expert/dashboard'
       preLoaderRoute: typeof AppExpertDashboardRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_public/experts/$expertSlug/': {
       id: '/_public/experts/$expertSlug/'
@@ -211,6 +223,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppExpertDashboardRoute: typeof AppExpertDashboardRoute
+  AppPatientDashboardRoute: typeof AppPatientDashboardRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppExpertDashboardRoute: AppExpertDashboardRoute,
+  AppPatientDashboardRoute: AppPatientDashboardRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 interface AuthRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
 }
@@ -222,10 +248,8 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
-  AppIndexRoute: AppIndexRoute,
-  AppExpertDashboardRoute: AppExpertDashboardRoute,
-  AppPatientDashboardRoute: AppPatientDashboardRoute,
   PublicBookingsBookingIdRoute: PublicBookingsBookingIdRoute,
   PublicExpertsIndexRoute: PublicExpertsIndexRoute,
   PublicExpertsExpertSlugServiceSlugRoute:
