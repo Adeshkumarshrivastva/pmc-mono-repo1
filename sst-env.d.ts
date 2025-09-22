@@ -62,6 +62,11 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    SenderEmail: {
+      configSet: string
+      sender: string
+      type: 'sst.aws.Email'
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />
