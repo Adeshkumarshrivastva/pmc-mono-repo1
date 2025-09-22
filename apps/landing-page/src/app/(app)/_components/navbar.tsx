@@ -20,7 +20,7 @@ const NAV_ITEMS = [
   { id: 'about', href: '/about-us', label: 'About Us' },
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'services', href: '/services', label: 'Services' },
-  { id: 'our-experts', href: '/our-experts', label: 'Our Experts' },
+  { id: 'our-experts', href: '/portal/our-experts', label: 'Our Experts' },
   { id: 'webinars', href: '/webinars', label: 'Awareness' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ] as const

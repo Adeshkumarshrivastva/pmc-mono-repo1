@@ -13,12 +13,12 @@ type NavbarProps = { services: Service[] }
 
 const NAV_ITEMS = [
   { id: 'home', href: 'https://positivemindcare.com/', label: 'Home' },
-  { id: 'about', href: 'https://positivemindcare.com/landing-page/about-us', label: 'About Us' },
-  { id: 'deepTms', href: 'https://positivemindcare.com/landing-page/deep-tms', label: 'Deep TMS' },
-  { id: 'services', href: 'https://positivemindcare.com/landing-page/services', label: 'Services' },
+  { id: 'about', href: 'https://positivemindcare.com/about-us', label: 'About Us' },
+  { id: 'deepTms', href: 'https://positivemindcare.com/deep-tms', label: 'Deep TMS' },
+  { id: 'services', href: 'https://positivemindcare.com/services', label: 'Services' },
   { id: 'our-experts', href: '/portal/experts', label: 'Our Experts' },
-  { id: 'webinars', href: 'https://positivemindcare.com/landing-page/webinars', label: 'Awareness' },
-  { id: 'contact-us', href: 'https://positivemindcare.com/landing-page/contact-us', label: 'Contact' },
+  { id: 'webinars', href: 'https://positivemindcare.com/webinars', label: 'Awareness' },
+  { id: 'contact-us', href: 'https://positivemindcare.com/contact-us', label: 'Contact' },
 ] as const
 
 export default function Navbar({}: NavbarProps) {

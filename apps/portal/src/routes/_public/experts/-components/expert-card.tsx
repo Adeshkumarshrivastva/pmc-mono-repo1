@@ -28,7 +28,7 @@ type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$g
 
 function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
   const { servicesProvided, name, slug, city, country, qualifications, availability } = expert
-  const [selectedMode, setSelectedMode] = useState<ServiceMode>('VIRTUAL')
+  const [selectedMode] = useState<ServiceMode>('VIRTUAL')
   const [showAllServices, setShowAllServices] = useState(false)
   const navigate = useNavigate()
 
@@ -119,23 +119,18 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
         </div>
 
         {availableModes.length > 0 ? (
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-4 flex-wrap">
             {availableModes.map((mode, i) => {
-              const isActive = selectedMode === mode.value
+              const ServiceIcon = mode.icon
 
               return (
-                <Button
+                <div
                   key={i}
-                  onClick={() => setSelectedMode(mode.value)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-orange-100 text-orange-700 border border-orange-300'
-                      : 'bg-muted text-muted-foreground border border-border hover:bg-accent'
-                  }`}
-                  icon={<mode.icon className="w-4 h-4" />}
+                  className="flex items-center gap-1 px-2 py-1 bg-muted/50 border border-border rounded-md text-sm"
                 >
-                  {mode.label}
-                </Button>
+                  <ServiceIcon className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-foreground">{mode.label}</span>
+                </div>
               )
             })}
           </div>
@@ -143,9 +138,7 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
 
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3">
-            <div className="text-sm font-medium text-foreground">
-              Available Services ({selectedMode === 'VIRTUAL' ? 'Online' : 'In-person'})
-            </div>
+            <div className="text-sm font-medium text-foreground">Available Services</div>
             {filteredServices.length > 2 ? (
               <button
                 onClick={() => setShowAllServices(!showAllServices)}
