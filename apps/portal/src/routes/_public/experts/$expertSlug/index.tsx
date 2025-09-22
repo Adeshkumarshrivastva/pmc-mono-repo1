@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { cn } from '@/lib/utils'
 import { CURRENCY_CONFIG } from '@/lib/booking'
+import Navbar from '../-components/navbar'
 
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
@@ -64,144 +65,147 @@ function ExpertPage() {
       const minPrice = prices.length > 0 ? Math.min(...prices) : 0
 
       return (
-        <div className="min-h-screen bg-accent">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full opacity-50"></div>
-            <div className="absolute top-1/2 -left-40 w-60 h-60 bg-accent-foreground/20 rounded-full opacity-50"></div>
-            <div className="absolute bottom-70 right-1/4 w-40 h-40 bg-primary/30 rounded-full opacity-40"></div>
-          </div>
+        <>
+          <Navbar services={[]} />
+          <div className="min-h-screen bg-accent">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full opacity-50"></div>
+              <div className="absolute top-1/2 -left-40 w-60 h-60 bg-accent-foreground/20 rounded-full opacity-50"></div>
+              <div className="absolute bottom-70 right-1/4 w-40 h-40 bg-primary/30 rounded-full opacity-40"></div>
+            </div>
 
-          <div className="container mx-auto px-4 py-6 relative">
-            <Link
-              to="/experts"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors font-medium text-sm"
-            >
-              <span className="flex items-center gap-1">
-                <ArrowLeft className="size-4" /> Back to Experts
-              </span>
-            </Link>
+            <div className="container mx-auto px-4 py-6 relative">
+              <Link
+                to="/experts"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors font-medium text-sm"
+              >
+                <span className="flex items-center gap-1">
+                  <ArrowLeft className="size-4" /> Back to Experts
+                </span>
+              </Link>
 
-            <div className="relative overflow-hidden mb-8">
-              <div className="absolute inset-0 bg-accent/40"></div>
+              <div className="relative overflow-hidden mb-8">
+                <div className="absolute inset-0 bg-accent/40"></div>
 
-              <div className="relative bg-card/90 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6 lg:p-8">
-                <div className="flex flex-col lg:flex-row gap-6 items-start">
-                  <div className="relative flex-shrink-0">
-                    {image ? (
-                      <div className="relative flex-shrink-0">
-                        <div className="w-36 h-48">
-                          <img src={image} alt={name} className="w-full h-full object-cover rounded-xl" />
-                        </div>
-                      </div>
-                    ) : (
-                      <UserIcon className="size-6 text-gray-400" />
-                    )}
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="mb-4">
-                      <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{name}</h1>
-                      <p className="text-lg text-primary font-semibold mb-2">{EXPERT_TYPE_CONFIG[type]?.label}</p>
-
-                      {avgRating && avgRating > 0 ? (
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={cn(
-                                  'w-4 h-4',
-                                  i < Math.floor(avgRating) ? 'text-yellow-400 fill-current' : 'text-gray-300',
-                                )}
-                              />
-                            ))}
+                <div className="relative bg-card/90 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6 lg:p-8">
+                  <div className="flex flex-col lg:flex-row gap-6 items-start">
+                    <div className="relative flex-shrink-0">
+                      {image ? (
+                        <div className="relative flex-shrink-0">
+                          <div className="w-36 h-48">
+                            <img src={image} alt={name} className="w-full h-full object-cover rounded-xl" />
                           </div>
-                          <span className="text-sm font-semibold text-foreground ml-1">{avgRating.toFixed(1)}</span>
                         </div>
-                      ) : null}
+                      ) : (
+                        <UserIcon className="size-6 text-gray-400" />
+                      )}
+                    </div>
 
-                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-                        <div className="text-center lg:text-left">
-                          <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                            <MapPin className="w-4 h-4" />
-                            <span className="text-sm">Location</span>
+                    <div className="flex-1">
+                      <div className="mb-4">
+                        <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{name}</h1>
+                        <p className="text-lg text-primary font-semibold mb-2">{EXPERT_TYPE_CONFIG[type]?.label}</p>
+
+                        {avgRating && avgRating > 0 ? (
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="flex items-center">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={cn(
+                                    'w-4 h-4',
+                                    i < Math.floor(avgRating) ? 'text-yellow-400 fill-current' : 'text-gray-300',
+                                  )}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-sm font-semibold text-foreground ml-1">{avgRating.toFixed(1)}</span>
                           </div>
-                          <p className="text-sm font-semibold text-foreground">
-                            {city}, {country}
-                          </p>
-                        </div>
+                        ) : null}
 
-                        {minPrice > 0 ? (
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                           <div className="text-center lg:text-left">
                             <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                              <span className="text-sm">Starting at</span>
+                              <MapPin className="w-4 h-4" />
+                              <span className="text-sm">Location</span>
                             </div>
-                            <p className="text-sm font-semibold text-primary">{`${CURRENCY_CONFIG['INR'].symbol} ${minPrice}`}</p>
+                            <p className="text-sm font-semibold text-foreground">
+                              {city}, {country}
+                            </p>
+                          </div>
+
+                          {minPrice > 0 ? (
+                            <div className="text-center lg:text-left">
+                              <div className="flex items-center gap-1 text-muted-foreground mb-1">
+                                <span className="text-sm">Starting at</span>
+                              </div>
+                              <p className="text-sm font-semibold text-primary">{`${CURRENCY_CONFIG['INR'].symbol} ${minPrice}`}</p>
+                            </div>
+                          ) : null}
+                        </div>
+
+                        {qualifications ? (
+                          <div className="mb-4">
+                            <h3 className="text-sm font-semibold text-foreground mb-1">Qualifications</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {(typeof qualifications === 'string'
+                                ? [qualifications]
+                                : Array.isArray(qualifications)
+                                  ? qualifications
+                                  : []
+                              ).join(', ')}
+                            </p>
                           </div>
                         ) : null}
                       </div>
-
-                      {qualifications ? (
-                        <div className="mb-4">
-                          <h3 className="text-sm font-semibold text-foreground mb-1">Qualifications</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {(typeof qualifications === 'string'
-                              ? [qualifications]
-                              : Array.isArray(qualifications)
-                                ? qualifications
-                                : []
-                            ).join(', ')}
-                          </p>
-                        </div>
-                      ) : null}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {bio ? (
-              <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6 mb-6">
-                <h2 className="text-lg font-bold text-foreground mb-3">About {name}</h2>
-                <p className="text-muted-foreground leading-relaxed text-sm">{bio}</p>
-              </div>
-            ) : null}
-
-            <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6">
-              <h2 className="text-lg font-bold text-foreground mb-4">Services & Expertise</h2>
-
-              {servicesProvided && servicesProvided.length > 0 ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  {filteredServices.map((service, index) => (
-                    <ServiceCard
-                      key={service.id || index}
-                      service={service}
-                      onBook={() => {
-                        navigate({
-                          to: '/experts/$expertSlug/$serviceSlug',
-                          params: {
-                            expertSlug: expertSlug,
-                            serviceSlug: service.slug,
-                          },
-                        })
-                      }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No services available.</p>
-                </div>
-              )}
-
-              {servicesProvided && servicesProvided.length > 0 && filteredServices.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No services available for the selected mode.</p>
+              {bio ? (
+                <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6 mb-6">
+                  <h2 className="text-lg font-bold text-foreground mb-3">About {name}</h2>
+                  <p className="text-muted-foreground leading-relaxed text-sm">{bio}</p>
                 </div>
               ) : null}
+
+              <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6">
+                <h2 className="text-lg font-bold text-foreground mb-4">Services & Expertise</h2>
+
+                {servicesProvided && servicesProvided.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {filteredServices.map((service, index) => (
+                      <ServiceCard
+                        key={service.id || index}
+                        service={service}
+                        onBook={() => {
+                          navigate({
+                            to: '/experts/$expertSlug/$serviceSlug',
+                            params: {
+                              expertSlug: expertSlug,
+                              serviceSlug: service.slug,
+                            },
+                          })
+                        }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">No services available.</p>
+                  </div>
+                )}
+
+                {servicesProvided && servicesProvided.length > 0 && filteredServices.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">No services available for the selected mode.</p>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )
     })
     .otherwise(() => null)
@@ -249,13 +253,6 @@ function ServiceCard({
           )
         })}
       </div>
-
-      {service.availableModes.includes('IN_PERSON') && service.city ? (
-        <div className="flex items-center gap-1 text-sm text-muted-foreground mb-3">
-          <MapPin className="w-3 h-3" />
-          {service.city}, {service.country}
-        </div>
-      ) : null}
 
       <Button
         onClick={onBook}
