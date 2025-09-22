@@ -10,7 +10,6 @@ export const Route = createFileRoute('/_app/')({
     if (!session.data) {
       throw redirect({ to: '/login' })
     }
-
     if (session.data.user.role === 'EXPERT') {
       throw redirect({ to: '/expert/dashboard' })
     }

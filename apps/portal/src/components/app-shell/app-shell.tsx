@@ -26,6 +26,7 @@ import {
 
 import { getErrorMessage } from '@/lib/utils'
 import NavLink from './components/nav-link'
+import { queryClient } from '@/lib/query-client'
 
 type AppShellProps = {
   children: React.ReactNode
@@ -35,11 +36,12 @@ type AppShellProps = {
 export default function AppShell({ children, user }: AppShellProps) {
   const navigate = useNavigate()
   const signOutMutation = useMutation({
-    mutationFn: async () => {
-      await authClient.signOut()
+    mutationFn: () => {
+      return authClient.signOut()
     },
     onSuccess: () => {
       toast.success('Signed out successfully')
+      queryClient.clear()
       navigate({ to: '/login', replace: true })
     },
     onError: (error) => {
@@ -122,14 +124,14 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
   {
     type: 'link',
     icon: LayoutDashboardIcon,
-    name: 'Dashboard',
+    name: 'Home',
     path: '/patient/dashboard',
     availableForUserRoles: ['PATIENT'],
   },
   {
     type: 'link',
     icon: CalendarDaysIcon,
-    name: 'Bookings',
+    name: 'My Bookings',
     path: '/patient/bookings',
     availableForUserRoles: ['PATIENT'],
   },
