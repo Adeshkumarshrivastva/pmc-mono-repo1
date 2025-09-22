@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Spinner } from '@/components/ui/spinner'
 
-export const Route = createFileRoute('/_app/patient/dashboard')({
-  component: PatientDashboard,
+export const Route = createFileRoute('/_app/patient/bookings/')({
+  component: PatientBookings,
   beforeLoad: ({ context: { user } }) => {
     if (user.role === 'EXPERT') {
       throw redirect({ to: '/expert/dashboard' })
@@ -21,10 +21,10 @@ export const Route = createFileRoute('/_app/patient/dashboard')({
   },
 })
 
-function PatientDashboard() {
+function PatientBookings() {
   return (
     <div className="h-full w-full flex flex-col items-center justify-center">
-      <div>Patient Dashboard Page</div>
+      <div>Patient Bookings Page</div>
     </div>
   )
 }

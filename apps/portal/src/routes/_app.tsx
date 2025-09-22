@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { CURRENT_SESSION_QUERY_KEY, getUserSession } from '@/queries/session'
 import { Spinner } from '@/components/ui/spinner'
+import AppShell from '@/components/app-shell'
 
 export const Route = createFileRoute('/_app')({
   component: AppLayout,
@@ -14,6 +15,9 @@ export const Route = createFileRoute('/_app')({
     }
     return { user: session.data.user }
   },
+  loader: ({ context: { user } }) => {
+    return { user }
+  },
   pendingComponent: () => {
     return (
       <div className="flex h-screen w-full items-center justify-center gap-2">
@@ -25,5 +29,11 @@ export const Route = createFileRoute('/_app')({
 })
 
 function AppLayout() {
-  return <Outlet />
+  const { user } = Route.useLoaderData()
+
+  return (
+    <AppShell user={user}>
+      <Outlet />
+    </AppShell>
+  )
 }
