@@ -95,3 +95,19 @@ export const expertMonthlyAvailableSlotsQuery = z.object({
 })
 
 export type ExpertMonthlyAvailableSlotsQuery = z.infer<typeof expertMonthlyAvailableSlotsQuery>
+
+export const expertBookingsSearchQuery = z.discriminatedUnion('period', [
+  z.object({
+    period: z.literal('upcoming'),
+  }),
+  z.object({
+    period: z.literal('past'),
+  }),
+  z.object({
+    period: z.literal('fixed'),
+    startDate: z.iso.datetime(),
+    endDate: z.iso.datetime(),
+  }),
+])
+
+export type ExpertBookingsSearchQuery = z.infer<typeof expertBookingsSearchQuery>

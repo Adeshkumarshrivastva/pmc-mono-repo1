@@ -2,6 +2,7 @@ import type { Dayjs } from 'dayjs'
 import dayjs from './dayjs'
 
 export const MINUTES_PER_HOUR = 60
+export const DEFAULT_TIMEZONE = 'Asia/Calcutta'
 
 export function dateToMinutes(date: Date | string): number {
   const dt = dayjs(date)
@@ -30,7 +31,7 @@ export function toHHMMA(date: Date | Dayjs) {
 
 export function formatDateTimeRange(
   { startDateTime, endDateTime }: { startDateTime: Date; endDateTime: Date },
-  timeZone = 'Asia/Calcutta',
+  timeZone = DEFAULT_TIMEZONE,
 ) {
   const localStartDateTime = dayjs(startDateTime).tz(timeZone)
   const localEndDateTime = dayjs(endDateTime).tz(timeZone)
