@@ -115,7 +115,7 @@ function ExpertServiceBookingPage() {
                     />
                   </div>
                   <Separator className="hidden xl:block" orientation="vertical" />
-                  <div className="w-full h-full flex flex-col xl:max-w-sm xl:rounded-r-xl">
+                  <div className="w-full h-full xl:rounded-r-xl p-6 space-y-4">
                     <h2 className="text-2xl font-semibold text-foreground">Verify Your Identity</h2>
                     <div className="w-full">
                       <PhoneVerificationForm
@@ -144,7 +144,7 @@ function ExpertServiceBookingPage() {
                     />
                   </div>
                   <Separator className="hidden xl:block" orientation="vertical" />
-                  <div className="w-full h-full  rounded-none xl:rounded-r-xl space-y-4 p-6">
+                  <div className="w-full h-full rounded-none xl:rounded-r-xl space-y-4 p-6">
                     <h2 className="text-2xl font-semibold text-foreground">Enter Details</h2>
                     <div className="w-full max-w-sm">
                       <PrebookingForm
