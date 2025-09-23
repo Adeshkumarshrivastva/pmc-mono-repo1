@@ -99,7 +99,7 @@ export default function AppShell({ children, user }: AppShellProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-8">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   )
@@ -117,8 +117,15 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
   {
     type: 'link',
     icon: HomeIcon,
-    name: 'Dashboard',
+    name: 'Home',
     path: '/expert/dashboard',
+    availableForUserRoles: ['EXPERT'],
+  },
+  {
+    type: 'link',
+    icon: CalendarDaysIcon,
+    name: 'Bookings',
+    path: '/expert/bookings',
     availableForUserRoles: ['EXPERT'],
   },
   {
