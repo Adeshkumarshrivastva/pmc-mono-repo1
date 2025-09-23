@@ -3,7 +3,7 @@ import { SingleBar, Presets } from 'cli-progress'
 import { nanoid } from 'nanoid'
 import z from 'zod'
 import experts from './experts.json'
-import { DayOfWeek, ExpertType, PrismaClient } from '../../../src/generated/prisma'
+import { DayOfWeek, ExpertGender, ExpertType, PrismaClient } from '../../../src/generated/prisma'
 import { getErrorMessage } from '../../../src/lib/utils'
 import dayjs from '../../../src/lib/dayjs'
 
@@ -20,6 +20,9 @@ export async function seedExperts(prisma: PrismaClient) {
         email: z.string(),
         type: z.nativeEnum(ExpertType),
         qualification: z.string(),
+        bio: z.string(),
+        expertGender: z.enum(ExpertGender),
+        expertise: z.string().array(),
         image: z.string(),
       })
       .parse(expert)
@@ -58,6 +61,9 @@ export async function seedExperts(prisma: PrismaClient) {
           qualifications: validatedExpert.qualification,
           image: validatedExpert.image,
           userId: user.id,
+          bio: validatedExpert.bio,
+          expertise: validatedExpert.expertise,
+          gender: validatedExpert.expertGender,
         },
       })
 
