@@ -9,6 +9,7 @@ import {
   type SortBy,
   type ExpertSearchResponse,
   type ExpertMonthlyAvailableSlotsQuery,
+  type ExpertBookingsSearchQuery,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 import {
@@ -370,4 +371,54 @@ export async function getExpertBooking(c: C, bookingId: string) {
   }
 
   return c.json({ success: true, booking })
+}
+
+export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+    const expert = await prisma.expert.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        id: true,
+        userId: true,
+      },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const bookingsWhereInput: Prisma.BookingWhereInput = {
+      expertId: expert.id,
+    }
+    const now = dayjs().toDate()
+
+    if (input.period === 'upcoming') {
+      bookingsWhereInput.OR = [
+        { startDateTime: { gte: now } },
+        // currently ongoing bookings
+        { startDateTime: { lt: now }, endDateTime: { gt: now } },
+      ]
+    } else if (input.period === 'past') {
+      bookingsWhereInput.endDateTime = { lt: now }
+    } else if (input.period === 'fixed') {
+      bookingsWhereInput.startDateTime = { gte: input.startDate }
+
+      bookingsWhereInput.endDateTime = { lte: input.endDate }
+    }
+
+    const bookings = await prisma.booking.findMany({
+      where: bookingsWhereInput,
+      orderBy: input.period === 'past' ? { endDateTime: 'desc' } : { startDateTime: 'asc' },
+    })
+
+    return c.json({ success: true, bookings })
+  } catch {
+    return c.json({ error: 'Failed to fetch booking' }, 500)
+  }
 }

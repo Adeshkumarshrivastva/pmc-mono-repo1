@@ -233,6 +233,7 @@ model Booking {
   // utc format
   startDateTime                    DateTime
   endDateTime                      DateTime
+  timezone                         String?       @default("Asia/Kolkata")
   mode                             ServiceMode
   isNoShow                         Boolean       @default(false)
   noShowBy                         UserRole?

@@ -1,13 +1,14 @@
 import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
 import type { HonoContext } from '../../lib/context'
-import { expertMonthlyAvailableSlotsQuery, expertSearchQuery } from './experts.input'
+import { expertBookingsSearchQuery, expertMonthlyAvailableSlotsQuery, expertSearchQuery } from './experts.input'
 import {
   getExpertFromSlug,
   getExperts,
   getExpertMonthlyAvailableSlots,
   getExpertServiceFromSlug,
   getExpertBooking,
+  getExpertBookings,
 } from './experts.service'
 
 export const expertsApp = new Hono<{ Variables: HonoContext }>()
@@ -21,5 +22,8 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
     zValidator('query', expertMonthlyAvailableSlotsQuery),
     async (c) =>
       getExpertMonthlyAvailableSlots(c, c.req.param('expertSlug'), c.req.param('serviceSlug'), c.req.valid('query')),
+  )
+  .get('/bookings/', zValidator('query', expertBookingsSearchQuery), async (c) =>
+    getExpertBookings(c, c.req.valid('query')),
   )
   .get('/bookings/:bookingId', async (c) => getExpertBooking(c, c.req.param('bookingId')))
