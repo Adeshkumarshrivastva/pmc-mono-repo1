@@ -27,6 +27,10 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     where: {
       id: input.expertId,
     },
+    select: {
+      id: true,
+      userId: true,
+    },
   })
 
   if (!expert) {
