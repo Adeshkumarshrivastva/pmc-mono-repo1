@@ -310,7 +310,7 @@ export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: Se
     icon: MapPin,
   },
   VIRTUAL: {
-    label: 'Google Meet',
+    label: 'Virtual',
     value: 'VIRTUAL',
     icon: Video,
   },

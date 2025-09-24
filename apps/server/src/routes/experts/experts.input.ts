@@ -13,6 +13,18 @@ export const expertSearchQuery = z.object({
   limit: z.coerce.number().min(1).max(50).default(10),
   sortBy: z.enum(['price', 'rating', 'name']).optional(),
   sortOrder: z.enum(['asc', 'desc']).default('asc'),
+  gender: z.enum(['MALE', 'FEMALE']).optional(),
+  expertise: z
+    .union([
+      z.string().array(),
+      z.string().transform((val) =>
+        val
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean),
+      ),
+    ])
+    .optional(),
 })
 
 export const serviceSearchQuery = z.object({
@@ -20,7 +32,6 @@ export const serviceSearchQuery = z.object({
   mode: z.enum(['IN_PERSON', 'VIRTUAL']).optional(),
   minPrice: z.coerce.number().optional(),
   maxPrice: z.coerce.number().optional(),
-  tags: z.string().optional(),
   location: z.string().optional(),
   minDuration: z.coerce.number().optional(),
   maxDuration: z.coerce.number().optional(),
@@ -59,6 +70,8 @@ export const EXPERT_SELECT_FIELDS = {
   qualifications: true,
   createdAt: true,
   updatedAt: true,
+  gender: true,
+  expertise: true,
   user: {
     select: {
       id: true,
@@ -80,7 +93,7 @@ export const SERVICE_SELECT_FIELDS = {
   isPartialPaymentAvailable: true,
   minPaymentAmount: true,
   durationInMinutes: true,
-  tags: true,
+
   createdAt: true,
   updatedAt: true,
 } satisfies Prisma.ServiceSelect

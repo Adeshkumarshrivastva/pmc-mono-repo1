@@ -42,26 +42,17 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
       serviceFilters.availableModes = { has: query.serviceMode }
     }
 
-    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-      serviceFilters.price = {}
-      if (query.minPrice !== undefined) {
-        serviceFilters.price.gte = query.minPrice
-      }
-      if (query.maxPrice !== undefined) {
-        serviceFilters.price.lte = query.maxPrice
-      }
-    }
-
-    if (query.tags) {
-      const tagList = query.tags.split(',').map((tag) => tag.trim())
-      serviceFilters.tags = { hasSome: tagList }
-    }
-
     if (query.location) {
-      serviceFilters.OR = [
-        { availableModes: { has: 'VIRTUAL' } },
-        { AND: [{ availableModes: { has: 'IN_PERSON' }, city: query.location }] },
-      ]
+      whereClause.city = query.location
+    }
+
+    if (query.expertise) {
+      whereClause.expertise = {
+        hasSome: query.expertise,
+      }
+    }
+    if (query.gender) {
+      whereClause.gender = query.gender
     }
 
     if (Object.keys(serviceFilters).length > 0) {
