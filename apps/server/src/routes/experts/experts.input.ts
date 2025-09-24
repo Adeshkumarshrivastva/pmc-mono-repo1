@@ -25,6 +25,7 @@ export const expertSearchQuery = z.object({
       ),
     ])
     .optional(),
+  search: z.string().optional(),
 })
 
 export const serviceSearchQuery = z.object({
@@ -32,6 +33,7 @@ export const serviceSearchQuery = z.object({
   mode: z.enum(['IN_PERSON', 'VIRTUAL']).optional(),
   minPrice: z.coerce.number().optional(),
   maxPrice: z.coerce.number().optional(),
+  search: z.string().optional(),
   location: z.string().optional(),
   minDuration: z.coerce.number().optional(),
   maxDuration: z.coerce.number().optional(),

@@ -7,10 +7,9 @@ import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { cn } from '@/lib/utils'
 
-type NavbarProps = {
-  services: Service[]
-}
+type NavbarProps = { services: Service[] }
 
 const NAV_ITEMS = [
   { id: 'home', href: 'https://positivemindcare.com/', label: 'Home' },
@@ -31,13 +30,6 @@ export default function Navbar({}: NavbarProps) {
     document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  function isItemActive(item: (typeof NAV_ITEMS)[number]) {
-    if (item.href.startsWith('/')) {
-      return pathname.startsWith(item.href)
-    }
-    return `/${pathname.split('/')[1]}` === item.href
-  }
-
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
       <nav className="flex items-center justify-between h-full px-4 py-2 mx-auto">
@@ -51,20 +43,19 @@ export default function Navbar({}: NavbarProps) {
 
         <div className="flex-1 hidden xl:flex items-center justify-center xl:space-x-8">
           {NAV_ITEMS.map((item) => {
-            const isActive = isItemActive(item)
+            const isInternal = item.href.startsWith('/portal')
+            const isActive = isInternal && pathname === item.href
             return (
-              <div key={item.id} className="relative">
-                <a
-                  href={item.href}
-                  className="text-lg font-semibold rounded-md px-2 py-1 transition-colors text-primary-foreground/50 hover:text-primary-foreground"
-                >
-                  {item.label}
-                </a>
-
-                {isActive && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-foreground rounded-full " />
+              <a
+                key={item.id}
+                href={item.href}
+                className={cn(
+                  'text-lg font-semibold rounded-md px-2 py-1 transition-colors',
+                  isActive ? 'text-primary-foreground' : 'text-primary-foreground/50 hover:text-primary-foreground',
                 )}
-              </div>
+              >
+                {item.label}
+              </a>
             )
           })}
         </div>

@@ -2,7 +2,18 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Video, MapPin, Clock, Star, type LucideIcon, ArrowLeft, UserIcon, Award, User, Heart } from 'lucide-react'
+import {
+  Video,
+  MapPin,
+  Clock,
+  Star,
+  type LucideIcon,
+  ArrowLeft,
+  UserIcon,
+  Award,
+  User,
+  BookOpenIcon,
+} from 'lucide-react'
 import type { ExpertType, ServiceMode } from '@pmc/server/src/generated/prisma/client'
 import { match } from 'ts-pattern'
 import type { InferResponseType } from 'hono'
@@ -196,7 +207,7 @@ function ExpertPage() {
               {bio ? (
                 <div className="bg-card/80 rounded-2xl border border-border shadow-lg p-6 mb-6">
                   <h2 className="text-lg flex font-bold text-foreground mb-3">
-                    <Heart className="size-6 text-emerald-600 rounded-2xl" />
+                    <BookOpenIcon className="size-5 text-primary mt-1 mr-1 " />
                     About
                   </h2>
                   <p className="text-muted-foreground leading-relaxed text-sm">{bio}</p>

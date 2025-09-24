@@ -210,7 +210,7 @@ export default function OurExperts() {
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     sortBy: 'rating',
-    sortOrder: 'desc',
+    sortOrder: 'asc',
   })
 
   const [showFilters, setShowFilters] = useState(false)
@@ -226,7 +226,7 @@ export default function OurExperts() {
       fetchExperts({
         search: '',
         sortBy: 'rating',
-        sortOrder: 'desc',
+        sortOrder: 'asc',
       }),
   })
 
@@ -295,7 +295,7 @@ export default function OurExperts() {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <input
                 type="text"
-                placeholder="Search by name, specialization..."
+                placeholder="Search by name"
                 className="w-full h-12 pl-12 pr-4 border border-border rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground"
                 value={filters.search}
                 onChange={(e) => {
@@ -391,7 +391,7 @@ export default function OurExperts() {
                     <Combobox
                       placeholder="asc/desc"
                       options={sortOrderOptions}
-                      value={filters.sortOrder || 'desc'}
+                      value={filters.sortOrder || 'asc'}
                       onValueChange={(value) => {
                         updateFilter('sortOrder', value as 'asc' | 'desc')
                       }}
@@ -632,8 +632,8 @@ const expertTypeOptions = [
 
 const serviceModeOptions = [
   { value: '', label: 'All Modes' },
-  { value: 'VIRTUAL', label: 'Online Only' },
-  { value: 'IN_PERSON', label: 'In-Person Only' },
+  { value: 'VIRTUAL', label: 'Virtual' },
+  { value: 'IN_PERSON', label: 'In-Person' },
 ]
 
 const sortByOptions = [
@@ -649,6 +649,6 @@ const genderOptions = [
 ]
 
 const sortOrderOptions = [
-  { value: 'desc', label: 'descending' },
   { value: 'asc', label: 'ascending' },
+  { value: 'desc', label: 'descending' },
 ]

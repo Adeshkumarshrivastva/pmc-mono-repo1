@@ -28,6 +28,26 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
 
     const whereClause: Prisma.ExpertWhereInput = {}
 
+    if (query.search) {
+      whereClause.OR = [
+        {
+          name: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
+
+        {
+          user: {
+            name: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ]
+    }
+
     if (query.type) {
       whereClause.type = query.type
     }
@@ -76,8 +96,8 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
         const aValue = getSortValue(sortBy, a)
         const bValue = getSortValue(sortBy, b)
         return match(query.sortOrder)
-          .with('desc', () => (bValue > aValue ? 1 : bValue < aValue ? -1 : 0))
           .with('asc', () => (aValue > bValue ? 1 : aValue < bValue ? -1 : 0))
+          .with('desc', () => (bValue > aValue ? 1 : bValue < aValue ? -1 : 0))
           .exhaustive()
       })
     }
