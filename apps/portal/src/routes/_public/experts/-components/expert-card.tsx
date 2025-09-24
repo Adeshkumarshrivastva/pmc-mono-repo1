@@ -269,23 +269,7 @@ export default function OurExperts() {
                     `Showing ${data.experts?.length || 0} expert${(data.experts?.length || 0) !== 1 ? 's' : ''} ready to help`,
                 )
                 .with({ status: 'pending' }, () => 'Loading experts...')
-                .with({ status: 'error' }, ({ error }) => (
-                  <div className="text-center py-16">
-                    <div className="bg-background border border-destructive/20 rounded-2xl p-8 max-w-md mx-auto">
-                      <div className="text-destructive mb-4 font-medium">
-                        Error loading experts: {error instanceof Error ? error.message : 'Unknown error'}
-                      </div>
-                      <Button
-                        onClick={() => {
-                          window.location.reload()
-                        }}
-                        className="bg-destructive hover:bg-destructive/90 text-primary-foreground rounded-xl px-6 py-2"
-                      >
-                        Try Again
-                      </Button>
-                    </div>
-                  </div>
-                ))
+                .with({ status: 'error' }, ({ error }) => `Error loading experts:${error}`)
                 .otherwise(() => 'Loading...')}
             </p>
           </div>
