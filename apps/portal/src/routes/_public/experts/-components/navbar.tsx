@@ -27,7 +27,9 @@ export default function Navbar({}: NavbarProps) {
   const pathname = location.pathname
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  const handleBooking = () => document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
+  function handleBooking() {
+    document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   function isItemActive(item: (typeof NAV_ITEMS)[number]) {
     if (item.href.startsWith('/')) {
