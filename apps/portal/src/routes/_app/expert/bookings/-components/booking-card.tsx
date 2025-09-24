@@ -4,67 +4,77 @@ import { match } from 'ts-pattern'
 import type { HonoClient } from '@/lib/hono-client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import dayjs from '@/lib/dayjs'
 import { formatDateTimeRange } from '@/lib/date'
 
 type BookingCardProps = {
   booking: InferResponseType<HonoClient['server']['experts']['bookings']['$get'], 200>['bookings'][number]
+  onViewDetails?: () => void
+  onReschedule?: () => void
 }
 
-export default function BookingCard({ booking }: BookingCardProps) {
+export default function BookingCard({ booking, onViewDetails, onReschedule }: BookingCardProps) {
+  const isUpcoming = dayjs(booking.startDateTime).isAfter(dayjs())
+  const canReschedule = true || (booking.status !== 'CANCELLED' && booking.status !== 'COMPLETED' && isUpcoming)
+
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-200">
-      <CardHeader className="pb-4">
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-lg font-semibold">{booking.serviceName}</CardTitle>
-          <Badge variant={getStatusBadgeVariant(booking.status)}>{booking.status}</Badge>
+    <Card className="hover:shadow-lg transition-all duration-200">
+      <CardHeader>
+        <div className="flex justify-between items-start gap-3">
+          <CardTitle className="text-lg font-semibold flex-1 min-w-0">{booking.serviceName}</CardTitle>
+          <Badge variant={getStatusBadgeVariant(booking.status)} className="flex-shrink-0">
+            {booking.status}
+          </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm">
-            <UserIcon className="size-5 text-muted-foreground" />
-            <span className="text-muted-foreground">{booking.patientName}</span>
-          </div>
+      <CardContent className="space-y-3">
+        <div className="flex items-center gap-2 text-sm">
+          <UserIcon className="size-4 text-muted-foreground flex-shrink-0" />
+          <span className="text-muted-foreground font-bold">{booking.patientName}</span>
         </div>
-
-        <div className="flex items-center gap-2">
-          <CalendarIcon className="size-5 text-muted-foreground" />
-          <div className="text-muted-foreground font-bold text-sm">
+        <div className="flex items-center gap-2 text-sm">
+          <CalendarIcon className="size-4 text-muted-foreground flex-shrink-0" />
+          <div className="text-muted-foreground font-bold">
             {formatDateTimeRange({
               startDateTime: dayjs(booking.startDateTime).toDate(),
               endDateTime: dayjs(booking.endDateTime).toDate(),
             })}
           </div>
         </div>
-
-        <div className="flex items-center gap-2 text-sm pt-2">
+        <div className="flex items-center gap-2 text-sm">
           {match(booking.mode)
             .returnType<React.ReactNode>()
-            .with('IN_PERSON', () => {
-              return (
-                <>
-                  <MapPinIcon className="size-5 text-muted-foreground" />
-                  <span className="text-muted-foreground">Some random location</span>
-                </>
-              )
-            })
-            .with('VIRTUAL', () => {
-              return (
-                <>
-                  <VideoIcon className="size-5 text-muted-foreground" />
-                  <span className="text-muted-foreground">Meet link</span>
-                </>
-              )
-            })
+            .with('IN_PERSON', () => (
+              <>
+                <MapPinIcon className="size-4 text-muted-foreground flex-shrink-0" />
+                <span className="text-muted-foreground font-bold">Some random location</span>
+              </>
+            ))
+            .with('VIRTUAL', () => (
+              <>
+                <VideoIcon className="size-4 text-muted-foreground flex-shrink-0" />
+                <span className="text-muted-foreground font-bold">Meet link</span>
+              </>
+            ))
             .otherwise(() => null)}
+        </div>
+        <div className="pt-2 border-t flex gap-2">
+          <Button className="flex-1" onClick={onViewDetails} size="sm">
+            View Details
+          </Button>
+          {canReschedule && (
+            <Button variant="outline" className="flex-1" onClick={onReschedule} size="sm">
+              Reschedule
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
   )
 }
 
-function getStatusBadgeVariant(status: string) {
+function getStatusBadgeVariant(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
   const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
     DRAFT: 'secondary',
     CONFIRMED: 'default',

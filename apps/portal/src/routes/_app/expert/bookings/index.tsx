@@ -77,7 +77,12 @@ function ExpertBookings() {
                     </div>
                   ))
                   .with({ status: 'success' }, ({ data: { bookings } }) => {
-                    return (
+                    return bookings.length === 0 ? (
+                      <div className="flex h-[200px] w-full flex-col items-center justify-center rounded-lg border">
+                        <p className="text-lg font-medium">No {period} bookings found</p>
+                        <p className="text-sm text-muted-foreground">Once you have bookings, they’ll appear here.</p>
+                      </div>
+                    ) : (
                       <div className="space-y-4">
                         {bookings.map((booking) => (
                           <BookingCard key={booking.id} booking={booking} />
