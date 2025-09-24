@@ -3,8 +3,9 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import { getURLFromMedia } from '@/payload/utils'
-import { Home } from '@/payload/types'
+import type { Home } from '@/payload/types'
 import AppointmentForm from './appointment-form'
+import Image from 'next/image'
 
 type HeroSectionProps = {
   data: Home['heroSetion']
@@ -14,11 +15,16 @@ export default function HeroSection({ data }: HeroSectionProps) {
   const backgroundImageUrl = getURLFromMedia(data?.heroSectionImage ?? '')
 
   return (
-    <div
-      className="bg-cover bg-center bg-no-repeat bg-primary min-h-[600px] sm:min-h-[700px] xl:min-h-[800px] xl:bg-contain xl:bg-bottom flex items-center"
-      style={{ backgroundImage: `url('${backgroundImageUrl}')` }}
-    >
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 xl:px-25">
+    <div className="bg-primary min-h-[600px] sm:min-h-[700px] xl:min-h-[800px] flex items-center relative">
+      <Image
+        src={backgroundImageUrl}
+        alt="Hero background"
+        fill
+        sizes="100vw"
+        className="object-cover xl:object-contain xl:object-bottom"
+        priority
+      />
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 xl:px-25 z-10">
         <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8 xl:gap-12">
           <div className="flex-1 max-w-2xl xl:max-w-none">
             <div className="space-y-6 xl:w-[484px]">
