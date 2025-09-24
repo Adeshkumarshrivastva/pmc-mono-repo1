@@ -1,4 +1,4 @@
-import { GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload'
 
 export const TermsAndConditions: GlobalConfig = {
   slug: 'terms-and-conditions',
