@@ -96,18 +96,11 @@ export const expertMonthlyAvailableSlotsQuery = z.object({
 
 export type ExpertMonthlyAvailableSlotsQuery = z.infer<typeof expertMonthlyAvailableSlotsQuery>
 
-export const expertBookingsSearchQuery = z.discriminatedUnion('period', [
-  z.object({
-    period: z.literal('upcoming'),
-  }),
-  z.object({
-    period: z.literal('past'),
-  }),
-  z.object({
-    period: z.literal('fixed'),
-    startDate: z.iso.datetime(),
-    endDate: z.iso.datetime(),
-  }),
-])
+export const expertBookingsSearchQuery = z.object({
+  period: z.enum(['upcoming', 'past', 'fixed']),
+  // startDate and endDate are only for fixed period
+  startDate: z.iso.datetime().optional(),
+  endDate: z.iso.datetime().optional(),
+})
 
 export type ExpertBookingsSearchQuery = z.infer<typeof expertBookingsSearchQuery>

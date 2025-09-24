@@ -32,17 +32,6 @@ const app = new Hono<{ Variables: HonoContext }>()
   .route('/experts', expertsApp)
   .route('/verification', verificationApp)
   .route('/webhooks', webhooksApp)
-  .use(async (c, next) => {
-    const session = await auth.api.getSession({
-      headers: c.req.raw.headers,
-    })
-    if (!session) {
-      return c.json({ error: 'Unauthorized' }, 403)
-    }
-    c.set('session', session.session)
-    c.set('user', session.user)
-    return next()
-  })
   .route('/user', userApp)
   .route('/booking', bookingApp)
 

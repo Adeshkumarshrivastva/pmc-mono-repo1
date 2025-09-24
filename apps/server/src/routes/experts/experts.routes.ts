@@ -10,20 +10,21 @@ import {
   getExpertBooking,
   getExpertBookings,
 } from './experts.service'
+import { authMiddleware } from '../../middleware/auth.middleware'
 
 export const expertsApp = new Hono<{ Variables: HonoContext }>()
-  .get('', zValidator('query', expertSearchQuery), async (c) => getExperts(c, c.req.valid('query')))
-  .get(':expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
-  .get(':expertSlug/service/:serviceSlug', async (c) =>
+  .get('/', zValidator('query', expertSearchQuery), async (c) => getExperts(c, c.req.valid('query')))
+  .get('/bookings', authMiddleware, zValidator('query', expertBookingsSearchQuery), async (c) =>
+    getExpertBookings(c, c.req.valid('query')),
+  )
+  .get('/bookings/:bookingId', authMiddleware, async (c) => getExpertBooking(c, c.req.param('bookingId')))
+  .get('/:expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
+  .get('/:expertSlug/service/:serviceSlug', async (c) =>
     getExpertServiceFromSlug(c, c.req.param('expertSlug'), c.req.param('serviceSlug')),
   )
   .get(
-    ':expertSlug/monthly-available-slots/:serviceSlug',
+    '/:expertSlug/monthly-available-slots/:serviceSlug',
     zValidator('query', expertMonthlyAvailableSlotsQuery),
     async (c) =>
       getExpertMonthlyAvailableSlots(c, c.req.param('expertSlug'), c.req.param('serviceSlug'), c.req.valid('query')),
   )
-  .get('/bookings/', zValidator('query', expertBookingsSearchQuery), async (c) =>
-    getExpertBookings(c, c.req.valid('query')),
-  )
-  .get('/bookings/:bookingId', async (c) => getExpertBooking(c, c.req.param('bookingId')))

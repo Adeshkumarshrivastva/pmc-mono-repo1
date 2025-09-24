@@ -379,6 +379,7 @@ export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) 
     if (!userId) {
       return c.json({ error: 'Missing userId' }, 400)
     }
+
     const expert = await prisma.expert.findUnique({
       where: {
         userId: userId,
