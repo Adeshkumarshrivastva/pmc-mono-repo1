@@ -75,7 +75,7 @@ export default function Navbar({ services }: NavbarProps) {
           <SheetContent side="top">
             <SheetHeader>
               <SheetTitle className="mb-8 text-2xl text-accent-foreground">Positive Mind Care</SheetTitle>
-              <SheetDescription>
+              <SheetDescription asChild>
                 <div className="space-y-6">
                   {NAV_ITEMS.map((link) => (
                     <div key={link.id} className="text-lg">

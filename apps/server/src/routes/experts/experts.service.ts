@@ -29,6 +29,26 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
 
     const whereClause: Prisma.ExpertWhereInput = {}
 
+    if (query.search) {
+      whereClause.OR = [
+        {
+          name: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
+
+        {
+          user: {
+            name: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ]
+    }
+
     if (query.type) {
       whereClause.type = query.type
     }
@@ -43,26 +63,17 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
       serviceFilters.availableModes = { has: query.serviceMode }
     }
 
-    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-      serviceFilters.price = {}
-      if (query.minPrice !== undefined) {
-        serviceFilters.price.gte = query.minPrice
-      }
-      if (query.maxPrice !== undefined) {
-        serviceFilters.price.lte = query.maxPrice
-      }
-    }
-
-    if (query.tags) {
-      const tagList = query.tags.split(',').map((tag) => tag.trim())
-      serviceFilters.tags = { hasSome: tagList }
-    }
-
     if (query.location) {
-      serviceFilters.OR = [
-        { availableModes: { has: 'VIRTUAL' } },
-        { AND: [{ availableModes: { has: 'IN_PERSON' }, city: query.location }] },
-      ]
+      whereClause.city = query.location
+    }
+
+    if (query.expertise) {
+      whereClause.expertise = {
+        hasSome: query.expertise,
+      }
+    }
+    if (query.gender) {
+      whereClause.gender = query.gender
     }
 
     if (Object.keys(serviceFilters).length > 0) {
@@ -86,8 +97,8 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
         const aValue = getSortValue(sortBy, a)
         const bValue = getSortValue(sortBy, b)
         return match(query.sortOrder)
-          .with('desc', () => (bValue > aValue ? 1 : bValue < aValue ? -1 : 0))
           .with('asc', () => (aValue > bValue ? 1 : aValue < bValue ? -1 : 0))
+          .with('desc', () => (bValue > aValue ? 1 : bValue < aValue ? -1 : 0))
           .exhaustive()
       })
     }
