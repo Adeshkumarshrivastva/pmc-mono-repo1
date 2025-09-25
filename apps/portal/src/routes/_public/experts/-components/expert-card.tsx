@@ -610,7 +610,7 @@ function generateLocationOptions(experts?: ExpertWithRelations[]) {
 const expertTypeOptions = [
   { value: '', label: 'All Types' },
   { value: 'PSYCHIATRIST', label: 'Psychiatrist' },
-  { value: 'PSYCHOLOGIST', label: 'Counciling Psychologist' },
+  { value: 'PSYCHOLOGIST', label: 'Counseling Psychologist' },
   { value: 'CLINICAL_PSYCHOLOGIST', label: 'Clinical Psychologist' },
 ]
 
