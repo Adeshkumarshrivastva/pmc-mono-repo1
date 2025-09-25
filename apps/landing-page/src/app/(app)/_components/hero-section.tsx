@@ -33,7 +33,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
               </h1>
 
               {data?.heroSectionDescription ? (
-                <p className="sm:text-lg text-primary-foreground leading-relaxed opacity-80">
+                <p className="sm:text-lg text-primary-foreground leading-relaxed opacity-80 p-2 bg-primary/60 border border-primary/30 rounded-2xl backdrop-blur-md sm:bg-transparent sm:border-0 sm:rounded-none sm:backdrop-blur-none">
                   {data.heroSectionDescription}
                 </p>
               ) : null}
