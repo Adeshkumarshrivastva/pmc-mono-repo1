@@ -97,9 +97,7 @@ export default function PrebookingForm({
       razorpay.open()
     },
     onError: (error) => {
-      toast.error('Failed to create booking', {
-        description: getErrorMessage(error),
-      })
+      toast.error(getErrorMessage(error))
     },
   })
 
@@ -198,7 +196,7 @@ type CreateBookingInput = {
   startDateTime: string
 }
 
-const createBooking = async ({ formInput, expertId, serviceId, startDateTime }: CreateBookingInput) => {
+async function createBooking({ formInput, expertId, serviceId, startDateTime }: CreateBookingInput) {
   const res = await honoClient.server.booking.create.$post({
     json: {
       patientName: formInput.patientName,

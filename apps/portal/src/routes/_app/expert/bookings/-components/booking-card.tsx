@@ -16,7 +16,7 @@ type BookingCardProps = {
 
 export default function BookingCard({ booking, onViewDetails, onReschedule }: BookingCardProps) {
   const isUpcoming = dayjs(booking.startDateTime).isAfter(dayjs())
-  const canReschedule = true || (booking.status !== 'CANCELLED' && booking.status !== 'COMPLETED' && isUpcoming)
+  const canReschedule = booking.status !== 'CANCELLED' && booking.status !== 'COMPLETED' && isUpcoming
 
   return (
     <Card className="hover:shadow-lg transition-all duration-200">
