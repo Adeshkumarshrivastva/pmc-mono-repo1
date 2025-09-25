@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type TeamMembersSectionProps = {
   data: AboutUs['teamMembersSection']
@@ -44,11 +45,12 @@ export default function TeamMembersSection({ data }: TeamMembersSectionProps) {
                     }`}
                   >
                     <div className="absolute inset-0 backface-hidden flex flex-col">
-                      <div className="h-[350px] w-full">
-                        <img
+                      <div className="h-[350px] w-full relative">
+                        <Image
                           src={getURLFromMedia(member?.image ?? '')}
                           alt={member?.memberName ?? ''}
-                          className="object-cover h-full w-full"
+                          fill
+                          className="object-cover"
                         />
                       </div>
 
@@ -66,10 +68,13 @@ export default function TeamMembersSection({ data }: TeamMembersSectionProps) {
                       </div>
                     </div>
 
-                    <div
-                      className="absolute inset-0 backface-hidden rotate-y-180 flex flex-col p-6 justify-between bg-cover bg-center bg-no-repeat"
-                      style={{ backgroundImage: `url(${getURLFromMedia(member?.image ?? '')})` }}
-                    >
+                    <div className="absolute inset-0 backface-hidden rotate-y-180 flex flex-col p-6 justify-between bg-cover bg-center bg-no-repeat">
+                      <Image
+                        src={getURLFromMedia(member?.image ?? '')}
+                        alt={member?.memberName ?? ''}
+                        fill
+                        className="object-cover"
+                      />
                       <div className="absolute inset-0 bg-black/60"></div>
 
                       <div className="relative z-10 space-y-4 text-primary-foreground">

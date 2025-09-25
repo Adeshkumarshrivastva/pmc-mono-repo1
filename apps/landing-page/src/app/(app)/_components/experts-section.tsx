@@ -4,10 +4,11 @@ import { useState, useMemo } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Button } from '@/components/ui/button'
 import { CallIcon, OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
-import { Home } from '@/payload/types'
+import type { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AppointmentForm from './appointment-form'
+import Image from 'next/image'
 
 type ExpertsSectionProps = { data: Home['expertsSection'] }
 
@@ -15,7 +16,7 @@ export default function ExpertsSection({ data }: ExpertsSectionProps) {
   const experts = Array.isArray(data?.experts) ? data.experts.filter((e) => typeof e !== 'string') : []
 
   const [startIdx, setStartIdx] = useState(0)
-  const [activeTab, setActiveTab] = useState<'psychologist' | 'psychiatrist'>('psychologist')
+  const [activeTab, setActiveTab] = useState<'psychologist' | 'psychiatrist'>('psychiatrist')
   const cardsPerPage = 2
 
   const filteredExperts = useMemo(
@@ -46,16 +47,16 @@ export default function ExpertsSection({ data }: ExpertsSectionProps) {
                 >
                   <TabsList className="border border-primary w-full sm:w-[400px] py-6 px-1">
                     <TabsTrigger
-                      value="psychologist"
-                      className="cursor-pointer text-primary data-[state=active]:bg-primary dark:data-[state=active]:text-accent dark:text-primary p-5 font-normal text-lg"
-                    >
-                      Psychologists
-                    </TabsTrigger>
-                    <TabsTrigger
                       value="psychiatrist"
                       className="cursor-pointer text-primary data-[state=active]:bg-primary dark:data-[state=active]:text-accent dark:text-primary p-5 font-normal text-lg"
                     >
                       Psychiatrists
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="psychologist"
+                      className="cursor-pointer text-primary data-[state=active]:bg-primary dark:data-[state=active]:text-accent dark:text-primary p-5 font-normal text-lg"
+                    >
+                      Psychologists
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
@@ -73,8 +74,7 @@ export default function ExpertsSection({ data }: ExpertsSectionProps) {
                       className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 bg-card p-3 rounded-2xl"
                     >
                       <div className="flex justify-center sm:justify-start">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                           alt="expert"
                           width={180}
                           height={190}
