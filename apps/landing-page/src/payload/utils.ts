@@ -1,5 +1,5 @@
-import type { Field } from 'payload'
-import type { Media } from './types'
+import { type Field } from 'payload'
+import { Media } from './types'
 
 export const METADATA_FIELD: Field = {
   type: 'group',

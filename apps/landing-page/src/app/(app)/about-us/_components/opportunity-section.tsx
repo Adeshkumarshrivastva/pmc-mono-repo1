@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { SolarBag4Linear } from '@/components/ui/icons'
 import { type AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import Image from 'next/image'
 
 type OpportunitySectionProps = {
   data: AboutUs['opportunitiesSection']
@@ -26,7 +25,8 @@ export default function OpportunitySection({ data }: OpportunitySectionProps) {
             </a>
           </div>
         </div>
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           alt="opportunities"
           width={572}
           height={576}
