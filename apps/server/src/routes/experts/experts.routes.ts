@@ -17,7 +17,7 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .get('/bookings', authMiddleware, zValidator('query', expertBookingsSearchQuery), async (c) =>
     getExpertBookings(c, c.req.valid('query')),
   )
-  .get('/bookings/:bookingId', authMiddleware, async (c) => getExpertBooking(c, c.req.param('bookingId')))
+  .get('/bookings/:bookingId', async (c) => getExpertBooking(c, c.req.param('bookingId')))
   .get('/:expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
   .get('/:expertSlug/service/:serviceSlug', async (c) =>
     getExpertServiceFromSlug(c, c.req.param('expertSlug'), c.req.param('serviceSlug')),

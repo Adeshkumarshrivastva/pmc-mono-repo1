@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { honoClient } from '@/lib/hono-client'
 import BookingCard from './-components/booking-card'
+import BookingInfo from './-components/booking-info'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 
 export const Route = createFileRoute('/_app/expert/bookings/')({
   component: ExpertBookings,
@@ -30,6 +32,7 @@ export const Route = createFileRoute('/_app/expert/bookings/')({
 
 function ExpertBookings() {
   const [period, setPeriod] = useState<BookingPeriod>('upcoming')
+  const [selectedBooking, setSelectedBooking] = useState<undefined | string>(undefined)
 
   const getExpertBookingsQuery = useQuery({
     queryKey: ['get-expert-bookings', period],
@@ -85,7 +88,13 @@ function ExpertBookings() {
                     ) : (
                       <div className="space-y-4">
                         {bookings.map((booking) => (
-                          <BookingCard key={booking.id} booking={booking} />
+                          <BookingCard
+                            onViewDetails={() => {
+                              setSelectedBooking(booking.id)
+                            }}
+                            key={booking.id}
+                            booking={booking}
+                          />
                         ))}
                       </div>
                     )
@@ -96,6 +105,18 @@ function ExpertBookings() {
           </>
         </div>
       </Tabs>
+
+      <Dialog
+        open={typeof selectedBooking !== 'undefined'}
+        onOpenChange={() => {
+          setSelectedBooking(undefined)
+        }}
+      >
+        <DialogContent className="p-2 sm:max-w-xl">
+          <DialogTitle>Booking Details</DialogTitle>
+          <BookingInfo />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

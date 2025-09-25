@@ -146,7 +146,7 @@ function VerifyOTP({ phoneNumber, onSuccess }: { phoneNumber: string; onBack: ()
   const verifyOtpMutation = useMutation({
     mutationFn: verifyPatientOtp,
     onSuccess: () => {
-      toast.success('Login successful')
+      toast.success('Phone verified successful')
       onSuccess()
     },
     onError: (error) => {
