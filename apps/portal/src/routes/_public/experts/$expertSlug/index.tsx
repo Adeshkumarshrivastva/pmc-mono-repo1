@@ -2,7 +2,18 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Video, MapPin, Clock, Star, type LucideIcon, ArrowLeft, UserIcon } from 'lucide-react'
+import {
+  Video,
+  MapPin,
+  Clock,
+  Star,
+  type LucideIcon,
+  ArrowLeft,
+  UserIcon,
+  Award,
+  User,
+  BookOpenIcon,
+} from 'lucide-react'
 import type { ExpertType, ServiceMode } from '@pmc/server/src/generated/prisma/client'
 import { match } from 'ts-pattern'
 import type { InferResponseType } from 'hono'
@@ -55,7 +66,8 @@ function ExpertPage() {
     })
 
     .with({ status: 'success' }, ({ data }) => {
-      const { servicesProvided, name, type, city, country, bio, qualifications, avgRating, image } = data.expert
+      const { servicesProvided, name, type, city, country, bio, qualifications, avgRating, image, expertise, gender } =
+        data.expert
 
       const filteredServices = servicesProvided.filter((service) => service.availableModes.includes(selectedMode)) || []
 
@@ -84,10 +96,10 @@ function ExpertPage() {
                 </span>
               </Link>
 
-              <div className="relative overflow-hidden mb-8">
-                <div className="absolute inset-0 bg-accent/40"></div>
+              <div className="relative overflow-hidden shadow-lg rounded-2xl mb-8 ">
+                <div className="absolute inset-0 bg-accent/40 "></div>
 
-                <div className="relative bg-card/90 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6 lg:p-8">
+                <div className="relative bg-card/90 backdrop-blur-sm rounded-2xl border border-border  p-6 lg:p-8">
                   <div className="flex flex-col lg:flex-row gap-6 items-start">
                     <div className="relative flex-shrink-0">
                       {image ? (
@@ -123,7 +135,7 @@ function ExpertPage() {
                           </div>
                         ) : null}
 
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
                           <div className="text-center lg:text-left">
                             <div className="flex items-center gap-1 text-muted-foreground mb-1">
                               <MapPin className="w-4 h-4" />
@@ -133,6 +145,16 @@ function ExpertPage() {
                               {city}, {country}
                             </p>
                           </div>
+
+                          {gender && (
+                            <div className="text-center lg:text-left">
+                              <div className="flex items-center gap-1 text-muted-foreground mb-1">
+                                <User className="w-4 h-4" />
+                                <span className="text-sm">Gender</span>
+                              </div>
+                              <p className="text-sm font-semibold text-foreground capitalize">{gender.toLowerCase()}</p>
+                            </div>
+                          )}
 
                           {minPrice > 0 ? (
                             <div className="text-center lg:text-left">
@@ -144,10 +166,29 @@ function ExpertPage() {
                           ) : null}
                         </div>
 
+                        {expertise && Array.isArray(expertise) && expertise.length > 0 && (
+                          <div className="mb-4">
+                            <div className="flex items-center gap-1 text-muted-foreground mb-2">
+                              <Award className="w-4 h-4" />
+                              <h3 className="text-sm">Areas of Expertise</h3>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {expertise.map((area, index) => (
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap"
+                                >
+                                  {area}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         {qualifications ? (
                           <div className="mb-4">
-                            <h3 className="text-sm font-semibold text-foreground mb-1">Qualifications</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="text-sm text-muted-foreground">Qualifications</h3>
+                            <p className="text-sm">
                               {(typeof qualifications === 'string'
                                 ? [qualifications]
                                 : Array.isArray(qualifications)
@@ -164,8 +205,11 @@ function ExpertPage() {
               </div>
 
               {bio ? (
-                <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6 mb-6">
-                  <h2 className="text-lg font-bold text-foreground mb-3">About {name}</h2>
+                <div className="bg-card/80 rounded-2xl border border-border shadow-lg p-6 mb-6">
+                  <h2 className="text-lg flex font-bold text-foreground mb-3">
+                    <BookOpenIcon className="size-5 text-primary mt-1 mr-1 " />
+                    About
+                  </h2>
                   <p className="text-muted-foreground leading-relaxed text-sm">{bio}</p>
                 </div>
               ) : null}
@@ -310,7 +354,7 @@ export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: Se
     icon: MapPin,
   },
   VIRTUAL: {
-    label: 'Google Meet',
+    label: 'Virtual',
     value: 'VIRTUAL',
     icon: Video,
   },
@@ -318,7 +362,7 @@ export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: Se
 
 const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType }> = {
   PSYCHOLOGIST: {
-    label: 'Psychologist',
+    label: 'Counseling Psychologist',
     value: 'PSYCHOLOGIST',
   },
   PSYCHIATRIST: {
