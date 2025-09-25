@@ -7,7 +7,7 @@
     "qualification": "MBBS, MD",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/672b090a890959270cd38598/672b090a890959270cd385989b1765ea-f93e-48ca-b2be-299340d8702a.jpeg",
     "bio": "Dr. Jyothi Rmai is a compassionate psychiatrist with over a decade of experience in treating complex mood and anxiety disorders. She believes in a holistic approach that combines evidence-based medication management with lifestyle modifications to ensure long-term mental well-being. Her practice also emphasizes psychoeducation for families to create supportive environments for recovery.",
-    "expertGender": "FEMALE",
+    "gender": "FEMALE",
     "expertise": ["Depression", "Anxiety", "Medication Management", "Deep TMS Therapy"]
   },
   {
@@ -18,7 +18,7 @@
     "qualification": "MD",
     "image": "https://positivemindcare.com/api/media/file/rahul_yadav.jpg",
     "bio": "Dr. Rahul Yadav is a dedicated psychiatrist specializing in the treatment of mood disorders, addiction, and stress-related conditions. He is passionate about integrating modern medical therapies with compassionate care, ensuring that his patients feel understood and supported at every stage of treatment. His focus on young adult mental health has helped many patients overcome challenges during transitional life phases.",
-    "expertGender": "MALE",
+    "gender": "MALE",
     "expertise": ["Bipolar Disorder", "Addiction", "Stress Management"]
   },
   {
@@ -29,7 +29,7 @@
     "qualification": "Mphil. / PDCP",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/6757f3516a4cd6b6dbaffb99/6757f3516a4cd6b6dbaffb993506673b-91b1-46d9-9ac4-4b17cffdb0b2.jpg",
     "bio": "Dr. Pooja Bhatt is a clinical psychologist with expertise in cognitive-behavioral therapy and trauma recovery. She works closely with clients to identify thought patterns and behaviors that interfere with personal growth, while empowering them to build healthier coping strategies. Her therapeutic style is collaborative and empathetic, ensuring clients feel safe while navigating complex emotional challenges.",
-    "expertGender": "FEMALE",
+    "gender": "FEMALE",
     "expertise": ["CBT", "Mindfulness", "Trauma Therapy"]
   },
   {
@@ -40,7 +40,7 @@
     "qualification": "M.Sc. / M.A.",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/6759509a9e0764152e371c0c/6759509a9e0764152e371c0c1f7c0f19-e771-4f21-87d6-05c73303c555.jpeg",
     "bio": "Ms. Ritika Wadhwa specializes in child and adolescent psychology, offering therapeutic interventions for behavioral and emotional challenges. She believes in fostering resilience through positive reinforcement, family involvement, and evidence-based therapy. Her goal is to create a nurturing environment where children can express themselves freely and build strong emotional foundations.",
-    "expertGender": "FEMALE",
+    "gender": "FEMALE",
     "expertise": ["Child Psychology", "Behavioral Issues", "Family Therapy", "Deep TMS Therapy"]
   },
   {
@@ -51,7 +51,7 @@
     "qualification": "PhD,Mphil. / PDCP",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/67595cf99e0764152e371c16/67595cf99e0764152e371c16cffccf15-713e-4d8f-b886-aef6c3f4f300.png",
     "bio": "Dr. Rachana Maurya is a seasoned clinical psychologist and researcher with a focus on trauma recovery and advanced psychometric testing. With a PhD and MPhil in clinical psychology, she blends academic rigor with therapeutic practice to deliver personalized care. Her expertise in trauma-focused therapy has guided countless individuals through healing journeys, restoring balance and confidence in their lives.",
-    "expertGender": "FEMALE",
+    "gender": "FEMALE",
     "expertise": ["Trauma", "PTSD", "Psychometric Testing"]
   },
   {
@@ -62,7 +62,7 @@
     "qualification": "MD",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/675abd2b553f555d6ec83f8d/675abd2b553f555d6ec83f8d0a92354f-1f2c-4818-a5cb-26cfde9a3d40.webp",
     "bio": "Dr. Akriti Jaiswal is a psychiatrist with a special interest in women’s mental health and perinatal psychiatry. She advocates for early intervention and preventive care, supporting women through major life transitions such as pregnancy and postpartum challenges. Her empathetic approach is complemented by evidence-based treatments, making her a trusted figure for patients seeking compassionate psychiatric care.",
-    "expertGender": "FEMALE",
+    "gender": "FEMALE",
     "expertise": ["Women's Mental Health", "Perinatal Psychiatry", "Anxiety Disorders", "Deep TMS Therapy"]
   },
   {
@@ -73,7 +73,7 @@
     "qualification": "M.Sc. / M.A.",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/67693633f61044e829733390/67693633f61044e8297333900e19954c-89c8-4897-98cc-619d3f4b4ec4.jpeg",
     "bio": "Ms. Punya Puri focuses on adolescent and young adult therapy, helping individuals cope with academic pressure, self-esteem issues, and social challenges. She integrates positive psychology techniques with therapeutic counseling, guiding clients toward self-discovery and resilience. Her sessions are designed to empower individuals to navigate life transitions with confidence.",
-    "expertGender": "FEMALE",
+    "gender": "FEMALE",
     "expertise": ["Adolescent Therapy", "Academic Stress", "Self-esteem Issues"]
   },
   {
@@ -84,7 +84,7 @@
     "qualification": "N/A",
     "image": "https://positivemindcare.com/api/media/file/WhatsApp%20Image%202025-08-24%20at%2014.30.36_8893f8e8.jpg",
     "bio": "Ms. Sakshi Saini is an emerging psychologist passionate about positive psychology and motivational therapies. She focuses on helping clients build meaningful goals, reduce stress, and improve emotional balance through tailored therapeutic interventions. Her curiosity and empathetic nature make her a supportive guide for individuals seeking personal growth.",
-    "expertGender": "FEMALE",
+    "gender": "FEMALE",
     "expertise": ["Positive Psychology", "Motivational Therapy", "Stress Reduction", "Deep TMS Therapy"]
   },
   {
@@ -95,7 +95,7 @@
     "qualification": "M.Sc. / M.A.",
     "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/673c4323825951e5b6787d97/673c4323825951e5b6787d971d9f339f-1f35-4f87-b166-153d34dbfc88.jpg",
     "bio": "Ms. Diksha Joshi works with individuals experiencing anxiety, stress, and self-esteem issues, emphasizing resilience building and personal empowerment. Her therapeutic approach combines talk therapy with evidence-based practices to help clients uncover strengths and achieve mental clarity. She aims to create a safe, supportive space where clients can explore their challenges openly.",
-    "expertGender": "FEMALE",
+    "gender": "FEMALE",
     "expertise": ["Resilience Building", "Talk Therapy", "Anxiety Management"]
   }
 ]

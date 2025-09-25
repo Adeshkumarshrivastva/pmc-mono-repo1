@@ -362,7 +362,7 @@ export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: Se
 
 const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType }> = {
   PSYCHOLOGIST: {
-    label: 'Counciling Psychologist',
+    label: 'Counseling Psychologist',
     value: 'PSYCHOLOGIST',
   },
   PSYCHIATRIST: {

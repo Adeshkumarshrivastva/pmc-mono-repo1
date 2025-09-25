@@ -21,7 +21,7 @@ export async function seedExperts(prisma: PrismaClient) {
         type: z.nativeEnum(ExpertType),
         qualification: z.string(),
         bio: z.string(),
-        expertGender: z.enum(ExpertGender),
+        gender: z.enum(ExpertGender),
         expertise: z.string().array(),
         image: z.string(),
       })
@@ -63,7 +63,7 @@ export async function seedExperts(prisma: PrismaClient) {
           userId: user.id,
           bio: validatedExpert.bio,
           expertise: validatedExpert.expertise,
-          gender: validatedExpert.expertGender,
+          gender: validatedExpert.gender,
         },
       })
 
