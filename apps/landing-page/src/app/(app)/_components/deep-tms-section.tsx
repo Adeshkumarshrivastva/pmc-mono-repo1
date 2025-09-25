@@ -1,11 +1,10 @@
 import Link from 'next/link'
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import type { Home } from '@/payload/types'
+import { Home } from '@/payload/types'
 import { Button } from '@/components/ui/button'
 import { ChatIcon } from '@/components/ui/icons'
 import { getURLFromMedia } from '@/payload/utils'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
 
 type DeepTmsSectionProps = {
   data: Home['deepTmsSection']
@@ -63,7 +62,8 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
                   <h3 className="z-10 text-3xl font-semibold mb-2">{feature.title}</h3>
                   <div className="absolute top-0 right-0">
                     {feature.image ? (
-                      <Image
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
                         alt={feature?.title ?? ''}
                         width={400}
                         height={220}
@@ -76,7 +76,8 @@ export default function DeepTMSSection({ data }: DeepTmsSectionProps) {
                     <p className="text-base">{feature.description}</p>
                     {feature?.stampImage ? (
                       <div className="mt-5">
-                        <Image
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
                           alt="stamp image"
                           width={120}
                           height={120}

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { ChatIcon, CheckIcon } from '@/components/ui/icons'
 import { cn } from '@/lib/utils'
-import type { Home } from '@/payload/types'
+import { Home } from '@/payload/types'
 
 type PackagesSectionProps = {
   data: Home['packagesSection']

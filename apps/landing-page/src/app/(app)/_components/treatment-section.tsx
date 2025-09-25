@@ -1,9 +1,8 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import type { Home } from '@/payload/types'
+import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Button } from '@/components/ui/button'
 import { ChatIcon, MedalRibbonIcon } from '@/components/ui/icons'
-import Image from 'next/image'
 
 type TreatmentSectionProps = {
   data: Home['treatmentSection']
@@ -17,7 +16,8 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
             <div className="hidden lg:block">
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   alt="Deep TMS treatment"
                   width={564}
                   height={800}

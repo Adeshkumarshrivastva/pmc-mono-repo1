@@ -1,11 +1,10 @@
 'use client'
 
-import type { Home } from '@/payload/types'
+import { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Button } from '@/components/ui/button'
 import { CallIcon, ClipBoardNotesWithQuestionMark } from '@/components/ui/icons'
 import SVGImageIcon from '@/components/svg-image-icon'
-import Image from 'next/image'
 
 type WhyChooseSectionProps = {
   data: Home['whyChooseSection']
@@ -15,6 +14,7 @@ export default function WhyChooseSection({ data }: WhyChooseSectionProps) {
   const handleBooking = () => {
     document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
   }
+
   return (
     <section className="bg-primary">
       <div className="flex-col lg:flex-row w-full flex justify-between max-w-7xl mx-auto px-1 md:px-5 xl:px-0 lg:gap-2">
@@ -34,15 +34,14 @@ export default function WhyChooseSection({ data }: WhyChooseSectionProps) {
           </Button>
           {data?.image && (
             <div className="w-full max-w-[800px] max-h-[500px] mt-6 lg:mt-0 overflow-hidden flex justify-center items-center lg:justify-start lg:pt-6">
-              <div className="w-full aspect-[1/2] sm:aspect-[4/5] md:aspect-[3/4] lg:aspect-[1/2] max-w-[400px] sm:max-w-[400px] md:max-w-[600px] lg:max-w-[600px] max-h-[300px] sm:max-h-[400px] md:max-h-[500px] lg:max-h-[700px] relative">
-                <Image
-                  src={getURLFromMedia(data.image)}
-                  alt="Healthcare professionals"
-                  fill
-                  sizes="(max-width: 640px) 400px, (max-width: 768px) 400px, (max-width: 1024px) 600px, 600px"
-                  className="object-contain"
-                />
-              </div>
+              <div
+                className="w-full aspect-[1/2] sm:aspect-[4/5] md:aspect-[3/4] lg:aspect-[1/2] bg-contain bg-no-repeat bg-center max-w-[400px] sm:max-w-[400px] md:max-w-[600px] lg:max-w-[600px] max-h-[300px] sm:max-h-[400px] md:max-h-[500px] lg:max-h-[700px]"
+                style={{
+                  backgroundImage: `url(${getURLFromMedia(data.image)})`,
+                }}
+                role="img"
+                aria-label={'Healthcare professionals'}
+              />
             </div>
           )}
         </div>

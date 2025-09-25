@@ -1,4 +1,4 @@
-import type { GlobalConfig } from 'payload'
+import { GlobalConfig } from 'payload'
 
 export const OurBlogs: GlobalConfig = {
   slug: 'our-blogs',

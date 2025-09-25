@@ -1,4 +1,4 @@
-import type { GlobalConfig } from 'payload'
+import { GlobalConfig } from 'payload'
 import { testimonialSection } from '../fields/testimonial-section'
 
 export const OurServices: GlobalConfig = {

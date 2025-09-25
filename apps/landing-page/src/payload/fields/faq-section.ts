@@ -1,4 +1,4 @@
-import type { Field } from 'payload'
+import { Field } from 'payload'
 
 export const faqSection: Field = {
   name: 'faqSection',

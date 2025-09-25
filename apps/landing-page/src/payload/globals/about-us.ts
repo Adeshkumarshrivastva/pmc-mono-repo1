@@ -1,4 +1,4 @@
-import type { GlobalConfig } from 'payload'
+import { GlobalConfig } from 'payload'
 import { expertsSection } from '../fields/experts-section'
 import { appointmentSection } from '../fields/appointment-section'
 
