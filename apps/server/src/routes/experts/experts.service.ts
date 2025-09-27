@@ -426,6 +426,13 @@ export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) 
 
     const bookings = await prisma.booking.findMany({
       where: bookingsWhereInput,
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+      },
       orderBy: input.period === 'past' ? { endDateTime: 'desc' } : { startDateTime: 'asc' },
     })
 

@@ -1,4 +1,12 @@
-import { CalendarDaysIcon, ClockIcon, HomeIcon, LayoutDashboardIcon, UserIcon, type LucideIcon } from 'lucide-react'
+import {
+  CalendarDaysIcon,
+  ClipboardListIcon,
+  ClockIcon,
+  HomeIcon,
+  LayoutDashboardIcon,
+  UserIcon,
+  type LucideIcon,
+} from 'lucide-react'
 import { Link, useNavigate, type ToPathOption } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -148,6 +156,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     name: 'Profile',
     path: '/patient/profile',
     availableForUserRoles: ['PATIENT'],
+  },
+  {
+    type: 'link',
+    icon: ClipboardListIcon,
+    name: 'Services',
+    path: '/expert/services',
+    availableForUserRoles: ['EXPERT'],
   },
   {
     type: 'link',

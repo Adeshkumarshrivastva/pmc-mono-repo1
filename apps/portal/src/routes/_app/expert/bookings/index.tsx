@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator'
 import { honoClient } from '@/lib/hono-client'
 import BookingCard from './-components/booking-card'
 import BookingInfo from './-components/booking-info'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
 export const Route = createFileRoute('/_app/expert/bookings/')({
   component: ExpertBookings,
@@ -86,16 +86,39 @@ function ExpertBookings() {
                         <p className="text-sm text-muted-foreground">Once you have bookings, they’ll appear here.</p>
                       </div>
                     ) : (
-                      <div className="space-y-4">
-                        {bookings.map((booking) => (
-                          <BookingCard
-                            onViewDetails={() => {
-                              setSelectedBooking(booking.id)
+                      <div>
+                        <div className="space-y-4 grid grid-cols-2 gap-6">
+                          {bookings.map((booking) => (
+                            <BookingCard
+                              onViewDetails={() => {
+                                setSelectedBooking(booking.id)
+                              }}
+                              key={booking.id}
+                              booking={booking}
+                            />
+                          ))}
+                        </div>
+                        {typeof selectedBooking !== 'undefined' ? (
+                          <Sheet
+                            open={typeof selectedBooking !== 'undefined'}
+                            onOpenChange={() => {
+                              setSelectedBooking(undefined)
                             }}
-                            key={booking.id}
-                            booking={booking}
-                          />
-                        ))}
+                          >
+                            <SheetContent
+                              className="w-full sm:max-w-2xl"
+                              onInteractOutside={(event) => {
+                                event.preventDefault()
+                              }}
+                            >
+                              <SheetHeader>
+                                <SheetTitle>Booking Summary</SheetTitle>
+                              </SheetHeader>
+                              <Separator />
+                              <BookingInfo booking={bookings.find((booking) => booking.id === selectedBooking)!} />
+                            </SheetContent>
+                          </Sheet>
+                        ) : null}
                       </div>
                     )
                   })
@@ -105,18 +128,6 @@ function ExpertBookings() {
           </>
         </div>
       </Tabs>
-
-      <Dialog
-        open={typeof selectedBooking !== 'undefined'}
-        onOpenChange={() => {
-          setSelectedBooking(undefined)
-        }}
-      >
-        <DialogContent className="p-2 sm:max-w-xl">
-          <DialogTitle>Booking Details</DialogTitle>
-          <BookingInfo />
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
@@ -126,11 +137,11 @@ type BookingPeriod = (typeof BOOKING_PERIODS)[number]
 
 const BOOKING_PERIODS_CONFIG: Record<BookingPeriod, { label: string; value: BookingPeriod }> = {
   upcoming: {
-    label: 'Upcoming',
+    label: 'Upcoming Bookings',
     value: 'upcoming',
   },
   past: {
-    label: 'Past',
+    label: 'Past Bookings',
     value: 'past',
   },
 }
