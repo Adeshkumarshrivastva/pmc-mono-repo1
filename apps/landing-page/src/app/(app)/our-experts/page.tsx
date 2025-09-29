@@ -5,6 +5,7 @@ import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { getPayloadClient } from '@/lib/payload'
 import type { Expert, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 export default function OurExperts() {
   return (
@@ -38,14 +39,17 @@ function ExpertCard({ expert }: { expert: Expert }) {
   return (
     <div className="bg-card p-4 rounded-2xl hover:shadow-sm grid md:grid-cols-2 flex-col gap-4">
       {/* Responsive image */}
-      <div className="col-span-full md:col-span-1 aspect-[4/3] w-full rounded-lg overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          loading="lazy"
-          alt={expert.expertName}
-          src={getURLFromMedia(expert.image ?? '')}
-          className="h-full w-full object-cover object-top"
-        />
+      <div className="col-span-full md:col-span-1 aspect-[4/3] w-full rounded-lg overflow-hidden relative">
+        {expert.image && (
+          <Image
+            src={getURLFromMedia(expert.image)}
+            alt={expert.expertName}
+            fill
+            className="object-cover object-top"
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        )}
       </div>
 
       <div className="col-span-full md:col-span-1 flex flex-col gap-3">

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import type { OurService } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type HeroSectionProps = {
   data: OurService['servicesHeroSection']
@@ -15,12 +16,16 @@ export default function HeroSection({ data }: HeroSectionProps) {
     <section className="w-full bg-accent">
       <div className="p-6 sm:p-10 lg:py-20 lg:px-5 flex flex-col gap-10 sm:gap-15 lg:gap-20 max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-5 lg:gap-5 items-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={getURLFromMedia(data?.image ?? '')}
-            alt={`services`}
-            className="object-cover rounded-lg sm:rounded-xl w-full max-w-sm sm:max-w-md lg:max-w-none lg:w-[400px] h-[300px] sm:h-[400px] lg:h-[500px] lg:flex-shrink-0"
-          />
+          {data?.image && (
+            <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-none lg:w-[400px] h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl flex-shrink-0 overflow-hidden">
+              <Image
+                src={getURLFromMedia(data.image)}
+                alt="services"
+                fill
+                className="object-cover rounded-lg sm:rounded-xl"
+              />
+            </div>
+          )}
           <div className="p-4 sm:p-8 lg:p-15 w-full">
             <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8 pb-4 sm:pb-5 lg:pb-6">
               <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-center lg:text-left leading-[140%]">
