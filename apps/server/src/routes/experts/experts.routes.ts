@@ -1,7 +1,12 @@
 import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
 import type { HonoContext } from '../../lib/context'
-import { expertBookingsSearchQuery, expertMonthlyAvailableSlotsQuery, expertSearchQuery } from './experts.input'
+import {
+  createPrescriptionInput,
+  expertBookingsSearchQuery,
+  expertMonthlyAvailableSlotsQuery,
+  expertSearchQuery,
+} from './experts.input'
 import {
   getExpertFromSlug,
   getExperts,
@@ -9,6 +14,7 @@ import {
   getExpertServiceFromSlug,
   getExpertBooking,
   getExpertBookings,
+  createPrescription,
 } from './experts.service'
 import { authMiddleware } from '../../middleware/auth.middleware'
 
@@ -18,6 +24,9 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
     getExpertBookings(c, c.req.valid('query')),
   )
   .get('/bookings/:bookingId', async (c) => getExpertBooking(c, c.req.param('bookingId')))
+  .post('/bookings/prescription', authMiddleware, zValidator('json', createPrescriptionInput), async (c) =>
+    createPrescription(c, c.req.valid('json')),
+  )
   .get('/:expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
   .get('/:expertSlug/service/:serviceSlug', async (c) =>
     getExpertServiceFromSlug(c, c.req.param('expertSlug'), c.req.param('serviceSlug')),

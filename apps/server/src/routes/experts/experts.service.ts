@@ -10,6 +10,7 @@ import {
   type ExpertSearchResponse,
   type ExpertMonthlyAvailableSlotsQuery,
   type ExpertBookingsSearchQuery,
+  type CreatePrescriptionInput,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 import {
@@ -432,6 +433,7 @@ export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) 
             user: true,
           },
         },
+        prescription: true,
       },
       orderBy: input.period === 'past' ? { endDateTime: 'desc' } : { startDateTime: 'asc' },
     })
@@ -439,5 +441,64 @@ export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) 
     return c.json({ success: true, bookings })
   } catch {
     return c.json({ error: 'Failed to fetch booking' }, 500)
+  }
+}
+
+export async function createPrescription(c: C, input: CreatePrescriptionInput) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const expert = await prisma.expert.findUnique({
+      where: { userId },
+      select: { id: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const booking = await prisma.booking.findUnique({
+      where: { id: input.bookingId },
+      select: {
+        id: true,
+        expertId: true,
+        status: true,
+      },
+    })
+
+    if (!booking) {
+      return c.json({ error: 'Booking not found' }, 404)
+    }
+
+    if (booking.expertId !== expert.id) {
+      return c.json({ error: 'Unauthorized to create prescription for this booking' }, 403)
+    }
+
+    const existingPrescription = await prisma.prescription.findFirst({
+      where: { bookingId: input.bookingId },
+    })
+
+    if (existingPrescription) {
+      return c.json({ error: 'Prescription already exists for this booking' }, 400)
+    }
+
+    const prescription = await prisma.prescription.create({
+      data: {
+        bookingId: input.bookingId,
+        medicines: input.medicines,
+        notes: input.notes,
+      },
+    })
+
+    return c.json({
+      success: true,
+      prescription,
+    })
+  } catch (error) {
+    const errorMessage = getErrorMessage(error)
+    return c.json({ error: `Failed to create prescription - ${errorMessage}` }, 500)
   }
 }

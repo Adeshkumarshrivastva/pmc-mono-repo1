@@ -11,10 +11,7 @@ type BookingCardProps = {
   onReschedule?: () => void
 }
 
-export default function BookingCard({ booking, onViewDetails, onReschedule }: BookingCardProps) {
-  // const isUpcoming = dayjs(booking.startDateTime).isAfter(dayjs())
-  // const canReschedule = booking.status !== 'CANCELLED' && booking.status !== 'COMPLETED' && isUpcoming
-
+export default function BookingCard({ booking, onViewDetails }: BookingCardProps) {
   return (
     <Card
       className="hover:shadow-lg transition-all duration-200 cursor-pointer"
@@ -44,16 +41,6 @@ export default function BookingCard({ booking, onViewDetails, onReschedule }: Bo
             })}
           </div>
         </div>
-        {/* <div className="pt-2 border-t flex gap-2"> */}
-        {/* <Button className="flex-1" onClick={onViewDetails} size="sm">
-          View Details
-        </Button> */}
-        {/* {canReschedule && (
-            <Button variant="outline" className="flex-1" onClick={onReschedule} size="sm">
-              Reschedule
-            </Button>
-          )} */}
-        {/* </div> */}
       </CardContent>
     </Card>
   )

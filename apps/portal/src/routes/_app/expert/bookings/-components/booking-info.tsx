@@ -14,6 +14,7 @@ import { formatDateTimeRange, utcDateToLocalDate } from '@/lib/date'
 import type { Booking } from '@/lib/booking'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import PrescriptionArea from './prescription-area'
 
 type BookingInfoProps = {
   booking: Booking
@@ -69,7 +70,7 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
               <TabsList>
                 <TabsTrigger value="booking-details">Booking Details</TabsTrigger>
                 <TabsTrigger value="patient-details">Patient Details</TabsTrigger>
-                <TabsTrigger value="prescriptions">Prescriptions</TabsTrigger>
+                <TabsTrigger value="prescriptions">Prescription</TabsTrigger>
               </TabsList>
             </div>
             <Separator />
@@ -91,7 +92,7 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
                   </span>
                 </div>
                 <div className="text-xs">
-                  Created on {dayjs(utcDateToLocalDate(dayjs(booking.createdAt).toDate())).format('D MMMM YYYY')}
+                  Booked on {dayjs(utcDateToLocalDate(dayjs(booking.createdAt).toDate())).format('D MMMM YYYY')}
                 </div>
               </div>
             </TabsContent>
@@ -99,7 +100,7 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
               Patient Details
             </TabsContent>
             <TabsContent value="prescriptions" className="p-4">
-              Booking details
+              <PrescriptionArea prescription={booking.prescription[0]} bookingId={booking.id} />
             </TabsContent>
           </div>
         </Tabs>

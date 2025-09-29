@@ -119,3 +119,25 @@ export const expertBookingsSearchQuery = z.object({
 })
 
 export type ExpertBookingsSearchQuery = z.infer<typeof expertBookingsSearchQuery>
+
+export const createPrescriptionInput = z.object({
+  bookingId: z.string(),
+  medicines: z.array(
+    z.object({
+      name: z.string(),
+      dosage: z.string(),
+      frequency: z.string(),
+      duration: z.string(),
+      instructions: z.string().optional(),
+    }),
+  ),
+  notes: z.string().optional(),
+})
+
+export type CreatePrescriptionInput = z.infer<typeof createPrescriptionInput>
+
+export const updatePrescriptionInput = createPrescriptionInput.omit({ bookingId: true }).partial().extend({
+  prescriptionId: z.string(),
+})
+
+export type UpdatePrescriptionInput = z.infer<typeof updatePrescriptionInput>
