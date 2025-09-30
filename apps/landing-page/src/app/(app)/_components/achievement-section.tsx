@@ -22,7 +22,7 @@ export default function AchievementSection({ data }: AchievementSectionProps) {
                 key={item.id ?? index}
                 className="flex flex-col items-center bg-white rounded-xl shadow-md p-6 space-y-6"
               >
-                <div className="flex flex-col items-center justify-cent gap-4">
+                <div className="flex flex-col items-center gap-4">
                   <div className="text-primary">
                     {item.icon && <SVGImageIcon src={getURLFromMedia(item.icon)} className="h-10 w-10 text-primary" />}
                   </div>
