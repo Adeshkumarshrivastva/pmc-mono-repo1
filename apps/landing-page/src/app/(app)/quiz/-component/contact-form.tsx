@@ -108,7 +108,7 @@ export default function QuizContactForm({
             <div className="flex gap-4 justify-end pt-4">
               <Button
                 type="button"
-                variant="outline"
+                variant="default"
                 onClick={() => onOpenChange(false)}
                 disabled={quizFormMutation.isPending}
               >

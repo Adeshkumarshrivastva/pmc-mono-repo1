@@ -18,13 +18,13 @@ const questions: string[] = [
   'How often do you have a drink containing alcohol?',
   'How many drinks containing alcohol do you have on a typical day when you are drinking?',
   'How often do you have six or more drinks on one occasion?',
-  // 'How often during the last year have you found that you were not able to stop drinking once you had started?',
-  // 'How often during the last year you failed to do what was normally expected of you because of drinking?',
-  // 'How often during the last year have you needed a first drink in the morning to get yourself going after a heavy drinking session?',
-  // 'How often during the last year have you had a feeling of guilt or remorse after drinking?',
-  // 'How often during the last year have you been unable to remember what happened the night before because of your drinking?',
-  // 'Have you or someone else been injured because of your drinking?',
-  // 'Has a relative, friend, doctor, or other healthcare worker been concerned about your drinking or suggested that you cut down?',
+  'How often during the last year have you found that you were not able to stop drinking once you had started?',
+  'How often during the last year you failed to do what was normally expected of you because of drinking?',
+  'How often during the last year have you needed a first drink in the morning to get yourself going after a heavy drinking session?',
+  'How often during the last year have you had a feeling of guilt or remorse after drinking?',
+  'How often during the last year have you been unable to remember what happened the night before because of your drinking?',
+  'Have you or someone else been injured because of your drinking?',
+  'Has a relative, friend, doctor, or other healthcare worker been concerned about your drinking or suggested that you cut down?',
 ]
 
 const optionsByQuestion: Option[][] = [

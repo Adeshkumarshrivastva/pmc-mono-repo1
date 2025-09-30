@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import { QuestionCard } from '../-component/question-card'
 import QuizContactForm from '../-component/contact-form'
 
@@ -111,7 +110,9 @@ export default function OCDQuizPage() {
               questionNumber={startIndex + index + 1}
               question={question}
               value={answers[startIndex + index]}
-              onChange={(value) => handleAnswerChange(index, value)}
+              onChange={(value) => {
+                handleAnswerChange(index, value)
+              }}
               isAnswered={isQuestionAnswered(index)}
               options={options}
             />

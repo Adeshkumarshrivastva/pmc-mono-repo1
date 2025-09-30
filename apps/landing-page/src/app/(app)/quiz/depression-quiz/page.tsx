@@ -4,31 +4,30 @@ import { useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import { QuestionCard } from '../-component/question-card'
 import QuizContactForm from '../-component/contact-form'
 
 const questions = [
   'I feel down hearted and blue.',
   'Morning is when i feel the best.',
-  // 'I have crying spells often.',
-  // 'I have trouble sleeping at night.',
-  // 'I eat as much as I used to.',
-  // 'I still enjoy sex.',
-  // 'I noticed that I am loosing weight.',
-  // 'I have trouble with constipation.',
-  // 'My heart beats faster than usual.',
-  // 'I get tired for no reason.',
-  // 'My mind is as clear as it used to be.',
-  // 'I find it easy to do the things I used to do.',
-  // "I am restless and can't keep still.",
-  // 'I feel hopeful about the future.',
-  // 'I am more irritable than usual.',
-  // 'I find it easy to make decisions.',
-  // 'I feel that I am useful and needed.',
-  // 'My life is pretty full.',
-  // 'I feel that others would be better off if I were dead.',
-  // 'I still enjoy the things I used to.',
+  'I have crying spells often.',
+  'I have trouble sleeping at night.',
+  'I eat as much as I used to.',
+  'I still enjoy sex.',
+  'I noticed that I am loosing weight.',
+  'I have trouble with constipation.',
+  'My heart beats faster than usual.',
+  'I get tired for no reason.',
+  'My mind is as clear as it used to be.',
+  'I find it easy to do the things I used to do.',
+  "I am restless and can't keep still.",
+  'I feel hopeful about the future.',
+  'I am more irritable than usual.',
+  'I find it easy to make decisions.',
+  'I feel that I am useful and needed.',
+  'My life is pretty full.',
+  'I feel that others would be better off if I were dead.',
+  'I still enjoy the things I used to.',
 ]
 
 const options = [
@@ -110,7 +109,9 @@ export default function DepressionQuizPage() {
               questionNumber={startIndex + index + 1}
               question={question}
               value={answers[startIndex + index]}
-              onChange={(value) => handleAnswerChange(index, value)}
+              onChange={(value) => {
+                handleAnswerChange(index, value)
+              }}
               isAnswered={isQuestionAnswered(index)}
               options={options}
             />

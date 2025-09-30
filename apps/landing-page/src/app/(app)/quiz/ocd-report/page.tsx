@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Info, Phone, MessageCircle, CalendarIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { CalendarIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import ScoreReport from '../-component/score-report'
 import AppointmentForm from '../../_components/appointment-form'
