@@ -1,16 +1,19 @@
 'use client'
 
-import { Brain, Cloud, Repeat, Wine, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Card, CardHeader, CardTitle, CardContent, CardAction } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import anxietyImg from '@/app/assets/anxiety.jpg'
+import depressionImg from '@/app/assets/depression.jpg'
+import ocdImg from '@/app/assets/ocd.jpg'
+import addictionImg from '@/app/assets/adiction.jpg'
 
 const NAVBAR_HEIGHT = 64
 
 type Assessment = {
   id: string
   title: string
-  icon: LucideIcon
+  image: any
   route: string
 }
 
@@ -49,101 +52,52 @@ function AssessmentCards() {
     {
       id: 'anxiety',
       title: 'Anxiety',
-      icon: Brain,
+      image: anxietyImg,
       route: '/quiz/anxiety-quiz',
     },
     {
       id: 'depression',
       title: 'Depression',
-      icon: Cloud,
+      image: depressionImg,
       route: '/quiz/depression-quiz',
     },
     {
       id: 'ocd',
       title: 'OCD',
-      icon: Repeat,
+      image: ocdImg,
       route: '/quiz/ocd-quiz',
     },
     {
       id: 'addiction',
       title: 'Addiction',
-      icon: Wine,
+      image: addictionImg,
       route: '/quiz/addiction-quiz',
     },
   ]
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {assessments.map(function (assessment) {
-        return <AssessmentCard key={assessment.id} assessment={assessment} />
-      })}
+      {assessments.map((assessment) => (
+        <AssessmentCard key={assessment.id} assessment={assessment} />
+      ))}
     </div>
   )
 }
 
 function AssessmentCard({ assessment }: { assessment: Assessment }) {
-  const IconComponent = assessment.icon
-
   return (
     <Link href={assessment.route} className="block">
       <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group overflow-hidden">
-        <CardContent className="flex items-center justify-center min-h-[200px] relative">
-          <AnimatedIcon icon={IconComponent} type={assessment.id} />
+        <CardContent className="flex items-center justify-center min-h-[200px] p-6">
+          <div className="relative w-65 h-65">
+            <Image src={assessment.image} alt={assessment.title} fill className="object-cover" />
+          </div>
         </CardContent>
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle className="text-xl">{assessment.title}</CardTitle>
-          <CardAction>
-            <IconComponent className="w-6 h-6 transition-transform duration-300 group-hover:translate-x-1" />
-          </CardAction>
+          <CardAction></CardAction>
         </CardHeader>
       </Card>
     </Link>
-  )
-}
-
-function AnimatedIcon({ icon: Icon, type }: { icon: any; type: string }) {
-  const animations: Record<string, string> = {
-    anxiety: 'animate-pulse',
-    depression: 'animate-bounce',
-    ocd: 'animate-spin',
-    addiction: 'animate-pulse',
-  }
-
-  const animationDuration: Record<string, React.CSSProperties> = {
-    anxiety: { animationDuration: '2s' },
-    depression: { animationDuration: '2.5s' },
-    ocd: { animationDuration: '3s' },
-    addiction: { animationDuration: '2s' },
-  }
-
-  return (
-    <div className="relative">
-      <Icon className={cn('size-24 opacity-80', animations[type] || '')} style={animationDuration[type]} />
-      {type === 'anxiety' && (
-        <>
-          <div
-            className="absolute inset-0 rounded-full border-4 border-current opacity-20 animate-ping"
-            style={{ animationDuration: '2s' }}
-          ></div>
-          <div
-            className="absolute inset-2 rounded-full border-2 border-current opacity-30 animate-ping"
-            style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}
-          ></div>
-        </>
-      )}
-      {type === 'depression' && (
-        <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 flex gap-1">
-          {[...Array(5)].map(function (_, i) {
-            return (
-              <div
-                key={i}
-                className="w-0.5 h-6 bg-current opacity-40 animate-pulse"
-                style={{ animationDelay: `${i * 0.2}s`, animationDuration: '1.5s' }}
-              ></div>
-            )
-          })}
-        </div>
-      )}
-    </div>
   )
 }

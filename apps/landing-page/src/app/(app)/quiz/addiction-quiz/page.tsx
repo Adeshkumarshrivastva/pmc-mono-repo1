@@ -226,7 +226,7 @@ export default function AlcoholAuditQuiz() {
         {currentPage === totalPages - 1 && (
           <div className="mt-6 text-center">
             <Button disabled={getAnsweredCount() < questions.length} onClick={handleSubmit} className="px-8 size-lg">
-              Submit Assessment
+              Generate Report
             </Button>
             {getAnsweredCount() < questions.length && (
               <p className="text-sm text-muted-foreground mt-2">Please answer all questions before submitting</p>
