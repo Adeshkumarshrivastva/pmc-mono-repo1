@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { QuestionCard } from '../-component/question-card'
+import QuizContactForm from '../-component/contact-form'
 
 type Option = {
   value: string
@@ -99,6 +100,7 @@ export default function AlcoholAuditQuiz() {
   const router = useRouter()
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [currentPage, setCurrentPage] = useState(0)
+  const [showContactDialog, setShowContactDialog] = useState(false)
 
   const questionsPerPage = 1
   const totalPages = Math.ceil(questions.length / questionsPerPage)
@@ -124,7 +126,7 @@ export default function AlcoholAuditQuiz() {
     return totalScore
   }
 
-  function handleSubmit() {
+  function navigateToResults() {
     const score = calculateScore()
     const resultsData = {
       answers,
@@ -137,7 +139,11 @@ export default function AlcoholAuditQuiz() {
       data: btoa(JSON.stringify(resultsData)),
     })
 
-    router.push(`/quiz/addiction-report?${searchParams.toString()}`)
+    router.push(`/quiz/depression-report?${searchParams.toString()}`)
+  }
+
+  function handleSubmit() {
+    setShowContactDialog(true)
   }
 
   function getAnsweredCount() {
@@ -228,6 +234,14 @@ export default function AlcoholAuditQuiz() {
           </div>
         )}
       </div>
+
+      <QuizContactForm
+        open={showContactDialog}
+        onOpenChange={setShowContactDialog}
+        onSuccess={navigateToResults}
+        title="Get Your Depression Assessment Results"
+        description="Enter your details to view your personalized depression assessment report"
+      />
     </div>
   )
 }

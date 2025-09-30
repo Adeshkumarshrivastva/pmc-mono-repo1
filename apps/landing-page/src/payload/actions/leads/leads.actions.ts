@@ -1,7 +1,7 @@
 'use server'
 
 import { getPayloadClient } from '@/lib/payload'
-import { LeadFormInput } from './leads.input'
+import { type LeadFormInput, type QuizLeadFormInput } from './leads.input'
 
 export async function createLead({ serviceId, subServiceId, ...rest }: LeadFormInput) {
   const payload = await getPayloadClient()
@@ -11,6 +11,17 @@ export async function createLead({ serviceId, subServiceId, ...rest }: LeadFormI
       ...rest,
       service: serviceId,
       subService: subServiceId,
+    },
+  })
+}
+export async function createQuizLead({ fullName, email, phone }: QuizLeadFormInput) {
+  const payload = await getPayloadClient()
+  await payload.create({
+    collection: 'leads',
+    data: {
+      fullName: fullName,
+      email: email,
+      phone: phone,
     },
   })
 }

@@ -6,26 +6,27 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { QuestionCard } from '../-component/question-card'
+import QuizContactForm from '../-component/contact-form'
 
 const questions = [
   'I have saved up so many things that they get in the way.',
   'I check things more often than necessary.',
   'I get upset if objects are not arranged properly.',
   'I feel compelled to count while I am doing things.',
-  // 'I find it difficult to touch an object when I know it has been touched by strangers or certain people.',
-  // 'I find it difficult to control my own thoughts.',
-  // "I collect things I don't need.",
-  // 'I repeatedly check doors, windows, drawers, etc.',
-  // 'I get upset if others change the way I have arranged things.',
-  // 'I feel I have to repeat certain numbers.',
-  // 'I sometimes have to wash or clean myself simply because I feel contaminated.',
-  // 'I am upset by unpleasant thoughts that come into my mind against my will.',
-  // 'I avoid throwing things away because I am afraid I might need them later.',
-  // 'I repeatedly check gas, water taps and light switches after turning them off.',
-  // 'I need things to be arranged in a particular way.',
-  // 'I feel that there are good and bad numbers.',
-  // 'I wash my hands more often and longer than necessary.',
-  // 'I frequently get nasty thoughts and have difficulty in getting rid of them.',
+  'I find it difficult to touch an object when I know it has been touched by strangers or certain people.',
+  'I find it difficult to control my own thoughts.',
+  "I collect things I don't need.",
+  'I repeatedly check doors, windows, drawers, etc.',
+  'I get upset if others change the way I have arranged things.',
+  'I feel I have to repeat certain numbers.',
+  'I sometimes have to wash or clean myself simply because I feel contaminated.',
+  'I am upset by unpleasant thoughts that come into my mind against my will.',
+  'I avoid throwing things away because I am afraid I might need them later.',
+  'I repeatedly check gas, water taps and light switches after turning them off.',
+  'I need things to be arranged in a particular way.',
+  'I feel that there are good and bad numbers.',
+  'I wash my hands more often and longer than necessary.',
+  'I frequently get nasty thoughts and have difficulty in getting rid of them.',
 ]
 
 const options = [
@@ -40,6 +41,7 @@ export default function OCDQuizPage() {
   const router = useRouter()
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [currentPage, setCurrentPage] = useState(0)
+  const [showContactDialog, setShowContactDialog] = useState(false)
 
   const questionsPerPage = 1
   const totalPages = Math.ceil(questions.length / questionsPerPage)
@@ -64,7 +66,7 @@ export default function OCDQuizPage() {
     return totalScore
   }
 
-  function handleSubmit() {
+  function navigateToResults() {
     const score = calculateScore()
     const resultsData = {
       answers,
@@ -77,7 +79,11 @@ export default function OCDQuizPage() {
       data: btoa(JSON.stringify(resultsData)),
     })
 
-    router.push(`/quiz/ocd-report?${searchParams.toString()}`)
+    router.push(`/quiz/depression-report?${searchParams.toString()}`)
+  }
+
+  function handleSubmit() {
+    setShowContactDialog(true)
   }
 
   function getAnsweredCount() {
@@ -168,6 +174,14 @@ export default function OCDQuizPage() {
           </div>
         )}
       </div>
+
+      <QuizContactForm
+        open={showContactDialog}
+        onOpenChange={setShowContactDialog}
+        onSuccess={navigateToResults}
+        title="Get Your Depression Assessment Results"
+        description="Enter your details to view your personalized depression assessment report"
+      />
     </div>
   )
 }

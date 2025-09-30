@@ -11,3 +11,11 @@ export const leadFormInput = z.object({
 })
 
 export type LeadFormInput = z.infer<typeof leadFormInput>
+
+export const quizLeadInput = z.object({
+  fullName: z.string().min(1),
+  email: z.email().optional(),
+  phone: z.string(),
+})
+
+export type QuizLeadFormInput = z.infer<typeof quizLeadInput>

@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { ArrowLeft, AlertTriangle, CheckCircle, Info, Phone, MessageCircle } from 'lucide-react'
+import { Info, Phone, MessageCircle, CalendarIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import ScoreReport from '../-component/score-report'
+import AppointmentForm from '../../_components/appointment-form'
 
 type ReportData = {
   answers: Record<string, string>
@@ -82,6 +82,8 @@ const scoreCategories: ScoreCategory[] = [
   },
 ]
 
+const MAX_SCORE = 72
+
 export default function OCDReportPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -120,182 +122,40 @@ export default function OCDReportPage() {
     )
   }
 
-  const formatDate = (timestamp: string) => {
-    return new Date(timestamp).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
-
   return (
     <div className="min-h-screen bg-primary-foreground">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="mb-8">
-          <Button
-            onClick={() => router.back()}
-            variant="default"
-            className="mb-4 flex items-center gap-2"
-            icon={<ArrowLeft className="w-4 h-4" />}
-          >
-            Back to Assessment
-          </Button>
-
-          <h1 className="text-3xl font-bold text-foreground mb-2">Your OCD Assessment Report</h1>
-          <p className="text-muted-foreground">Completed on {formatDate(reportData.timestamp)}</p>
-        </div>
-
-        <Card className={cn('mb-6 border-2', currentCategory.bgColor)}>
-          <CardHeader className="text-center pb-4">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <div className="text-4xl font-bold text-foreground">{reportData.totalScore}</div>
-              <div className="text-sm text-muted-foreground">out of 72</div>
-            </div>
-
-            <Badge variant="secondary" className={cn('text-lg px-4 py-2', currentCategory.color, 'bg-background')}>
-              {currentCategory.level}
-            </Badge>
-
-            <p className="text-sm text-muted-foreground mt-2">Score range: {currentCategory.range}</p>
-          </CardHeader>
-
-          <CardContent>
-            <div className="bg-background/50 rounded-lg p-4">
-              <p className="text-foreground leading-relaxed">{currentCategory.description}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Info className="w-5 h-5" />
-              Understanding Your Score
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {scoreCategories.map((category, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    'flex items-center justify-between p-3 rounded-lg border-2 transition-all',
-                    category.level === currentCategory.level
-                      ? `${category.bgColor} border-current`
-                      : 'bg-background border-border',
-                  )}
+        <ScoreReport
+          score={reportData.totalScore}
+          maxScore={MAX_SCORE}
+          currentCategory={currentCategory}
+          scoreCategories={scoreCategories}
+          reportTitle="Your Depression Assessment Report"
+          timestamp={reportData.timestamp}
+          onBack={() => {
+            router.back()
+          }}
+          onRetake={() => {
+            router.push('/quiz')
+          }}
+          onViewExperts={() => {
+            router.push('http://localhost:5173/portal/experts')
+          }}
+          disclaimer="This assessment is not a diagnostic tool and should not replace professional medical advice. If you're experiencing persistent OCD symptoms, please consult with a qualified mental health professional who specializes in OCD for proper evaluation and treatment."
+          appointmentFormTrigger={
+            <AppointmentForm
+              trigger={
+                <Button
+                  variant="default"
+                  className="flex items-center gap-2 w-full sm:w-auto"
+                  icon={<CalendarIcon className="w-4 h-4" />}
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={cn(
-                        'w-3 h-3 rounded-full',
-                        category.level === currentCategory.level ? 'bg-current opacity-100' : 'bg-muted-foreground/30',
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        'font-medium',
-                        category.level === currentCategory.level ? category.color : 'text-foreground',
-                      )}
-                    >
-                      {category.level}
-                    </span>
-                  </div>
-                  <span className="text-sm text-muted-foreground">{category.range} points</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
-              Recommended Next Steps
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {currentCategory.recommendations.map((recommendation, index) => (
-                <div key={index} className="flex items-start gap-3 p-3 bg-accent/50 rounded-lg">
-                  <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
-                  <p className="text-foreground">{recommendation}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {currentCategory.level !== 'Minimal OCD Symptoms' && (
-          <Card className="mb-6 border-amber-200 bg-amber-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-amber-800">
-                <AlertTriangle className="w-5 h-5" />
-                Important Notice
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-amber-800 leading-relaxed">
-                This assessment is not a diagnostic tool and should not replace professional medical advice. If
-                you&apos;re experiencing persistent OCD symptoms, please consult with a qualified mental health
-                professional who specializes in OCD for proper evaluation and treatment.
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-        {(currentCategory.level === 'Moderate OCD Symptoms' || currentCategory.level === 'Severe OCD Symptoms') && (
-          <Card className="mb-6 border-blue-200 bg-blue-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-800">
-                <Info className="w-5 h-5" />
-                OCD-Specific Resources
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3 text-blue-800">
-                <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                  <Phone className="w-4 h-4 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">International OCD Foundation</p>
-                    <p className="text-sm">Visit iocdf.org for resources and specialist directory</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                  <MessageCircle className="w-4 h-4 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">OCD Support Groups</p>
-                    <p className="text-sm">Find local and online support groups through IOCDF</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                  <Info className="w-4 h-4 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">Evidence-Based Treatment</p>
-                    <p className="text-sm">
-                      ERP (Exposure and Response Prevention) is the gold standard for OCD treatment
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={() => router.push('/quiz')} variant="default" className="px-8">
-            Retake Assessment
-          </Button>
-
-          <Button onClick={() => window.print()} variant="default" className="px-8">
-            Save Report
-          </Button>
-        </div>
+                  Book a Consultation
+                </Button>
+              }
+            />
+          }
+        />
 
         <div className="mt-12 text-center">
           <p className="text-xs text-muted-foreground leading-relaxed max-w-2xl mx-auto">
