@@ -136,7 +136,7 @@ export const createPrescriptionInput = z.object({
 
 export type CreatePrescriptionInput = z.infer<typeof createPrescriptionInput>
 
-export const updatePrescriptionInput = createPrescriptionInput.omit({ bookingId: true }).partial().extend({
+export const updatePrescriptionInput = createPrescriptionInput.partial().extend({
   prescriptionId: z.string(),
 })
 

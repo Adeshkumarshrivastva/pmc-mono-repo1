@@ -87,7 +87,7 @@ function ExpertBookings() {
                       </div>
                     ) : (
                       <div>
-                        <div className="space-y-4 grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {bookings.map((booking) => (
                             <BookingCard
                               onViewDetails={() => {

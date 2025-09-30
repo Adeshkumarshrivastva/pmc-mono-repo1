@@ -19,7 +19,7 @@ const app = new Hono<{ Variables: HonoContext }>()
       origin: [config.cors.origin],
       credentials: true,
       exposeHeaders: ['Content-Length'],
-      allowMethods: ['POST', 'GET', 'OPTIONS'],
+      allowMethods: ['POST', 'GET', 'PATCH', 'OPTIONS'],
       allowHeaders: ['Content-Type', 'Authorization'],
     }),
   )

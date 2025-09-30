@@ -6,6 +6,7 @@ import {
   expertBookingsSearchQuery,
   expertMonthlyAvailableSlotsQuery,
   expertSearchQuery,
+  updatePrescriptionInput,
 } from './experts.input'
 import {
   getExpertFromSlug,
@@ -15,6 +16,7 @@ import {
   getExpertBooking,
   getExpertBookings,
   createPrescription,
+  updatePrescription,
 } from './experts.service'
 import { authMiddleware } from '../../middleware/auth.middleware'
 
@@ -26,6 +28,9 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .get('/bookings/:bookingId', async (c) => getExpertBooking(c, c.req.param('bookingId')))
   .post('/bookings/prescription', authMiddleware, zValidator('json', createPrescriptionInput), async (c) =>
     createPrescription(c, c.req.valid('json')),
+  )
+  .patch('/bookings/prescription', authMiddleware, zValidator('json', updatePrescriptionInput), async (c) =>
+    updatePrescription(c, c.req.valid('json')),
   )
   .get('/:expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
   .get('/:expertSlug/service/:serviceSlug', async (c) =>

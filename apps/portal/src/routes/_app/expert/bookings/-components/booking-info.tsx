@@ -69,7 +69,6 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
             <div className="flex items-center p-4">
               <TabsList>
                 <TabsTrigger value="booking-details">Booking Details</TabsTrigger>
-                <TabsTrigger value="patient-details">Patient Details</TabsTrigger>
                 <TabsTrigger value="prescriptions">Prescription</TabsTrigger>
               </TabsList>
             </div>
@@ -95,9 +94,6 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
                   Booked on {dayjs(utcDateToLocalDate(dayjs(booking.createdAt).toDate())).format('D MMMM YYYY')}
                 </div>
               </div>
-            </TabsContent>
-            <TabsContent value="patient-details" className="p-4">
-              Patient Details
             </TabsContent>
             <TabsContent value="prescriptions" className="p-4">
               <PrescriptionArea prescription={booking.prescription[0]} bookingId={booking.id} />

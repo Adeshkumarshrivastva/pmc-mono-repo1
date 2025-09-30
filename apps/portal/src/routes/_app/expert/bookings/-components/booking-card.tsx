@@ -14,7 +14,7 @@ type BookingCardProps = {
 export default function BookingCard({ booking, onViewDetails }: BookingCardProps) {
   return (
     <Card
-      className="hover:shadow-lg transition-all duration-200 cursor-pointer"
+      className="hover:shadow-lg transition-all duration-200 cursor-pointer h-full flex flex-col"
       onClick={() => {
         onViewDetails?.()
       }}
@@ -27,7 +27,7 @@ export default function BookingCard({ booking, onViewDetails }: BookingCardProps
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 flex-1">
         <div className="flex items-center gap-2 text-sm">
           <UserIcon className="size-4 text-muted-foreground flex-shrink-0" />
           <span className="text-muted-foreground font-bold">{booking.patientName}</span>

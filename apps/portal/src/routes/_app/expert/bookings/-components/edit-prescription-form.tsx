@@ -4,25 +4,31 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import z from 'zod'
 import { PlusIcon, TrashIcon } from 'lucide-react'
-import { honoClient } from '@/lib/hono-client'
 import { getErrorMessage } from '@/lib/utils'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { prescriptionConfig } from '@/lib/prescription'
+import { prescriptionConfig, type Prescription } from '@/lib/prescription'
+import type { Booking } from '@/lib/booking'
+import { honoClient } from '@/lib/hono-client'
+
+type EditPrescriptionFormProps = {
+  prescription: Booking['prescription'][number]
+  onSuccess: () => void
+}
 
 type PrescriptionFormData = z.infer<typeof prescriptionConfig>
 
-export default function CreatePrescriptionForm({ bookingId, onSuccess }: { bookingId: string; onSuccess: () => void }) {
+export default function EditPrescriptionForm({ prescription, onSuccess }: EditPrescriptionFormProps) {
   const queryClient = useQueryClient()
 
   const form = useForm<PrescriptionFormData>({
     resolver: zodResolver(prescriptionConfig),
     defaultValues: {
-      medicines: [{ name: '', dosage: '', frequency: '', duration: '', instructions: '' }],
-      notes: '',
+      medicines: [...((prescription?.medicines as Prescription['medicines']) || [])],
+      notes: prescription.notes ?? '',
     },
   })
 
@@ -35,25 +41,24 @@ export default function CreatePrescriptionForm({ bookingId, onSuccess }: { booki
     name: 'medicines',
   })
 
-  const createPrescriptionMutation = useMutation({
+  const updatePrescriptionMutation = useMutation({
     mutationFn: async (data: PrescriptionFormData) => {
-      const response = await honoClient.server.experts.bookings.prescription.$post({
+      const response = await honoClient.server.experts.bookings.prescription.$patch({
         json: {
-          bookingId,
-          medicines: data?.medicines ?? [],
+          bookingId: prescription.bookingId,
+          prescriptionId: prescription.id,
+          medicines: data.medicines,
           notes: data.notes,
         },
       })
-
       if (!response.ok) {
         const error = await response.json()
         throw new Error((error as { error?: string }).error || 'Failed to create prescription')
       }
-
       return response.json()
     },
     onSuccess: () => {
-      toast.success('Prescription created successfully')
+      toast.success('Prescription updated successfully')
       onSuccess()
       form.reset()
       queryClient.invalidateQueries({ queryKey: ['get-expert-bookings'] })
@@ -67,7 +72,7 @@ export default function CreatePrescriptionForm({ bookingId, onSuccess }: { booki
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          createPrescriptionMutation.mutate(values)
+          updatePrescriptionMutation.mutate(values)
         })}
         className="space-y-6 p-6"
       >
@@ -98,19 +103,17 @@ export default function CreatePrescriptionForm({ bookingId, onSuccess }: { booki
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h5 className="font-medium">Medicine {index + 1}</h5>
-                  {medicineFields.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      icon={<TrashIcon className="size-4" />}
-                      onClick={() => {
-                        removeMedicine(index)
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    icon={<TrashIcon className="size-4" />}
+                    onClick={() => {
+                      removeMedicine(index)
+                    }}
+                  >
+                    Remove
+                  </Button>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -208,10 +211,10 @@ export default function CreatePrescriptionForm({ bookingId, onSuccess }: { booki
         <div className="flex justify-end">
           <Button
             type="submit"
-            disabled={createPrescriptionMutation.isPending}
-            loading={createPrescriptionMutation.isPending}
+            disabled={updatePrescriptionMutation.isPending}
+            loading={updatePrescriptionMutation.isPending}
           >
-            Create Prescription
+            Update Prescription
           </Button>
         </div>
       </form>
