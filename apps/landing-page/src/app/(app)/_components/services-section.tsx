@@ -5,7 +5,7 @@ import Autoscroll from 'embla-carousel-auto-scroll'
 import { ArrowRightIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { Home, Service } from '@/payload/types'
+import { type Home, type Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import QuestionnaireModal from './questionnaire-modal'
 
