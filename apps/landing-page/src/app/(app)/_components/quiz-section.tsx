@@ -15,11 +15,9 @@ export default function QuizSection({ data }: QuizSectionProps) {
 
   return (
     <section className="w-full bg-primary">
-      <div className="px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-12 lg:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent pointer-events-none" />
-
+      <div className="px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-12 lg:py-20 relative overflow-hidden">
         <div className="relative mx-auto max-w-7xl z-10">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="flex-1 max-w-2xl lg:max-w-none">
               <div className="space-y-6">
                 {data?.quizTitle ? (
@@ -54,8 +52,8 @@ export default function QuizSection({ data }: QuizSectionProps) {
               </div>
             </div>
 
-            <div className="flex justify-center lg:justify-end w-full lg:w-[700px] xl:w-[780px]">
-              {illustrationUrl ? (
+            {illustrationUrl ? (
+              <div className="flex justify-center lg:justify-end">
                 <div className="relative aspect-square w-full max-w-md lg:max-w-none">
                   <Image
                     src={illustrationUrl}
@@ -65,8 +63,8 @@ export default function QuizSection({ data }: QuizSectionProps) {
                     className="object-contain"
                   />
                 </div>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
