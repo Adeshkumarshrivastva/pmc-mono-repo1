@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { getPayloadClient } from '@/lib/payload'
 import { getURLFromMedia } from '@/payload/utils'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Webinar } from '@/payload/types'
+import type { Webinar } from '@/payload/types'
+import Image from 'next/image'
 
 export default async function WebinarsPage() {
   return (
@@ -43,13 +44,15 @@ function WebinarCard({ webinar }: { webinar: Webinar }) {
   return (
     <Link href={href} className="group relative flex flex-col overflow-hidden rounded-2xl bg-card text-card-foreground">
       <AspectRatio ratio={16 / 9} className="bg-muted">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={getURLFromMedia(webinar.poster ?? '')}
-          alt={webinar.title}
-          loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:duration-0"
-        />
+        {webinar.poster && (
+          <Image
+            src={getURLFromMedia(webinar.poster)}
+            alt={webinar.title}
+            fill
+            loading="lazy"
+            className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:duration-0"
+          />
+        )}
       </AspectRatio>
 
       <div className="flex flex-1 flex-col p-5">

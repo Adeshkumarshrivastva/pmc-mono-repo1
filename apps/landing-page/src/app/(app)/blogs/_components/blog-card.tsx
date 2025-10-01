@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { CircleArrowRightIcon } from '@/components/ui/icons'
-import { Blog } from '@/payload/types'
+import type { Blog } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type BlogCardProps = {
   blog: Blog
@@ -13,11 +14,9 @@ export default function BlogCard({ blog }: BlogCardProps) {
     <Link href={`/blogs/${blog.id}`} className="block">
       <article className="relative flex flex-col w-full max-w-sm mx-auto sm:max-w-none sm:mx-0">
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl">
-          <img
-            src={getURLFromMedia(blog?.image ?? '')}
-            alt={blog?.title ?? ''}
-            className="h-full w-full object-cover"
-          />
+          {blog?.image && (
+            <Image src={getURLFromMedia(blog.image)} alt={blog?.title ?? ''} fill className="object-cover" />
+          )}
         </div>
 
         <div className="bg-card rounded-3xl p-7 -mt-10 mx-3 sm:mx-4 shadow-lg lg:absolute lg:left-3 lg:-right-6 lg:-bottom-16 lg:max-w-none lg:min-h-[160px] lg:flex lg:flex-col lg:justify-between z-10">

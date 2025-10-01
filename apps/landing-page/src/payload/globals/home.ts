@@ -4,6 +4,7 @@ import { faqSection } from '../fields/faq-section'
 import { expertsSection } from '../fields/experts-section'
 import { testimonialSection } from '../fields/testimonial-section'
 import { serivicesSection } from '../fields/services-section'
+import { achievementSection } from '../fields/achievement-section'
 import { quizSection } from '../fields/quiz-section'
 
 export const Home: GlobalConfig = {
@@ -295,6 +296,7 @@ export const Home: GlobalConfig = {
     quizSection,
     testimonialSection,
     faqSection,
+    achievementSection,
     {
       name: 'blogsSection',
       label: 'Blogs Section',
