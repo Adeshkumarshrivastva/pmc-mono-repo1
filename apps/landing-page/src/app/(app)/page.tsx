@@ -41,13 +41,13 @@ export default async function HomePage() {
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
       <HeroSection data={heroSetion} />
       <DeepTmsSection data={deepTmsSection} />
+      <QuizSection data={quizSection} />
       <ServicesSection data={servicesSection} services={services.docs} />
       <TreatmentSection data={treatmentSection} />
       <WhyChooseSection data={whyChooseSection} />
       <ExpertsSection data={expertsSection} />
       <PackagesSection data={packagesSection} />
       <AppointmentSection data={appointmentSection} services={services.docs} />
-      <QuizSection data={quizSection} />
       <TestimonialSection data={testimonialSection} />
       <AchievementSection data={achievementSection} />
       <FAQSection data={faqSection} />

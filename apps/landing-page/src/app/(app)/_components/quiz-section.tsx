@@ -13,7 +13,7 @@ type QuizSectionProps = {
 function CheckIcon() {
   return (
     <svg
-      className="w-3 h-3 text-primary"
+      className="w-3 h-3 text-accent-foreground"
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -37,26 +37,26 @@ export default function QuizSection({ data }: QuizSectionProps) {
   const features = data?.quizFeatures?.length ? data.quizFeatures : defaultFeatures
 
   return (
-    <div className="bg-background py-16 sm:py-20 lg:py-24 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+    <div className="bg-primary py-16 sm:py-20 lg:py-24 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent pointer-events-none" />
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 xl:px-25 z-10">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
           <div className="flex-1 max-w-2xl lg:max-w-none">
             <div className="space-y-6">
               {data?.quizTitle ? (
-                <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold text-foreground leading-tight">
+                <div className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold text-primary-foreground leading-tight">
                   <RichText data={data.quizTitle} disableContainer={true} />
                 </div>
               ) : (
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold text-foreground leading-tight">
-                  <span className="text-primary">Take a Free Mental Health Test Today!</span>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold text-primary-foreground leading-tight">
+                  <span className="text-accent">Take a Free Mental Health Test Today!</span>
                   <br />
                   Know How You Feel.
                 </h2>
               )}
 
-              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl">
+              <p className="text-base sm:text-lg text-primary-foreground/80 leading-relaxed max-w-xl">
                 {data?.quizDescription ||
                   'Scientifically validated standard assessments - quickest way to determine if you are suffering from symptoms of any mental health disorder.'}
               </p>
@@ -64,13 +64,13 @@ export default function QuizSection({ data }: QuizSectionProps) {
               <div className="space-y-3 pt-4">
                 {features.map((feature, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5">
                       <CheckIcon />
                     </div>
-                    <p className="text-sm sm:text-base text-foreground">
+                    <p className="text-sm sm:text-base text-primary-foreground">
                       {index === 0 && !data?.quizFeatures?.length ? (
                         <>
-                          Get a <span className="font-semibold text-primary">Free Report</span>
+                          Get a <span className="font-semibold text-accent">Free Report</span>
                         </>
                       ) : (
                         feature.text
@@ -83,14 +83,16 @@ export default function QuizSection({ data }: QuizSectionProps) {
 
             <div className="mt-8">
               <Link href="/quiz">
-                <Button className="w-full sm:w-auto">{data?.quizButtonText || 'Take the Test Now'}</Button>
+                <Button variant="secondary" className="w-full sm:w-auto">
+                  {data?.quizButtonText || 'Take the Test Now'}
+                </Button>
               </Link>
             </div>
           </div>
 
-          <div className="flex justify-between w-full lg:w-[700px] xl:w-[780px]">
+          <div className="flex justify-center lg:justify-end w-full lg:w-[700px] xl:w-[780px]">
             {illustrationUrl ? (
-              <div className="relative aspect-square w-full">
+              <div className="relative aspect-square w-full max-w-md lg:max-w-none">
                 <Image
                   src={illustrationUrl}
                   alt="Mental health illustration"
@@ -100,9 +102,14 @@ export default function QuizSection({ data }: QuizSectionProps) {
                 />
               </div>
             ) : (
-              <div className="relative aspect-square w-full bg-primary/10 rounded-3xl flex items-center justify-center">
-                <div className="w-32 h-32 rounded-full bg-primary/20 flex items-center justify-center">
-                  <svg className="w-16 h-16 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="relative aspect-square w-full max-w-md lg:max-w-none bg-primary-foreground/10 rounded-3xl flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full bg-accent flex items-center justify-center">
+                  <svg
+                    className="w-16 h-16 text-accent-foreground"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
