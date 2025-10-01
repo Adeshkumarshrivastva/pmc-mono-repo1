@@ -832,6 +832,32 @@ export interface Home {
         | null
     }
   }
+  quizSection: {
+    quizTitle: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    }
+    quizDescription: string
+    quizFeatures?:
+      | {
+          text: string
+          id?: string | null
+        }[]
+      | null
+    quizButtonText?: string | null
+    quizImage?: (string | null) | Media
+  }
   testimonialSection?: {
     title?: string | null
     testimonialSlides?: (string | Testimonial)[] | null
@@ -1459,6 +1485,20 @@ export interface HomeSelect<T extends boolean = true> {
                     id?: T
                   }
             }
+      }
+  quizSection?:
+    | T
+    | {
+        quizTitle?: T
+        quizDescription?: T
+        quizFeatures?:
+          | T
+          | {
+              text?: T
+              id?: T
+            }
+        quizButtonText?: T
+        quizImage?: T
       }
   testimonialSection?:
     | T

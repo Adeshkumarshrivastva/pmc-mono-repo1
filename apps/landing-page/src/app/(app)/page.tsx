@@ -12,6 +12,7 @@ import PackagesSection from './_components/packages-section'
 import BlogsSection from './_components/blogs-section'
 import ExpertsSection from './_components/experts-section'
 import ServicesSection from './_components/services-section'
+import QuizSection from './_components/quiz-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -27,6 +28,7 @@ export default async function HomePage() {
     blogsSection,
     expertsSection,
     servicesSection,
+    quizSection,
   } = await payload.findGlobal({
     slug: 'home',
   })
@@ -43,6 +45,7 @@ export default async function HomePage() {
       <ExpertsSection data={expertsSection} />
       <PackagesSection data={packagesSection} />
       <AppointmentSection data={appointmentSection} services={services.docs} />
+      <QuizSection data={quizSection} />
       <TestimonialSection data={testimonialSection} />
       <FAQSection data={faqSection} />
       <BlogsSection data={blogsSection} />
