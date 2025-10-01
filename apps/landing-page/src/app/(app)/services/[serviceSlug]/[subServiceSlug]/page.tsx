@@ -4,6 +4,7 @@ import { getService, getServices } from '@/payload/actions'
 import { getURLFromMedia } from '@/payload/utils'
 import { Button } from '@/components/ui/button'
 import { CallIcon, LocationIcon, MailIcon } from '@/components/ui/icons'
+import Image from 'next/image'
 
 type SubServicePageProps = {
   params: Promise<{ subServiceSlug: string }>
@@ -29,13 +30,15 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
 
             {service.image ? (
               <div className="mt-12 md:mt-16 flex items-center justify-center  w-full relative">
-                <div className="relative w-full min-h-[300px] md:min-h-[400px] lg:min-h-[450px]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={getURLFromMedia(service.image ?? '')}
-                    alt={service.name}
-                    className="absolute inset-0 w-full h-full object-cover rounded-2xl"
-                  />
+                <div className="relative w-full min-h-[300px] md:min-h-[400px] lg:min-h-[450px] rounded-2xl overflow-hidden">
+                  {service.image && (
+                    <Image
+                      src={getURLFromMedia(service.image)}
+                      alt={service.name}
+                      fill
+                      className="object-cover rounded-2xl"
+                    />
+                  )}
                 </div>
 
                 <div className="absolute inset-x-4 bottom-4 bg-primary-foreground/50 md:bg-primary-foreground/90 backdrop-blur-sm rounded-xl p-4">
@@ -97,12 +100,13 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
                       </div>
 
                       {sub.image && (
-                        <div className="lg:col-span-2 flex items-center justify-center">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                        <div className="relative w-full max-h-64 md:max-h-80 rounded-xl overflow-hidden">
+                          <Image
                             src={getURLFromMedia(sub.image)}
                             alt={sub.name}
-                            className="w-full h-auto max-h-64 md:max-h-80 object-cover rounded-xl"
+                            fill
+                            className="object-cover rounded-xl"
+                            priority={false}
                           />
                         </div>
                       )}

@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { OurService, Service } from '@/payload/types'
+import type { OurService, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type OurServicesSectionProps = {
   data: OurService['mainServicesSection']
@@ -51,12 +52,11 @@ function ServiceCard({ service, actionButtonText }: { service: Service; actionBu
         </div>
       </div>
       <div className="lg:col-span-1 order-first lg:order-last">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          alt={service.name}
-          src={getURLFromMedia(service.image ?? '')}
-          className="rounded-3xl w-full h-64 sm:h-80 lg:h-96 lg:w-96 object-cover mx-auto"
-        />
+        {service.image && (
+          <div className="relative w-full h-64 sm:h-80 lg:h-96 lg:w-96 mx-auto rounded-3xl overflow-hidden">
+            <Image src={getURLFromMedia(service.image)} alt={service.name ?? ''} fill className="object-cover" />
+          </div>
+        )}
       </div>
     </div>
   )

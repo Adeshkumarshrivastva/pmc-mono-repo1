@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import SquareArrowRightIcon from '@/components/ui/icons'
 import { getService, getServices } from '@/payload/actions'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type MainServicePageProps = {
   params: Promise<{ serviceSlug: string }>
@@ -36,14 +37,17 @@ export default async function MainServicePage({ params }: MainServicePageProps) 
               <div className="grid gap-6 md:grid-cols-3 md:gap-8 lg:gap-12">
                 {subServices?.docs.map((subService) => (
                   <div key={subService.id} className="space-y-2">
-                    <div>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        alt={subService?.name}
-                        src={getURLFromMedia(subService.image ?? '')}
-                        className="rounded-3xl w-full h-64 sm:h-80 lg:h-96 lg:w-96 object-cover mx-auto"
-                      />
-                    </div>
+                    {subService.image && (
+                      <div className="relative rounded-3xl w-full h-64 sm:h-80 lg:h-96 lg:w-96 mx-auto overflow-hidden">
+                        <Image
+                          src={getURLFromMedia(subService.image)}
+                          alt={subService?.name || 'Sub Service Image'}
+                          fill
+                          className="object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
                     <Link href={`${service.slug}/${subService.slug}`}>
                       <Button
                         className="w-full rounded-2xl justify-between h-16 text-left"
