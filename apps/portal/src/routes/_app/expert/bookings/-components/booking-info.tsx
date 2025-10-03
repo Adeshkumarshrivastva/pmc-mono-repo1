@@ -63,7 +63,7 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
         </div>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-y-auto">
         <Tabs defaultValue="booking-details">
           <div className="flex flex-col">
             <div className="flex items-center p-4">

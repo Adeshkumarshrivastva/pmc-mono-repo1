@@ -106,7 +106,7 @@ function ExpertBookings() {
                             }}
                           >
                             <SheetContent
-                              className="w-full sm:max-w-2xl"
+                              className="w-full sm:max-w-2xl overflow-y-auto"
                               onInteractOutside={(event) => {
                                 event.preventDefault()
                               }}

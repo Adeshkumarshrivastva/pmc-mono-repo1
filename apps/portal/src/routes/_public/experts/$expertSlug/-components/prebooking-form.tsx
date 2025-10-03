@@ -184,7 +184,7 @@ export const SERVICE_MODE_CONFIG: Record<BookingLocation, { label: string; value
     value: 'IN_PERSON',
   },
   VIRTUAL: {
-    label: 'Google Meet',
+    label: 'Virtual',
     value: 'VIRTUAL',
   },
 }

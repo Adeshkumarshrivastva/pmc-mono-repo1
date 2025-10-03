@@ -1,6 +1,8 @@
 import { ClipboardPenIcon, EditIcon, DownloadIcon } from 'lucide-react'
 import { useState } from 'react'
 import { match } from 'ts-pattern'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
@@ -10,6 +12,8 @@ import CreatePrescriptionForm from './create-prescription-form'
 import EditPrescriptionForm from './edit-prescription-form'
 import dayjs from '@/lib/dayjs'
 import { utcDateToLocalDate } from '@/lib/date'
+import { honoClient } from '@/lib/hono-client'
+import { getErrorMessage } from '@/lib/utils'
 
 type PrescriptionProps = {
   prescription?: Booking['prescription'][number]
@@ -18,6 +22,32 @@ type PrescriptionProps = {
 
 export default function PrescriptionArea({ prescription, bookingId }: PrescriptionProps) {
   const [mode, setMode] = useState<{ type: 'create' | 'edit' } | undefined>(undefined)
+
+  const downloadPrescriptionMutation = useMutation({
+    mutationFn: async ({ prescriptionId }: { prescriptionId: string }) => {
+      const response = await honoClient.server.experts.bookings['download-prescription'][':prescriptionId'].$post({
+        param: { prescriptionId },
+      })
+      if (!response.ok) {
+        throw new Error('Failed to download prescription')
+      }
+      return response.blob()
+    },
+    onSuccess: (blob) => {
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `prescription-${Date.now()}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+      toast.success('Prescription downloaded successfully')
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error))
+    },
+  })
 
   return (
     <>
@@ -34,7 +64,18 @@ export default function PrescriptionArea({ prescription, bookingId }: Prescripti
               >
                 Edit
               </Button>
-              <Button variant="outline" size="sm" icon={<DownloadIcon className="size-4" />}>
+              <Button
+                onClick={() => {
+                  downloadPrescriptionMutation.mutate({
+                    prescriptionId: prescription.id,
+                  })
+                }}
+                disabled={downloadPrescriptionMutation.isPending}
+                loading={downloadPrescriptionMutation.isPending}
+                variant="outline"
+                size="sm"
+                icon={<DownloadIcon className="size-4" />}
+              >
                 Download
               </Button>
             </div>

@@ -76,6 +76,10 @@ export default $config({
           from: 'apps/server/src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
           to: 'src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
         },
+        {
+          from: 'apps/server/src/static/assets/logo.png',
+          to: 'src/static/assets/logo.png',
+        },
       ],
     })
 
