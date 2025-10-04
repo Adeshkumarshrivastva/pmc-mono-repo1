@@ -13,7 +13,7 @@ import EditPrescriptionForm from './edit-prescription-form'
 import dayjs from '@/lib/dayjs'
 import { utcDateToLocalDate } from '@/lib/date'
 import { honoClient } from '@/lib/hono-client'
-import { getErrorMessage } from '@/lib/utils'
+import { downloadBlobAsFile, getErrorMessage } from '@/lib/utils'
 
 type PrescriptionProps = {
   prescription?: Booking['prescription'][number]
@@ -34,14 +34,7 @@ export default function PrescriptionArea({ prescription, bookingId }: Prescripti
       return response.blob()
     },
     onSuccess: (blob) => {
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `prescription-${Date.now()}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
+      downloadBlobAsFile(blob, `prescription-${Date.now()}.pdf`)
       toast.success('Prescription downloaded successfully')
     },
     onError: (error) => {
