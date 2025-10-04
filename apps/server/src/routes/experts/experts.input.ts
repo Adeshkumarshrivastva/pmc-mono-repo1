@@ -141,3 +141,13 @@ export const updatePrescriptionInput = createPrescriptionInput.partial().extend(
 })
 
 export type UpdatePrescriptionInput = z.infer<typeof updatePrescriptionInput>
+
+export const medicineSchema = z.object({
+  name: z.string(),
+  dosage: z.string().optional(),
+  frequency: z.string().optional(),
+  duration: z.string().optional(),
+  instructions: z.string().optional(),
+})
+
+export type Medicine = z.infer<typeof medicineSchema>

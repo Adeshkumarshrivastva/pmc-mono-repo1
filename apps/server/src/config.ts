@@ -30,6 +30,10 @@ export const configSchema = z.object({
       keySecret: z.string(),
     }),
   }),
+  email: z.object({
+    emailSender: z.string(),
+  }),
+  browserlessWsUrl: z.string(),
 })
 
 export type ConfigSchema = z.infer<typeof configSchema>
@@ -53,6 +57,10 @@ function getConfig() {
           keySecret: env.RAZORPAY_KEY_SECRET,
         },
       },
+      email: {
+        emailSender: env.EMAIL_SENDER,
+      },
+      browserlessWsUrl: env.BROWSERLESS_WS_ENDPOINT,
     })
 
     return config

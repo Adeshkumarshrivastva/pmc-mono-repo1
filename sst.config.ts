@@ -43,6 +43,7 @@ export default $config({
     const JwtSecret = new sst.Secret('JWT_SECRET')
     const RazorpayKeyId = new sst.Secret('RAZORPAY_KEY_ID')
     const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
+    const BrowserlessWsEndpoint = new sst.Secret('BROWSERLESS_WS_ENDPOINT')
 
     const SenderEmail = new sst.aws.Email('SenderEmail', {
       sender:
@@ -70,6 +71,7 @@ export default $config({
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
         JWT_SECRET: JwtSecret.value,
         EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
+        BROWSERLESS_WS_ENDPOINT: BrowserlessWsEndpoint.value,
       },
       copyFiles: [
         {

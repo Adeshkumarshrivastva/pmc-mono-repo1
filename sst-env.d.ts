@@ -3,73 +3,77 @@
 /* eslint-disable */
 /* deno-fmt-ignore-file */
 
-declare module "sst" {
+declare module 'sst' {
   export interface Resource {
-    "BETTER_AUTH_SECRET": {
-      "type": "sst.sst.Secret"
-      "value": string
+    BETTER_AUTH_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "DATABASE_URL": {
-      "type": "sst.sst.Secret"
-      "value": string
+    BROWSERLESS_WS_ENDPOINT: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "GOOGLE_CLIENT_ID": {
-      "type": "sst.sst.Secret"
-      "value": string
+    DATABASE_URL: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "GOOGLE_CLIENT_SECRET": {
-      "type": "sst.sst.Secret"
-      "value": string
+    GOOGLE_CLIENT_ID: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "JWT_SECRET": {
-      "type": "sst.sst.Secret"
-      "value": string
+    GOOGLE_CLIENT_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "PAYLOAD_DB_URL": {
-      "type": "sst.sst.Secret"
-      "value": string
+    JWT_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "PAYLOAD_SECRET": {
-      "type": "sst.sst.Secret"
-      "value": string
+    PAYLOAD_DB_URL: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "PMC_LANDING_PAGE_MEDIA_BUCKET": {
-      "name": string
-      "type": "sst.aws.Bucket"
+    PAYLOAD_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "PmcHonoServer": {
-      "name": string
-      "type": "sst.aws.Function"
-      "url": string
+    PMC_LANDING_PAGE_MEDIA_BUCKET: {
+      name: string
+      type: 'sst.aws.Bucket'
     }
-    "PmcLandingPage": {
-      "type": "sst.aws.Nextjs"
-      "url": string
+    PmcHonoServer: {
+      name: string
+      type: 'sst.aws.Function'
+      url: string
     }
-    "PmcPortal": {
-      "type": "sst.aws.StaticSite"
-      "url": string
+    PmcLandingPage: {
+      type: 'sst.aws.Nextjs'
+      url: string
     }
-    "PmcRouter": {
-      "type": "sst.aws.Router"
-      "url": string
+    PmcPortal: {
+      type: 'sst.aws.StaticSite'
+      url: string
     }
-    "RAZORPAY_KEY_ID": {
-      "type": "sst.sst.Secret"
-      "value": string
+    PmcRouter: {
+      type: 'sst.aws.Router'
+      url: string
     }
-    "RAZORPAY_KEY_SECRET": {
-      "type": "sst.sst.Secret"
-      "value": string
+    RAZORPAY_KEY_ID: {
+      type: 'sst.sst.Secret'
+      value: string
     }
-    "SenderEmail": {
-      "configSet": string
-      "sender": string
-      "type": "sst.aws.Email"
+    RAZORPAY_KEY_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    SenderEmail: {
+      configSet: string
+      sender: string
+      type: 'sst.aws.Email'
     }
   }
 }
 /// <reference path="sst-env.d.ts" />
 
-import "sst"
+import 'sst'
 export {}
