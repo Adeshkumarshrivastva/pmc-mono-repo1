@@ -109,6 +109,7 @@ export default $config({
     const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
 
     new sst.aws.Nextjs('PmcLandingPage', {
+      link: [MediaBucket],
       path: 'apps/landing-page',
       router: {
         instance: router,

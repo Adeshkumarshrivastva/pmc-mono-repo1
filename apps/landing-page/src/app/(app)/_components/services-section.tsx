@@ -5,9 +5,10 @@ import Autoscroll from 'embla-carousel-auto-scroll'
 import { ArrowRightIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { Home, Service } from '@/payload/types'
+import type { Home, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import QuestionnaireModal from './questionnaire-modal'
+import Image from 'next/image'
 
 type ServicesSectionProps = {
   data: Home['servicesSection']
@@ -63,14 +64,16 @@ export default function ServicesSection({ data, services }: ServicesSectionProps
                   return (
                     <CarouselItem key={typedService.id} className="md:basis-1/3 lg:basis-1/4">
                       <Link href={`/services/${typedService.slug}`} className="group flex flex-col space-y-4 h-full">
-                        <div className="overflow-hidden rounded-xl bg-muted">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={getURLFromMedia(typedService.image ?? '')}
-                            alt={typedService.name}
-                            className="aspect-[4/3] w-full object-cover"
-                            loading="lazy"
-                          />
+                        <div className="overflow-hidden rounded-xl bg-muted relative aspect-[4/3] w-full">
+                          {typedService.image && (
+                            <Image
+                              src={getURLFromMedia(typedService.image)}
+                              alt={typedService.name}
+                              fill
+                              className="object-cover"
+                              loading="lazy"
+                            />
+                          )}
                         </div>
                         <div className="flex-1 rounded-xl bg-primary p-6 shadow-lg transition-shadow duration-300 group-hover:shadow-xl">
                           <div className="space-y-3 flex flex-col justify-between h-full">

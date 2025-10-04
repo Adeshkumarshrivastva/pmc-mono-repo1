@@ -1,6 +1,7 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type HeroSectionProps = {
   data: AboutUs['aboutUsHeroSection']
@@ -29,10 +30,16 @@ export default function HeroSection({ data }: HeroSectionProps) {
               </div>
             </div>
           </div>
-          <div
-            className="flex flex-col bg-cover bg-[center_30%] bg-no-repeat w-full p-4 sm:p-6 md:p-8 lg:p-12 min-h-[300px] md:min-h-[400px] lg:min-h-[450px] rounded-2xl relative"
-            style={{ backgroundImage: `url('${getURLFromMedia(data?.overlayContent?.overlayImage ?? '')}')` }}
-          >
+          <div className="flex flex-col w-full p-4 sm:p-6 md:p-8 lg:p-12 min-h-[300px] md:min-h-[400px] lg:min-h-[450px] rounded-2xl relative overflow-hidden">
+            {data?.overlayContent?.overlayImage && (
+              <Image
+                src={getURLFromMedia(data?.overlayContent?.overlayImage ?? '')}
+                alt={data?.overlayContent?.heading || ''}
+                fill
+                className="object-cover object-[center_30%]"
+                priority
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-transparent rounded-2xl"></div>
             <div className="flex-1 max-w-xl space-y-3 sm:space-y-4 relative z-10">
               <div className="text-lg sm:text-xl md:text-2xl font-medium text-background">
