@@ -1,3 +1,5 @@
+import * as fs from 'fs/promises'
+import path from 'path'
 import { ZodError } from 'zod'
 
 export function invariant(cond: unknown, message: string): asserts cond {
@@ -20,3 +22,9 @@ export const SECOND = 1000
 export const MINUTE = SECOND * 60
 export const HOUR = MINUTE * 60
 export const DAY = HOUR * 24
+
+export async function getLogoAsBase64() {
+  const logoPath = path.resolve(process.cwd(), 'src/static/assets/logo.png')
+  const logoData = await fs.readFile(logoPath)
+  return `data:image/png;base64,${logoData.toString('base64')}`
+}

@@ -43,11 +43,19 @@ export function dateToUtcMinutes(date: Date | string) {
   return dt.hour() * MINUTES_PER_HOUR + dt.minute()
 }
 
-export function formatDateTimeRange({ startDateTime, endDateTime }: { startDateTime: Date; endDateTime: Date }) {
+export function formatDateTimeRange({
+  startDateTime,
+  endDateTime,
+  dateFormat = 'dddd, MMMM D, YYYY',
+}: {
+  startDateTime: Date
+  endDateTime: Date
+  dateFormat?: string
+}) {
   const localStartDateTime = dayjs(utcDateToLocalDate(startDateTime))
   const localEndDateTime = dayjs(utcDateToLocalDate(endDateTime))
 
-  const dateStr = localStartDateTime.format('dddd, MMMM D, YYYY')
+  const dateStr = localStartDateTime.format(dateFormat)
   const startTimeStr = toHHMMA(localStartDateTime)
   const endTimeStr = toHHMMA(localEndDateTime)
   return `${startTimeStr} - ${endTimeStr}, ${dateStr}`

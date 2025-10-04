@@ -42,4 +42,12 @@ export const auth = betterAuth({
       secure: true,
     },
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: ['EXPERT', 'PATIENT', 'ADMIN'],
+        input: false,
+      },
+    },
+  },
 })

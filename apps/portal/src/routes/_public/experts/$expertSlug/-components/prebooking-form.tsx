@@ -7,7 +7,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { SERVICE_MODES, type ServiceMode } from '@/lib/booking'
+import { BOOKING_LOCATION, type BookingLocation } from '@/lib/booking'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { honoClient } from '@/lib/hono-client'
 import { getErrorMessage, invariant } from '@/lib/utils'
@@ -26,7 +26,7 @@ type PrebookingFormProps = {
 const prebookingFormSchema = z.object({
   patientName: z.string({ message: 'Patient Name is required' }).min(3).max(100),
   patientEmail: z.email().optional().or(z.literal('')),
-  serviceMode: z.enum(SERVICE_MODES),
+  serviceMode: z.enum(BOOKING_LOCATION),
 })
 
 export default function PrebookingForm({
@@ -97,9 +97,7 @@ export default function PrebookingForm({
       razorpay.open()
     },
     onError: (error) => {
-      toast.error('Failed to create booking', {
-        description: getErrorMessage(error),
-      })
+      toast.error(getErrorMessage(error))
     },
   })
 
@@ -151,7 +149,7 @@ export default function PrebookingForm({
                 <FormLabel>Location*</FormLabel>
                 <FormControl>
                   <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
-                    {SERVICE_MODES.map((mode) => (
+                    {BOOKING_LOCATION.map((mode) => (
                       <FormItem key={SERVICE_MODE_CONFIG[mode].value} className="flex items-center gap-3">
                         <FormControl>
                           <RadioGroupItem value={SERVICE_MODE_CONFIG[mode].value} />
@@ -180,13 +178,13 @@ export default function PrebookingForm({
   )
 }
 
-export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: ServiceMode }> = {
+export const SERVICE_MODE_CONFIG: Record<BookingLocation, { label: string; value: BookingLocation }> = {
   IN_PERSON: {
     label: 'In Person',
     value: 'IN_PERSON',
   },
   VIRTUAL: {
-    label: 'Google Meet',
+    label: 'Virtual',
     value: 'VIRTUAL',
   },
 }
@@ -198,7 +196,7 @@ type CreateBookingInput = {
   startDateTime: string
 }
 
-const createBooking = async ({ formInput, expertId, serviceId, startDateTime }: CreateBookingInput) => {
+async function createBooking({ formInput, expertId, serviceId, startDateTime }: CreateBookingInput) {
   const res = await honoClient.server.booking.create.$post({
     json: {
       patientName: formInput.patientName,

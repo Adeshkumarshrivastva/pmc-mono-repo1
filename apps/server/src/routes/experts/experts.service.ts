@@ -10,6 +10,8 @@ import {
   type ExpertSearchResponse,
   type ExpertMonthlyAvailableSlotsQuery,
   type ExpertBookingsSearchQuery,
+  type CreatePrescriptionInput,
+  type UpdatePrescriptionInput,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 import {
@@ -21,6 +23,7 @@ import {
   type TimeRange,
 } from '../../lib/booking'
 import { dateToMinutes, toDDMMYYYY } from '../../lib/date'
+import { generatePrescriptionPDF } from '../../lib/prescription'
 
 export async function getExperts(c: C, query: ExpertSearchQuery) {
   try {
@@ -390,6 +393,7 @@ export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) 
     if (!userId) {
       return c.json({ error: 'Missing userId' }, 400)
     }
+
     const expert = await prisma.expert.findUnique({
       where: {
         userId: userId,
@@ -425,11 +429,180 @@ export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) 
 
     const bookings = await prisma.booking.findMany({
       where: bookingsWhereInput,
+      include: {
+        patient: {
+          include: {
+            user: true,
+          },
+        },
+        prescription: true,
+      },
       orderBy: input.period === 'past' ? { endDateTime: 'desc' } : { startDateTime: 'asc' },
     })
 
     return c.json({ success: true, bookings })
   } catch {
     return c.json({ error: 'Failed to fetch booking' }, 500)
+  }
+}
+
+export async function createPrescription(c: C, input: CreatePrescriptionInput) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const expert = await prisma.expert.findUnique({
+      where: { userId },
+      select: { id: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const booking = await prisma.booking.findUnique({
+      where: { id: input.bookingId },
+      select: {
+        id: true,
+        expertId: true,
+        status: true,
+      },
+    })
+
+    if (!booking) {
+      return c.json({ error: 'Booking not found' }, 404)
+    }
+
+    if (booking.expertId !== expert.id) {
+      return c.json({ error: 'Unauthorized to create prescription for this booking' }, 403)
+    }
+
+    // TODO: throw error on booking status not in ['BOOKED', 'COMPLETED']
+
+    const existingPrescription = await prisma.prescription.findFirst({
+      where: { bookingId: input.bookingId },
+    })
+
+    if (existingPrescription) {
+      return c.json({ error: 'Prescription already exists for this booking' }, 400)
+    }
+
+    const prescription = await prisma.prescription.create({
+      data: {
+        bookingId: input.bookingId,
+        medicines: input.medicines,
+        notes: input.notes,
+      },
+    })
+
+    return c.json({
+      success: true,
+      prescription,
+    })
+  } catch (error) {
+    return c.json({ error: `Failed to create prescription - ${getErrorMessage(error)}` }, 500)
+  }
+}
+
+export async function updatePrescription(c: C, input: UpdatePrescriptionInput) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const expert = await prisma.expert.findUnique({
+      where: { userId },
+      select: { id: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const booking = await prisma.booking.findUnique({
+      where: { id: input.bookingId },
+      select: {
+        id: true,
+        expertId: true,
+        status: true,
+      },
+    })
+
+    if (!booking) {
+      return c.json({ error: 'Booking not found' }, 404)
+    }
+
+    if (booking.expertId !== expert.id) {
+      return c.json({ error: 'Unauthorized to create prescription for this booking' }, 403)
+    }
+
+    // TODO: Throw error if Booking status not in ['COMPLETED', 'BOOKED']
+
+    const existingPrescription = await prisma.prescription.findFirst({
+      where: { bookingId: input.bookingId },
+    })
+
+    if (!existingPrescription) {
+      return c.json({ error: 'Prescription not found' })
+    }
+
+    await prisma.prescription.update({
+      where: {
+        id: input.prescriptionId,
+      },
+      data: {
+        medicines: input.medicines,
+        notes: input.notes,
+      },
+    })
+
+    return c.json({ success: true })
+  } catch (error) {
+    return c.json({ error: `Failed to update prescription - ${getErrorMessage(error)}` })
+  }
+}
+
+export async function downloadPrescription(c: C, prescriptionId: string) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const prescription = await prisma.prescription.findUnique({
+      where: { id: prescriptionId },
+      include: {
+        booking: {
+          include: {
+            expert: true,
+            patient: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    if (!prescription) {
+      return c.json({ error: 'Prescription not found' }, 404)
+    }
+
+    if (!(prescription.booking.expert.userId !== userId || prescription.booking.patient.userId !== userId)) {
+      return c.json({ error: 'Unauthorized to download this prescription' }, 403)
+    }
+
+    const buffer = await generatePrescriptionPDF(prescription)
+
+    return c.body(buffer, 200, {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=prescription-${prescriptionId}.pdf`,
+    })
+  } catch (error) {
+    return c.json({ error: `Failed to download prescription - ${getErrorMessage(error)}` })
   }
 }

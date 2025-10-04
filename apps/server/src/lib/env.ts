@@ -16,5 +16,6 @@ export const env = z
     RAZORPAY_KEY_ID: z.string(),
     RAZORPAY_KEY_SECRET: z.string(),
     EMAIL_SENDER: z.string(),
+    BROWSERLESS_WS_ENDPOINT: z.string(),
   })
   .parse(process.env)

@@ -25,10 +25,11 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
         </Providers>
         <Toaster />
         <FloatingWhatsapp />
-        <Script id="razorpay-checkout" src="https://checkout.razorpay.com/v1/checkout.js" />
+        <Script defer id="razorpay-checkout" src="https://checkout.razorpay.com/v1/checkout.js" />
         {/* Zoho SalesIQ loader */}
         <Script
           id="zoho-salesiq-init"
+          defer
           dangerouslySetInnerHTML={{
             __html: `
               window.$zoho = window.$zoho || {};

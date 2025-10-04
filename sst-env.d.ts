@@ -9,6 +9,10 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    BROWSERLESS_WS_ENDPOINT: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     DATABASE_URL: {
       type: 'sst.sst.Secret'
       value: string

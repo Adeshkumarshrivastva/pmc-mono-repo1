@@ -217,39 +217,50 @@ enum BookingStatus {
 }
 
 model Booking {
-  id                               String        @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt                        DateTime      @default(now())
-  updatedAt                        DateTime      @updatedAt
-  status                           BookingStatus @default(DRAFT)
-  expert                           Expert        @relation(fields: [expertId], references: [id])
-  expertId                         String        @db.ObjectId
-  patient                          Patient       @relation(fields: [patientId], references: [id])
-  patientId                        String        @db.ObjectId
+  id                               String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                        DateTime       @default(now())
+  updatedAt                        DateTime       @updatedAt
+  status                           BookingStatus  @default(DRAFT)
+  expert                           Expert         @relation(fields: [expertId], references: [id])
+  expertId                         String         @db.ObjectId
+  patient                          Patient        @relation(fields: [patientId], references: [id])
+  patientId                        String         @db.ObjectId
   patientName                      String
   patientEmail                     String?
-  service                          Service       @relation(fields: [serviceId], references: [id])
-  serviceId                        String        @db.ObjectId
+  service                          Service        @relation(fields: [serviceId], references: [id])
+  serviceId                        String         @db.ObjectId
   serviceName                      String
   servicePrice                     Float
   serviceCurrency                  String
   serviceDurationInMinutes         Int
   serviceBufferTimeBeforeInMinutes Int
   serviceBufferTimeAfterInMinutes  Int
-  parentBookingId                  String?       @db.ObjectId
+  parentBookingId                  String?        @db.ObjectId
   preBookingQnA                    Json?
   // utc format
   startDateTime                    DateTime
   endDateTime                      DateTime
-  timezone                         String?       @default("Asia/Kolkata")
+  timezone                         String?        @default("Asia/Kolkata")
   mode                             ServiceMode
-  isNoShow                         Boolean       @default(false)
+  isNoShow                         Boolean        @default(false)
   noShowBy                         UserRole?
   inPersonLocation                 Json?
   virtualLocation                  Json?
   payments                         Payment[]
+  prescription                     Prescription[]
 
   @@index([expertId, serviceId])
   @@index([expertId, startDateTime, endDateTime])
+}
+
+model Prescription {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  bookingId String   @db.ObjectId
+  notes     String?
+  medicines Json[]
 }
 
 // TODO: Add BookingHistory

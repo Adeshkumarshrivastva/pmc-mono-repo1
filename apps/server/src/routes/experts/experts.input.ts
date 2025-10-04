@@ -111,18 +111,43 @@ export const expertMonthlyAvailableSlotsQuery = z.object({
 
 export type ExpertMonthlyAvailableSlotsQuery = z.infer<typeof expertMonthlyAvailableSlotsQuery>
 
-export const expertBookingsSearchQuery = z.discriminatedUnion('period', [
-  z.object({
-    period: z.literal('upcoming'),
-  }),
-  z.object({
-    period: z.literal('past'),
-  }),
-  z.object({
-    period: z.literal('fixed'),
-    startDate: z.iso.datetime(),
-    endDate: z.iso.datetime(),
-  }),
-])
+export const expertBookingsSearchQuery = z.object({
+  period: z.enum(['upcoming', 'past', 'fixed']),
+  // startDate and endDate are only for fixed period
+  startDate: z.iso.datetime().optional(),
+  endDate: z.iso.datetime().optional(),
+})
 
 export type ExpertBookingsSearchQuery = z.infer<typeof expertBookingsSearchQuery>
+
+export const createPrescriptionInput = z.object({
+  bookingId: z.string(),
+  medicines: z.array(
+    z.object({
+      name: z.string(),
+      dosage: z.string(),
+      frequency: z.string(),
+      duration: z.string(),
+      instructions: z.string().optional(),
+    }),
+  ),
+  notes: z.string().optional(),
+})
+
+export type CreatePrescriptionInput = z.infer<typeof createPrescriptionInput>
+
+export const updatePrescriptionInput = createPrescriptionInput.partial().extend({
+  prescriptionId: z.string(),
+})
+
+export type UpdatePrescriptionInput = z.infer<typeof updatePrescriptionInput>
+
+export const medicineSchema = z.object({
+  name: z.string(),
+  dosage: z.string().optional(),
+  frequency: z.string().optional(),
+  duration: z.string().optional(),
+  instructions: z.string().optional(),
+})
+
+export type Medicine = z.infer<typeof medicineSchema>
