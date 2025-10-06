@@ -34,6 +34,10 @@ export const configSchema = z.object({
     apiKey: z.string(),
     licenceNumber: z.string(),
   }),
+  email: z.object({
+    emailSender: z.string(),
+  }),
+  browserlessWsUrl: z.string(),
 })
 
 export type ConfigSchema = z.infer<typeof configSchema>
@@ -61,6 +65,10 @@ function getConfig() {
         apiKey: env.WHATSAPP_API_KEY_SECRET,
         licenceNumber: env.WHATSAPP_LICENCE_NUMBER_SECRET,
       },
+      email: {
+        emailSender: env.EMAIL_SENDER,
+      },
+      browserlessWsUrl: env.BROWSERLESS_WS_ENDPOINT,
     })
 
     return config
