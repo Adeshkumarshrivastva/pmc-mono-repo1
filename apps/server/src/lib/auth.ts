@@ -5,6 +5,7 @@ import { phoneNumber } from 'better-auth/plugins'
 import { prisma } from './db'
 import { config } from '../config'
 import { invariant } from './utils'
+import { sendWhatsappMessageByTemplate } from './whatsapp'
 
 invariant(config, 'config should be present')
 
@@ -25,9 +26,18 @@ export const auth = betterAuth({
   },
   plugins: [
     phoneNumber({
-      sendOTP: ({ phoneNumber, code }) => {
-        console.log(`Sending OTP code ${code} to phone number ${phoneNumber}`)
-        // TODO: Implement sending OTP code via SMS
+      sendOTP: async ({ phoneNumber, code }) => {
+        if (isDevelopment) {
+          console.log(`Sending OTP code ${code} to phone number ${phoneNumber}`)
+        } else {
+          await sendWhatsappMessageByTemplate({
+            to: phoneNumber,
+            templateName: 'new_otp_verification',
+            templateValues: [code],
+            urlParams: [code],
+          })
+          // TODO: Implement sending OTP code via SMS
+        }
       },
       signUpOnVerification: {
         getTempEmail: (phoneNumber) => {
