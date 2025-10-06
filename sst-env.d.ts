@@ -62,6 +62,11 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    SenderEmail: {
+      configSet: string
+      sender: string
+      type: 'sst.aws.Email'
+    }
     WHATSAPP_API_KEY_SECRET: {
       type: 'sst.sst.Secret'
       value: string

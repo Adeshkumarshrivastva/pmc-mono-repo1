@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getPayloadClient } from '@/lib/payload'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 interface WebinarPageProps {
   params: Promise<{ webinarId: string }>
@@ -50,11 +51,10 @@ export default async function WebinarPage({ params }: WebinarPageProps) {
             <h2 id="speaker-title" className="text-xl font-semibold">
               About the speaker
             </h2>
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-4 relative">
               {webinar.speaker.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={getURLFromMedia(webinar.speaker.image ?? '')}
+                <Image
+                  src={getURLFromMedia(webinar.speaker.image)}
                   alt={webinar.speaker.name ?? 'Webinar Speaker'}
                   className="rounded-full object-cover size-20"
                 />

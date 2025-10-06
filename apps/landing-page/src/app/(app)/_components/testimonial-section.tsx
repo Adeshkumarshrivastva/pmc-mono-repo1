@@ -3,10 +3,11 @@
 import { useState } from 'react'
 import { match, P } from 'ts-pattern'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { Home, Testimonial } from '@/payload/types'
+import { Carousel, type CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel'
+import type { Home, Testimonial } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 export type TestimonialSectionProps = {
   data: Home['testimonialSection']
@@ -62,13 +63,15 @@ export default function TestimonialSection({ data }: TestimonialSectionProps) {
                             <blockquote className="text-foreground text-lg leading-relaxed mb-6 flex-grow">
                               &quot;{typedTestimonial.message}&quot;
                             </blockquote>
-                            <div className="flex items-center">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={getURLFromMedia(typedTestimonial.auhtorImage ?? '')}
-                                alt={typedTestimonial.authorName}
-                                className="w-12 h-12 rounded-full object-cover mr-4"
-                              />
+                            <div className="flex items-center gap-4">
+                              <div className="relative w-12 h-12">
+                                <Image
+                                  fill
+                                  src={getURLFromMedia(typedTestimonial.auhtorImage ?? '')}
+                                  alt={typedTestimonial.authorName}
+                                  className="rounded-full object-cover mr-4"
+                                />
+                              </div>
                               <div>
                                 <p className="font-semibold text-foreground">{typedTestimonial.authorName}</p>
                               </div>

@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { CircleArrowRightIcon, ChatIcon } from '@/components/ui/icons'
-import { Home } from '@/payload/types'
+import type { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type BlogsSectionProps = {
   data: Home['blogsSection']
@@ -40,11 +41,11 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                     className="relative flex flex-col w-full max-w-sm mx-auto sm:max-w-none sm:mx-0"
                   >
                     <div className="relative aspect-[16/9] w-full">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
+                        fill
                         src={getURLFromMedia(blog?.image ?? '')}
                         alt={blog?.title ?? ''}
-                        className="h-full w-full object-cover rounded-2xl"
+                        className="object-cover rounded-2xl"
                       />
                     </div>
 

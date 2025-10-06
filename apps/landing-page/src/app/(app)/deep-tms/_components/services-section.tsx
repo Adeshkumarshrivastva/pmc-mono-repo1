@@ -4,8 +4,9 @@ import Link from 'next/link'
 import Autoscroll from 'embla-carousel-auto-scroll'
 import { ArrowRightIcon } from 'lucide-react'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { DeepTm, Service } from '@/payload/types'
+import type { DeepTm, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type ServicesSectionProps = {
   data: DeepTm['servicesSection']
@@ -47,14 +48,17 @@ export default function ServicesSection({ data, services }: ServicesSectionProps
                         href={`/services/deep-tms/${typedService.slug}`}
                         className="group flex flex-col space-y-4 h-full"
                       >
-                        <div className="overflow-hidden rounded-xl bg-muted">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={getURLFromMedia(typedService.image ?? '')}
-                            alt={typedService.name}
-                            className="aspect-[4/3] w-full object-cover"
-                            loading="lazy"
-                          />
+                        <div className="overflow-hidden rounded-xl bg-muted aspect-[4/3] relative w-full">
+                          {typedService.image && (
+                            <Image
+                              src={getURLFromMedia(typedService.image)}
+                              alt={typedService.name}
+                              fill
+                              className="object-cover"
+                              loading="lazy"
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                            />
+                          )}
                         </div>
                         <div className="flex-1 rounded-xl bg-primary p-6 shadow-lg transition-shadow duration-300 group-hover:shadow-xl">
                           <div className="space-y-3 flex flex-col justify-between h-full">

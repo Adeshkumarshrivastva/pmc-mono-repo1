@@ -46,6 +46,13 @@ export default $config({
     const WhatsappApiKeySecret = new sst.Secret('WHATSAPP_API_KEY_SECRET')
     const WhatsappLicenceNumberSecret = new sst.Secret('WHATSAPP_LICENCE_NUMBER_SECRET')
 
+    const SenderEmail = new sst.aws.Email('SenderEmail', {
+      sender:
+        $app.stage === 'production'
+          ? 'no-reply@positivemindcare.com'
+          : $interpolate`no-reply-${$app.stage}@positivemindcare.com`,
+    })
+
     new sst.aws.Function('PmcHonoServer', {
       architecture: 'arm64',
       handler: 'apps/server/src/index.handler',
@@ -66,6 +73,7 @@ export default $config({
         JWT_SECRET: JwtSecret.value,
         WHATSAPP_API_KEY_SECRET: WhatsappApiKeySecret.value,
         WHATSAPP_LICENCE_NUMBER_SECRET: WhatsappLicenceNumberSecret.value,
+        EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
       },
       copyFiles: [
         {
@@ -99,6 +107,7 @@ export default $config({
     const MediaBucket = new sst.aws.Bucket('PMC_LANDING_PAGE_MEDIA_BUCKET')
 
     new sst.aws.Nextjs('PmcLandingPage', {
+      link: [MediaBucket],
       path: 'apps/landing-page',
       router: {
         instance: router,

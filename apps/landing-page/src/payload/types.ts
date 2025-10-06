@@ -846,6 +846,17 @@ export interface Home {
         }[]
       | null
   }
+  achievementSection?: {
+    title?: string | null
+    achievements?:
+      | {
+          number?: string | null
+          label?: string | null
+          icon?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
+  }
   blogsSection?: {
     title?: string | null
     action?: string | null
@@ -1475,6 +1486,19 @@ export interface HomeSelect<T extends boolean = true> {
           | {
               question?: T
               answer?: T
+              id?: T
+            }
+      }
+  achievementSection?:
+    | T
+    | {
+        title?: T
+        achievements?:
+          | T
+          | {
+              number?: T
+              label?: T
+              icon?: T
               id?: T
             }
       }

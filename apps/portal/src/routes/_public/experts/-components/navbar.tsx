@@ -13,12 +13,12 @@ type NavbarProps = { services: Service[] }
 
 const NAV_ITEMS = [
   { id: 'home', href: 'https://positivemindcare.com/', label: 'Home' },
-  { id: 'about', href: 'https://positivemindcare.com/landing-page/about-us', label: 'About Us' },
-  { id: 'deepTms', href: 'https://positivemindcare.com/landing-page/deep-tms', label: 'Deep TMS' },
-  { id: 'services', href: 'https://positivemindcare.com/landing-page/services', label: 'Services' },
+  { id: 'about', href: 'https://positivemindcare.com/about-us', label: 'About Us' },
+  { id: 'deepTms', href: 'https://positivemindcare.com/deep-tms', label: 'Deep TMS' },
+  { id: 'services', href: 'https://positivemindcare.com/services', label: 'Services' },
   { id: 'our-experts', href: '/portal/experts', label: 'Our Experts' },
-  { id: 'webinars', href: 'https://positivemindcare.com/landing-page/webinars', label: 'Awareness' },
-  { id: 'contact-us', href: 'https://positivemindcare.com/landing-page/contact-us', label: 'Contact' },
+  { id: 'webinars', href: 'https://positivemindcare.com/webinars', label: 'Awareness' },
+  { id: 'contact-us', href: 'https://positivemindcare.com/contact-us', label: 'Contact' },
 ] as const
 
 export default function Navbar({}: NavbarProps) {
@@ -26,7 +26,9 @@ export default function Navbar({}: NavbarProps) {
   const pathname = location.pathname
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  const handleBooking = () => document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
+  function handleBooking() {
+    document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
@@ -41,7 +43,8 @@ export default function Navbar({}: NavbarProps) {
 
         <div className="flex-1 hidden xl:flex items-center justify-center xl:space-x-8">
           {NAV_ITEMS.map((item) => {
-            const isActive = `/${pathname.split('/')[1]}` === item.href
+            const isInternal = item.href.startsWith('/portal')
+            const isActive = isInternal && pathname === item.href
             return (
               <a
                 key={item.id}

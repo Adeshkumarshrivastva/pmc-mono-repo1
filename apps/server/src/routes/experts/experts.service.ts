@@ -9,6 +9,7 @@ import {
   type SortBy,
   type ExpertSearchResponse,
   type ExpertMonthlyAvailableSlotsQuery,
+  type ExpertBookingsSearchQuery,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 import {
@@ -28,6 +29,26 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
 
     const whereClause: Prisma.ExpertWhereInput = {}
 
+    if (query.search) {
+      whereClause.OR = [
+        {
+          name: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
+
+        {
+          user: {
+            name: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ]
+    }
+
     if (query.type) {
       whereClause.type = query.type
     }
@@ -42,26 +63,17 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
       serviceFilters.availableModes = { has: query.serviceMode }
     }
 
-    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-      serviceFilters.price = {}
-      if (query.minPrice !== undefined) {
-        serviceFilters.price.gte = query.minPrice
-      }
-      if (query.maxPrice !== undefined) {
-        serviceFilters.price.lte = query.maxPrice
-      }
-    }
-
-    if (query.tags) {
-      const tagList = query.tags.split(',').map((tag) => tag.trim())
-      serviceFilters.tags = { hasSome: tagList }
-    }
-
     if (query.location) {
-      serviceFilters.OR = [
-        { availableModes: { has: 'VIRTUAL' } },
-        { AND: [{ availableModes: { has: 'IN_PERSON' }, city: query.location }] },
-      ]
+      whereClause.city = query.location
+    }
+
+    if (query.expertise) {
+      whereClause.expertise = {
+        hasSome: query.expertise,
+      }
+    }
+    if (query.gender) {
+      whereClause.gender = query.gender
     }
 
     if (Object.keys(serviceFilters).length > 0) {
@@ -85,8 +97,8 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
         const aValue = getSortValue(sortBy, a)
         const bValue = getSortValue(sortBy, b)
         return match(query.sortOrder)
-          .with('desc', () => (bValue > aValue ? 1 : bValue < aValue ? -1 : 0))
           .with('asc', () => (aValue > bValue ? 1 : aValue < bValue ? -1 : 0))
+          .with('desc', () => (bValue > aValue ? 1 : bValue < aValue ? -1 : 0))
           .exhaustive()
       })
     }
@@ -370,4 +382,54 @@ export async function getExpertBooking(c: C, bookingId: string) {
   }
 
   return c.json({ success: true, booking })
+}
+
+export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+    const expert = await prisma.expert.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        id: true,
+        userId: true,
+      },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const bookingsWhereInput: Prisma.BookingWhereInput = {
+      expertId: expert.id,
+    }
+    const now = dayjs().toDate()
+
+    if (input.period === 'upcoming') {
+      bookingsWhereInput.OR = [
+        { startDateTime: { gte: now } },
+        // currently ongoing bookings
+        { startDateTime: { lt: now }, endDateTime: { gt: now } },
+      ]
+    } else if (input.period === 'past') {
+      bookingsWhereInput.endDateTime = { lt: now }
+    } else if (input.period === 'fixed') {
+      bookingsWhereInput.startDateTime = { gte: input.startDate }
+
+      bookingsWhereInput.endDateTime = { lte: input.endDate }
+    }
+
+    const bookings = await prisma.booking.findMany({
+      where: bookingsWhereInput,
+      orderBy: input.period === 'past' ? { endDateTime: 'desc' } : { startDateTime: 'asc' },
+    })
+
+    return c.json({ success: true, bookings })
+  } catch {
+    return c.json({ error: 'Failed to fetch booking' }, 500)
+  }
 }

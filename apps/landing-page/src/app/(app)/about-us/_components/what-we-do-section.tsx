@@ -1,6 +1,7 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { AboutUs } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import Image from 'next/image'
 
 type WhatWeDoSectionProps = {
   data: AboutUs['whatWeDoSection']
@@ -27,18 +28,25 @@ export default function WhatWeDoSection({ data }: WhatWeDoSectionProps) {
             </div>
           </div>
           <div className="grid gap-6 md:grid-cols-3 md:gap-8 lg:gap-12">
-            {data?.featureCards?.map((feature) => (
-              <div
-                key={feature.id}
-                className="bg-cover bg-center bg-no-repeat bg-primary-foreground min-h-80 space-y-4 p-6 rounded-3xl"
-                style={{
-                  backgroundImage: `url(${getURLFromMedia(feature?.image ?? '')})`,
-                }}
-              >
-                <div className="text-2xl font-medium">{feature?.heading}</div>
-                {feature?.description ? <RichText data={feature?.description} className="opacity-80" /> : null}
-              </div>
-            ))}
+            {data?.featureCards?.map((feature) => {
+              return (
+                <div
+                  key={feature.id}
+                  className="bg-primary-foreground min-h-80 space-y-4 p-6 rounded-3xl relative overflow-hidden"
+                >
+                  {feature.image && (
+                    <Image
+                      src={getURLFromMedia(feature?.image ?? '')}
+                      alt={feature?.heading || ''}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+                  <div className="text-2xl font-medium">{feature?.heading}</div>
+                  {feature?.description ? <RichText data={feature.description} className="opacity-80" /> : null}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

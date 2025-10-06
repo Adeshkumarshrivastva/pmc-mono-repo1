@@ -12,6 +12,7 @@ import PackagesSection from './_components/packages-section'
 import BlogsSection from './_components/blogs-section'
 import ExpertsSection from './_components/experts-section'
 import ServicesSection from './_components/services-section'
+import AchievementSection from './_components/achievement-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -27,6 +28,7 @@ export default async function HomePage() {
     blogsSection,
     expertsSection,
     servicesSection,
+    achievementSection,
   } = await payload.findGlobal({
     slug: 'home',
   })
@@ -37,12 +39,14 @@ export default async function HomePage() {
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
       <HeroSection data={heroSetion} />
       <DeepTmsSection data={deepTmsSection} />
+      <ServicesSection data={servicesSection} services={services.docs} />
       <TreatmentSection data={treatmentSection} />
       <WhyChooseSection data={whyChooseSection} />
       <ExpertsSection data={expertsSection} />
       <PackagesSection data={packagesSection} />
       <AppointmentSection data={appointmentSection} services={services.docs} />
       <TestimonialSection data={testimonialSection} />
+      <AchievementSection data={achievementSection} />
       <FAQSection data={faqSection} />
       <BlogsSection data={blogsSection} />
     </div>

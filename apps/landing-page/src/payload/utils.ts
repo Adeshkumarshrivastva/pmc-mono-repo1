@@ -1,5 +1,5 @@
-import { type Field } from 'payload'
-import { Media } from './types'
+import type { Field } from 'payload'
+import type { Media } from './types'
 
 export const METADATA_FIELD: Field = {
   type: 'group',
@@ -10,9 +10,9 @@ export const METADATA_FIELD: Field = {
 
 export function getURLFromMedia(media: Media | string) {
   if (typeof media === 'string') {
-    return media
+    return `https://positivemindcare.com${media}`
   } else if (media && typeof media.url === 'string') {
-    return media.url
+    return `https://positivemindcare.com${media.url}`
   }
   return ''
 }

@@ -88,6 +88,11 @@ enum ExpertType {
   CLINICAL_PSYCHOLOGIST
 }
 
+enum ExpertGender {
+  MALE
+  FEMALE
+}
+
 model Expert {
   id               String               @id @default(auto()) @map("_id") @db.ObjectId
   createdAt        DateTime             @default(now())
@@ -110,6 +115,8 @@ model Expert {
   blockedDates     ExpertBlockDates[]
   bookings         Booking[]
   payments         Payment[]
+  expertise        String[]
+  gender           ExpertGender
 }
 
 enum DayOfWeek {
@@ -233,6 +240,7 @@ model Booking {
   // utc format
   startDateTime                    DateTime
   endDateTime                      DateTime
+  timezone                         String?       @default("Asia/Kolkata")
   mode                             ServiceMode
   isNoShow                         Boolean       @default(false)
   noShowBy                         UserRole?
