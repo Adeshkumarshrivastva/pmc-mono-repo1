@@ -305,7 +305,7 @@ export default function OurExperts() {
         </div>
 
         {showFilters ? (
-          <div className="sticky top-25 z-20 bg-background border border-border rounded-xl shadow-lg mb-8 overflow-hidden">
+          <div className="bg-background border border-border rounded-xl shadow-lg mb-8 overflow-hidden">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-foreground">Filter Experts</h3>

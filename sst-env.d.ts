@@ -71,6 +71,14 @@ declare module 'sst' {
       sender: string
       type: 'sst.aws.Email'
     }
+    WHATSAPP_API_KEY_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    WHATSAPP_LICENCE_NUMBER_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
   }
 }
 /// <reference path="sst-env.d.ts" />

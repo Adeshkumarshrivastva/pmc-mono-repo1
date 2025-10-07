@@ -18,7 +18,9 @@ export default function NavLink({ children, icon: Icon, ...linkProps }: NavLinkP
               <SidebarMenuButton
                 className={cn(
                   'border border-transparent transition-colors',
-                  match ? 'bg-accent text-accent-foreground border-border' : undefined,
+                  match
+                    ? 'bg-primary text-primary-foreground border-primary hover:bg-primary hover:text-primary-foreground'
+                    : undefined,
                 )}
               >
                 <Icon className="size-5" />

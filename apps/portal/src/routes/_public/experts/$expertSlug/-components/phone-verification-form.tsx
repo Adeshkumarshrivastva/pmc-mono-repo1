@@ -7,22 +7,22 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { getErrorMessage } from '@/lib/utils'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import dayjs from '@/lib/dayjs'
 import { honoClient } from '@/lib/hono-client'
+import PhoneInput from '@/components/ui/phone-input'
 
 type Mode = { type: 'initial'; phoneNumber?: string } | { type: 'verify'; phoneNumber: string }
 
 const phoneValidationSchema = z.object({
   phoneNumber: z
     .string()
-    .min(10, {
+    .min(12, {
       message: 'Your phonenumber must be 10 characters.',
     })
-    .max(10),
+    .max(12),
 })
 
 const otpValidationSchema = z.object({
@@ -94,15 +94,15 @@ function InitiateVerificationForm({ onSuccess }: { onSuccess: (phoneNumber: stri
           sendOtpMutation.mutate(value.phoneNumber)
         })}
       >
+        <div className="text-xs">We will send a code (via SMS & Whatsapp) to your mobile number</div>
         <FormField
           name="phoneNumber"
           control={form.control}
           render={({ field }) => {
             return (
               <FormItem>
-                <FormLabel>Phone Number*</FormLabel>
                 <FormControl>
-                  <Input autoFocus autoComplete="off" placeholder="9999988888" {...field} />
+                  <PhoneInput autoFocus autoComplete="off" placeholder="Enter your mobile number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -165,8 +165,7 @@ function VerifyOTP({ phoneNumber, onSuccess }: { phoneNumber: string; onBack: ()
         })}
       >
         <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">Enter the 6-digit code sent to</p>
-          <p className="font-medium">+91 {phoneNumber}</p>
+          <div className="text-xs">Please enter the OTP sent to your mobile number +{phoneNumber}</div>
         </div>
         <FormField
           name="otp"
@@ -193,7 +192,7 @@ function VerifyOTP({ phoneNumber, onSuccess }: { phoneNumber: string; onBack: ()
         />
         <div className="space-y-2">
           <Button type="submit" disabled={verifyOtpMutation.isPending} loading={verifyOtpMutation.isPending}>
-            {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
+            Continue
           </Button>
           <div>
             {seconds > 0 ? (

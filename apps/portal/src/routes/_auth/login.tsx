@@ -4,19 +4,18 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { useTimer } from 'react-timer-hook'
-import dayjs from 'dayjs'
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth-client'
 import { Logo } from '@/components/ui/logo'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Card, CardContent } from '@/components/ui/card'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
-import { env } from '@/lib/env'
 import { getErrorMessage, invariant } from '@/lib/utils'
+import dayjs from '@/lib/dayjs'
+import PhoneInput from '@/components/ui/phone-input'
 
 export const Route = createFileRoute('/_auth/login')({
   beforeLoad: async () => {
@@ -32,10 +31,10 @@ export const Route = createFileRoute('/_auth/login')({
 const phoneValidationSchema = z.object({
   phoneNumber: z
     .string()
-    .min(10, {
+    .min(12, {
       message: 'Your phonenumber must be 10 characters.',
     })
-    .max(10),
+    .max(12),
 })
 
 const otpValidationSchema = z.object({
@@ -43,43 +42,16 @@ const otpValidationSchema = z.object({
 })
 
 function LoginPage() {
-  const loginWithGoogleMutation = useMutation({
-    mutationFn: () => {
-      return authClient.signIn.social({
-        provider: 'google',
-        callbackURL: env.VITE_PUBLIC_OAUTH_CALLBACK_URL,
-      })
-    },
-  })
-
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
+    <div className="h-screen flex flex-col items-center justify-center bg-primary">
       <div className="flex w-full max-w-sm flex-col gap-6 p-4">
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-4 text-white">
           <Logo className="size-12" />
           <div className="text-xl font-medium tracking-tight">Positive Mind Care</div>
         </div>
         <Card>
           <CardContent className="space-y-4">
             <OtpLoginForm />
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Or</span>
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              className="w-full"
-              disabled={loginWithGoogleMutation.isPending}
-              onClick={() => {
-                loginWithGoogleMutation.mutate()
-              }}
-            >
-              Login with Google
-            </Button>
           </CardContent>
         </Card>
       </div>
@@ -154,15 +126,18 @@ function InitiateLoginForm({ onSuccess }: { onSuccess: (phoneNumber: string) => 
           sendOtpMutation.mutate(value)
         })}
       >
+        <div className="text-center">
+          <div className="font-semibold">Login or Sign up</div>
+          <div className="text-xs">We will send a code (via SMS & Whatsapp) to your mobile number</div>
+        </div>
         <FormField
           name="phoneNumber"
           control={form.control}
           render={({ field }) => {
             return (
               <FormItem>
-                <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input autoFocus autoComplete="off" placeholder="9999988888" {...field} />
+                  <PhoneInput autoFocus autoComplete="off" placeholder="Enter your mobile number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -175,7 +150,7 @@ function InitiateLoginForm({ onSuccess }: { onSuccess: (phoneNumber: string) => 
           disabled={sendOtpMutation.isPending}
           loading={sendOtpMutation.isPending}
         >
-          {sendOtpMutation.isPending ? 'Sending...' : 'Send OTP'}
+          Continue
         </Button>
       </form>
     </Form>
@@ -256,9 +231,9 @@ function VerifyOTP({
           verifyOtpMutation.mutate(value)
         })}
       >
-        <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">Enter the 6-digit code sent to</p>
-          <p className="font-medium">+91 {phoneNumber}</p>
+        <div className="text-center">
+          <div className="font-semibold">Verify your number</div>
+          <div className="text-xs">Please enter the OTP sent to your mobile number +{phoneNumber}</div>
         </div>
         <FormField
           name="otp"
@@ -267,16 +242,18 @@ function VerifyOTP({
             return (
               <FormItem>
                 <FormControl>
-                  <InputOTP autoFocus maxLength={6} onChange={field.onChange} value={field.value}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
+                  <div className="flex justify-center">
+                    <InputOTP autoFocus maxLength={6} onChange={field.onChange} value={field.value}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
