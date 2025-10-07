@@ -6,6 +6,7 @@ import { prisma } from './db'
 import { config } from '../config'
 import { invariant } from './utils'
 import { sendWhatsappMessageByTemplate } from './whatsapp'
+import { rootLogger } from './logger'
 
 invariant(config, 'config should be present')
 
@@ -27,9 +28,9 @@ export const auth = betterAuth({
   plugins: [
     phoneNumber({
       sendOTP: async ({ phoneNumber, code }) => {
-        if (isDevelopment) {
-          console.log(`Sending OTP code ${code} to phone number ${phoneNumber}`)
-        } else {
+        rootLogger.info(`Sending OTP code ${code} to phone number ${phoneNumber}`)
+
+        if (!isDevelopment) {
           await sendWhatsappMessageByTemplate({
             to: phoneNumber,
             templateName: 'verify_user_otp',

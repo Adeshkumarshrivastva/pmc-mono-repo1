@@ -192,7 +192,7 @@ function VerifyOTP({ phoneNumber, onSuccess }: { phoneNumber: string; onBack: ()
         />
         <div className="space-y-2">
           <Button type="submit" disabled={verifyOtpMutation.isPending} loading={verifyOtpMutation.isPending}>
-            {verifyOtpMutation.isPending ? 'Verifying...' : 'Verify OTP'}
+            Continue
           </Button>
           <div>
             {seconds > 0 ? (
