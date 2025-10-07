@@ -32,7 +32,7 @@ export const auth = betterAuth({
         } else {
           await sendWhatsappMessageByTemplate({
             to: phoneNumber,
-            templateName: 'new_otp_verification',
+            templateName: 'verify_user_otp',
             templateValues: [code],
             urlParams: [code],
           })

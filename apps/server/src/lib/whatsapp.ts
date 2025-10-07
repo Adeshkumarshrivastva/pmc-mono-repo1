@@ -17,7 +17,7 @@ export async function sendWhatsappMessageByTemplate({
     const params = new URLSearchParams({
       LicenseNumber: config.whatsapp.licenceNumber,
       APIKey: config.whatsapp.apiKey,
-      Contact: `91${to}`,
+      Contact: to,
       Template: templateName,
       Param: templateValues.join(','),
       URLParam: urlParams.join(','),
