@@ -24,6 +24,7 @@ export async function seedExperts(prisma: PrismaClient) {
         gender: z.enum(ExpertGender),
         expertise: z.string().array(),
         image: z.string(),
+        experienceInYears: z.number().optional(),
       })
       .parse(expert)
 
@@ -64,6 +65,7 @@ export async function seedExperts(prisma: PrismaClient) {
           bio: validatedExpert.bio,
           expertise: validatedExpert.expertise,
           gender: validatedExpert.gender,
+          experienceInYears: validatedExpert.experienceInYears || null,
         },
       })
 
