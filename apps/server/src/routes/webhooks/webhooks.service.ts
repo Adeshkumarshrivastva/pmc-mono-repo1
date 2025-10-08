@@ -1,14 +1,21 @@
 import { render } from '@react-email/render'
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
 
+import { Resource } from 'sst'
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import type { PaymentConfirmationInput } from './webhooks.input'
 import BookingConfirmationForExpert from '../../emails/booking-confirmation-expert'
 import BookingConfirmationForPatient from '../../emails/booking-confirmation-patient'
 import { env } from '../../lib/env'
+import { sendWhatsappMessageByTemplate } from '../../lib/whatsapp'
+import { config } from '../../config'
+import { createLogger } from '../../lib/logger'
 
 const sesClient = new SESv2Client()
+
+const isDevelopment = Resource.App.stage !== 'production'
+const logger = createLogger('webhook-service')
 
 export async function paymentConfirmation(c: C, input: PaymentConfirmationInput) {
   const { order } = input.payload
@@ -76,9 +83,10 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
     const emailPromises = [
       sesClient.send(
         new SendEmailCommand({
-          FromEmailAddress: env.EMAIL_SENDER,
+          FromEmailAddress: config.email.emailSender,
           Destination: {
             ToAddresses: [booking.expert.user.email],
+            CcAddresses: isDevelopment ? [] : ['helpdesk@positivemindcare.com'],
           },
           Content: {
             Simple: {
@@ -98,15 +106,13 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
       ),
     ]
 
-    const patientEmail = booking.patientEmail
-
-    if (patientEmail) {
+    if (booking.patientEmail) {
       emailPromises.push(
         sesClient.send(
           new SendEmailCommand({
             FromEmailAddress: env.EMAIL_SENDER,
             Destination: {
-              ToAddresses: [patientEmail],
+              ToAddresses: [booking.patientEmail],
             },
             Content: {
               Simple: {
@@ -127,7 +133,39 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
       )
     }
 
-    await Promise.allSettled(emailPromises)
+    // Send WhatsApp messages in parallel with emails
+    const whatsappPromises = []
+
+    whatsappPromises.push(
+      sendWhatsappMessageByTemplate({
+        to: booking.expert.user.phoneNumber!,
+        templateName: 'new_booking_confirmation',
+        templateValues: [booking.expert.user.name ?? '', booking.serviceName, booking.patientName ?? ''],
+        urlParams: [booking.id],
+      }).catch((error) => {
+        logger.error('Failed to send WhatsApp to expert:', error)
+        return null
+      }),
+    )
+
+    whatsappPromises.push(
+      sendWhatsappMessageByTemplate({
+        to: booking.patient.user.phoneNumber!,
+        templateName: 'new_booking_confirmation',
+        templateValues: [
+          booking.patient.user.name ?? 'Patient',
+          booking.serviceName,
+          booking.expert.user.name ?? 'Expert',
+        ],
+        urlParams: [booking.id],
+      }).catch((error) => {
+        logger.error('Failed to send WhatsApp to patient:', error)
+        return null
+      }),
+    )
+
+    // Wait for all notifications to complete (emails and WhatsApp)
+    await Promise.allSettled([...emailPromises, ...whatsappPromises])
 
     return c.json({ success: true, message: 'Payment confirmed and emails sent' })
   } catch {

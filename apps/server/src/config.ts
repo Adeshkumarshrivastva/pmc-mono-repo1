@@ -33,6 +33,7 @@ export const configSchema = z.object({
   whatsapp: z.object({
     apiKey: z.string(),
     licenceNumber: z.string(),
+    testNumber: z.string().optional().default('918076332196'),
   }),
   email: z.object({
     emailSender: z.string(),
