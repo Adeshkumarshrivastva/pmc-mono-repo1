@@ -36,7 +36,6 @@ export default function QuizContactForm({
   const quizFormMutation = useMutation({
     mutationFn: createQuizLead,
     onSuccess: () => {
-      toast('Thank you for your interest!')
       form.reset()
       onOpenChange(false)
       onSuccess()
@@ -106,14 +105,6 @@ export default function QuizContactForm({
             />
 
             <div className="flex gap-4 justify-end pt-4">
-              <Button
-                type="button"
-                variant="default"
-                onClick={() => onOpenChange(false)}
-                disabled={quizFormMutation.isPending}
-              >
-                Cancel
-              </Button>
               <Button type="submit" disabled={quizFormMutation.isPending}>
                 {quizFormMutation.isPending ? 'Submitting...' : 'View Results'}
               </Button>
