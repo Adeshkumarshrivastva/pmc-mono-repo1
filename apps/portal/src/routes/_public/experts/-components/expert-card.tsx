@@ -28,7 +28,7 @@ type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$g
 
 function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
   const { servicesProvided, name, slug, city, country, availability, expertise, experienceInYears } = expert
-  const [selectedMode] = useState<ServiceMode>('VIRTUAL')
+  const [selectedMode] = useState<ServiceMode | 'ALL'>('ALL')
   const [showAllServices, setShowAllServices] = useState(false)
   const navigate = useNavigate()
 
@@ -40,7 +40,10 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
       icon: SERVICE_MODE_CONFIG[mode as ServiceMode].icon,
     }))
 
-  const filteredServices = servicesProvided?.filter((service) => service.availableModes.includes(selectedMode)) || []
+  const filteredServices =
+    selectedMode === 'ALL'
+      ? servicesProvided || []
+      : (servicesProvided || []).filter((service) => service.availableModes?.includes(selectedMode))
 
   const nextSlot = getNextAvailableSlot(availability)
 

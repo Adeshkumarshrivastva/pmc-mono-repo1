@@ -75,7 +75,8 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
               </div>
             </>
           ) : null}
-          {mode.type === 'fill_prebooking_info' ? (
+
+          {mode.type === 'fill_prebooking_info' && service.availableModes.length === 1 ? (
             <div className="flex items-center gap-2">
               {service.availableModes.map((availableMode, index) => {
                 const modeConfig = SERVICE_MODE_CONFIG[availableMode]

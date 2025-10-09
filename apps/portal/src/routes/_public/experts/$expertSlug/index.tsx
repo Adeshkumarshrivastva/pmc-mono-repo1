@@ -307,7 +307,9 @@ function ServiceCard({
       <div className="flex gap-2 mb-3 flex-wrap">
         {availableModes.map((mode) => {
           const modeConfig = SERVICE_MODE_CONFIG[mode as ServiceMode]
-          if (!modeConfig) return null
+          if (!modeConfig) {
+            return null
+          }
 
           const ServiceIcon = modeConfig.icon
 

@@ -92,7 +92,7 @@ function ExpertServiceBookingPage() {
                         if (!user || !user.phoneNumber) {
                           setMode({ type: 'verify_identity' })
                         } else {
-                          setMode({ type: 'fill_prebooking_info', phoneNumber: '9876543210' })
+                          setMode({ type: 'fill_prebooking_info', phoneNumber: user.phoneNumber })
                         }
                       }}
                     />
