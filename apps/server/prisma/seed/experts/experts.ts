@@ -3,7 +3,7 @@ import { SingleBar, Presets } from 'cli-progress'
 import { nanoid } from 'nanoid'
 import z from 'zod'
 import experts from './experts.json'
-import { DayOfWeek, ExpertGender, ExpertType, PrismaClient } from '../../../src/generated/prisma'
+import { DayOfWeek, ExpertGender, ExpertType, PrismaClient, ServiceMode } from '../../../src/generated/prisma'
 import { getErrorMessage } from '../../../src/lib/utils'
 import dayjs from '../../../src/lib/dayjs'
 
@@ -18,13 +18,14 @@ export async function seedExperts(prisma: PrismaClient) {
         name: z.string(),
         phoneNumber: z.string(),
         email: z.string(),
-        type: z.nativeEnum(ExpertType),
+        type: z.enum(ExpertType),
         qualification: z.string(),
         bio: z.string(),
         gender: z.enum(ExpertGender),
         expertise: z.string().array(),
         image: z.string(),
         experienceInYears: z.number().optional(),
+        availableModes: z.enum(ServiceMode).array().min(1),
       })
       .parse(expert)
 
@@ -93,6 +94,7 @@ export async function seedExperts(prisma: PrismaClient) {
           country: 'INDIA',
           expertId: createdExpert.id,
           slug: 'initial-consultation',
+          availableModes: validatedExpert.availableModes,
         },
       })
     } catch (error) {
