@@ -214,6 +214,7 @@ enum BookingStatus {
   CANCELLED
   RESCHEDULED
   COMPLETED
+  NOSHOW
 }
 
 model Booking {
@@ -242,7 +243,6 @@ model Booking {
   endDateTime                      DateTime
   timezone                         String?        @default("Asia/Kolkata")
   mode                             ServiceMode
-  isNoShow                         Boolean        @default(false)
   noShowBy                         UserRole?
   inPersonLocation                 Json?
   virtualLocation                  Json?

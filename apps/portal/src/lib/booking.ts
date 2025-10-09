@@ -24,3 +24,6 @@ export const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
 } as const
 
 export type Booking = InferResponseType<HonoClient['server']['experts']['bookings']['$get'], 200>['bookings'][number]
+
+export const BOOKING_PERIODS = ['upcoming', 'past'] as const
+export type BookingPeriod = (typeof BOOKING_PERIODS)[number]
