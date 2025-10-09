@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
+import { MapPin, VideoIcon, type LucideIcon } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -21,6 +22,7 @@ type PrebookingFormProps = {
   expertSlug: string
   serviceSlug: string
   phoneNumber: string
+  availableModes?: BookingLocation[]
 }
 
 const prebookingFormSchema = z.object({
@@ -35,6 +37,7 @@ export default function PrebookingForm({
   phoneNumber,
   expertSlug,
   serviceSlug,
+  availableModes,
 }: PrebookingFormProps) {
   invariant(serviceId, 'service id must be present')
   invariant(expertId, 'expert Id must be present')
@@ -45,9 +48,11 @@ export default function PrebookingForm({
   const selectedSlot = getSelectedSlot()
   invariant(selectedSlot, 'selectedSlot must be present')
 
+  const modes = availableModes ?? BOOKING_LOCATION
+
   const form = useForm({
     defaultValues: {
-      serviceMode: 'VIRTUAL',
+      serviceMode: modes.length === 1 ? modes[0] : 'VIRTUAL',
     },
     resolver: zodResolver(prebookingFormSchema),
   })
@@ -141,28 +146,47 @@ export default function PrebookingForm({
             )
           }}
         />
-        <FormField
-          name="serviceMode"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Location*</FormLabel>
-                <FormControl>
-                  <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
-                    {BOOKING_LOCATION.map((mode) => (
-                      <FormItem key={SERVICE_MODE_CONFIG[mode].value} className="flex items-center gap-3">
-                        <FormControl>
-                          <RadioGroupItem value={SERVICE_MODE_CONFIG[mode].value} />
-                        </FormControl>
-                        <FormLabel className="font-normal">{SERVICE_MODE_CONFIG[mode].label}</FormLabel>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </FormItem>
-            )
-          }}
-        />
+        {modes.length > 1 && (
+          <FormField
+            name="serviceMode"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Location*</FormLabel>
+                  <FormControl>
+                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
+                      {modes.map((mode) => {
+                        const Icon = SERVICE_MODE_CONFIG[mode].icon
+                        return (
+                          <FormItem key={SERVICE_MODE_CONFIG[mode].value} className="flex items-center gap-3">
+                            <FormControl>
+                              <RadioGroupItem value={SERVICE_MODE_CONFIG[mode].value} />
+                            </FormControl>
+                            <FormLabel className="font-normal flex items-center gap-2">
+                              {Icon && <Icon className="size-4" />}
+                              {SERVICE_MODE_CONFIG[mode].label}
+                            </FormLabel>
+                          </FormItem>
+                        )
+                      })}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )
+            }}
+          />
+        )}
+
+        {modes.length === 1 && (
+          <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
+            {SERVICE_MODE_CONFIG[modes[0]].icon &&
+              (() => {
+                const Icon = SERVICE_MODE_CONFIG[modes[0]].icon!
+                return <Icon className="size-4" />
+              })()}
+            <span className="text-sm font-medium">{SERVICE_MODE_CONFIG[modes[0]].label}</span>
+          </div>
+        )}
         {/* TODO: Render Custom Form Fields of Service */}
 
         <Button
@@ -178,14 +202,19 @@ export default function PrebookingForm({
   )
 }
 
-export const SERVICE_MODE_CONFIG: Record<BookingLocation, { label: string; value: BookingLocation }> = {
+export const SERVICE_MODE_CONFIG: Record<
+  BookingLocation,
+  { label: string; value: BookingLocation; icon?: LucideIcon }
+> = {
   IN_PERSON: {
     label: 'In Person',
     value: 'IN_PERSON',
+    icon: MapPin,
   },
   VIRTUAL: {
     label: 'Virtual',
     value: 'VIRTUAL',
+    icon: VideoIcon,
   },
 }
 

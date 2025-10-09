@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -31,7 +30,6 @@ export const Route = createFileRoute('/_public/experts/$expertSlug/')({
 function ExpertPage() {
   const { expertSlug } = Route.useParams()
   const navigate = useNavigate()
-  const [selectedMode] = useState<ServiceMode>('VIRTUAL')
 
   const getExpertQuery = useQuery({
     queryKey: ['expert', expertSlug],
@@ -82,7 +80,7 @@ function ExpertPage() {
         experienceInYears,
       } = data.expert
 
-      const filteredServices = servicesProvided.filter((service) => service.availableModes.includes(selectedMode)) || []
+      const filteredServices = servicesProvided || []
 
       const prices =
         servicesProvided.map((service) => service.price).filter((price): price is number => price != null) || []
@@ -286,13 +284,8 @@ function ServiceCard({
   service: ExpertWithDetails['servicesProvided'][number]
   onBook: () => void
 }) {
-  const allServiceModes = [...new Set(service?.availableModes || [])]
-  const availableModes = Object.keys(SERVICE_MODE_CONFIG)
-    .filter((mode) => allServiceModes.includes(mode as ServiceMode))
-    .map((mode) => ({
-      ...SERVICE_MODE_CONFIG[mode as ServiceMode],
-      icon: SERVICE_MODE_CONFIG[mode as ServiceMode].icon,
-    }))
+  const availableModes = [...new Set(service?.availableModes || [])]
+
   return (
     <div className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-all duration-200 hover:border-primary/20">
       <div className="flex justify-between items-start mb-3">
@@ -312,16 +305,19 @@ function ServiceCard({
       </div>
 
       <div className="flex gap-2 mb-3 flex-wrap">
-        {availableModes.map((mode, i) => {
-          const ServiceIcon = SERVICE_MODE_CONFIG[mode.value].icon
+        {availableModes.map((mode) => {
+          const modeConfig = SERVICE_MODE_CONFIG[mode as ServiceMode]
+          if (!modeConfig) return null
+
+          const ServiceIcon = modeConfig.icon
 
           return (
             <div
-              key={i}
+              key={mode}
               className="flex items-center gap-1 px-2 py-1 bg-muted/50 border border-border rounded-md text-sm"
             >
-              <ServiceIcon className="w-3 h-3 text-muted-foreground" />
-              <span className="text-foreground">{SERVICE_MODE_CONFIG[mode.value].label}</span>
+              {ServiceIcon && <ServiceIcon className="w-3 h-3 text-muted-foreground" />}
+              <span className="text-foreground">{modeConfig.label}</span>
             </div>
           )
         })}

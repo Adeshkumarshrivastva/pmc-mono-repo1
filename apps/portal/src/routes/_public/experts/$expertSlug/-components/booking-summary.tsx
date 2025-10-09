@@ -7,6 +7,7 @@ import { CURRENCY_CONFIG, type BookingMode } from '@/lib/booking'
 import { Separator } from '@/components/ui/separator'
 import { DEFAULT_TIMEZONE, formatDateTimeRange } from '@/lib/date'
 import dayjs from '@/lib/dayjs'
+import { SERVICE_MODE_CONFIG } from './prebooking-form'
 
 type BookingSummaryProps = {
   mode: BookingMode
@@ -73,6 +74,23 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
                 <div className="text-muted-foreground font-bold text-sm">{DEFAULT_TIMEZONE}</div>
               </div>
             </>
+          ) : null}
+          {mode.type === 'fill_prebooking_info' ? (
+            <div className="flex items-center gap-2">
+              {service.availableModes.map((availableMode, index) => {
+                const modeConfig = SERVICE_MODE_CONFIG[availableMode]
+                const Icon = modeConfig.icon
+                return (
+                  <div key={availableMode} className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5">
+                      {Icon && <Icon className="size-4" />}
+                      <div className="text-muted-foreground font-bold text-sm">{modeConfig.label}</div>
+                    </div>
+                    {index < service.availableModes.length - 1 && <span className="text-muted-foreground">/</span>}
+                  </div>
+                )
+              })}
+            </div>
           ) : null}
         </div>
       </div>

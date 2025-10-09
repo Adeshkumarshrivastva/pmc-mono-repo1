@@ -1,7 +1,7 @@
 [
   {
     "name": "Dr. Rahul Yadav",
-    "phoneNumber": "+918901587202",
+    "phoneNumber": "918901587202",
     "email": "drrahulyadav@positivemindcare.com",
     "type": "PSYCHIATRIST",
     "qualification": "MBBS, M.D. (Psychiatry)",
@@ -25,7 +25,7 @@
   },
   {
     "name": "Ms. Diksha Joshi",
-    "phoneNumber": "+917289944985",
+    "phoneNumber": "917289944985",
     "email": "psychologist@positivemindcare.com",
     "type": "COUNSELLING_PSYCHOLOGIST",
     "qualification": "Ph.D. Scholar, M.Sc. in Clinical Psychology",
@@ -38,7 +38,7 @@
   },
   {
     "name": "Dr. Akriti Jaiswal",
-    "phoneNumber": "+919690078822",
+    "phoneNumber": "919690078822",
     "email": "akritijaiswal081992@gmail.com",
     "type": "PSYCHIATRIST",
     "qualification": "MBBS, M.D. (Psychiatry)",
@@ -51,7 +51,7 @@
   },
   {
     "name": "Dr. Richa Trivedi",
-    "phoneNumber": "+918871317765",
+    "phoneNumber": "918871317765",
     "email": "trivediricha42@gmail.com",
     "type": "PSYCHIATRIST",
     "qualification": "MBBS, M.D. (Psychiatry)",
@@ -74,7 +74,7 @@
   },
   {
     "name": "Ms. Sheenu Chandna",
-    "phoneNumber": "+917678267644",
+    "phoneNumber": "917678267644",
     "email": "sheenu@positivemindcare.com",
     "type": "CLINICAL_PSYCHOLOGIST",
     "qualification": "M.Phil. in Clinical Psychology",
@@ -87,7 +87,7 @@
   },
   {
     "name": "Dr. Sakshi Saini",
-    "phoneNumber": "+917042359351",
+    "phoneNumber": "917042359351",
     "email": "sakshi@positivemindcare.com",
     "type": "CLINICAL_PSYCHOLOGIST",
     "qualification": "M.Phil. in Clinical Psychology",
@@ -108,7 +108,7 @@
   },
   {
     "name": "Dr. Rachana Maurya",
-    "phoneNumber": "+918447559584",
+    "phoneNumber": "918447559584",
     "email": "drrachnamy@gmail.com",
     "type": "REHABILITATION_PSYCHOLOGIST",
     "qualification": "Ph.D., M.Phil., PDCP",
@@ -121,7 +121,7 @@
   },
   {
     "name": "Dr. Sanjina Bose",
-    "phoneNumber": "+917678267644",
+    "phoneNumber": "917678267644",
     "email": "clinicalpsychology890@gmail.com",
     "type": "CLINICAL_PSYCHOLOGIST",
     "qualification": "M.Phil. in Clinical Psychology (RCI), M.A. Psychology (TISS)",
