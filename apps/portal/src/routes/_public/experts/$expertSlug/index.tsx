@@ -22,6 +22,7 @@ import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { cn } from '@/lib/utils'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 import Navbar from '../-components/navbar'
+import { Marquee } from '@/components/ui/marquee'
 
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
@@ -66,8 +67,20 @@ function ExpertPage() {
     })
 
     .with({ status: 'success' }, ({ data }) => {
-      const { servicesProvided, name, type, city, country, bio, qualifications, avgRating, image, expertise, gender } =
-        data.expert
+      const {
+        servicesProvided,
+        name,
+        type,
+        city,
+        country,
+        bio,
+        qualifications,
+        avgRating,
+        image,
+        expertise,
+        gender,
+        experienceInYears,
+      } = data.expert
 
       const filteredServices = servicesProvided.filter((service) => service.availableModes.includes(selectedMode)) || []
 
@@ -136,15 +149,14 @@ function ExpertPage() {
                         ) : null}
 
                         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
-                          <div className="text-center lg:text-left">
-                            <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                              <MapPin className="w-4 h-4" />
-                              <span className="text-sm">Location</span>
+                          {experienceInYears ? (
+                            <div className="text-center lg:text-left">
+                              <div className="flex items-center gap-1 text-muted-foreground mb-1">
+                                <span className="text-sm">Experience</span>
+                              </div>
+                              <p className="text-sm font-semibold text-primary">{experienceInYears}</p>
                             </div>
-                            <p className="text-sm font-semibold text-foreground">
-                              {city}, {country}
-                            </p>
-                          </div>
+                          ) : null}
 
                           {gender && (
                             <div className="text-center lg:text-left">
@@ -164,6 +176,16 @@ function ExpertPage() {
                               <p className="text-sm font-semibold text-primary">{`${CURRENCY_CONFIG['INR'].symbol} ${minPrice}`}</p>
                             </div>
                           ) : null}
+
+                          <div className="text-center lg:text-left">
+                            <div className="flex items-center gap-1 text-muted-foreground mb-1">
+                              <MapPin className="w-4 h-4" />
+                              <span className="text-sm">Location</span>
+                            </div>
+                            <p className="text-sm font-semibold text-foreground">
+                              {city}, {country}
+                            </p>
+                          </div>
                         </div>
 
                         {expertise && Array.isArray(expertise) && expertise.length > 0 && (
@@ -172,15 +194,17 @@ function ExpertPage() {
                               <Award className="w-4 h-4" />
                               <h3 className="text-sm">Areas of Expertise</h3>
                             </div>
-                            <div className="flex flex-wrap gap-2">
-                              {expertise.map((area, index) => (
-                                <span
-                                  key={index}
-                                  className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap"
-                                >
-                                  {area}
-                                </span>
-                              ))}
+                            <div className="group/marquee">
+                              <Marquee pauseOnHover className="[--duration:30s] [--gap:0.5rem]" repeat={2}>
+                                {expertise.map((area, index) => (
+                                  <span
+                                    key={index}
+                                    className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap"
+                                  >
+                                    {area}
+                                  </span>
+                                ))}
+                              </Marquee>
                             </div>
                           </div>
                         )}
@@ -372,5 +396,17 @@ const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType 
   CLINICAL_PSYCHOLOGIST: {
     label: 'Clinical Psychologist',
     value: 'CLINICAL_PSYCHOLOGIST',
+  },
+  CONSULTANT_PHYSICIAN: {
+    label: '',
+    value: 'PSYCHOLOGIST',
+  },
+  REHABILITATION_PSYCHOLOGIST: {
+    label: '',
+    value: 'PSYCHOLOGIST',
+  },
+  COUNSELLING_PSYCHOLOGIST: {
+    label: '',
+    value: 'PSYCHOLOGIST',
   },
 }
