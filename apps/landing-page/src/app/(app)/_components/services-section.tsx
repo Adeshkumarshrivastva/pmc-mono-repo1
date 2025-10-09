@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import Autoscroll from 'embla-carousel-auto-scroll'
 import { ArrowRightIcon } from 'lucide-react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import type { Home, Service } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import QuestionnaireModal from './questionnaire-modal'
-import Image from 'next/image'
 
 type ServicesSectionProps = {
   data: Home['servicesSection']

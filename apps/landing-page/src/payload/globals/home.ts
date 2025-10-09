@@ -5,6 +5,7 @@ import { expertsSection } from '../fields/experts-section'
 import { testimonialSection } from '../fields/testimonial-section'
 import { serivicesSection } from '../fields/services-section'
 import { achievementSection } from '../fields/achievement-section'
+import { quizSection } from '../fields/quiz-section'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -292,6 +293,7 @@ export const Home: GlobalConfig = {
     serivicesSection,
     expertsSection,
     appointmentSection,
+    quizSection,
     testimonialSection,
     faqSection,
     achievementSection,
