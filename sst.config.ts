@@ -45,6 +45,7 @@ export default $config({
     const RazorpayKeySecret = new sst.Secret('RAZORPAY_KEY_SECRET')
     const WhatsappApiKeySecret = new sst.Secret('WHATSAPP_API_KEY_SECRET')
     const WhatsappLicenceNumberSecret = new sst.Secret('WHATSAPP_LICENCE_NUMBER_SECRET')
+    const WhatsappTestNumberSecret = new sst.Secret('WHATSAPP_TEST_NUMBER_SECRET')
     const BrowserlessWsEndpoint = new sst.Secret('BROWSERLESS_WS_ENDPOINT')
 
     const SenderEmail = new sst.aws.Email('SenderEmail', {
@@ -74,6 +75,7 @@ export default $config({
         JWT_SECRET: JwtSecret.value,
         WHATSAPP_API_KEY_SECRET: WhatsappApiKeySecret.value,
         WHATSAPP_LICENCE_NUMBER_SECRET: WhatsappLicenceNumberSecret.value,
+        WHATSAPP_TEST_NUMBER_SECRET: WhatsappTestNumberSecret.value,
         EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
         BROWSERLESS_WS_ENDPOINT: BrowserlessWsEndpoint.value,
       },

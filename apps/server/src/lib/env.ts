@@ -17,6 +17,7 @@ export const env = z
     RAZORPAY_KEY_SECRET: z.string(),
     WHATSAPP_API_KEY_SECRET: z.string(),
     WHATSAPP_LICENCE_NUMBER_SECRET: z.string(),
+    WHATSAPP_TEST_NUMBER_SECRET: z.string(),
     EMAIL_SENDER: z.string(),
     BROWSERLESS_WS_ENDPOINT: z.string(),
   })

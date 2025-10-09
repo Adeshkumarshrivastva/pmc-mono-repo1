@@ -30,15 +30,15 @@ export const auth = betterAuth({
       sendOTP: async ({ phoneNumber, code }) => {
         rootLogger.info(`Sending OTP code ${code} to phone number ${phoneNumber}`)
 
-        if (!isDevelopment) {
-          await sendWhatsappMessageByTemplate({
-            to: phoneNumber,
-            templateName: 'verify_user_otp',
-            templateValues: [code],
-            urlParams: [code],
-          })
-          // TODO: Implement sending OTP code via SMS
-        }
+        // if (!isDevelopment) {
+        await sendWhatsappMessageByTemplate({
+          to: phoneNumber,
+          templateName: 'verify_user_otp',
+          templateValues: [code],
+          urlParams: [code],
+        })
+        // TODO: Implement sending OTP code via SMS
+        // }
       },
       signUpOnVerification: {
         getTempEmail: (phoneNumber) => {
