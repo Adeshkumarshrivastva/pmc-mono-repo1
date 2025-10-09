@@ -37,226 +37,228 @@ export async function generatePrescriptionPDF(prescription: PrescriptionWithBook
   const page = await browser.newPage()
   const logoBase64 = await getLogoAsBase64()
   const template = `
-      <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <title>Prescription #${prescription.id}</title>
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Prescription #${prescription.id}</title>
+<style>
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        body {
-          font-family: 'Arial', sans-serif;
-          padding: 40px;
-          color: #333;
-        }
+body {
+  font-family: Arial, sans-serif;
+  padding: 40px;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.5;
+}
 
-        .header {
-          border-bottom: 3px solid #385246;
-          padding-bottom: 20px;
-          margin-bottom: 30px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
 
-        .header .logo {
-          max-width: 150px;
-          max-height: 80px;
-          object-fit: contain;
-        }
+.clinic-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 60%;
+  word-break: break-word;
+}
 
-        .header .header-text {
-          flex: 1;
-        }
+.clinic-logo img {
+  max-width: 150px;
+  max-height: 80px;
+  object-fit: contain;
+}
 
-        .header h1 {
-          color: #385246;
-          font-size: 28px;
-          margin-bottom: 10px;
-        }
+.clinic-details strong {
+  font-weight: bold;
+}
 
-        .header .expert-info {
-          font-size: 14px;
-          color: #666;
-        }
+.doctor-info {
+  text-align: right;
+  width: 35%;
+}
 
-        .section {
-          margin-bottom: 25px;
-        }
+.doctor-name {
+  font-weight: bold;
+}
 
-        .section-title {
-          font-size: 16px;
-          font-weight: bold;
-          color: #385246;
-          margin-bottom: 10px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
+.section {
+  margin-bottom: 30px;
+}
 
-        .info-row {
-          display: flex;
-          margin-bottom: 8px;
-          font-size: 14px;
-        }
+.patient-info {
+  border-bottom: 1px solid #bbb;
+  padding-bottom: 8px;
+}
 
-        .info-label {
-          font-weight: 600;
-          width: 150px;
-          color: #555;
-        }
+.patient-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
 
-        .info-value {
-          color: #333;
-        }
+.rx-heading {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 8px 0;
+}
 
-        .medicines {
-          margin-top: 15px;
-        }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
 
-        .medicine-item {
-          padding: 15px;
-          margin-bottom: 10px;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          background-color: #f9fafb;
-        }
+th,
+td {
+  border: 1px solid #bbb;
+  padding: 8px;
+  vertical-align: top;
+}
 
-        .medicine-name {
-          font-size: 16px;
-          font-weight: 600;
-          color: #1f2937;
-          margin-bottom: 8px;
-        }
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  text-align: left;
+}
 
-        .medicine-details {
-          font-size: 14px;
-          color: #6b7280;
-          margin-bottom: 4px;
-        }
+.col-sl {
+  width: 5%;
+  text-align: center;
+}
 
-        .notes-box {
-          padding: 15px;
-          background-color: #fef3c7;
-          border-left: 4px solid #f59e0b;
-          border-radius: 4px;
-          margin-top: 10px;
-        }
+.col-name {
+  width: 45%;
+  text-transform: uppercase;
+}
 
-        .notes-text {
-          font-size: 14px;
-          line-height: 1.6;
-          color: #92400e;
-        }
+.col-frequency {
+  width: 20%;
+}
 
-        .footer {
-          margin-top: 50px;
-          padding-top: 20px;
-          border-top: 2px solid #e5e7eb;
-          text-align: right;
-        }
+.col-duration {
+  width: 30%;
+}
 
-        .signature {
-          margin-top: 30px;
-          font-size: 14px;
-        }
+.doctor-signature {
+  font-weight: 600;
+  text-align: right;
+  margin-top: 40px;
+  margin-right: 30px;
+}
 
-        .signature-line {
-          border-top: 1px solid #333;
-          width: 250px;
-          margin-left: auto;
-          margin-top: 5px;
-          padding-top: 5px;
-        }
+.additional-notes strong {
+  display: block;
+  margin-bottom: 2px;
+}
 
-        .prescription-id {
-          font-size: 12px;
-          color: #9ca3af;
-          margin-top: 10px;
-        }
-      </style>
-    </head>
-      <body>
-      <div class="header">
-        <div class="header-text">
-          <h1>Medical Prescription</h1>
-        </div>
-        ${logoBase64 ? `<img src="${logoBase64}" alt="Company Logo" class="logo" />` : ''}
+.small-note {
+  position: fixed;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  background: white;
+  padding-bottom: 12px;
+}
+
+.note-line {
+  border: 0;
+  border-top: 1px solid #ddd;
+  margin: 5px 40px 0 40px;
+}
+
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="clinic-info">
+      <div class="clinic-logo">${logoBase64 ? `<img src="${logoBase64}" alt="Clinic Logo"/>` : ''}</div>
+      <div class="clinic-details">
+        <div><strong>Positive Mind Care</strong></div>
+        <div>804, Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018</div>
+        <div>+91-8920530832</div>
       </div>
+    </div>
+    <div class="doctor-info">
+      <div class="doctor-name">${prescription.booking.expert.name}</div>
+      ${prescription.booking.expert.qualifications ? `<div>${prescription.booking.expert.qualifications}</div>` : ''}
+    </div>
+  </div>
 
-      <div class="section">
-        <div class="section-title">Patient Information</div>
-        <div class="info-row">
-          <span class="info-label">Patient Name:</span>
-          <span class="info-value">${prescription.booking.patientName}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Date:</span>
-          <span class="info-value">${dayjs(prescription.createdAt).format('DD MMM YYYY')}</span>
-        </div>
-      </div>
+  <div class="section patient-info">
+    <div class="patient-row">
+      <div><strong>Patient Name:</strong> ${prescription.booking.patientName}</div>
+      <div><strong>Patient ID:</strong> ${prescription.booking.patientId || prescription.booking.id}</div>
+    </div>
+    <div><strong>Date:</strong> ${dayjs(prescription.createdAt).format('DD MMM YYYY')}</div>
+    <div><strong>Booking Date & Time:</strong>
+      ${formatDateTimeRange({ startDateTime: prescription.booking.startDateTime, endDateTime: prescription.booking.endDateTime })}
+    </div>
+  </div>
 
-      <div class="section">
-        <div class="section-title">Booking Details</div>
-        <div class="info-row">
-          <span class="info-label">Service:</span>
-          <span class="info-value">${prescription.booking.serviceName || 'N/A'}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Booking Date & Time:</span>
-          <span class="info-value">${formatDateTimeRange({ startDateTime: prescription.booking.startDateTime, endDateTime: prescription.booking.endDateTime })}</span>
-        </div>
-      </div>
+  <div class="section">
+    <div class="rx-heading">Prescription</div>
+   <table>
+  <thead>
+    <tr>
+      <th class="col-sl">Sl</th>
+      <th class="col-name">Medicine Name</th>
+      <th class="col-frequency">Frequency</th>
+      <th class="col-duration">Duration / Instructions</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${medicines
+      .map(
+        (medicine, index: number) => `
+      <tr>
+        <td class="col-sl">${index + 1}</td>
+        <td class="col-name">${medicine.name}</td>
+        <td class="col-frequency">${medicine.frequency || '-'}</td>
+        <td class="col-duration">${
+          [
+            medicine.duration ? `Duration: ${medicine.duration}` : '',
+            medicine.instructions ? `Instructions: ${medicine.instructions}` : '',
+          ]
+            .filter(Boolean)
+            .join('<br />') || '-'
+        }</td>
+      </tr>
+    `,
+      )
+      .join('')}
+  </tbody>
+</table>
 
-      <div class="section">
-        <div class="section-title">Prescription</div>
-        <div class="medicines">
-          ${medicines
-            .map(
-              (medicine, index: number) => `
-            <div class="medicine-item">
-              <div class="medicine-name">${index + 1}. ${medicine.name}</div>
-              ${medicine.dosage ? `<div class="medicine-details"><strong>Dosage:</strong> ${medicine.dosage}</div>` : ''}
-              ${medicine.frequency ? `<div class="medicine-details"><strong>Frequency:</strong> ${medicine.frequency}</div>` : ''}
-              ${medicine.duration ? `<div class="medicine-details"><strong>Duration:</strong> ${medicine.duration}</div>` : ''}
-              ${medicine.instructions ? `<div class="medicine-details"><strong>Instructions:</strong> ${medicine.instructions}</div>` : ''}
-            </div>
-          `,
-            )
-            .join('')}
-        </div>
-      </div>
+  </div>
 
-      ${
-        prescription.notes
-          ? `
-        <div class="section">
-          <div class="section-title">Additional Notes</div>
-          <div class="notes-box">
-            <div class="notes-text">${prescription.notes}</div>
-          </div>
-        </div>
-      `
-          : ''
-      }
+  ${prescription.notes ? `<div class="section additional-notes"><strong>Additional Notes</strong><div>${prescription.notes}</div></div>` : ''}
 
-      <div class="footer">
-        <div class="signature">
-          <div class="signature-line">
-            ${prescription.booking.expert.name}
-          </div>
-        </div>
-        <div class="prescription-id">
-          Prescription ID: ${prescription.id}
-        </div>
-      </div>
-      </body>
-    </html>
-  `
+  <div class="doctor-signature">${prescription.booking.expert.name}</div>
+
+  <div class="small-note">
+    Booking ID: ${prescription.booking.id}
+    <hr class="note-line" />
+  </div>
+
+</body>
+</html>
+`
 
   await page.setContent(template, {
     waitUntil: ['domcontentloaded', 'networkidle0'],
