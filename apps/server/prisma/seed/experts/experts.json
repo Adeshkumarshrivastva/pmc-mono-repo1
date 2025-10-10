@@ -20,9 +20,8 @@
       "Deep TMS Therapy"
     ],
     "gender": "MALE",
-    "image": "https://positivemindcare.com/api/media/file/rahul_yadav.jpg",
-    "availableModes": ["VIRTUAL"],
-    "price": 1500
+    "image": "https://positivemindcare.com/api/media/file/rahul_yadav-1.jpg",
+    "availableModes": ["VIRTUAL"]
   },
   {
     "name": "Ms. Diksha Joshi",
@@ -34,9 +33,8 @@
     "bio": "I am a counselling psychologist with over 3 years of experience. I focus on anxiety, depression, and stress management using an eclectic therapeutic approach. I am  empathetic, non-judgmental, and supportive.and active listener ,I help my clients to overcome their past issues and regain their ability to face challenges in future. With the help of counselling, I improve their quality of life and I work with children and adults. ",
     "expertise": ["Anxiety Disorders", "Depression", "Stress Management", "Self-Esteem Building", "Work-Life Balance"],
     "gender": "FEMALE",
-    "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/673c4323825951e5b6787d97/673c4323825951e5b6787d971d9f339f-1f35-4f87-b166-153d34dbfc88.jpg",
-    "availableModes": ["VIRTUAL"],
-    "price": 1200
+    "image": "https://positivemindcare.com/api/media/file/Professional%20Photo-3.jpg",
+    "availableModes": ["VIRTUAL"]
   },
   {
     "name": "Dr. Akriti Jaiswal",
@@ -48,9 +46,8 @@
     "bio": "I am a psychiatrist with 3 years of experience at Delhi Government Hospital. I specialize in juvenile psychiatry and de-addiction, addressing the emotional and rehabilitation needs of young individuals through evidence-based care.",
     "expertise": ["Juvenile Psychiatry", "De-addiction", "Behavioral Disorders", "Youth Mental Health"],
     "gender": "FEMALE",
-    "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/675abd2b553f555d6ec83f8d/675abd2b553f555d6ec83f8d0a92354f-1f2c-4818-a5cb-26cfde9a3d40.webp",
-    "availableModes": ["VIRTUAL"],
-    "price": 1500
+    "image": "https://positivemindcare.com/api/media/file/akriti-jaiswal.jpg",
+    "availableModes": ["VIRTUAL"]
   },
   {
     "name": "Dr. Richa Trivedi",
@@ -72,9 +69,8 @@
       "Sexual Disorders"
     ],
     "gender": "FEMALE",
-    "image": "",
-    "availableModes": ["VIRTUAL"],
-    "price": 1500
+    "image": "https://positivemindcare.com/api/media/file/richa-trivedi.jpg",
+    "availableModes": ["VIRTUAL"]
   },
   {
     "name": "Ms. Sheenu Chandna",
@@ -108,9 +104,8 @@
       " Life-skills workshops"
     ],
     "gender": "FEMALE",
-    "image": "https://positivemindcare.com/api/media/file/WhatsApp%20Image%202025-08-24%20at%2014.30.36_8893f8e8.jpg",
-    "availableModes": ["VIRTUAL", "IN_PERSON"],
-    "price": 1500
+    "image": "https://positivemindcare.com/api/media/file/sakshi-saini.webp",
+    "availableModes": ["VIRTUAL", "IN_PERSON"]
   },
   {
     "name": "Dr. Rachana Maurya",
@@ -122,9 +117,8 @@
     "bio": "I am a rehabilitation and clinical psychologist specializing in trauma recovery and psychometric testing. I have helped numerous individuals rebuild confidence and emotional balance through trauma-focused therapies.",
     "expertise": ["Trauma", "PTSD", "Psychometric Testing", "Rehabilitation Psychology"],
     "gender": "FEMALE",
-    "image": "https://positivemindcaredoc.s3.ap-south-1.amazonaws.com/Practitioner/67595cf99e0764152e371c16/67595cf99e0764152e371c16cffccf15-713e-4d8f-b886-aef6c3f4f300.png",
-    "availableModes": ["VIRTUAL"],
-    "price": 2000
+    "image": "https://positivemindcare.com/api/media/file/Rachna_maurya-1.jpg",
+    "availableModes": ["VIRTUAL"]
   },
   {
     "name": "Dr. Sanjina Bose",
@@ -136,9 +130,8 @@
     "bio": "I am a clinical psychologist with over 5 years of experience specializing in psychodiagnostic assessments and third-wave therapies. I integrate CBT and mindfulness techniques to provide tailored interventions for children, adults, and geriatric clients.",
     "expertise": ["Psychodiagnostic Assessment", "CBT", "Mindfulness", "Therapeutic Interventions"],
     "gender": "FEMALE",
-    "image": "",
-    "availableModes": ["VIRTUAL"],
-    "price": 1800
+    "image": "https://positivemindcare.com/api/media/file/sanjana-bose.jpg",
+    "availableModes": ["VIRTUAL"]
   },
   {
     "name": "Dr. RP Singh",
@@ -150,8 +143,7 @@
     "bio": "I am a senior consultant physician with over 44 years of experience (41 years as a specialist). I have extensive expertise in diabetes management, skin allergies, viral fever treatment, and insulin-free therapy.",
     "expertise": ["Diabetes Management", "Skin Allergies", "Viral Fever Treatment", "Insulin-Free Treatment"],
     "gender": "MALE",
-    "image": "",
-    "availableModes": ["IN_PERSON"],
-    "price": 1500
+    "image": "https://positivemindcare.com/api/media/file/rp-singh.png",
+    "availableModes": ["IN_PERSON"]
   }
 ]
