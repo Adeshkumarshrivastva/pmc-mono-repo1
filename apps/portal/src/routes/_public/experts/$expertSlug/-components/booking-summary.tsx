@@ -58,6 +58,22 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
               {service.price}
             </div>
           </div>
+          {service.availableModes.length === 1 ? (
+            <div className="flex items-center gap-2">
+              {service.availableModes.map((availableMode) => {
+                const modeConfig = SERVICE_MODE_CONFIG[availableMode]
+                const Icon = modeConfig.icon
+                return (
+                  <div key={availableMode} className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
+                      <Icon className="size-5 text-muted-foreground" />
+                      <div className="text-muted-foreground font-bold text-sm">{modeConfig.label}</div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : null}
           {mode.type !== 'select_slot' && selectedSlot ? (
             <>
               <div className="flex items-center gap-2">
@@ -74,23 +90,6 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
                 <div className="text-muted-foreground font-bold text-sm">{DEFAULT_TIMEZONE}</div>
               </div>
             </>
-          ) : null}
-
-          {mode.type === 'fill_prebooking_info' && service.availableModes.length === 1 ? (
-            <div className="flex items-center gap-2">
-              {service.availableModes.map((availableMode) => {
-                const modeConfig = SERVICE_MODE_CONFIG[availableMode]
-                const Icon = modeConfig.icon
-                return (
-                  <div key={availableMode} className="flex items-center gap-1.5">
-                    <div className="flex items-center gap-1.5">
-                      {Icon && <Icon className="size-4" />}
-                      <div className="text-muted-foreground font-bold text-sm">{modeConfig.label}</div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
           ) : null}
         </div>
       </div>

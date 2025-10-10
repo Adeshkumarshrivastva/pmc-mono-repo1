@@ -235,7 +235,7 @@ function ExpertPage() {
               ) : null}
 
               <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6">
-                <h2 className="text-lg font-bold text-foreground mb-4">Services & Expertise</h2>
+                <h2 className="text-lg font-bold text-foreground mb-4">Services</h2>
 
                 {servicesProvided && servicesProvided.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -282,8 +282,6 @@ function ServiceCard({
   service: ExpertWithDetails['servicesProvided'][number]
   onBook: () => void
 }) {
-  const availableModes = Object.keys(SERVICE_MODE_CONFIG) as ServiceMode[]
-
   return (
     <div className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-all duration-200 hover:border-primary/20">
       <div className="flex justify-between items-start mb-3">
@@ -303,7 +301,7 @@ function ServiceCard({
       </div>
 
       <div className="flex gap-2 mb-3 flex-wrap">
-        {availableModes.map((mode: ServiceMode) => {
+        {service.availableModes.map((mode: ServiceMode) => {
           const modeConfig = SERVICE_MODE_CONFIG[mode]
 
           const ServiceIcon = modeConfig.icon

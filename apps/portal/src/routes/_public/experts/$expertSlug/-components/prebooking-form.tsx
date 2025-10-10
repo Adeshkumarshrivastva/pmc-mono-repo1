@@ -31,14 +31,7 @@ const prebookingFormSchema = z.object({
   serviceMode: z.enum(BOOKING_LOCATION),
 })
 
-export default function PrebookingForm({
-  serviceId,
-  expertId,
-  phoneNumber,
-  expertSlug,
-  serviceSlug,
-  availableModes,
-}: PrebookingFormProps) {
+export default function PrebookingForm({ serviceId, expertId, phoneNumber, availableModes }: PrebookingFormProps) {
   invariant(serviceId, 'service id must be present')
   invariant(expertId, 'expert Id must be present')
 
@@ -76,7 +69,7 @@ export default function PrebookingForm({
           escape: false,
           ondismiss: () => {
             toast.error('Payment was not completed. Please try again.')
-            navigate({ to: '/experts/$expertSlug/$serviceSlug', params: { expertSlug, serviceSlug }, replace: true })
+            window.location.reload()
           },
         },
         handler: () => {
@@ -175,16 +168,6 @@ export default function PrebookingForm({
           />
         )}
 
-        {availableModes.length === 1 && (
-          <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
-            {SERVICE_MODE_CONFIG[availableModes[0]].icon &&
-              (() => {
-                const Icon = SERVICE_MODE_CONFIG[availableModes[0]].icon!
-                return <Icon className="size-4" />
-              })()}
-            <span className="text-sm font-medium">{SERVICE_MODE_CONFIG[availableModes[0]].label}</span>
-          </div>
-        )}
         {/* TODO: Render Custom Form Fields of Service */}
 
         <Button
