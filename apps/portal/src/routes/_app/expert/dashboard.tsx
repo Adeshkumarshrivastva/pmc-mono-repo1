@@ -19,5 +19,5 @@ export const Route = createFileRoute('/_app/expert/dashboard')({
 })
 
 function ExpertDashboard() {
-  return <div>Expert Dashboard</div>
+  return <div>Expert Dashboard (Coming soon)</div>
 }

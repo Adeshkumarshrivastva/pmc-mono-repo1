@@ -1,7 +1,7 @@
 import {
   CalendarDaysIcon,
-  ClipboardListIcon,
-  ClockIcon,
+  // ClipboardListIcon,
+  // ClockIcon,
   HomeIcon,
   LayoutDashboardIcon,
   UserIcon,
@@ -157,18 +157,18 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     path: '/patient/profile',
     availableForUserRoles: ['PATIENT'],
   },
-  {
-    type: 'link',
-    icon: ClipboardListIcon,
-    name: 'Services',
-    path: '/expert/services',
-    availableForUserRoles: ['EXPERT'],
-  },
-  {
-    type: 'link',
-    icon: ClockIcon,
-    name: 'Availability',
-    path: '/expert/availability',
-    availableForUserRoles: ['EXPERT'],
-  },
+  // {
+  //   type: 'link',
+  //   icon: ClipboardListIcon,
+  //   name: 'Services',
+  //   path: '/expert/services',
+  //   availableForUserRoles: ['EXPERT'],
+  // },
+  // {
+  //   type: 'link',
+  //   icon: ClockIcon,
+  //   name: 'Availability',
+  //   path: '/expert/availability',
+  //   availableForUserRoles: ['EXPERT'],
+  // },
 ]

@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_app/')({
       throw redirect({ to: '/login' })
     }
     if (session.data.user.role === 'EXPERT') {
-      throw redirect({ to: '/expert/dashboard' })
+      throw redirect({ to: '/expert/bookings' })
     }
     if (session.data.user.role === 'PATIENT') {
       // TODO: Change this to /patient/dashboard when that route is created
