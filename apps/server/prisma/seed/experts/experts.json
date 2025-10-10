@@ -21,7 +21,8 @@
     ],
     "gender": "MALE",
     "image": "https://positivemindcare.com/api/media/file/rahul_yadav-1.jpg",
-    "availableModes": ["VIRTUAL"]
+    "availableModes": ["VIRTUAL"],
+    "price": 1500
   },
   {
     "name": "Ms. Diksha Joshi",
@@ -34,7 +35,8 @@
     "expertise": ["Anxiety Disorders", "Depression", "Stress Management", "Self-Esteem Building", "Work-Life Balance"],
     "gender": "FEMALE",
     "image": "https://positivemindcare.com/api/media/file/Professional%20Photo-3.jpg",
-    "availableModes": ["VIRTUAL"]
+    "availableModes": ["VIRTUAL"],
+    "price": 1200
   },
   {
     "name": "Dr. Akriti Jaiswal",
@@ -47,7 +49,8 @@
     "expertise": ["Juvenile Psychiatry", "De-addiction", "Behavioral Disorders", "Youth Mental Health"],
     "gender": "FEMALE",
     "image": "https://positivemindcare.com/api/media/file/akriti-jaiswal.jpg",
-    "availableModes": ["VIRTUAL"]
+    "availableModes": ["VIRTUAL"],
+    "price": 1500
   },
   {
     "name": "Dr. Richa Trivedi",
@@ -70,7 +73,8 @@
     ],
     "gender": "FEMALE",
     "image": "https://positivemindcare.com/api/media/file/richa-trivedi.jpg",
-    "availableModes": ["VIRTUAL"]
+    "availableModes": ["VIRTUAL"],
+    "price": 1500
   },
   {
     "name": "Ms. Sheenu Chandna",
@@ -83,7 +87,8 @@
     "expertise": ["Anxiety Disorders", "Depression", "Stress Management", "OCD"],
     "gender": "FEMALE",
     "image": "",
-    "availableModes": ["VIRTUAL"]
+    "availableModes": ["VIRTUAL"],
+    "price": 1500
   },
   {
     "name": "Dr. Sakshi Saini",
@@ -104,7 +109,8 @@
     ],
     "gender": "FEMALE",
     "image": "https://positivemindcare.com/api/media/file/sakshi-saini.webp",
-    "availableModes": ["VIRTUAL", "IN_PERSON"]
+    "availableModes": ["VIRTUAL", "IN_PERSON"],
+    "price": 1500
   },
   {
     "name": "Dr. Rachana Maurya",
@@ -117,7 +123,8 @@
     "expertise": ["Trauma", "PTSD", "Psychometric Testing", "Rehabilitation Psychology"],
     "gender": "FEMALE",
     "image": "https://positivemindcare.com/api/media/file/Rachna_maurya-1.jpg",
-    "availableModes": ["VIRTUAL"]
+    "availableModes": ["VIRTUAL"],
+    "price": 2000
   },
   {
     "name": "Dr. Sanjina Bose",
@@ -130,7 +137,8 @@
     "expertise": ["Psychodiagnostic Assessment", "CBT", "Mindfulness", "Therapeutic Interventions"],
     "gender": "FEMALE",
     "image": "https://positivemindcare.com/api/media/file/sanjana-bose.jpg",
-    "availableModes": ["VIRTUAL"]
+    "availableModes": ["VIRTUAL"],
+    "price": 1800
   },
   {
     "name": "Dr. RP Singh",
@@ -143,6 +151,7 @@
     "expertise": ["Diabetes Management", "Skin Allergies", "Viral Fever Treatment", "Insulin-Free Treatment"],
     "gender": "MALE",
     "image": "https://positivemindcare.com/api/media/file/rp-singh.png",
-    "availableModes": ["IN_PERSON"]
+    "availableModes": ["IN_PERSON"],
+    "price": 1500
   }
 ]
