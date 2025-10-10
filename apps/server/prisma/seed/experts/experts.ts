@@ -26,6 +26,7 @@ export async function seedExperts(prisma: PrismaClient) {
         image: z.string(),
         experienceInYears: z.number().optional(),
         availableModes: z.enum(ServiceMode).array().min(1),
+        price: z.number().min(1000),
       })
       .parse(expert)
 
@@ -89,7 +90,7 @@ export async function seedExperts(prisma: PrismaClient) {
       await prisma.service.create({
         data: {
           name: 'Initial Consultation',
-          price: 1000,
+          price: validatedExpert.price,
           city: 'GURGAON',
           country: 'INDIA',
           expertId: createdExpert.id,
