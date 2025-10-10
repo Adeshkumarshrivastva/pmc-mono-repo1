@@ -86,7 +86,7 @@
     "bio": "I am a clinical psychologist with more than 5 years of experience. I use an eclectic, evidence-based approach in treating anxiety, depression, stress, and OCD. Her sessions provide a safe, non-judgmental space for personal growth and healing.",
     "expertise": ["Anxiety Disorders", "Depression", "Stress Management", "OCD"],
     "gender": "FEMALE",
-    "image": "",
+    "image": "https://positivemindcare.com/api/media/file/sheenu-chandra.png",
     "availableModes": ["VIRTUAL"],
     "price": 1500
   },
