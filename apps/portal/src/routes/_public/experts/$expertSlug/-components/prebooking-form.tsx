@@ -14,6 +14,7 @@ import { getErrorMessage, invariant } from '@/lib/utils'
 import { useBooking } from '../-hooks/use-booking'
 import { env } from '@/lib/env'
 import { loadRazorpayScript } from '@/lib/razorpay'
+import { SERVICE_MODE_CONFIG } from '@/lib/location'
 
 type PrebookingFormProps = {
   serviceId?: string
@@ -21,6 +22,7 @@ type PrebookingFormProps = {
   expertSlug: string
   serviceSlug: string
   phoneNumber: string
+  availableModes: BookingLocation[]
 }
 
 const prebookingFormSchema = z.object({
@@ -29,13 +31,7 @@ const prebookingFormSchema = z.object({
   serviceMode: z.enum(BOOKING_LOCATION),
 })
 
-export default function PrebookingForm({
-  serviceId,
-  expertId,
-  phoneNumber,
-  expertSlug,
-  serviceSlug,
-}: PrebookingFormProps) {
+export default function PrebookingForm({ serviceId, expertId, phoneNumber, availableModes }: PrebookingFormProps) {
   invariant(serviceId, 'service id must be present')
   invariant(expertId, 'expert Id must be present')
 
@@ -47,7 +43,7 @@ export default function PrebookingForm({
 
   const form = useForm({
     defaultValues: {
-      serviceMode: 'VIRTUAL',
+      serviceMode: availableModes[0],
     },
     resolver: zodResolver(prebookingFormSchema),
   })
@@ -73,7 +69,7 @@ export default function PrebookingForm({
           escape: false,
           ondismiss: () => {
             toast.error('Payment was not completed. Please try again.')
-            navigate({ to: '/experts/$expertSlug/$serviceSlug', params: { expertSlug, serviceSlug }, replace: true })
+            window.location.reload()
           },
         },
         handler: () => {
@@ -141,28 +137,37 @@ export default function PrebookingForm({
             )
           }}
         />
-        <FormField
-          name="serviceMode"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Location*</FormLabel>
-                <FormControl>
-                  <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
-                    {BOOKING_LOCATION.map((mode) => (
-                      <FormItem key={SERVICE_MODE_CONFIG[mode].value} className="flex items-center gap-3">
-                        <FormControl>
-                          <RadioGroupItem value={SERVICE_MODE_CONFIG[mode].value} />
-                        </FormControl>
-                        <FormLabel className="font-normal">{SERVICE_MODE_CONFIG[mode].label}</FormLabel>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </FormItem>
-            )
-          }}
-        />
+        {availableModes.length > 1 && (
+          <FormField
+            name="serviceMode"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Location*</FormLabel>
+                  <FormControl>
+                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
+                      {availableModes.map((mode) => {
+                        const Icon = SERVICE_MODE_CONFIG[mode].icon
+                        return (
+                          <FormItem key={SERVICE_MODE_CONFIG[mode].value} className="flex items-center gap-3">
+                            <FormControl>
+                              <RadioGroupItem value={SERVICE_MODE_CONFIG[mode].value} />
+                            </FormControl>
+                            <FormLabel className="font-normal flex items-center gap-2">
+                              {Icon && <Icon className="size-4" />}
+                              {SERVICE_MODE_CONFIG[mode].label}
+                            </FormLabel>
+                          </FormItem>
+                        )
+                      })}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )
+            }}
+          />
+        )}
+
         {/* TODO: Render Custom Form Fields of Service */}
 
         <Button
@@ -176,17 +181,6 @@ export default function PrebookingForm({
       </form>
     </Form>
   )
-}
-
-export const SERVICE_MODE_CONFIG: Record<BookingLocation, { label: string; value: BookingLocation }> = {
-  IN_PERSON: {
-    label: 'In Person',
-    value: 'IN_PERSON',
-  },
-  VIRTUAL: {
-    label: 'Virtual',
-    value: 'VIRTUAL',
-  },
 }
 
 type CreateBookingInput = {
