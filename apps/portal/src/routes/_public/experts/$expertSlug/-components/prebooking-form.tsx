@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
-import { MapPin, VideoIcon, type LucideIcon } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -15,6 +14,7 @@ import { getErrorMessage, invariant } from '@/lib/utils'
 import { useBooking } from '../-hooks/use-booking'
 import { env } from '@/lib/env'
 import { loadRazorpayScript } from '@/lib/razorpay'
+import { SERVICE_MODE_CONFIG } from '@/lib/location'
 
 type PrebookingFormProps = {
   serviceId?: string
@@ -22,7 +22,7 @@ type PrebookingFormProps = {
   expertSlug: string
   serviceSlug: string
   phoneNumber: string
-  availableModes?: BookingLocation[]
+  availableModes: BookingLocation[]
 }
 
 const prebookingFormSchema = z.object({
@@ -48,11 +48,9 @@ export default function PrebookingForm({
   const selectedSlot = getSelectedSlot()
   invariant(selectedSlot, 'selectedSlot must be present')
 
-  const modes = availableModes ?? BOOKING_LOCATION
-
   const form = useForm({
     defaultValues: {
-      serviceMode: modes.length === 1 ? modes[0] : 'VIRTUAL',
+      serviceMode: availableModes[0],
     },
     resolver: zodResolver(prebookingFormSchema),
   })
@@ -146,7 +144,7 @@ export default function PrebookingForm({
             )
           }}
         />
-        {modes.length > 1 && (
+        {availableModes.length > 1 && (
           <FormField
             name="serviceMode"
             render={({ field }) => {
@@ -155,7 +153,7 @@ export default function PrebookingForm({
                   <FormLabel>Location*</FormLabel>
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
-                      {modes.map((mode) => {
+                      {availableModes.map((mode) => {
                         const Icon = SERVICE_MODE_CONFIG[mode].icon
                         return (
                           <FormItem key={SERVICE_MODE_CONFIG[mode].value} className="flex items-center gap-3">
@@ -177,14 +175,14 @@ export default function PrebookingForm({
           />
         )}
 
-        {modes.length === 1 && (
+        {availableModes.length === 1 && (
           <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
-            {SERVICE_MODE_CONFIG[modes[0]].icon &&
+            {SERVICE_MODE_CONFIG[availableModes[0]].icon &&
               (() => {
-                const Icon = SERVICE_MODE_CONFIG[modes[0]].icon!
+                const Icon = SERVICE_MODE_CONFIG[availableModes[0]].icon!
                 return <Icon className="size-4" />
               })()}
-            <span className="text-sm font-medium">{SERVICE_MODE_CONFIG[modes[0]].label}</span>
+            <span className="text-sm font-medium">{SERVICE_MODE_CONFIG[availableModes[0]].label}</span>
           </div>
         )}
         {/* TODO: Render Custom Form Fields of Service */}
@@ -200,22 +198,6 @@ export default function PrebookingForm({
       </form>
     </Form>
   )
-}
-
-export const SERVICE_MODE_CONFIG: Record<
-  BookingLocation,
-  { label: string; value: BookingLocation; icon?: LucideIcon }
-> = {
-  IN_PERSON: {
-    label: 'In Person',
-    value: 'IN_PERSON',
-    icon: MapPin,
-  },
-  VIRTUAL: {
-    label: 'Virtual',
-    value: 'VIRTUAL',
-    icon: VideoIcon,
-  },
 }
 
 type CreateBookingInput = {

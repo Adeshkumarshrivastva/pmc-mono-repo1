@@ -80,8 +80,6 @@ function ExpertPage() {
         experienceInYears,
       } = data.expert
 
-      const filteredServices = servicesProvided || []
-
       const prices =
         servicesProvided.map((service) => service.price).filter((price): price is number => price != null) || []
 
@@ -241,7 +239,7 @@ function ExpertPage() {
 
                 {servicesProvided && servicesProvided.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {filteredServices.map((service, index) => (
+                    {servicesProvided.map((service, index) => (
                       <ServiceCard
                         key={service.id || index}
                         service={service}
@@ -263,7 +261,7 @@ function ExpertPage() {
                   </div>
                 )}
 
-                {servicesProvided && servicesProvided.length > 0 && filteredServices.length === 0 ? (
+                {servicesProvided && servicesProvided.length > 0 && servicesProvided.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-muted-foreground">No services available for the selected mode.</p>
                   </div>
@@ -284,7 +282,7 @@ function ServiceCard({
   service: ExpertWithDetails['servicesProvided'][number]
   onBook: () => void
 }) {
-  const availableModes = [...new Set(service?.availableModes || [])]
+  const availableModes = Object.keys(SERVICE_MODE_CONFIG) as ServiceMode[]
 
   return (
     <div className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-all duration-200 hover:border-primary/20">
@@ -305,11 +303,8 @@ function ServiceCard({
       </div>
 
       <div className="flex gap-2 mb-3 flex-wrap">
-        {availableModes.map((mode) => {
-          const modeConfig = SERVICE_MODE_CONFIG[mode as ServiceMode]
-          if (!modeConfig) {
-            return null
-          }
+        {availableModes.map((mode: ServiceMode) => {
+          const modeConfig = SERVICE_MODE_CONFIG[mode]
 
           const ServiceIcon = modeConfig.icon
 
@@ -318,7 +313,7 @@ function ServiceCard({
               key={mode}
               className="flex items-center gap-1 px-2 py-1 bg-muted/50 border border-border rounded-md text-sm"
             >
-              {ServiceIcon && <ServiceIcon className="w-3 h-3 text-muted-foreground" />}
+              {<ServiceIcon className="w-3 h-3 text-muted-foreground" />}
               <span className="text-foreground">{modeConfig.label}</span>
             </div>
           )
