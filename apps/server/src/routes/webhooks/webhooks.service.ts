@@ -7,7 +7,6 @@ import { prisma } from '../../lib/db'
 import type { PaymentConfirmationInput } from './webhooks.input'
 import BookingConfirmationForExpert from '../../emails/booking-confirmation-expert'
 import BookingConfirmationForPatient from '../../emails/booking-confirmation-patient'
-import { env } from '../../lib/env'
 import { sendWhatsappMessageByTemplate } from '../../lib/whatsapp'
 import { config } from '../../config'
 import { createLogger } from '../../lib/logger'
@@ -81,55 +80,65 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
     // TODO: Create Google Calendar event
 
     const emailPromises = [
-      sesClient.send(
-        new SendEmailCommand({
-          FromEmailAddress: config.email.emailSender,
-          Destination: {
-            ToAddresses: [booking.expert.user.email],
-            CcAddresses: isDevelopment ? [] : ['helpdesk@positivemindcare.com'],
-          },
-          Content: {
-            Simple: {
-              Subject: {
-                Data: `New Booking Confirmation - ${booking.serviceName}`,
-              },
-              Body: {
-                Html: {
-                  Data: await render(
-                    BookingConfirmationForExpert({ booking, orderId: existingPayment.razorpayOrderId }),
-                  ),
-                },
-              },
-            },
-          },
-        }),
-      ),
-    ]
-
-    if (booking.patientEmail) {
-      emailPromises.push(
-        sesClient.send(
+      sesClient
+        .send(
           new SendEmailCommand({
-            FromEmailAddress: env.EMAIL_SENDER,
+            FromEmailAddress: config.email.emailSender,
             Destination: {
-              ToAddresses: [booking.patientEmail],
+              ToAddresses: [booking.expert.user.email],
+              CcAddresses: isDevelopment ? [] : ['helpdesk@positivemindcare.com'],
             },
             Content: {
               Simple: {
                 Subject: {
-                  Data: `Booking Confirmed - ${booking.serviceName} with ${booking.expert.user.name}`,
+                  Data: `New Booking Confirmation - ${booking.serviceName}`,
                 },
                 Body: {
                   Html: {
                     Data: await render(
-                      BookingConfirmationForPatient({ booking, orderId: existingPayment.razorpayOrderId }),
+                      BookingConfirmationForExpert({ booking, orderId: existingPayment.razorpayOrderId }),
                     ),
                   },
                 },
               },
             },
           }),
-        ),
+        )
+        .catch((error) => {
+          logger.error(`Failed to send booking confirmation email to expert: ${error}`)
+          return null
+        }),
+    ]
+
+    if (booking.patientEmail) {
+      emailPromises.push(
+        sesClient
+          .send(
+            new SendEmailCommand({
+              FromEmailAddress: config.email.emailSender,
+              Destination: {
+                ToAddresses: [booking.patientEmail],
+              },
+              Content: {
+                Simple: {
+                  Subject: {
+                    Data: `Booking Confirmed - ${booking.serviceName} with ${booking.expert.user.name}`,
+                  },
+                  Body: {
+                    Html: {
+                      Data: await render(
+                        BookingConfirmationForPatient({ booking, orderId: existingPayment.razorpayOrderId }),
+                      ),
+                    },
+                  },
+                },
+              },
+            }),
+          )
+          .catch((error) => {
+            logger.error(`Failed to send booking confirmation email to patient: ${error}`)
+            return null
+          }),
       )
     }
 
@@ -143,7 +152,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
         templateValues: [booking.expert.user.name ?? '', booking.serviceName, booking.patientName ?? ''],
         urlParams: [booking.id],
       }).catch((error) => {
-        logger.error('Failed to send WhatsApp to expert:', error)
+        logger.error(`Failed to send WhatsApp to expert: ${error}`)
         return null
       }),
     )
@@ -152,14 +161,10 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
       sendWhatsappMessageByTemplate({
         to: booking.patient.user.phoneNumber!,
         templateName: 'new_booking_confirmation',
-        templateValues: [
-          booking.patient.user.name ?? 'Patient',
-          booking.serviceName,
-          booking.expert.user.name ?? 'Expert',
-        ],
+        templateValues: [booking.patientName, booking.serviceName, booking.expert.user.name ?? 'Expert'],
         urlParams: [booking.id],
       }).catch((error) => {
-        logger.error('Failed to send WhatsApp to patient:', error)
+        logger.error(`Failed to send WhatsApp to patient: ${error}`)
         return null
       }),
     )
