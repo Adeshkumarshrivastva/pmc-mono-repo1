@@ -69,6 +69,7 @@ export async function createGoogleCalendarEvent(params: CreateMeetLinkParams): P
         { method: 'popup', minutes: 10 },
       ],
     },
+    location: params.inPersonLocation ?? '',
   }
 
   const response = await calendar.events.insert({
