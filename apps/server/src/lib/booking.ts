@@ -2,22 +2,6 @@ import dayjs from './dayjs'
 import type { DayOfWeek } from '../generated/prisma'
 import { minutesToHHMM } from './date'
 
-import { type Booking, type Expert, type Service, type Patient, type User, ServiceMode } from '../generated/prisma'
-
-type BookingWithRelations = Booking & {
-  expert: Expert & {
-    user: User
-  }
-  patient: Patient & {
-    user: User
-  }
-  service: Service
-}
-
-type BookingConfirmationProps = {
-  booking: BookingWithRelations
-}
-
 export const DAY_MAP: Record<DayOfWeek, number> = {
   SUNDAY: 0,
   MONDAY: 1,
@@ -62,24 +46,4 @@ export function formatCurrency(amount: number, currency: string) {
     style: 'currency',
     currency: currency,
   }).format(amount)
-}
-
-export function getInPersonAddress({ booking }: BookingConfirmationProps) {
-  if (booking.mode !== ServiceMode.IN_PERSON || !booking.inPersonLocation) {
-    return null
-  }
-
-  const location = booking.inPersonLocation as Record<string, string>
-  const address = location.address || ''
-  const city = location.city || ''
-  return `${address}${address && city ? ', ' : ''}${city}`
-}
-
-export function getVirtualMeetingLink({ booking }: BookingConfirmationProps) {
-  if (booking.mode !== ServiceMode.VIRTUAL || !booking.virtualLocation) {
-    return null
-  }
-
-  const location = booking.virtualLocation as Record<string, string>
-  return location.meetingLink || null
 }

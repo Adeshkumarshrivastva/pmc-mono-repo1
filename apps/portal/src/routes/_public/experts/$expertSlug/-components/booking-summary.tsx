@@ -64,7 +64,7 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
                 const modeConfig = SERVICE_MODE_CONFIG[availableMode]
                 const Icon = modeConfig.icon
                 return (
-                  <div key={availableMode} className="flex items-center gap-1.5">
+                  <div key={availableMode} className="flex items-center gap-2">
                     <div className="flex items-center gap-2">
                       <Icon className="size-5 text-muted-foreground" />
                       <div className="text-muted-foreground font-bold text-sm">{modeConfig.label}</div>

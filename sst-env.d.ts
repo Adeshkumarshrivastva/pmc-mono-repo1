@@ -17,11 +17,23 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    GOOGLE_CALENDAR_EMAIL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     GOOGLE_CLIENT_ID: {
       type: 'sst.sst.Secret'
       value: string
     }
     GOOGLE_CLIENT_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_SERVICE_ACCOUNT_EMAIL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: {
       type: 'sst.sst.Secret'
       value: string
     }
