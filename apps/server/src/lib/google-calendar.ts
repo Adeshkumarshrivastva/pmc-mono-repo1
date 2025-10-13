@@ -30,6 +30,7 @@ interface CreateMeetLinkParams {
   endDateTime: Date
   attendees?: string[]
   isVirtual?: boolean
+  inPersonLocation?: string
 }
 
 export async function createGoogleCalendarEvent(params: CreateMeetLinkParams): Promise<{
@@ -60,11 +61,20 @@ export async function createGoogleCalendarEvent(params: CreateMeetLinkParams): P
           },
         }
       : undefined,
+    reminders: {
+      useDefault: false,
+      overrides: [
+        { method: 'email', minutes: 30 }, // Reminder 30 minutes before
+        { method: 'email', minutes: 1440 }, // Reminder 24 hours before
+        { method: 'popup', minutes: 10 },
+      ],
+    },
   }
 
   const response = await calendar.events.insert({
     calendarId: 'primary',
     conferenceDataVersion: 1,
+    sendNotifications: true,
     requestBody: event,
   })
 

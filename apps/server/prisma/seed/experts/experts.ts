@@ -39,6 +39,7 @@ export async function seedExperts(prisma: PrismaClient) {
           name: validatedExpert.name,
           errorMessage: ' User with mobile ${validatedExpert.phoneNumber} already exists. Skipping...',
         })
+        continue
       }
 
       const user = await prisma.user.create({
@@ -96,6 +97,12 @@ export async function seedExperts(prisma: PrismaClient) {
           expertId: createdExpert.id,
           slug: 'initial-consultation',
           availableModes: validatedExpert.availableModes,
+          inPersonLocation: validatedExpert.availableModes.includes('IN_PERSON')
+            ? {
+                address: '804, Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018',
+                googleMapLink: 'https://maps.app.goo.gl/K3FgwML8LxX6ZyEm6',
+              }
+            : null,
         },
       })
     } catch (error) {

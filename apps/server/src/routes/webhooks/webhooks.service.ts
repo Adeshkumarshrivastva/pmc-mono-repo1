@@ -12,6 +12,7 @@ import { config } from '../../config'
 import { createLogger } from '../../lib/logger'
 import { createGoogleCalendarEvent } from '../../lib/google-calendar'
 import { getErrorMessage } from '../../lib/utils'
+import { getInPersonLocation } from '../../lib/location'
 
 const sesClient = new SESv2Client()
 
@@ -76,25 +77,29 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
 
     //  Create Google Calendar event
     let googleCalendarEvent: { eventId: string; meetLink: string | null } | null = null
-    try {
-      const attendees = [booking.expert.user.email]
-      if (booking.patientEmail) {
-        attendees.push(booking.patientEmail)
+    if (!isDevelopment) {
+      try {
+        const attendees = [booking.expert.user.email]
+        if (booking.patientEmail) {
+          attendees.push(booking.patientEmail)
+        }
+
+        googleCalendarEvent = await createGoogleCalendarEvent({
+          summary: booking.serviceName,
+          // TODO: add more details - reschedule link, expert and patient details
+          description: `Booking with ${booking.expert.user.name} for ${booking.serviceName}`,
+          startDateTime: booking.startDateTime,
+          endDateTime: booking.endDateTime,
+          attendees,
+          isVirtual: booking.mode === 'VIRTUAL',
+          inPersonLocation: getInPersonLocation(booking.inPersonLocation),
+        })
+
+        logger.info(`Google Calendar Event created: eventId=${googleCalendarEvent.eventId}`)
+      } catch (error) {
+        logger.error(`Failed to create Google Calendar event: ${getErrorMessage(error)} [bookingId=${bookingId}]`)
+        // Continue processing - we'll update the booking without calendar event
       }
-
-      googleCalendarEvent = await createGoogleCalendarEvent({
-        summary: booking.serviceName,
-        description: `Booking with ${booking.expert.user.name} for ${booking.serviceName}`,
-        startDateTime: booking.startDateTime,
-        endDateTime: booking.endDateTime,
-        attendees,
-        isVirtual: booking.mode === 'VIRTUAL',
-      })
-
-      logger.info(`Google Calendar Event created: eventId=${googleCalendarEvent.eventId}`)
-    } catch (error) {
-      logger.error(`Failed to create Google Calendar event: ${getErrorMessage(error)} [bookingId=${bookingId}]`)
-      // Continue processing - we'll update the booking without calendar event
     }
 
     //  Update booking and payment status in a transaction

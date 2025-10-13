@@ -51,12 +51,12 @@ export default $config({
     const GoogleServiceAccountPrivateKey = new sst.Secret('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY')
     const GoogleCalendarEmail = new sst.Secret('GOOGLE_CALENDAR_EMAIL')
 
-    const SenderEmail = new sst.aws.Email('SenderEmail', {
-      sender:
-        $app.stage === 'production'
-          ? 'no-reply@positivemindcare.com'
-          : $interpolate`no-reply-${$app.stage}@positivemindcare.com`,
-    })
+    const SenderEmail =
+      $app.stage === 'production'
+        ? new sst.aws.Email('SenderEmail', {
+            sender: 'no-reply@positivemindcare.com',
+          })
+        : sst.aws.Email.get('SenderEmail', 'no-reply-dev@positivemindcare.com')
 
     new sst.aws.Function('PmcHonoServer', {
       architecture: 'arm64',
