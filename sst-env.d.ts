@@ -66,6 +66,14 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    SMS_SERVICE_PASSWORD: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    SMS_SERVICE_USERID: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     SenderEmail: {
       configSet: string
       sender: string
