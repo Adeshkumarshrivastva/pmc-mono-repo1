@@ -38,6 +38,11 @@ export const configSchema = z.object({
   email: z.object({
     emailSender: z.string(),
   }),
+  google: z.object({
+    serviceAccountEmail: z.string(),
+    serviceACcountPrivateKey: z.string(),
+    calendarEmail: z.string(),
+  }),
   browserlessWsUrl: z.string(),
 })
 
@@ -66,6 +71,11 @@ function getConfig() {
         apiKey: env.WHATSAPP_API_KEY_SECRET,
         licenceNumber: env.WHATSAPP_LICENCE_NUMBER_SECRET,
         testNumber: env.WHATSAPP_TEST_NUMBER_SECRET,
+      },
+      google: {
+        serviceAccountEmail: env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+        serviceACcountPrivateKey: env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
+        calendarEmail: env.GOOGLE_CALENDAR_EMAIL,
       },
       email: {
         emailSender: env.EMAIL_SENDER,

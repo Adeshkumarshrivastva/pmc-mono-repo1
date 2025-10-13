@@ -47,6 +47,9 @@ export default $config({
     const WhatsappLicenceNumberSecret = new sst.Secret('WHATSAPP_LICENCE_NUMBER_SECRET')
     const WhatsappTestNumberSecret = new sst.Secret('WHATSAPP_TEST_NUMBER_SECRET')
     const BrowserlessWsEndpoint = new sst.Secret('BROWSERLESS_WS_ENDPOINT')
+    const GoogleServiceAccountEmail = new sst.Secret('GOOGLE_SERVICE_ACCOUNT_EMAIL')
+    const GoogleServiceAccountPrivateKey = new sst.Secret('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY')
+    const GoogleCalendarEmail = new sst.Secret('GOOGLE_CALENDAR_EMAIL')
 
     const SenderEmail = new sst.aws.Email('SenderEmail', {
       sender:
@@ -78,6 +81,9 @@ export default $config({
         WHATSAPP_TEST_NUMBER_SECRET: WhatsappTestNumberSecret.value,
         EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
         BROWSERLESS_WS_ENDPOINT: BrowserlessWsEndpoint.value,
+        GOOGLE_SERVICE_ACCOUNT_EMAIL: GoogleServiceAccountEmail.value,
+        GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: GoogleServiceAccountPrivateKey.value,
+        GOOGLE_CALENDAR_EMAIL: GoogleCalendarEmail.value,
       },
       copyFiles: [
         {

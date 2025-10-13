@@ -25,6 +25,14 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    GOOGLE_SERVICE_ACCOUNT_EMAIL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     JWT_SECRET: {
       type: 'sst.sst.Secret'
       value: string
