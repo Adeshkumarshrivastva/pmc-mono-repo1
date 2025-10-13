@@ -151,3 +151,16 @@ export const medicineSchema = z.object({
 })
 
 export type Medicine = z.infer<typeof medicineSchema>
+
+export const expertProfileInput = z.object({
+  name: z.string().min(3),
+  qualifications: z.string().optional(),
+  bio: z.string().optional(),
+  gender: z.enum(['MALE', 'FEMALE']),
+  city: z.string(),
+  country: z.string(),
+  timezone: z.string(),
+  expertise: z.array(z.string()),
+})
+
+export type ExpertProfileInput = z.infer<typeof expertProfileInput>

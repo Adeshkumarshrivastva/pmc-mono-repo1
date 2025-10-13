@@ -12,6 +12,7 @@ import {
   type ExpertBookingsSearchQuery,
   type CreatePrescriptionInput,
   type UpdatePrescriptionInput,
+  type ExpertProfileInput,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 import {
@@ -605,4 +606,33 @@ export async function downloadPrescription(c: C, prescriptionId: string) {
   } catch (error) {
     return c.json({ error: `Failed to download prescription - ${getErrorMessage(error)}` })
   }
+}
+
+export async function getExpert(c: C) {
+  console.log('api hitting!!!!!')
+  const userId = c.var.user?.id
+  if (!userId) return c.json({ error: 'Unauthorized' }, 400)
+  console.log(`user id --- ${userId}`)
+  const expert = await prisma.expert.findUnique({
+    where: { userId },
+  })
+
+  if (!expert) return c.json({ error: 'Expert profile not found' }, 404)
+
+  return c.json(expert)
+}
+
+export async function updateExpert(c: C, data: ExpertProfileInput) {
+  const userId = c.var.user?.id
+  if (!userId) return c.json({ error: 'Unauthorized' }, 400)
+
+  const expert = await prisma.expert.findUnique({ where: { userId } })
+  if (!expert) return c.json({ error: 'Expert profile not found' }, 404)
+
+  const updated = await prisma.expert.update({
+    where: { id: expert.id },
+    data,
+  })
+
+  return c.json(updated)
 }
