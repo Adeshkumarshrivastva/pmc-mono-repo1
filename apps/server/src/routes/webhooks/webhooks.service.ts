@@ -97,7 +97,7 @@ export async function paymentConfirmation(c: C, input: PaymentConfirmationInput)
       // Continue processing - we'll update the booking without calendar event
     }
 
-    // Step 4: Update booking and payment status in a transaction
+    //  Update booking and payment status in a transaction
     await prisma.$transaction([
       prisma.booking.update({
         where: {
