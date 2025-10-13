@@ -7,6 +7,7 @@ import { config } from '../config'
 import { invariant } from './utils'
 import { sendWhatsappMessageByTemplate } from './whatsapp'
 import { rootLogger } from './logger'
+import { sendOTPMessage } from './sms'
 
 invariant(config, 'config should be present')
 
@@ -28,16 +29,17 @@ export const auth = betterAuth({
   plugins: [
     phoneNumber({
       sendOTP: async ({ phoneNumber, code }) => {
-        rootLogger.info(`Sending OTP code ${code} to phone number ${phoneNumber}`)
-
         if (!isDevelopment) {
+          await sendOTPMessage({ to: phoneNumber, otp: code })
+
           await sendWhatsappMessageByTemplate({
             to: phoneNumber,
             templateName: 'verify_user_otp',
             templateValues: [code],
             urlParams: [code],
           })
-          // TODO: Implement sending OTP code via SMS
+        } else {
+          rootLogger.info(`Sending OTP code ${code} to phone number ${phoneNumber}`)
         }
       },
       signUpOnVerification: {

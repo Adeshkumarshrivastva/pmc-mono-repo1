@@ -22,6 +22,8 @@ export const env = z
     WHATSAPP_LICENCE_NUMBER_SECRET: z.string(),
     WHATSAPP_TEST_NUMBER_SECRET: z.string(),
     EMAIL_SENDER: z.string(),
+    SMS_SERVICE_USERID: z.string(),
+    SMS_SERVICE_PASSWORD: z.string(),
     BROWSERLESS_WS_ENDPOINT: z.string(),
   })
   .parse(process.env)
