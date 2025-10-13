@@ -38,6 +38,10 @@ export const configSchema = z.object({
   email: z.object({
     emailSender: z.string(),
   }),
+  sms: z.object({
+    userId: z.string(),
+    password: z.string(),
+  }),
   browserlessWsUrl: z.string(),
 })
 
@@ -69,6 +73,10 @@ function getConfig() {
       },
       email: {
         emailSender: env.EMAIL_SENDER,
+      },
+      sms: {
+        userId: env.SMS_SERVICE_USERID,
+        password: env.SMS_SERVICE_PASSWORD,
       },
       browserlessWsUrl: env.BROWSERLESS_WS_ENDPOINT,
     })

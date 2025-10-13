@@ -47,6 +47,8 @@ export default $config({
     const WhatsappLicenceNumberSecret = new sst.Secret('WHATSAPP_LICENCE_NUMBER_SECRET')
     const WhatsappTestNumberSecret = new sst.Secret('WHATSAPP_TEST_NUMBER_SECRET')
     const BrowserlessWsEndpoint = new sst.Secret('BROWSERLESS_WS_ENDPOINT')
+    const SmsServiceUserId = new sst.Secret('SMS_SERVICE_USERID')
+    const SmsServicePassword = new sst.Secret('SMS_SERVICE_PASSWORD')
 
     const SenderEmail = new sst.aws.Email('SenderEmail', {
       sender:
@@ -78,6 +80,8 @@ export default $config({
         WHATSAPP_TEST_NUMBER_SECRET: WhatsappTestNumberSecret.value,
         EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
         BROWSERLESS_WS_ENDPOINT: BrowserlessWsEndpoint.value,
+        SMS_SERVICE_USERID: SmsServiceUserId.value,
+        SMS_SERVICE_PASSWORD: SmsServicePassword.value,
       },
       copyFiles: [
         {
