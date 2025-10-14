@@ -123,10 +123,9 @@ function ExpertPage() {
                     </div>
 
                     <div className="flex-1">
-                      <div className="mb-4">
-                        <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{name}</h1>
+                      <div className="mb-4 ">
+                        <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1 ">{name}</h1>
                         <p className="text-lg text-primary font-semibold mb-2">{EXPERT_TYPE_CONFIG[type]?.label}</p>
-
                         {avgRating && avgRating > 0 ? (
                           <div className="flex items-center gap-2 mb-3">
                             <div className="flex items-center">
@@ -143,11 +142,11 @@ function ExpertPage() {
                             <span className="text-sm font-semibold text-foreground ml-1">{avgRating.toFixed(1)}</span>
                           </div>
                         ) : null}
-
-                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
                           {experienceInYears ? (
-                            <div className="text-center lg:text-left">
+                            <div>
                               <div className="flex items-center gap-1 text-muted-foreground mb-1">
+                                <Clock className="size-3" />
                                 <span className="text-sm">Experience</span>
                               </div>
                               <p className="text-sm font-semibold text-primary">{experienceInYears}</p>
@@ -155,9 +154,9 @@ function ExpertPage() {
                           ) : null}
 
                           {gender && (
-                            <div className="text-center lg:text-left">
+                            <div>
                               <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                                <User className="w-4 h-4" />
+                                <User className="size-3" />
                                 <span className="text-sm">Gender</span>
                               </div>
                               <p className="text-sm font-semibold text-foreground capitalize">{gender.toLowerCase()}</p>
@@ -165,17 +164,19 @@ function ExpertPage() {
                           )}
 
                           {minPrice > 0 ? (
-                            <div className="text-center lg:text-left">
+                            <div>
                               <div className="flex items-center gap-1 text-muted-foreground mb-1">
                                 <span className="text-sm">Starting at</span>
                               </div>
-                              <p className="text-sm font-semibold text-primary">{`${CURRENCY_CONFIG['INR'].symbol} ${minPrice}`}</p>
+                              <p className="text-sm font-semibold text-primary">
+                                {`${CURRENCY_CONFIG['INR'].symbol} ${minPrice}`}
+                              </p>
                             </div>
                           ) : null}
 
-                          <div className="text-center lg:text-left">
+                          <div>
                             <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                              <MapPin className="w-4 h-4" />
+                              <MapPin className="size-3" />
                               <span className="text-sm">Location</span>
                             </div>
                             <p className="text-sm font-semibold text-foreground">
@@ -183,7 +184,6 @@ function ExpertPage() {
                             </p>
                           </div>
                         </div>
-
                         {expertise && Array.isArray(expertise) && expertise.length > 0 && (
                           <div className="mb-4">
                             <div className="flex items-center gap-1 text-muted-foreground mb-2">
@@ -204,7 +204,6 @@ function ExpertPage() {
                             </div>
                           </div>
                         )}
-
                         {qualifications ? (
                           <div className="mb-4">
                             <h3 className="text-sm text-muted-foreground">Qualifications</h3>
