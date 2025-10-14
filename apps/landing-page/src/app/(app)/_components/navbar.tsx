@@ -33,13 +33,7 @@ export default function Navbar({ services }: NavbarProps) {
 
   const handleBooking = () => document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
 
-  const SHOW_BOOKING_BUTTON_ON_ROUTES = [
-    '/',
-    '/deep-tms',
-    '/about-us',
-    '/services',
-    ...(services?.map((service) => `/services/${service.slug}`) || []),
-  ]
+  const SHOW_BOOKING_BUTTON_ON_ROUTES = ['/', '/deep-tms', '/about-us', '/services']
 
   const showBookingButton =
     pathname === '/' || SHOW_BOOKING_BUTTON_ON_ROUTES.some((route) => route !== '/' && pathname.startsWith(route))
