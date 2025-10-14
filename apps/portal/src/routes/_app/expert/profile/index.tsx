@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Combobox } from '@/components/ui/combo-box'
 import { honoClient } from '@/lib/hono-client'
-import { genderOptions, generateSpecializationOptions } from '@/lib/utils'
+import { genderOptions, generateSpecializationOptions } from '@/lib/expert'
 
 const profileFormSchema = z.object({
   name: z.string().min(3),
@@ -37,15 +37,14 @@ export const Route = createFileRoute('/_app/expert/profile/')({
 
     const expert = await expertResponse.json()
     const allExperts = await allExpertsResponse.json()
-    const specializationOptions = generateSpecializationOptions(allExperts.experts)
-    return { expert, specializationOptions }
+    return { expert, allExperts }
   },
   loader: ({ context }) => context,
   component: ExpertProfile,
 })
 
 function ExpertProfile() {
-  const { expert, specializationOptions } = Route.useLoaderData()
+  const { expert, allExperts } = Route.useLoaderData()
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -69,17 +68,22 @@ function ExpertProfile() {
       }
       return await res.json()
     },
-    onSuccess: () => toast.success('Profile updated successfully'),
-    onError: (err) => toast.error(err?.message || 'Failed to update profile'),
+    onSuccess: () => {
+      toast.success('Profile updated successfully')
+    },
+    onError: (err) => {
+      toast.error(err?.message || 'Failed to update profile')
+    },
   })
-
-  function onSubmit(values: ProfileFormValues) {
-    updateProfileMutation.mutate(values)
-  }
 
   return (
     <Form {...form}>
-      <form className="w-full max-w-4xl space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="w-full max-w-4xl space-y-6"
+        onSubmit={form.handleSubmit((values) => {
+          updateProfileMutation.mutate(values)
+        })}
+      >
         <h1 className="text-2xl font-semibold mb-8">Profile</h1>
 
         <div className="flex items-center space-x-4 mb-8">
@@ -134,7 +138,7 @@ function ExpertProfile() {
                 <Combobox
                   multiple
                   placeholder="Select Expertise"
-                  options={specializationOptions || []}
+                  options={generateSpecializationOptions(allExperts.experts)}
                   value={field.value}
                   onValueChange={(val) => field.onChange(val)}
                   className="w-full"

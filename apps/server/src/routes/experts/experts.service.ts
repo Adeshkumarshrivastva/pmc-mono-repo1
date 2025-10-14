@@ -609,25 +609,31 @@ export async function downloadPrescription(c: C, prescriptionId: string) {
 }
 
 export async function getExpert(c: C) {
-  console.log('api hitting!!!!!')
   const userId = c.var.user?.id
-  if (!userId) return c.json({ error: 'Unauthorized' }, 400)
-  console.log(`user id --- ${userId}`)
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 400)
+  }
   const expert = await prisma.expert.findUnique({
     where: { userId },
   })
 
-  if (!expert) return c.json({ error: 'Expert profile not found' }, 404)
+  if (!expert) {
+    return c.json({ error: 'Expert profile not found' }, 404)
+  }
 
   return c.json(expert)
 }
 
 export async function updateExpert(c: C, data: ExpertProfileInput) {
   const userId = c.var.user?.id
-  if (!userId) return c.json({ error: 'Unauthorized' }, 400)
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 400)
+  }
 
   const expert = await prisma.expert.findUnique({ where: { userId } })
-  if (!expert) return c.json({ error: 'Expert profile not found' }, 404)
+  if (!expert) {
+    return c.json({ error: 'Expert profile not found' }, 404)
+  }
 
   const updated = await prisma.expert.update({
     where: { id: expert.id },
