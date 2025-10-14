@@ -1,6 +1,9 @@
 import { calendar, type calendar_v3 } from '@googleapis/calendar'
 import { JWT } from 'google-auth-library'
+import { Resource } from 'sst'
 import { config } from '../config'
+
+const isDevelopment = Resource.App.stage !== 'production'
 
 export function getGoogleCalendarClient() {
   const clientEmail = config.google.serviceAccountEmail
@@ -25,12 +28,14 @@ export function getGoogleCalendarClient() {
 
 interface CreateMeetLinkParams {
   summary: string
+  bookingId: string
   description?: string
   startDateTime: Date
   endDateTime: Date
   attendees?: string[]
   isVirtual?: boolean
   inPersonLocation?: string
+  organizerEmail: string
 }
 
 export async function createGoogleCalendarEvent(params: CreateMeetLinkParams): Promise<{
@@ -51,10 +56,15 @@ export async function createGoogleCalendarEvent(params: CreateMeetLinkParams): P
       timeZone: 'UTC',
     },
     attendees: params.attendees?.map((email) => ({ email })),
+    organizer: {
+      email: params.organizerEmail,
+    },
+    guestsCanInviteOthers: true,
+    guestsCanSeeOtherGuests: true,
     conferenceData: params.isVirtual
       ? {
           createRequest: {
-            requestId: `${Date.now()}-${Math.random().toString(36).substring(7)}`,
+            requestId: `${params.bookingId}-${Date.now()}`,
             conferenceSolutionKey: {
               type: 'hangoutsMeet',
             },
@@ -69,11 +79,11 @@ export async function createGoogleCalendarEvent(params: CreateMeetLinkParams): P
         { method: 'popup', minutes: 10 },
       ],
     },
-    location: params.inPersonLocation ?? '',
+    location: params.isVirtual ? 'Virtual (Google Meet)' : params.inPersonLocation,
   }
 
   const response = await calendar.events.insert({
-    calendarId: 'primary',
+    calendarId: isDevelopment ? config.google.calendarEmail : 'primary',
     conferenceDataVersion: 1,
     sendNotifications: true,
     requestBody: event,
@@ -99,7 +109,7 @@ export async function deleteGoogleCalendarEvent(eventId: string): Promise<void> 
   const calendar = getGoogleCalendarClient()
 
   await calendar.events.delete({
-    calendarId: 'primary',
+    calendarId: isDevelopment ? config.google.calendarEmail : 'primary',
     eventId,
   })
 }

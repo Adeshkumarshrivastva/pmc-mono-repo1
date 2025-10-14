@@ -97,6 +97,7 @@ export async function seedExperts(prisma: PrismaClient) {
           expertId: createdExpert.id,
           slug: 'initial-consultation',
           availableModes: validatedExpert.availableModes,
+          paymentMode: validatedExpert.availableModes.includes('IN_PERSON') ? 'OFFLINE' : 'ONLINE',
           inPersonLocation: validatedExpert.availableModes.includes('IN_PERSON')
             ? {
                 address: '804, Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018',
