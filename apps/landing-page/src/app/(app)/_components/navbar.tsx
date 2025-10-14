@@ -33,6 +33,17 @@ export default function Navbar({ services }: NavbarProps) {
 
   const handleBooking = () => document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
 
+  const SHOW_BOOKING_BUTTON_ON_ROUTES = [
+    '/',
+    '/deep-tms',
+    '/about-us',
+    '/services',
+    ...(services?.map((service) => `/services/${service.slug}`) || []),
+  ]
+
+  const showBookingButton =
+    pathname === '/' || SHOW_BOOKING_BUTTON_ON_ROUTES.some((route) => route !== '/' && pathname.startsWith(route))
+
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
       <nav className="flex items-center justify-between h-full px-4 py-2 mx-auto">
@@ -64,9 +75,11 @@ export default function Navbar({ services }: NavbarProps) {
           })}
         </div>
 
-        <Button variant="secondary" icon={<CallIcon />} className="hidden xl:flex" onClick={handleBooking}>
-          Book Appointment
-        </Button>
+        {showBookingButton && (
+          <Button variant="secondary" icon={<CallIcon />} className="hidden xl:flex" onClick={handleBooking}>
+            Book Appointment
+          </Button>
+        )}
 
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger className="block xl:hidden">
