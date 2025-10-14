@@ -111,6 +111,7 @@ export async function createBooking(c: C, input: CreateBookingInput) {
           serviceCurrency: service.currency,
           servicePrice: service.price,
           bookingId: draftBooking.id,
+          paymentMode: service.paymentMode,
           // TODO: Later, we will take the partial payment amount as input from the patient
           amountPaid: service.price,
           isPartialPayment: false,
@@ -121,31 +122,57 @@ export async function createBooking(c: C, input: CreateBookingInput) {
       return { draftBooking, pendingPayment }
     })
 
-    const razorpayOrder = await razorpayInstance.orders.create({
-      amount: result.pendingPayment.amountPaid * 100,
-      currency: result.pendingPayment.serviceCurrency,
-      notes: {
+    if (service.paymentMode === 'ONLINE') {
+      const razorpayOrder = await razorpayInstance.orders.create({
+        amount: result.pendingPayment.amountPaid * 100,
+        currency: result.pendingPayment.serviceCurrency,
+        notes: {
+          bookingId: result.draftBooking.id,
+          serviceId: service.id,
+          serviceName: service.name,
+          servicePrice: service.price,
+          expertId: expert.id,
+          patientId: patient.id,
+          paymentId: result.pendingPayment.id,
+          bookingMode: input.mode,
+        },
+      })
+
+      await prisma.payment.update({
+        where: {
+          id: result.pendingPayment.id,
+        },
+        data: {
+          razorpayOrderId: razorpayOrder.id,
+        },
+      })
+
+      return c.json({
+        success: true,
         bookingId: result.draftBooking.id,
-        serviceId: service.id,
-        serviceName: service.name,
-        servicePrice: service.price,
-        expertId: expert.id,
-        patientId: patient.id,
-        paymentId: result.pendingPayment.id,
-        bookingMode: input.mode,
-      },
-    })
+        paymentMode: 'ONLINE' as const,
+        razorpayOrder: razorpayOrder,
+      })
+    } else {
+      await prisma.booking.update({
+        where: {
+          id: result.draftBooking.id,
+        },
+        data: {
+          status: 'BOOKED',
+        },
+      })
 
-    await prisma.payment.update({
-      where: {
-        id: result.pendingPayment.id,
-      },
-      data: {
-        razorpayOrderId: razorpayOrder.id,
-      },
-    })
+      // TODO: Send confirmation email and whatsapp message to patient and expert
+      // TODO: Create calendar event for expert and patient (if email provided)
 
-    return c.json({ success: true, bookingId: result.draftBooking.id, ...razorpayOrder })
+      return c.json({
+        success: true,
+        bookingId: result.draftBooking.id,
+        paymentMode: service.paymentMode,
+        razorpayOrder: null,
+      })
+    }
   } catch {
     return c.json({ error: 'Failed to create booking' }, 500)
   }

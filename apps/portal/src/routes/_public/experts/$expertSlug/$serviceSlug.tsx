@@ -154,6 +154,9 @@ function ExpertServiceBookingPage() {
                         expertSlug={expertSlug}
                         serviceSlug={serviceSlug}
                         availableModes={service.availableModes}
+                        paymentMode={service.paymentMode}
+                        price={service.price}
+                        currency={service.currency}
                       />
                     </div>
                   </div>

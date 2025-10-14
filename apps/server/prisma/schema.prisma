@@ -169,6 +169,11 @@ enum ServiceMode {
   VIRTUAL
 }
 
+enum PaymentMode {
+  ONLINE
+  OFFLINE
+}
+
 model Service {
   id                        String        @id @default(auto()) @map("_id") @db.ObjectId
   createdAt                 DateTime      @default(now())
@@ -191,6 +196,7 @@ model Service {
   durationInMinutes         Int           @default(60)
   booking                   Booking[]
   payments                  Payment[]
+  paymentMode               PaymentMode   @default(ONLINE)
   tags                      String[]
   prebookingQuestions       Json?
   isDeleted                 Boolean       @default(false)
@@ -303,11 +309,13 @@ model Payment {
   amountPaid       Float
   amountCurrency   String
   isPartialPayment Boolean
+  paymentMode      PaymentMode
 
   @@index([expertId, serviceId, bookingId])
   @@index([isPartialPayment])
   @@index([servicePrice])
   @@index([amountPaid])
+  @@index([paymentMode])
 }
 
 enum NotificationType {
