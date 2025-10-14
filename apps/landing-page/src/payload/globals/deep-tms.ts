@@ -55,6 +55,11 @@ export const DeepTms: GlobalConfig = {
             },
           ],
         },
+        {
+          name: 'action',
+          label: 'Action',
+          type: 'text',
+        },
       ],
     },
     {

@@ -924,6 +924,7 @@ export interface DeepTm {
           id?: string | null
         }[]
       | null
+    action?: string | null
   }
   deepTmsWorkSection?: {
     title?: string | null
@@ -1573,6 +1574,7 @@ export interface DeepTmsSelect<T extends boolean = true> {
               description?: T
               id?: T
             }
+        action?: T
       }
   deepTmsWorkSection?:
     | T
