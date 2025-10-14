@@ -1,12 +1,12 @@
 import type { InferResponseType } from 'hono'
-import { type HonoClient } from '@/lib/hono-client'
+import type { HonoClient } from '@/lib/hono-client'
 
 export const genderOptions = [
   { value: 'MALE', label: 'Male' },
   { value: 'FEMALE', label: 'Female' },
 ]
 
-type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
+export type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
 
 export function generateSpecializationOptions(experts?: ExpertWithRelations[]) {
   if (!experts) {
