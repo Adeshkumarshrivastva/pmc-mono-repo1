@@ -153,6 +153,7 @@ function ExpertServiceBookingPage() {
                         expertId={service.expertId}
                         expertSlug={expertSlug}
                         serviceSlug={serviceSlug}
+                        availableModes={service.availableModes}
                       />
                     </div>
                   </div>

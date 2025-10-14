@@ -1,11 +1,11 @@
 import { Fragment } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { CallIcon } from '@/components/ui/icons'
 import { getURLFromMedia } from '@/payload/utils'
 import type { Home } from '@/payload/types'
 import AppointmentForm from './appointment-form'
-import Image from 'next/image'
 
 type HeroSectionProps = {
   data: Home['heroSetion']

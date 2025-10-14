@@ -3,7 +3,7 @@ import { SingleBar, Presets } from 'cli-progress'
 import { nanoid } from 'nanoid'
 import z from 'zod'
 import experts from './experts.json'
-import { DayOfWeek, ExpertGender, ExpertType, PrismaClient } from '../../../src/generated/prisma'
+import { DayOfWeek, ExpertGender, ExpertType, PrismaClient, ServiceMode } from '../../../src/generated/prisma'
 import { getErrorMessage } from '../../../src/lib/utils'
 import dayjs from '../../../src/lib/dayjs'
 
@@ -18,12 +18,15 @@ export async function seedExperts(prisma: PrismaClient) {
         name: z.string(),
         phoneNumber: z.string(),
         email: z.string(),
-        type: z.nativeEnum(ExpertType),
+        type: z.enum(ExpertType),
         qualification: z.string(),
         bio: z.string(),
         gender: z.enum(ExpertGender),
         expertise: z.string().array(),
         image: z.string(),
+        experienceInYears: z.number().optional(),
+        availableModes: z.enum(ServiceMode).array().min(1),
+        price: z.number().min(1000),
       })
       .parse(expert)
 
@@ -36,6 +39,7 @@ export async function seedExperts(prisma: PrismaClient) {
           name: validatedExpert.name,
           errorMessage: ' User with mobile ${validatedExpert.phoneNumber} already exists. Skipping...',
         })
+        continue
       }
 
       const user = await prisma.user.create({
@@ -64,6 +68,7 @@ export async function seedExperts(prisma: PrismaClient) {
           bio: validatedExpert.bio,
           expertise: validatedExpert.expertise,
           gender: validatedExpert.gender,
+          experienceInYears: validatedExpert.experienceInYears || null,
         },
       })
 
@@ -86,11 +91,18 @@ export async function seedExperts(prisma: PrismaClient) {
       await prisma.service.create({
         data: {
           name: 'Initial Consultation',
-          price: 1000,
+          price: validatedExpert.price,
           city: 'GURGAON',
           country: 'INDIA',
           expertId: createdExpert.id,
           slug: 'initial-consultation',
+          availableModes: validatedExpert.availableModes,
+          inPersonLocation: validatedExpert.availableModes.includes('IN_PERSON')
+            ? {
+                address: '804, Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018',
+                googleMapLink: 'https://maps.app.goo.gl/K3FgwML8LxX6ZyEm6',
+              }
+            : null,
         },
       })
     } catch (error) {

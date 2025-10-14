@@ -11,6 +11,7 @@ import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { Combobox } from '@/components/ui/combo-box'
 import { SERVICE_MODE_CONFIG } from '../$expertSlug'
 import { CURRENCY_CONFIG } from '@/lib/booking'
+import { Marquee } from '@/components/ui/marquee'
 
 type FilterState = {
   search: string
@@ -26,8 +27,8 @@ type FilterState = {
 type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
 
 function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
-  const { servicesProvided, name, slug, city, country, availability, expertise } = expert
-  const [selectedMode] = useState<ServiceMode>('VIRTUAL')
+  const { servicesProvided, name, slug, city, country, availability, expertise, experienceInYears } = expert
+  const [selectedMode] = useState<ServiceMode | 'ALL'>('ALL')
   const [showAllServices, setShowAllServices] = useState(false)
   const navigate = useNavigate()
 
@@ -39,10 +40,10 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
       icon: SERVICE_MODE_CONFIG[mode as ServiceMode].icon,
     }))
 
-  const filteredServices = servicesProvided?.filter((service) => service.availableModes.includes(selectedMode)) || []
-  const prices =
-    servicesProvided?.map((service) => service.price).filter((price): price is number => price != null) || []
-  const minPrice = prices.length > 0 ? Math.min(...prices) : 0
+  const filteredServices =
+    selectedMode === 'ALL'
+      ? servicesProvided || []
+      : (servicesProvided || []).filter((service) => service.availableModes?.includes(selectedMode))
 
   const nextSlot = getNextAvailableSlot(availability)
 
@@ -78,12 +79,14 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
               </div>
             </div>
 
-            <div className="text-sm text-muted-foreground mb-2">
-              Price Range:{' '}
-              <span className="font-semibold text-foreground">
-                {minPrice > 0 ? `${CURRENCY_CONFIG['INR'].symbol}${minPrice}` : 'Contact for pricing'}
-              </span>
-            </div>
+            {experienceInYears ? (
+              <div className="text-sm text-muted-foreground mb-2">
+                Experience:{' '}
+                <span className="font-semibold text-foreground">
+                  {experienceInYears} {experienceInYears === 1 ? 'year' : 'years'}
+                </span>
+              </div>
+            ) : null}
 
             <div className="text-sm text-muted-foreground mb-2">
               Location:{' '}
@@ -96,8 +99,8 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
               <div className="mb-4">
                 <div className="text-sm text-muted-foreground mb-1">Expertise:</div>
 
-                <div className="relative overflow-hidden group">
-                  <div className="flex gap-2 animate-marquee group-hover:[animation-play-state:paused]">
+                <div className="group/marquee">
+                  <Marquee pauseOnHover className="[--duration:30s] [--gap:0.5rem]" repeat={2}>
                     {(typeof expertise === 'string'
                       ? (expertise as string).split(',').map((q: string) => q.trim())
                       : Array.isArray(expertise)
@@ -111,7 +114,7 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
                         {qual}
                       </span>
                     ))}
-                  </div>
+                  </Marquee>
                 </div>
               </div>
             ) : null}

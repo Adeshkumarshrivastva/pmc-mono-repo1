@@ -3,8 +3,9 @@
 import { Container, Font, Html, Heading, Text, Section, Row, Column, Button, Tailwind } from '@react-email/components'
 import { match } from 'ts-pattern'
 import { type Booking, type Expert, type Service, type Patient, type User, ServiceMode } from '../generated/prisma'
-import { formatCurrency, getInPersonAddress, getVirtualMeetingLink } from '../lib/booking'
+import { formatCurrency } from '../lib/booking'
 import { formatDateTimeRange } from '../lib/date'
+import { getInPersonLocation, getVirtualMeetLink } from '../lib/location'
 
 type BookingWithRelations = Booking & {
   expert: Expert & {
@@ -113,39 +114,31 @@ export default function BookingConfirmationForPatient({ booking, orderId }: Book
               </Row>
 
               {match(booking.mode)
-                .with(
-                  ServiceMode.IN_PERSON,
-                  () =>
-                    getInPersonAddress({ booking }) && (
-                      <Row className="mb-3">
-                        <Column className="w-1/3">
-                          <Text className="text-sm text-gray-600 font-semibold m-0">Location:</Text>
-                        </Column>
-                        <Column className="w-2/3">
-                          <Text className="text-sm text-gray-900 m-0">{getInPersonAddress({ booking })}</Text>
-                        </Column>
-                      </Row>
-                    ),
-                )
-                .with(
-                  ServiceMode.VIRTUAL,
-                  () =>
-                    getVirtualMeetingLink({ booking }) && (
-                      <Row className="mb-3">
-                        <Column className="w-1/3">
-                          <Text className="text-sm text-gray-600 font-semibold m-0">Meeting Link:</Text>
-                        </Column>
-                        <Column className="w-2/3">
-                          <Button
-                            href={getVirtualMeetingLink({ booking }) || undefined}
-                            className="bg-blue-600 text-white py-2 px-5 rounded text-sm no-underline font-semibold"
-                          >
-                            Join Meeting
-                          </Button>
-                        </Column>
-                      </Row>
-                    ),
-                )
+                .with(ServiceMode.IN_PERSON, () => (
+                  <Row className="mb-3">
+                    <Column className="w-1/3">
+                      <Text className="text-sm text-gray-600 font-semibold m-0">Location:</Text>
+                    </Column>
+                    <Column className="w-2/3">
+                      <Text className="text-sm text-gray-900 m-0">{getInPersonLocation(booking.inPersonLocation)}</Text>
+                    </Column>
+                  </Row>
+                ))
+                .with(ServiceMode.VIRTUAL, () => (
+                  <Row className="mb-3">
+                    <Column className="w-1/3">
+                      <Text className="text-sm text-gray-600 font-semibold m-0">Meeting Link:</Text>
+                    </Column>
+                    <Column className="w-2/3">
+                      <Button
+                        href={getVirtualMeetLink(booking.virtualLocation)}
+                        className="bg-blue-600 text-white py-2 px-5 rounded text-sm no-underline font-semibold"
+                      >
+                        Join Meeting
+                      </Button>
+                    </Column>
+                  </Row>
+                ))
                 .otherwise(() => null)}
 
               <Row className="mb-3">

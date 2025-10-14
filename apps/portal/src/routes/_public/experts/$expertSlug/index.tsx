@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -22,6 +21,7 @@ import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { cn } from '@/lib/utils'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 import Navbar from '../-components/navbar'
+import { Marquee } from '@/components/ui/marquee'
 
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
@@ -30,7 +30,6 @@ export const Route = createFileRoute('/_public/experts/$expertSlug/')({
 function ExpertPage() {
   const { expertSlug } = Route.useParams()
   const navigate = useNavigate()
-  const [selectedMode] = useState<ServiceMode>('VIRTUAL')
 
   const getExpertQuery = useQuery({
     queryKey: ['expert', expertSlug],
@@ -66,10 +65,20 @@ function ExpertPage() {
     })
 
     .with({ status: 'success' }, ({ data }) => {
-      const { servicesProvided, name, type, city, country, bio, qualifications, avgRating, image, expertise, gender } =
-        data.expert
-
-      const filteredServices = servicesProvided.filter((service) => service.availableModes.includes(selectedMode)) || []
+      const {
+        servicesProvided,
+        name,
+        type,
+        city,
+        country,
+        bio,
+        qualifications,
+        avgRating,
+        image,
+        expertise,
+        gender,
+        experienceInYears,
+      } = data.expert
 
       const prices =
         servicesProvided.map((service) => service.price).filter((price): price is number => price != null) || []
@@ -114,10 +123,9 @@ function ExpertPage() {
                     </div>
 
                     <div className="flex-1">
-                      <div className="mb-4">
-                        <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{name}</h1>
+                      <div className="mb-4 ">
+                        <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1 ">{name}</h1>
                         <p className="text-lg text-primary font-semibold mb-2">{EXPERT_TYPE_CONFIG[type]?.label}</p>
-
                         {avgRating && avgRating > 0 ? (
                           <div className="flex items-center gap-2 mb-3">
                             <div className="flex items-center">
@@ -134,22 +142,21 @@ function ExpertPage() {
                             <span className="text-sm font-semibold text-foreground ml-1">{avgRating.toFixed(1)}</span>
                           </div>
                         ) : null}
-
-                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
-                          <div className="text-center lg:text-left">
-                            <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                              <MapPin className="w-4 h-4" />
-                              <span className="text-sm">Location</span>
+                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+                          {experienceInYears ? (
+                            <div>
+                              <div className="flex items-center gap-1 text-muted-foreground mb-1">
+                                <Clock className="size-3" />
+                                <span className="text-sm">Experience</span>
+                              </div>
+                              <p className="text-sm font-semibold text-primary">{experienceInYears}</p>
                             </div>
-                            <p className="text-sm font-semibold text-foreground">
-                              {city}, {country}
-                            </p>
-                          </div>
+                          ) : null}
 
                           {gender && (
-                            <div className="text-center lg:text-left">
+                            <div>
                               <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                                <User className="w-4 h-4" />
+                                <User className="size-3" />
                                 <span className="text-sm">Gender</span>
                               </div>
                               <p className="text-sm font-semibold text-foreground capitalize">{gender.toLowerCase()}</p>
@@ -157,34 +164,46 @@ function ExpertPage() {
                           )}
 
                           {minPrice > 0 ? (
-                            <div className="text-center lg:text-left">
+                            <div>
                               <div className="flex items-center gap-1 text-muted-foreground mb-1">
                                 <span className="text-sm">Starting at</span>
                               </div>
-                              <p className="text-sm font-semibold text-primary">{`${CURRENCY_CONFIG['INR'].symbol} ${minPrice}`}</p>
+                              <p className="text-sm font-semibold text-primary">
+                                {`${CURRENCY_CONFIG['INR'].symbol} ${minPrice}`}
+                              </p>
                             </div>
                           ) : null}
-                        </div>
 
+                          <div>
+                            <div className="flex items-center gap-1 text-muted-foreground mb-1">
+                              <MapPin className="size-3" />
+                              <span className="text-sm">Location</span>
+                            </div>
+                            <p className="text-sm font-semibold text-foreground">
+                              {city}, {country}
+                            </p>
+                          </div>
+                        </div>
                         {expertise && Array.isArray(expertise) && expertise.length > 0 && (
                           <div className="mb-4">
                             <div className="flex items-center gap-1 text-muted-foreground mb-2">
                               <Award className="w-4 h-4" />
                               <h3 className="text-sm">Areas of Expertise</h3>
                             </div>
-                            <div className="flex flex-wrap gap-2">
-                              {expertise.map((area, index) => (
-                                <span
-                                  key={index}
-                                  className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap"
-                                >
-                                  {area}
-                                </span>
-                              ))}
+                            <div className="group/marquee">
+                              <Marquee pauseOnHover className="[--duration:30s] [--gap:0.5rem]" repeat={2}>
+                                {expertise.map((area, index) => (
+                                  <span
+                                    key={index}
+                                    className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap"
+                                  >
+                                    {area}
+                                  </span>
+                                ))}
+                              </Marquee>
                             </div>
                           </div>
                         )}
-
                         {qualifications ? (
                           <div className="mb-4">
                             <h3 className="text-sm text-muted-foreground">Qualifications</h3>
@@ -215,11 +234,11 @@ function ExpertPage() {
               ) : null}
 
               <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6">
-                <h2 className="text-lg font-bold text-foreground mb-4">Services & Expertise</h2>
+                <h2 className="text-lg font-bold text-foreground mb-4">Services</h2>
 
                 {servicesProvided && servicesProvided.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {filteredServices.map((service, index) => (
+                    {servicesProvided.map((service, index) => (
                       <ServiceCard
                         key={service.id || index}
                         service={service}
@@ -241,7 +260,7 @@ function ExpertPage() {
                   </div>
                 )}
 
-                {servicesProvided && servicesProvided.length > 0 && filteredServices.length === 0 ? (
+                {servicesProvided && servicesProvided.length > 0 && servicesProvided.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-muted-foreground">No services available for the selected mode.</p>
                   </div>
@@ -262,8 +281,6 @@ function ServiceCard({
   service: ExpertWithDetails['servicesProvided'][number]
   onBook: () => void
 }) {
-  const availableModes = Object.keys(SERVICE_MODE_CONFIG) as ServiceMode[]
-
   return (
     <div className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-all duration-200 hover:border-primary/20">
       <div className="flex justify-between items-start mb-3">
@@ -283,16 +300,18 @@ function ServiceCard({
       </div>
 
       <div className="flex gap-2 mb-3 flex-wrap">
-        {availableModes.map((mode, i) => {
-          const ServiceIcon = SERVICE_MODE_CONFIG[mode].icon
+        {service.availableModes.map((mode: ServiceMode) => {
+          const modeConfig = SERVICE_MODE_CONFIG[mode]
+
+          const ServiceIcon = modeConfig.icon
 
           return (
             <div
-              key={i}
+              key={mode}
               className="flex items-center gap-1 px-2 py-1 bg-muted/50 border border-border rounded-md text-sm"
             >
-              <ServiceIcon className="w-3 h-3 text-muted-foreground" />
-              <span className="text-foreground">{SERVICE_MODE_CONFIG[mode].label}</span>
+              {<ServiceIcon className="w-3 h-3 text-muted-foreground" />}
+              <span className="text-foreground">{modeConfig.label}</span>
             </div>
           )
         })}
@@ -372,5 +391,17 @@ const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType 
   CLINICAL_PSYCHOLOGIST: {
     label: 'Clinical Psychologist',
     value: 'CLINICAL_PSYCHOLOGIST',
+  },
+  CONSULTANT_PHYSICIAN: {
+    label: '',
+    value: 'PSYCHOLOGIST',
+  },
+  REHABILITATION_PSYCHOLOGIST: {
+    label: '',
+    value: 'PSYCHOLOGIST',
+  },
+  COUNSELLING_PSYCHOLOGIST: {
+    label: '',
+    value: 'PSYCHOLOGIST',
   },
 }

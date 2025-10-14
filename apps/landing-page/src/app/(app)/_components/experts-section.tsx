@@ -2,13 +2,13 @@
 
 import { useState, useMemo } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { CallIcon, OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
 import type { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AppointmentForm from './appointment-form'
-import Image from 'next/image'
 
 type ExpertsSectionProps = { data: Home['expertsSection'] }
 
