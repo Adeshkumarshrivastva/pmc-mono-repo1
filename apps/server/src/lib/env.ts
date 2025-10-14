@@ -11,6 +11,9 @@ export const env = z
     DATABASE_URL: z.string(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    GOOGLE_SERVICE_ACCOUNT_EMAIL: z.string(),
+    GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: z.string(),
+    GOOGLE_CALENDAR_EMAIL: z.string(),
     JWT_SECRET: z.string(),
     NODE_ENV: z.enum([NodeEnv.development, NodeEnv.production]).default(NodeEnv.development),
     RAZORPAY_KEY_ID: z.string(),
@@ -19,6 +22,8 @@ export const env = z
     WHATSAPP_LICENCE_NUMBER_SECRET: z.string(),
     WHATSAPP_TEST_NUMBER_SECRET: z.string(),
     EMAIL_SENDER: z.string(),
+    SMS_SERVICE_USERID: z.string(),
+    SMS_SERVICE_PASSWORD: z.string(),
     BROWSERLESS_WS_ENDPOINT: z.string(),
   })
   .parse(process.env)

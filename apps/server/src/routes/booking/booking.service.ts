@@ -77,16 +77,6 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     return c.json({ error: slotCheck.reason || 'Slot not available' }, 404)
   }
 
-  let virtualLocation = null
-  let inPersonLocation = null
-
-  if (input.mode === 'VIRTUAL') {
-    // TODO: Generate Google Meet link here
-    virtualLocation = null // Will be populated when Google Meet integration is implemented
-  } else if (input.mode === 'IN_PERSON') {
-    inPersonLocation = service.inPersonLocation
-  }
-
   try {
     const result = await prisma.$transaction(async (tx) => {
       const draftBooking = await tx.booking.create({
@@ -107,8 +97,7 @@ export async function createBooking(c: C, input: CreateBookingInput) {
           serviceCurrency: service.currency,
           preBookingQnA: input.prebookingQnA,
           mode: input.mode,
-          virtualLocation,
-          inPersonLocation,
+          inPersonLocation: input.mode === 'IN_PERSON' ? service.inPersonLocation : null,
         },
       })
 
@@ -143,6 +132,7 @@ export async function createBooking(c: C, input: CreateBookingInput) {
         expertId: expert.id,
         patientId: patient.id,
         paymentId: result.pendingPayment.id,
+        bookingMode: input.mode,
       },
     })
 

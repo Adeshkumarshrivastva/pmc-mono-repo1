@@ -17,11 +17,23 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    GOOGLE_CALENDAR_EMAIL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     GOOGLE_CLIENT_ID: {
       type: 'sst.sst.Secret'
       value: string
     }
     GOOGLE_CLIENT_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_SERVICE_ACCOUNT_EMAIL: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: {
       type: 'sst.sst.Secret'
       value: string
     }
@@ -63,6 +75,14 @@ declare module 'sst' {
       value: string
     }
     RAZORPAY_KEY_SECRET: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    SMS_SERVICE_PASSWORD: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    SMS_SERVICE_USERID: {
       type: 'sst.sst.Secret'
       value: string
     }

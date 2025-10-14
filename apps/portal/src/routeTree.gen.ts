@@ -21,6 +21,7 @@ import { Route as PublicExpertsServicesIndexRouteImport } from './routes/_public
 import { Route as PublicExpertsExpertSlugIndexRouteImport } from './routes/_public/experts/$expertSlug/index'
 import { Route as AppPatientBookingsIndexRouteImport } from './routes/_app/patient/bookings/index'
 import { Route as AppExpertBookingsIndexRouteImport } from './routes/_app/expert/bookings/index'
+import { Route as PublicExpertsServicesExpertServiceRouteImport } from './routes/_public/experts/services/$expertService'
 import { Route as PublicExpertsExpertSlugServiceSlugRouteImport } from './routes/_public/experts/$expertSlug/$serviceSlug'
 
 const AuthRoute = AuthRouteImport.update({
@@ -61,16 +62,18 @@ const AppExpertDashboardRoute = AppExpertDashboardRouteImport.update({
   path: '/expert/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
-const PublicExpertsServicesIndexRoute = PublicExpertsServicesIndexRouteImport.update({
-  id: '/_public/experts/services/',
-  path: '/experts/services/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicExpertsExpertSlugIndexRoute = PublicExpertsExpertSlugIndexRouteImport.update({
-  id: '/_public/experts/$expertSlug/',
-  path: '/experts/$expertSlug/',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const PublicExpertsServicesIndexRoute =
+  PublicExpertsServicesIndexRouteImport.update({
+    id: '/_public/experts/services/',
+    path: '/experts/services/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PublicExpertsExpertSlugIndexRoute =
+  PublicExpertsExpertSlugIndexRouteImport.update({
+    id: '/_public/experts/$expertSlug/',
+    path: '/experts/$expertSlug/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AppPatientBookingsIndexRoute = AppPatientBookingsIndexRouteImport.update({
   id: '/patient/bookings/',
   path: '/patient/bookings/',
@@ -81,11 +84,18 @@ const AppExpertBookingsIndexRoute = AppExpertBookingsIndexRouteImport.update({
   path: '/expert/bookings/',
   getParentRoute: () => AppRoute,
 } as any)
-const PublicExpertsExpertSlugServiceSlugRoute = PublicExpertsExpertSlugServiceSlugRouteImport.update({
-  id: '/_public/experts/$expertSlug/$serviceSlug',
-  path: '/experts/$expertSlug/$serviceSlug',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const PublicExpertsServicesExpertServiceRoute =
+  PublicExpertsServicesExpertServiceRouteImport.update({
+    id: '/_public/experts/services/$expertService',
+    path: '/experts/services/$expertService',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PublicExpertsExpertSlugServiceSlugRoute =
+  PublicExpertsExpertSlugServiceSlugRouteImport.update({
+    id: '/_public/experts/$expertSlug/$serviceSlug',
+    path: '/experts/$expertSlug/$serviceSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
@@ -95,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/bookings/$bookingId': typeof PublicBookingsBookingIdRoute
   '/experts': typeof PublicExpertsIndexRoute
   '/experts/$expertSlug/$serviceSlug': typeof PublicExpertsExpertSlugServiceSlugRoute
+  '/experts/services/$expertService': typeof PublicExpertsServicesExpertServiceRoute
   '/expert/bookings': typeof AppExpertBookingsIndexRoute
   '/patient/bookings': typeof AppPatientBookingsIndexRoute
   '/experts/$expertSlug': typeof PublicExpertsExpertSlugIndexRoute
@@ -108,6 +119,7 @@ export interface FileRoutesByTo {
   '/bookings/$bookingId': typeof PublicBookingsBookingIdRoute
   '/experts': typeof PublicExpertsIndexRoute
   '/experts/$expertSlug/$serviceSlug': typeof PublicExpertsExpertSlugServiceSlugRoute
+  '/experts/services/$expertService': typeof PublicExpertsServicesExpertServiceRoute
   '/expert/bookings': typeof AppExpertBookingsIndexRoute
   '/patient/bookings': typeof AppPatientBookingsIndexRoute
   '/experts/$expertSlug': typeof PublicExpertsExpertSlugIndexRoute
@@ -124,6 +136,7 @@ export interface FileRoutesById {
   '/_public/bookings/$bookingId': typeof PublicBookingsBookingIdRoute
   '/_public/experts/': typeof PublicExpertsIndexRoute
   '/_public/experts/$expertSlug/$serviceSlug': typeof PublicExpertsExpertSlugServiceSlugRoute
+  '/_public/experts/services/$expertService': typeof PublicExpertsServicesExpertServiceRoute
   '/_app/expert/bookings/': typeof AppExpertBookingsIndexRoute
   '/_app/patient/bookings/': typeof AppPatientBookingsIndexRoute
   '/_public/experts/$expertSlug/': typeof PublicExpertsExpertSlugIndexRoute
@@ -139,6 +152,7 @@ export interface FileRouteTypes {
     | '/bookings/$bookingId'
     | '/experts'
     | '/experts/$expertSlug/$serviceSlug'
+    | '/experts/services/$expertService'
     | '/expert/bookings'
     | '/patient/bookings'
     | '/experts/$expertSlug'
@@ -152,6 +166,7 @@ export interface FileRouteTypes {
     | '/bookings/$bookingId'
     | '/experts'
     | '/experts/$expertSlug/$serviceSlug'
+    | '/experts/services/$expertService'
     | '/expert/bookings'
     | '/patient/bookings'
     | '/experts/$expertSlug'
@@ -167,6 +182,7 @@ export interface FileRouteTypes {
     | '/_public/bookings/$bookingId'
     | '/_public/experts/'
     | '/_public/experts/$expertSlug/$serviceSlug'
+    | '/_public/experts/services/$expertService'
     | '/_app/expert/bookings/'
     | '/_app/patient/bookings/'
     | '/_public/experts/$expertSlug/'
@@ -179,6 +195,7 @@ export interface RootRouteChildren {
   PublicBookingsBookingIdRoute: typeof PublicBookingsBookingIdRoute
   PublicExpertsIndexRoute: typeof PublicExpertsIndexRoute
   PublicExpertsExpertSlugServiceSlugRoute: typeof PublicExpertsExpertSlugServiceSlugRoute
+  PublicExpertsServicesExpertServiceRoute: typeof PublicExpertsServicesExpertServiceRoute
   PublicExpertsExpertSlugIndexRoute: typeof PublicExpertsExpertSlugIndexRoute
   PublicExpertsServicesIndexRoute: typeof PublicExpertsServicesIndexRoute
 }
@@ -269,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppExpertBookingsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_public/experts/services/$expertService': {
+      id: '/_public/experts/services/$expertService'
+      path: '/experts/services/$expertService'
+      fullPath: '/experts/services/$expertService'
+      preLoaderRoute: typeof PublicExpertsServicesExpertServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public/experts/$expertSlug/$serviceSlug': {
       id: '/_public/experts/$expertSlug/$serviceSlug'
       path: '/experts/$expertSlug/$serviceSlug'
@@ -312,8 +336,13 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PublicBookingsBookingIdRoute: PublicBookingsBookingIdRoute,
   PublicExpertsIndexRoute: PublicExpertsIndexRoute,
-  PublicExpertsExpertSlugServiceSlugRoute: PublicExpertsExpertSlugServiceSlugRoute,
+  PublicExpertsExpertSlugServiceSlugRoute:
+    PublicExpertsExpertSlugServiceSlugRoute,
+  PublicExpertsServicesExpertServiceRoute:
+    PublicExpertsServicesExpertServiceRoute,
   PublicExpertsExpertSlugIndexRoute: PublicExpertsExpertSlugIndexRoute,
   PublicExpertsServicesIndexRoute: PublicExpertsServicesIndexRoute,
 }
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

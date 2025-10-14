@@ -3,8 +3,6 @@ import { useState } from 'react'
 import { MenuIcon } from 'lucide-react'
 import type { Service } from '@pmc/server/src/generated/prisma/client'
 import { Logo } from '@/components/ui/logo'
-import { Button } from '@/components/ui/button'
-import { CallIcon } from '@/components/ui/icons'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
@@ -25,10 +23,6 @@ export default function Navbar({}: NavbarProps) {
   const location = useLocation()
   const pathname = location.pathname
   const [sheetOpen, setSheetOpen] = useState(false)
-
-  function handleBooking() {
-    document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
@@ -59,10 +53,6 @@ export default function Navbar({}: NavbarProps) {
             )
           })}
         </div>
-
-        <Button variant="secondary" icon={<CallIcon />} className="hidden xl:flex" onClick={handleBooking}>
-          Book Appointment
-        </Button>
 
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger className="block xl:hidden">

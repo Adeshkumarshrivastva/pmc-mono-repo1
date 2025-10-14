@@ -47,13 +47,18 @@ export default $config({
     const WhatsappLicenceNumberSecret = new sst.Secret('WHATSAPP_LICENCE_NUMBER_SECRET')
     const WhatsappTestNumberSecret = new sst.Secret('WHATSAPP_TEST_NUMBER_SECRET')
     const BrowserlessWsEndpoint = new sst.Secret('BROWSERLESS_WS_ENDPOINT')
+    const GoogleServiceAccountEmail = new sst.Secret('GOOGLE_SERVICE_ACCOUNT_EMAIL')
+    const GoogleServiceAccountPrivateKey = new sst.Secret('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY')
+    const GoogleCalendarEmail = new sst.Secret('GOOGLE_CALENDAR_EMAIL')
+    const SmsServiceUserId = new sst.Secret('SMS_SERVICE_USERID')
+    const SmsServicePassword = new sst.Secret('SMS_SERVICE_PASSWORD')
 
-    const SenderEmail = new sst.aws.Email('SenderEmail', {
-      sender:
-        $app.stage === 'production'
-          ? 'no-reply@positivemindcare.com'
-          : $interpolate`no-reply-${$app.stage}@positivemindcare.com`,
-    })
+    const SenderEmail =
+      $app.stage === 'production'
+        ? new sst.aws.Email('SenderEmail', {
+            sender: 'no-reply@positivemindcare.com',
+          })
+        : sst.aws.Email.get('SenderEmail', 'no-reply-dev@positivemindcare.com')
 
     new sst.aws.Function('PmcHonoServer', {
       architecture: 'arm64',
@@ -78,6 +83,11 @@ export default $config({
         WHATSAPP_TEST_NUMBER_SECRET: WhatsappTestNumberSecret.value,
         EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
         BROWSERLESS_WS_ENDPOINT: BrowserlessWsEndpoint.value,
+        GOOGLE_SERVICE_ACCOUNT_EMAIL: GoogleServiceAccountEmail.value,
+        GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: GoogleServiceAccountPrivateKey.value,
+        GOOGLE_CALENDAR_EMAIL: GoogleCalendarEmail.value,
+        SMS_SERVICE_USERID: SmsServiceUserId.value,
+        SMS_SERVICE_PASSWORD: SmsServicePassword.value,
       },
       copyFiles: [
         {
