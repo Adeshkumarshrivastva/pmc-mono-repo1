@@ -1,13 +1,6 @@
-import {
-  MapPinIcon,
-  VideoIcon,
-  UserIcon,
-  PhoneIcon,
-  CopyIcon,
-  CalendarClockIcon,
-  ClipboardListIcon,
-} from 'lucide-react'
+import { UserIcon, PhoneIcon, CopyIcon, CalendarClockIcon, ClipboardListIcon, ExternalLinkIcon } from 'lucide-react'
 import { match } from 'ts-pattern'
+import { toast } from 'sonner'
 import { Separator } from '@/components/ui/separator'
 import dayjs from '@/lib/dayjs'
 import { formatDateTimeRange, utcDateToLocalDate } from '@/lib/date'
@@ -15,6 +8,7 @@ import type { Booking } from '@/lib/booking'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import PrescriptionArea from './prescription-area'
+import { inPersonLocationSchema, SERVICE_MODE_CONFIG, virtualLocationSchema } from '@/lib/location'
 
 type BookingInfoProps = {
   booking: Booking
@@ -44,21 +38,52 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
         <div className="flex items-center gap-2 text-sm">
           {match(booking.mode)
             .returnType<React.ReactNode>()
-            .with('IN_PERSON', () => (
-              <>
-                <MapPinIcon className="size-4 text-muted-foreground flex-shrink-0" />
-                <span className="text-muted-foreground">GURGAON</span>
-              </>
-            ))
-            .with('VIRTUAL', () => (
-              <>
-                <VideoIcon className="size-4 text-muted-foreground flex-shrink-0" />
-                <div className="flex items-center gap-1">
-                  <Button variant="outline">Join with Google Meet</Button>
-                  <Button variant="outline" icon={<CopyIcon />} />
-                </div>
-              </>
-            ))
+            .with('IN_PERSON', () => {
+              const inPersonLocation = inPersonLocationSchema.parse(booking.inPersonLocation)
+              const Icon = SERVICE_MODE_CONFIG['IN_PERSON'].icon
+              return (
+                <>
+                  <Icon className="size-4 text-muted-foreground shrink-0" />
+                  <div className="space-y-1">
+                    <div className="text-muted-foreground font-bold text-sm">{inPersonLocation?.address}</div>
+                    {inPersonLocation?.googleMapLink ? (
+                      <a
+                        href={inPersonLocation.googleMapLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-primary hover:underline text-sm"
+                      >
+                        Google Map Link
+                        <ExternalLinkIcon className="size-3.5" />
+                      </a>
+                    ) : null}
+                  </div>
+                </>
+              )
+            })
+            .with('VIRTUAL', () => {
+              const virtualLocation = virtualLocationSchema.parse(booking.virtualLocation)
+              const Icon = SERVICE_MODE_CONFIG['VIRTUAL'].icon
+
+              return virtualLocation ? (
+                <>
+                  <Icon className="size-4 text-muted-foreground flex-shrink-0" />
+                  <div className="flex items-center gap-1">
+                    <a href={virtualLocation.meetLink} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline">Join with Google Meet</Button>
+                    </a>
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(virtualLocation.meetLink)
+                        toast.success('Copied to clipboard successfully')
+                      }}
+                      variant="outline"
+                      icon={<CopyIcon />}
+                    />
+                  </div>
+                </>
+              ) : null
+            })
             .otherwise(() => null)}
         </div>
       </div>

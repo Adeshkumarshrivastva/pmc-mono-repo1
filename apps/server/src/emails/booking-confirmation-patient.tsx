@@ -19,7 +19,7 @@ type BookingWithRelations = Booking & {
 
 type BookingConfirmationProps = {
   booking: BookingWithRelations
-  orderId: string
+  orderId: string | null
 }
 
 export default function BookingConfirmationForPatient({ booking, orderId }: BookingConfirmationProps) {
@@ -152,14 +152,16 @@ export default function BookingConfirmationForPatient({ booking, orderId }: Book
                 </Column>
               </Row>
 
-              <Row>
-                <Column className="w-1/3">
-                  <Text className="text-sm text-gray-600 font-semibold m-0">Order ID:</Text>
-                </Column>
-                <Column className="w-2/3">
-                  <Text className="text-sm text-gray-900 m-0">#{orderId}</Text>
-                </Column>
-              </Row>
+              {orderId ? (
+                <Row>
+                  <Column className="w-1/3">
+                    <Text className="text-sm text-gray-600 font-semibold m-0">Order ID:</Text>
+                  </Column>
+                  <Column className="w-2/3">
+                    <Text className="text-sm text-gray-900 m-0">#{orderId}</Text>
+                  </Column>
+                </Row>
+              ) : null}
             </Section>
 
             <Section className="bg-yellow-50 rounded-lg p-5 mb-6">

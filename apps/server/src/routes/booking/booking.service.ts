@@ -6,6 +6,7 @@ import { DAY_MAP } from '../../lib/booking'
 import { DayOfWeek } from '../../generated/prisma'
 import { dateToMinutes } from '../../lib/date'
 import { razorpayInstance } from '../../lib/razorpay'
+import { handlePostBooking } from '../../lib/post-booking'
 
 export async function createBooking(c: C, input: CreateBookingInput) {
   const userId = c.var.user?.id
@@ -154,17 +155,48 @@ export async function createBooking(c: C, input: CreateBookingInput) {
         razorpayOrder: razorpayOrder,
       })
     } else {
+      const bookingWithRelations = await prisma.booking.findUnique({
+        where: { id: result.draftBooking.id },
+        include: {
+          expert: {
+            include: {
+              user: true,
+            },
+          },
+          patient: {
+            include: {
+              user: true,
+            },
+          },
+          service: true,
+        },
+      })
+
+      if (!bookingWithRelations) {
+        return c.json({ error: 'Booking not found after creation' }, 500)
+      }
+
+      const { googleCalendarEvent } = await handlePostBooking({
+        booking: bookingWithRelations,
+        orderId: null, // No Razorpay order for offline payments
+      })
+
       await prisma.booking.update({
         where: {
           id: result.draftBooking.id,
         },
         data: {
           status: 'BOOKED',
+          virtualLocation:
+            bookingWithRelations.mode === 'VIRTUAL' && googleCalendarEvent?.meetLink
+              ? {
+                  type: 'google_meet',
+                  meetLink: googleCalendarEvent.meetLink,
+                }
+              : null,
+          calendarEventId: googleCalendarEvent?.eventId ?? null,
         },
       })
-
-      // TODO: Send confirmation email and whatsapp message to patient and expert
-      // TODO: Create calendar event for expert and patient (if email provided)
 
       return c.json({
         success: true,
