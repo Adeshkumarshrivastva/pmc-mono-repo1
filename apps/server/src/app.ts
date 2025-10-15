@@ -9,6 +9,7 @@ import { expertsApp } from './routes/experts/experts.routes'
 import { verificationApp } from './routes/verification/verification.routes'
 import { bookingApp } from './routes/booking/booking.routes'
 import { webhooksApp } from './routes/webhooks/webhooks.routes'
+import { servicesApp } from './routes/services/services.routes'
 
 invariant(config, 'config must be present')
 
@@ -34,6 +35,7 @@ const app = new Hono<{ Variables: HonoContext }>()
   .route('/webhooks', webhooksApp)
   .route('/user', userApp)
   .route('/booking', bookingApp)
+  .route('/service', servicesApp)
 
 export { app }
 export type App = typeof app
