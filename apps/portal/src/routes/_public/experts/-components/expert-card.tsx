@@ -5,13 +5,14 @@ import { Search, Filter, Star, Calendar, MapPin, X, UserIcon } from 'lucide-reac
 import type { ExpertType, ServiceMode, DayOfWeek } from '@pmc/server/src/generated/prisma/client'
 import type { SortBy } from '@pmc/server/src/routes/experts/experts.input'
 import { match } from 'ts-pattern'
+import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
-import { honoClient } from '@/lib/hono-client'
+import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { Combobox } from '@/components/ui/combo-box'
 import { SERVICE_MODE_CONFIG } from '../$expertSlug'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 import { Marquee } from '@/components/ui/marquee'
-import { generateSpecializationOptions, type ExpertWithRelations } from '@/lib/expert'
+import { specializationOptions } from '@/lib/expert'
 
 type FilterState = {
   search: string
@@ -23,6 +24,8 @@ type FilterState = {
   sortBy?: SortBy
   sortOrder?: 'asc' | 'desc'
 }
+
+export type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
 
 function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
   const { servicesProvided, name, slug, city, country, availability, expertise, experienceInYears } = expert
@@ -231,7 +234,6 @@ export default function OurExperts() {
       }),
   })
 
-  const specializationOptions = generateSpecializationOptions(allExpertsQuery.data?.experts)
   const locationOptions = generateLocationOptions(allExpertsQuery.data?.experts)
 
   function updateFilter(

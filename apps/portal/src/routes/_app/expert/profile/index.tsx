@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Combobox } from '@/components/ui/combo-box'
 import { honoClient } from '@/lib/hono-client'
-import { genderOptions, generateSpecializationOptions } from '@/lib/expert'
+import { genderOptions, specializationOptions } from '@/lib/expert'
 
 const profileFormSchema = z.object({
   name: z.string().min(3),
@@ -29,22 +29,20 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>
 export const Route = createFileRoute('/_app/expert/profile/')({
   beforeLoad: async () => {
     const expertResponse = await honoClient.server.experts.expert.$get()
-    const allExpertsResponse = await honoClient.server.experts.$get({ query: {} })
 
-    if (!expertResponse.ok || !allExpertsResponse.ok) {
+    if (!expertResponse.ok) {
       throw new Error('Failed to load data')
     }
 
     const expert = await expertResponse.json()
-    const allExperts = await allExpertsResponse.json()
-    return { expert, allExperts }
+    return { expert }
   },
   loader: ({ context }) => context,
   component: ExpertProfile,
 })
 
 function ExpertProfile() {
-  const { expert, allExperts } = Route.useLoaderData()
+  const { expert } = Route.useLoaderData()
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -138,7 +136,7 @@ function ExpertProfile() {
                 <Combobox
                   multiple
                   placeholder="Select Expertise"
-                  options={generateSpecializationOptions(allExperts.experts)}
+                  options={specializationOptions}
                   value={field.value}
                   onValueChange={(val) => field.onChange(val)}
                   className="w-full"

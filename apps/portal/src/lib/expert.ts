@@ -1,30 +1,35 @@
-import type { InferResponseType } from 'hono'
-import type { HonoClient } from '@/lib/hono-client'
-
 export const genderOptions = [
   { value: 'MALE', label: 'Male' },
   { value: 'FEMALE', label: 'Female' },
 ]
 
-export type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
-
-export function generateSpecializationOptions(experts?: ExpertWithRelations[]) {
-  if (!experts) {
-    return []
-  }
-
-  const allExpertise = new Set<string>()
-
-  experts.forEach((expert) => {
-    if (expert.expertise && Array.isArray(expert.expertise)) {
-      expert.expertise.forEach((expertise) => allExpertise.add(expertise))
-    }
-  })
-
-  return Array.from(allExpertise)
-    .map((expertise) => ({
-      value: expertise,
-      label: expertise.charAt(0).toUpperCase() + expertise.slice(1),
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label))
-}
+export const specializationOptions = [
+  { value: 'Academic Stress', label: 'Academic Stress' },
+  { value: 'Addiction', label: 'Addiction' },
+  { value: 'Adolescent Therapy', label: 'Adolescent Therapy' },
+  { value: 'Anxiety', label: 'Anxiety' },
+  { value: 'Anxiety Disorders', label: 'Anxiety Disorders' },
+  { value: 'Anxiety Management', label: 'Anxiety Management' },
+  { value: 'Behavioral Issues', label: 'Behavioral Issues' },
+  { value: 'Bipolar Disorder', label: 'Bipolar Disorder' },
+  { value: 'CBT', label: 'CBT' },
+  { value: 'Child Psychology', label: 'Child Psychology' },
+  { value: 'Deep TMS Therapy', label: 'Deep TMS Therapy' },
+  { value: 'Depression', label: 'Depression' },
+  { value: 'Family Therapy', label: 'Family Therapy' },
+  { value: 'Medication Management', label: 'Medication Management' },
+  { value: 'Mindfulness', label: 'Mindfulness' },
+  { value: 'Motivational Therapy', label: 'Motivational Therapy' },
+  { value: 'Perinatal Psychiatry', label: 'Perinatal Psychiatry' },
+  { value: 'Positive Psychology', label: 'Positive Psychology' },
+  { value: 'Psychometric Testing', label: 'Psychometric Testing' },
+  { value: 'PTSD', label: 'PTSD' },
+  { value: 'Resilience Building', label: 'Resilience Building' },
+  { value: 'Self-esteem Issues', label: 'Self-esteem Issues' },
+  { value: 'Stress Management', label: 'Stress Management' },
+  { value: 'Stress Reduction', label: 'Stress Reduction' },
+  { value: 'Talk Therapy', label: 'Talk Therapy' },
+  { value: 'Trauma', label: 'Trauma' },
+  { value: 'Trauma Therapy', label: 'Trauma Therapy' },
+  { value: "Women's Mental Health", label: "Women's Mental Health" },
+]
