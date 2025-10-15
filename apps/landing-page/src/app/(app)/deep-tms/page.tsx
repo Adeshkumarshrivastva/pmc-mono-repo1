@@ -1,7 +1,6 @@
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { getPayloadClient } from '@/lib/payload'
 import { getServices } from '@/payload/actions'
-import { Service } from '@/payload/types'
 import HeroSection from './_components/hero-section'
 import FAQSection from '../_components/faq-section'
 import AppointmentSection from '../_components/appointment-section'

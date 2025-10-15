@@ -3,6 +3,7 @@ import { CallIcon } from '@/components/ui/icons'
 import type { DeepTm } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import Image from 'next/image'
+import AppointmentForm from '../../_components/appointment-form'
 
 export type EligibilityProps = {
   data: DeepTm['deepTmsEligibilitySection']
@@ -36,9 +37,15 @@ export function EligibilitySection({ data }: EligibilityProps) {
                 ))}
             </div>
           </div>
-          <Button icon={<CallIcon />} className="font-normal">
-            {data?.action}
-          </Button>
+          {data?.action ? (
+            <AppointmentForm
+              trigger={
+                <Button variant="default" icon={<CallIcon />} className="w-full sm:w-auto">
+                  {data.action}
+                </Button>
+              }
+            />
+          ) : null}
         </div>
       </div>
     </div>
