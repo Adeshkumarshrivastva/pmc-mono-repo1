@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,10 +8,10 @@ import { match } from 'ts-pattern'
 import { Plus, MapPin, Clock, IndianRupee } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Service } from '@pmc/server/src/generated/prisma/client'
+import { nanoid } from 'nanoid'
 import { honoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/text-area'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Checkbox } from '@/components/ui/check-box'
@@ -39,7 +39,7 @@ const serviceFormSchema = z.object({
 type ServiceFormInput = z.infer<typeof serviceFormSchema>
 
 function ExpertService() {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const serviceQuery = useQuery({
@@ -93,9 +93,9 @@ function ExpertService() {
                   <Card
                     key={service.id}
                     className="hover:shadow-lg transition-all duration-200 cursor-pointer h-full flex flex-col"
-                    onClick={() => {
-                      navigate({ to: '/expert/services/$serviceId', params: { serviceId: service.id } })
-                    }}
+                    // onClick={() => {
+                    //   navigate({ to: '/expert/services/$serviceId', params: { serviceId: service.id } })
+                    // }}
                   >
                     <CardHeader>
                       <div className="flex justify-between items-start gap-3">
@@ -236,8 +236,13 @@ function ServiceDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((data: ServiceFormInput) => {
+              const dataWithUniqueSlug = {
+                ...data,
+                slug: `${data.slug}-${nanoid(4)}`,
+              }
+
               if (mode === 'create') {
-                createMutation.mutate(data)
+                createMutation.mutate(dataWithUniqueSlug)
               } else {
                 updateMutation.mutate(data)
               }
@@ -259,30 +264,12 @@ function ServiceDialog({
 
                         const slug = e.target.value
                           .toLowerCase()
+                          .replace(/[^a-z0-9\s]/g, '')
+                          .trim()
                           .replace(/\s+/g, '-')
-                          .replace(/[^a-z0-9-]/g, '')
+
                         form.setValue('slug', slug)
                       }}
-                      className="bg-input border-border text-foreground"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-foreground">Description (Optional)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe your service..."
-                      rows={3}
-                      {...field}
-                      className="bg-input border-border text-foreground"
                     />
                   </FormControl>
                   <FormMessage />
@@ -303,7 +290,6 @@ function ServiceDialog({
                         placeholder="1000"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
-                        className="bg-input border-border text-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -323,7 +309,6 @@ function ServiceDialog({
                         placeholder="60"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
-                        className="bg-input border-border text-foreground"
                       />
                     </FormControl>
                     <FormMessage />
@@ -337,13 +322,13 @@ function ServiceDialog({
               name="availableModes"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-foreground">Available Modes</FormLabel>
+                  <FormLabel className="text-foreground">Service Location</FormLabel>
                   <div className="space-y-2">
                     <FormField
                       control={form.control}
                       name="availableModes"
                       render={({ field }) => (
-                        <div className="flex items-center space-x-2">
+                        <label className="flex items-center space-x-2 cursor-pointer">
                           <Checkbox
                             checked={field.value?.includes('IN_PERSON')}
                             onCheckedChange={(checked) => {
@@ -355,15 +340,15 @@ function ServiceDialog({
                               }
                             }}
                           />
-                          <label className="text-sm font-medium text-foreground">In Person</label>
-                        </div>
+                          <span className="text-sm font-medium text-foreground">In Person</span>
+                        </label>
                       )}
                     />
                     <FormField
                       control={form.control}
                       name="availableModes"
                       render={({ field }) => (
-                        <div className="flex items-center space-x-2">
+                        <label className="flex items-center space-x-2 cursor-pointer">
                           <Checkbox
                             checked={field.value?.includes('VIRTUAL')}
                             onCheckedChange={(checked) => {
@@ -375,8 +360,8 @@ function ServiceDialog({
                               }
                             }}
                           />
-                          <label className="text-sm font-medium text-foreground">Virtual</label>
-                        </div>
+                          <span className="text-sm font-medium text-foreground">Virtual</span>
+                        </label>
                       )}
                     />
                   </div>
