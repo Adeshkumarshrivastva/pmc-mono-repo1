@@ -21,6 +21,7 @@ import {
   SidebarInset,
   SidebarMenu,
   SidebarProvider,
+  SidebarTrigger,
 } from '../ui/sidebar'
 import { Button } from '../ui/button'
 import { Spinner } from '../ui/spinner'
@@ -84,6 +85,7 @@ export default function AppShell({ children, user }: AppShellProps) {
       </Sidebar>
       <SidebarInset className="relative">
         <div className="bg-background sticky top-0 z-50 flex items-center gap-4 border-b px-3 py-1.5">
+          <SidebarTrigger className="mr-4 md:hidden" />
           <div className="flex-1" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
