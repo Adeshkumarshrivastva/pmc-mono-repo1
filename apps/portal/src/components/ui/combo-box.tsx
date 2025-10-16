@@ -106,7 +106,7 @@ export function Combobox({
       <PopoverContent className="p-0" align="start" style={{ width: 'var(--radix-popover-trigger-width)' }}>
         <Command>
           <CommandInput placeholder="Select..."></CommandInput>
-          <CommandList className="max-h-[50vh]">
+          <CommandList className="max-h-[40vh]">
             <CommandEmpty>No option found</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {

@@ -173,4 +173,11 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
   //   path: '/expert/availability',
   //   availableForUserRoles: ['EXPERT'],
   // },
+  {
+    type: 'link',
+    icon: UserIcon,
+    name: 'Profile',
+    path: '/expert/profile',
+    availableForUserRoles: ['EXPERT'],
+  },
 ]
