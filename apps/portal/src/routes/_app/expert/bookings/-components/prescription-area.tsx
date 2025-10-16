@@ -17,10 +17,11 @@ import { downloadBlobAsFile, getErrorMessage } from '@/lib/utils'
 
 type PrescriptionProps = {
   prescription?: Booking['prescription'][number]
+  isLimitedMedicines: boolean
   bookingId: string
 }
 
-export default function PrescriptionArea({ prescription, bookingId }: PrescriptionProps) {
+export default function PrescriptionArea({ prescription, isLimitedMedicines, bookingId }: PrescriptionProps) {
   const [mode, setMode] = useState<{ type: 'create' | 'edit' } | undefined>(undefined)
 
   const downloadPrescriptionMutation = useMutation({
@@ -146,6 +147,7 @@ export default function PrescriptionArea({ prescription, bookingId }: Prescripti
                 </SheetHeader>
                 <Separator />
                 <CreatePrescriptionForm
+                  isLimitedMedicines={isLimitedMedicines}
                   bookingId={bookingId}
                   onSuccess={() => {
                     setMode(undefined)

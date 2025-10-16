@@ -12,10 +12,21 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { prescriptionConfig } from '@/lib/prescription'
+import { SearchableCombobox } from '@/components/ui/searchable-combobox'
+import { ALL_MEDICINES_OPTIONS } from '@/lib/medicine'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type PrescriptionFormData = z.infer<typeof prescriptionConfig>
 
-export default function CreatePrescriptionForm({ bookingId, onSuccess }: { bookingId: string; onSuccess: () => void }) {
+export default function CreatePrescriptionForm({
+  bookingId,
+  onSuccess,
+  isLimitedMedicines,
+}: {
+  bookingId: string
+  onSuccess: () => void
+  isLimitedMedicines: boolean
+}) {
   const queryClient = useQueryClient()
 
   const form = useForm<PrescriptionFormData>({
@@ -121,7 +132,31 @@ export default function CreatePrescriptionForm({ bookingId, onSuccess }: { booki
                       <FormItem>
                         <FormLabel>Medicine Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g., Paracetamol" {...field} />
+                          {isLimitedMedicines ? (
+                            <Select value={field.value} onValueChange={field.onChange}>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a medicine" />
+                              </SelectTrigger>
+                              <SelectContent className="max-h-[50vh]">
+                                {ALL_MEDICINES_OPTIONS.map((medicine) => (
+                                  <SelectItem key={medicine.value} value={medicine.value} className="w-full">
+                                    {medicine.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <SearchableCombobox
+                              fetchOptions={(query: string) => {
+                                return Promise.resolve(
+                                  ALL_MEDICINES_OPTIONS.filter((med) =>
+                                    med.label.toLowerCase().includes(query.toLowerCase()),
+                                  ),
+                                )
+                              }}
+                              {...field}
+                            />
+                          )}
                         </FormControl>
                         <FormMessage />
                       </FormItem>
