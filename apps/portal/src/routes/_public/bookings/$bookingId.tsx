@@ -125,7 +125,7 @@ function BookingConfirmationPage() {
                             href={virtualLocation.meetLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-muted-foreground font-bold text-sm"
+                            className="inline-flex items-center gap-1 text-muted-foreground font-bold text-sm"
                           >
                             {virtualLocation?.meetLink}
                             <ExternalLinkIcon className="size-3.5" />

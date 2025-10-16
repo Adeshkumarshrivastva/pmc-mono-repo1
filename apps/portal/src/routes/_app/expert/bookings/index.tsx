@@ -9,6 +9,7 @@ import { honoClient } from '@/lib/hono-client'
 import BookingCard from './-components/booking-card'
 import BookingInfo from './-components/booking-info'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { BOOKING_PERIODS, type BookingPeriod } from '@/lib/booking'
 
 export const Route = createFileRoute('/_app/expert/bookings/')({
   component: ExpertBookings,
@@ -95,6 +96,7 @@ function ExpertBookings() {
                               }}
                               key={booking.id}
                               booking={booking}
+                              period={period}
                             />
                           ))}
                         </div>
@@ -131,9 +133,6 @@ function ExpertBookings() {
     </div>
   )
 }
-
-const BOOKING_PERIODS = ['upcoming', 'past'] as const
-type BookingPeriod = (typeof BOOKING_PERIODS)[number]
 
 const BOOKING_PERIODS_CONFIG: Record<BookingPeriod, { label: string; value: BookingPeriod }> = {
   upcoming: {

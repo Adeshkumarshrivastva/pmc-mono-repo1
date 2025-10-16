@@ -12,6 +12,7 @@ import { Combobox } from '@/components/ui/combo-box'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 import { Marquee } from '@/components/ui/marquee'
 import { SERVICE_MODE_CONFIG } from '@/lib/location'
+import { specializationOptions } from '@/lib/expert'
 
 type FilterState = {
   search: string
@@ -233,7 +234,6 @@ export default function OurExperts() {
       }),
   })
 
-  const specializationOptions = generateSpecializationOptions(allExpertsQuery.data?.experts)
   const locationOptions = generateLocationOptions(allExpertsQuery.data?.experts)
 
   function updateFilter(
@@ -566,27 +566,6 @@ function ExpertCardSkeleton() {
       </div>
     </div>
   )
-}
-
-function generateSpecializationOptions(experts?: ExpertWithRelations[]) {
-  if (!experts) {
-    return []
-  }
-
-  const allExpertise = new Set<string>()
-
-  experts.forEach((expert) => {
-    if (expert.expertise && Array.isArray(expert.expertise)) {
-      expert.expertise.forEach((expertise) => allExpertise.add(expertise))
-    }
-  })
-
-  return Array.from(allExpertise)
-    .map((expertise) => ({
-      value: expertise,
-      label: expertise.charAt(0).toUpperCase() + expertise.slice(1),
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label))
 }
 
 function generateLocationOptions(experts?: ExpertWithRelations[]) {

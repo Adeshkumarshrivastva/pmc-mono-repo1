@@ -1,5 +1,8 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import { DeepTm } from '@/payload/types'
+import { type DeepTm } from '@/payload/types'
+import AppointmentForm from '../../_components/appointment-form'
+import { Button } from '@/components/ui/button'
+import { CallIcon } from '@/components/ui/icons'
 
 type HeroSectionProps = {
   // TODO: Rename DeepTm to DeepTms in payload and update accordingly
@@ -23,6 +26,17 @@ export default function HeroSection({ data }: HeroSectionProps) {
             <div>
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 <iframe className="h-auto w-full aspect-video rounded-lg" src={data?.videoUrl ?? ''} />
+                {data?.action && (
+                  <div className="mt-8">
+                    <AppointmentForm
+                      trigger={
+                        <Button variant="default" icon={<CallIcon />} className="w-full sm:w-auto">
+                          {data.action}
+                        </Button>
+                      }
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

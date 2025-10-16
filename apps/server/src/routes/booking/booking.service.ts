@@ -6,6 +6,7 @@ import { DAY_MAP } from '../../lib/booking'
 import { DayOfWeek } from '../../generated/prisma'
 import { dateToMinutes } from '../../lib/date'
 import { razorpayInstance } from '../../lib/razorpay'
+import { handlePostBooking } from '../../lib/post-booking'
 
 export async function createBooking(c: C, input: CreateBookingInput) {
   const userId = c.var.user?.id
@@ -111,6 +112,7 @@ export async function createBooking(c: C, input: CreateBookingInput) {
           serviceCurrency: service.currency,
           servicePrice: service.price,
           bookingId: draftBooking.id,
+          paymentMode: service.paymentMode,
           // TODO: Later, we will take the partial payment amount as input from the patient
           amountPaid: service.price,
           isPartialPayment: false,
@@ -121,31 +123,88 @@ export async function createBooking(c: C, input: CreateBookingInput) {
       return { draftBooking, pendingPayment }
     })
 
-    const razorpayOrder = await razorpayInstance.orders.create({
-      amount: result.pendingPayment.amountPaid * 100,
-      currency: result.pendingPayment.serviceCurrency,
-      notes: {
+    if (service.paymentMode === 'ONLINE') {
+      const razorpayOrder = await razorpayInstance.orders.create({
+        amount: result.pendingPayment.amountPaid * 100,
+        currency: result.pendingPayment.serviceCurrency,
+        notes: {
+          bookingId: result.draftBooking.id,
+          serviceId: service.id,
+          serviceName: service.name,
+          servicePrice: service.price,
+          expertId: expert.id,
+          patientId: patient.id,
+          paymentId: result.pendingPayment.id,
+          bookingMode: input.mode,
+        },
+      })
+
+      await prisma.payment.update({
+        where: {
+          id: result.pendingPayment.id,
+        },
+        data: {
+          razorpayOrderId: razorpayOrder.id,
+        },
+      })
+
+      return c.json({
+        success: true,
         bookingId: result.draftBooking.id,
-        serviceId: service.id,
-        serviceName: service.name,
-        servicePrice: service.price,
-        expertId: expert.id,
-        patientId: patient.id,
-        paymentId: result.pendingPayment.id,
-        bookingMode: input.mode,
-      },
-    })
+        paymentMode: 'ONLINE' as const,
+        razorpayOrder: razorpayOrder,
+      })
+    } else {
+      const bookingWithRelations = await prisma.booking.findUnique({
+        where: { id: result.draftBooking.id },
+        include: {
+          expert: {
+            include: {
+              user: true,
+            },
+          },
+          patient: {
+            include: {
+              user: true,
+            },
+          },
+          service: true,
+        },
+      })
 
-    await prisma.payment.update({
-      where: {
-        id: result.pendingPayment.id,
-      },
-      data: {
-        razorpayOrderId: razorpayOrder.id,
-      },
-    })
+      if (!bookingWithRelations) {
+        return c.json({ error: 'Booking not found after creation' }, 500)
+      }
 
-    return c.json({ success: true, bookingId: result.draftBooking.id, ...razorpayOrder })
+      const { googleCalendarEvent } = await handlePostBooking({
+        booking: bookingWithRelations,
+        orderId: null, // No Razorpay order for offline payments
+      })
+
+      await prisma.booking.update({
+        where: {
+          id: result.draftBooking.id,
+        },
+        data: {
+          status: 'BOOKED',
+          virtualLocation:
+            bookingWithRelations.mode === 'VIRTUAL' && googleCalendarEvent?.meetLink
+              ? {
+                  type: 'google_meet',
+                  meetLink: googleCalendarEvent.meetLink,
+                }
+              : null,
+          calendarEventId: googleCalendarEvent?.eventId ?? null,
+        },
+      })
+
+      return c.json({
+        success: true,
+        bookingId: result.draftBooking.id,
+        paymentMode: service.paymentMode,
+        razorpayOrder: null,
+      })
+    }
   } catch {
     return c.json({ error: 'Failed to create booking' }, 500)
   }
