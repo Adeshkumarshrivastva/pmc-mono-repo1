@@ -19,8 +19,8 @@ import { Route as AppPatientDashboardRouteImport } from './routes/_app/patient/d
 import { Route as AppExpertDashboardRouteImport } from './routes/_app/expert/dashboard'
 import { Route as PublicExpertsExpertSlugIndexRouteImport } from './routes/_public/experts/$expertSlug/index'
 import { Route as AppPatientBookingsIndexRouteImport } from './routes/_app/patient/bookings/index'
-import { Route as AppExpertProfileIndexRouteImport } from './routes/_app/expert/profile/index'
 import { Route as AppExpertServicesIndexRouteImport } from './routes/_app/expert/services/index'
+import { Route as AppExpertProfileIndexRouteImport } from './routes/_app/expert/profile/index'
 import { Route as AppExpertBookingsIndexRouteImport } from './routes/_app/expert/bookings/index'
 import { Route as PublicExpertsExpertSlugServiceSlugRouteImport } from './routes/_public/experts/$expertSlug/$serviceSlug'
 import { Route as AppExpertServicesServiceIdRouteImport } from './routes/_app/expert/services/$serviceId'
@@ -73,14 +73,14 @@ const AppPatientBookingsIndexRoute = AppPatientBookingsIndexRouteImport.update({
   path: '/patient/bookings/',
   getParentRoute: () => AppRoute,
 } as any)
-const AppExpertProfileIndexRoute = AppExpertProfileIndexRouteImport.update({
-  id: '/expert/profile/',
-  path: '/expert/profile/',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppExpertServicesIndexRoute = AppExpertServicesIndexRouteImport.update({
   id: '/expert/services/',
   path: '/expert/services/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExpertProfileIndexRoute = AppExpertProfileIndexRouteImport.update({
+  id: '/expert/profile/',
+  path: '/expert/profile/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppExpertBookingsIndexRoute = AppExpertBookingsIndexRouteImport.update({
@@ -278,18 +278,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPatientBookingsIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/expert/profile/': {
-      id: '/_app/expert/profile/'
-      path: '/expert/profile'
-      fullPath: '/expert/profile'
-      preLoaderRoute: typeof AppExpertProfileIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/expert/services/': {
       id: '/_app/expert/services/'
       path: '/expert/services'
       fullPath: '/expert/services'
       preLoaderRoute: typeof AppExpertServicesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/expert/profile/': {
+      id: '/_app/expert/profile/'
+      path: '/expert/profile'
+      fullPath: '/expert/profile'
+      preLoaderRoute: typeof AppExpertProfileIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/expert/bookings/': {

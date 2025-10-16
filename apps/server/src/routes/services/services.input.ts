@@ -4,6 +4,7 @@ export const createServiceInput = z.object({
   name: z.string().min(1, 'Service name is required'),
   slug: z.string().min(1, 'Slug is required'),
   availableModes: z.array(z.enum(['IN_PERSON', 'VIRTUAL'])).min(1, 'At least one mode is required'),
+  paymentMode: z.enum(['ONLINE', 'OFFLINE']),
   inPersonLocation: z.any().optional(),
   city: z.string().min(1, 'City is required'),
   country: z.string().min(1, 'Country is required'),

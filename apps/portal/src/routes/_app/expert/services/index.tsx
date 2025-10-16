@@ -17,6 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Checkbox } from '@/components/ui/check-box'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export const Route = createFileRoute('/_app/expert/services/')({
   component: ExpertService,
@@ -29,11 +30,12 @@ const serviceFormSchema = z.object({
     .min(3, 'Slug must be at least 3 characters')
     .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
   description: z.string().optional(),
-  price: z.number().min(0, 'Price must be positive'),
+  price: z.number().min(500, 'Price must be above ₹500'),
   durationInMinutes: z.number().min(15, 'Duration must be at least 15 minutes'),
   city: z.string().min(2, 'City is required'),
   country: z.string().min(2, 'Country is required'),
   availableModes: z.array(z.enum(['IN_PERSON', 'VIRTUAL'])).min(1, 'Select at least one mode'),
+  paymentMode: z.enum(['ONLINE', 'OFFLINE']),
 })
 
 type ServiceFormInput = z.infer<typeof serviceFormSchema>
@@ -170,6 +172,7 @@ function ServiceDialog({
       city: 'Gurgoan',
       country: 'India',
       availableModes: [],
+      paymentMode: 'ONLINE',
     },
     resolver: zodResolver(serviceFormSchema),
   })
@@ -365,6 +368,28 @@ function ServiceDialog({
                       )}
                     />
                   </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="paymentMode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-foreground">Payment Mode</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select payment mode" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="ONLINE">Online</SelectItem>
+                      <SelectItem value="OFFLINE">Offline</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
