@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { MapPin, Star, ArrowLeft, UserIcon, Award, User, BookOpenIcon } from 'lucide-react'
+import { MapPin, Star, ArrowLeft, UserIcon, Award, User, BookOpenIcon, ClockIcon } from 'lucide-react'
 import type { ExpertType } from '@pmc/server/src/generated/prisma/client'
 import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
@@ -135,10 +135,10 @@ function ExpertPage() {
                           {experienceInYears ? (
                             <div>
                               <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                                <Clock className="size-3" />
+                                <ClockIcon className="size-3" />
                                 <span className="text-sm">Experience</span>
                               </div>
-                              <p className="text-sm font-semibold text-primary">{experienceInYears}</p>
+                              <p className="text-sm font-semibold text-primary">{experienceInYears} years</p>
                             </div>
                           ) : null}
 
