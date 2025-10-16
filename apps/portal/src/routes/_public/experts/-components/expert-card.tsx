@@ -25,7 +25,7 @@ type FilterState = {
   sortOrder?: 'asc' | 'desc'
 }
 
-export type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
+type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
 
 function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
   const { servicesProvided, name, slug, city, country, availability, expertise, experienceInYears } = expert
