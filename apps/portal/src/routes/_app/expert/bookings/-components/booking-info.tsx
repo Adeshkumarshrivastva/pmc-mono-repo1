@@ -121,7 +121,11 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
               </div>
             </TabsContent>
             <TabsContent value="prescriptions" className="p-4">
-              <PrescriptionArea prescription={booking.prescription[0]} bookingId={booking.id} />
+              <PrescriptionArea
+                isLimitedMedicines={booking.mode === 'VIRTUAL'}
+                prescription={booking.prescription[0]}
+                bookingId={booking.id}
+              />
             </TabsContent>
           </div>
         </Tabs>
