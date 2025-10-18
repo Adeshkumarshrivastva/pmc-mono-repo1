@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import PrescriptionArea from './prescription-area'
 import { inPersonLocationSchema, SERVICE_MODE_CONFIG, virtualLocationSchema } from '@/lib/location'
+import PaymentArea from './payment-area'
 
 type BookingInfoProps = {
   booking: Booking
@@ -92,9 +93,10 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
         <Tabs defaultValue="booking-details">
           <div className="flex flex-col">
             <div className="flex items-center p-4">
-              <TabsList>
+              <TabsList className="gap-2">
                 <TabsTrigger value="booking-details">Booking Details</TabsTrigger>
                 <TabsTrigger value="prescriptions">Prescription</TabsTrigger>
+                <TabsTrigger value="payment">Payment</TabsTrigger>
               </TabsList>
             </div>
             <Separator />
@@ -126,6 +128,9 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
                 prescription={booking.prescription[0]}
                 bookingId={booking.id}
               />
+            </TabsContent>
+            <TabsContent value="payment" className="p-4">
+              <PaymentArea bookingId={booking.id} />
             </TabsContent>
           </div>
         </Tabs>
