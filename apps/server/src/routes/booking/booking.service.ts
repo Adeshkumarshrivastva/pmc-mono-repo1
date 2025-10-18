@@ -305,3 +305,89 @@ async function isSlotAvailable(
 
   return { isAvailable: true }
 }
+
+export async function getBookingWithPayments(c: C, bookingId: string) {
+  const booking = await prisma.booking.findUnique({
+    where: {
+      id: bookingId,
+    },
+    include: {
+      payments: true,
+      expert: {
+        include: { user: true },
+      },
+      patient: {
+        include: { user: true },
+      },
+      service: true,
+    },
+  })
+
+  if (!booking) {
+    return c.json({ error: 'Booking not found' }, 404)
+  }
+
+  return c.json({ success: true, booking })
+}
+
+export async function updatePaymentStatus(c: C, input: { status: 'PENDING' | 'COMPLETED' }) {
+  const expertId = c.var.user?.id
+  const bookingId = c.req.param('bookingId')
+
+  if (!expertId) {
+    return c.json({ error: 'Missing expert user ID' }, 401)
+  }
+
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: {
+      expert: { select: { userId: true } },
+    },
+  })
+
+  if (!booking) {
+    return c.json({ error: 'Booking not found' }, 404)
+  }
+
+  if (booking.expert.userId !== expertId) {
+    return c.json({ error: 'Unauthorized: You do not own this booking' }, 403)
+  }
+
+  if (booking.status === 'CANCELLED') {
+    return c.json({ error: 'Cannot update payment for cancelled booking' }, 400)
+  }
+
+  const payment = await prisma.payment.findFirst({
+    where: {
+      bookingId,
+      paymentMode: 'OFFLINE',
+    },
+  })
+
+  if (!payment) {
+    return c.json({ error: 'No offline payment found for this booking' }, 404)
+  }
+
+  if (payment.paymentMode !== 'OFFLINE') {
+    return c.json({ error: 'Can only manually update offline payments' }, 400)
+  }
+
+  if (payment.status === input.status) {
+    return c.json({ message: `Payment is already marked as ${input.status}` }, 200)
+  }
+
+  await prisma.$transaction([
+    prisma.payment.update({
+      where: { id: payment.id },
+      data: { status: input.status },
+    }),
+    prisma.booking.update({
+      where: { id: booking.id },
+      data: {
+        status: input.status === 'COMPLETED' ? 'BOOKED' : booking.status,
+      },
+    }),
+  ])
+
+  return c.json({ success: true, message: `Payment status updated to ${input.status}` })
+}
