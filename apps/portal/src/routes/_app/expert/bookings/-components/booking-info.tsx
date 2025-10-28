@@ -130,7 +130,7 @@ export default function BookingInfo({ booking }: BookingInfoProps) {
               />
             </TabsContent>
             <TabsContent value="payment" className="p-4">
-              <PaymentArea bookingId={booking.id} />
+              <PaymentArea bookingId={booking.id} payment={booking.payments[0]} />
             </TabsContent>
           </div>
         </Tabs>

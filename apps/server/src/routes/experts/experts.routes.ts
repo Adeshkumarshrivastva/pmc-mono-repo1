@@ -7,6 +7,7 @@ import {
   expertMonthlyAvailableSlotsQuery,
   expertProfileInput,
   expertSearchQuery,
+  updatePaymentStatusInput,
   updatePrescriptionInput,
 } from './experts.input'
 import {
@@ -21,6 +22,7 @@ import {
   downloadPrescription,
   getExpert,
   updateExpert,
+  updatePaymentStatus,
 } from './experts.service'
 import { authMiddleware } from '../../middleware/auth.middleware'
 
@@ -38,6 +40,9 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   )
   .post('/bookings/download-prescription/:prescriptionId', authMiddleware, async (c) =>
     downloadPrescription(c, c.req.param('prescriptionId')),
+  )
+  .patch('/:bookingId/payment/status', authMiddleware, zValidator('json', updatePaymentStatusInput), async (c) =>
+    updatePaymentStatus(c, c.req.valid('json')),
   )
   .get('/expert', authMiddleware, async (c) => getExpert(c))
   .patch('/expert', authMiddleware, zValidator('json', expertProfileInput), async (c) =>

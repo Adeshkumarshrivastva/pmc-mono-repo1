@@ -18,9 +18,3 @@ export const createBookingInput = z.object({
 })
 
 export type CreateBookingInput = z.infer<typeof createBookingInput>
-
-export const updatePaymentStatusInput = z.object({
-  status: z.enum(['PENDING', 'COMPLETED']),
-})
-
-export type UpdatePaymentStatusInput = z.infer<typeof updatePaymentStatusInput>

@@ -15,7 +15,7 @@ export default function PaymentArea({ bookingId, payment }: PaymentAreaProps) {
 
   const updatePaymentStatusMutation = useMutation({
     mutationFn: async (status: 'PENDING' | 'COMPLETED') => {
-      const res = await honoClient.server.booking[':bookingId'].payment.status.$patch({
+      const res = await honoClient.server.experts[':bookingId'].payment.status.$patch({
         param: { bookingId },
         json: { status },
       })
@@ -24,7 +24,7 @@ export default function PaymentArea({ bookingId, payment }: PaymentAreaProps) {
     },
     onSuccess: (data) => {
       toast.success(data.message || 'Payment status updated')
-      queryClient.invalidateQueries({ queryKey: ['booking', bookingId] })
+      queryClient.invalidateQueries({ queryKey: ['get-expert-bookings'] })
     },
     onError: (error) => {
       toast.error(getErrorMessage(error))
@@ -59,7 +59,7 @@ export default function PaymentArea({ bookingId, payment }: PaymentAreaProps) {
         className="min-w-44"
         loading={updatePaymentStatusMutation.isPending}
       >
-        `Mark as ${nextStatus}`
+        Mark as {nextStatus}
       </Button>
     </div>
   )
