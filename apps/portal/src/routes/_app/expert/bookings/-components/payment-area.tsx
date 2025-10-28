@@ -1,37 +1,19 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { honoClient } from '@/lib/hono-client'
 import { getErrorMessage } from '@/lib/utils'
+import type { Booking } from '@/lib/booking'
 
 type PaymentAreaProps = {
   bookingId: string
+  payment?: Booking['payments'][number]
 }
 
-export default function PaymentArea({ bookingId }: PaymentAreaProps) {
+export default function PaymentArea({ bookingId, payment }: PaymentAreaProps) {
   const queryClient = useQueryClient()
 
-  const {
-    data: bookingResponse,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['booking', bookingId],
-    queryFn: async () => {
-      const res = await honoClient.server.booking[':bookingId'].$get({
-        param: { bookingId },
-      })
-      if (!res.ok) throw new Error(await res.text())
-      return res.json()
-    },
-    enabled: !!bookingId,
-  })
-
-  const booking = bookingResponse?.booking
-  const offlinePayment = booking?.payments?.find((p) => p.paymentMode === 'OFFLINE')
-  const paymentStatus = offlinePayment?.status || 'PENDING'
-
-  const mutation = useMutation({
+  const updatePaymentStatusMutation = useMutation({
     mutationFn: async (status: 'PENDING' | 'COMPLETED') => {
       const res = await honoClient.server.booking[':bookingId'].payment.status.$patch({
         param: { bookingId },
@@ -49,40 +31,35 @@ export default function PaymentArea({ bookingId }: PaymentAreaProps) {
     },
   })
 
-  if (isLoading) {
-    return <div>Loading booking...</div>
-  }
-
-  if (error) {
-    return <div>Error fetching booking: {getErrorMessage(error)}</div>
-  }
-
-  if (!offlinePayment) {
+  if (!payment) {
     return <p className="text-sm text-muted-foreground">No offline payment found.</p>
   }
 
-  const nextStatus = paymentStatus === 'PENDING' ? 'COMPLETED' : 'PENDING'
+  const nextStatus = payment.status === 'PENDING' ? 'COMPLETED' : 'PENDING'
 
   return (
     <div className="space-y-4">
       <div>
-        <strong>Amount:</strong> {offlinePayment.amountCurrency} {offlinePayment.amountPaid}
+        <strong>Amount:</strong> {payment.amountCurrency} {payment.amountPaid}
       </div>
 
       <div>
         <strong>Payment Status:</strong>
-        <span className={`ml-2 ${paymentStatus === 'COMPLETED' ? 'text-green-600' : 'text-yellow-600'}`}>
-          {paymentStatus}
+        <span className={`ml-2 ${payment.status === 'COMPLETED' ? 'text-green-600' : 'text-yellow-600'}`}>
+          {payment.status}
         </span>
       </div>
 
       <Button
-        onClick={() => mutation.mutate(nextStatus)}
-        disabled={mutation.isPending}
+        onClick={() => {
+          updatePaymentStatusMutation.mutate(nextStatus)
+        }}
+        disabled={updatePaymentStatusMutation.isPending}
         variant="default"
         className="min-w-44"
+        loading={updatePaymentStatusMutation.isPending}
       >
-        {mutation.isPending ? 'Updating...' : `Mark as ${nextStatus}`}
+        `Mark as ${nextStatus}`
       </Button>
     </div>
   )

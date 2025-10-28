@@ -437,6 +437,7 @@ export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) 
           },
         },
         prescription: true,
+        payments: true,
       },
       orderBy: input.period === 'past' ? { endDateTime: 'desc' } : { startDateTime: 'asc' },
     })
