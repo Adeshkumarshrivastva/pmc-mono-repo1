@@ -46,7 +46,7 @@ export default async function HomePage() {
       <TreatmentSection data={treatmentSection} />
       <WhyChooseSection data={whyChooseSection} />
       <ExpertsSection data={expertsSection} />
-      <PackagesSection data={packagesSection} />
+      {/* <PackagesSection data={packagesSection} /> */}
       <AppointmentSection data={appointmentSection} services={services.docs} />
       <TestimonialSection data={testimonialSection} />
       <AchievementSection data={achievementSection} />
