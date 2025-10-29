@@ -93,6 +93,11 @@ const PublicExpertsExpertSlugServiceSlugRoute = PublicExpertsExpertSlugServiceSl
   path: '/experts/$expertSlug/$serviceSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppExpertServicesServiceIdRoute = AppExpertServicesServiceIdRouteImport.update({
+  id: '/expert/services/$serviceId',
+  path: '/expert/services/$serviceId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
