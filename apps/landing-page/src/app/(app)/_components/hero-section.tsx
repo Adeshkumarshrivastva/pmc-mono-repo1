@@ -6,6 +6,8 @@ import { CallIcon } from '@/components/ui/icons'
 import { getURLFromMedia } from '@/payload/utils'
 import type { Home } from '@/payload/types'
 import AppointmentForm from './appointment-form'
+import Link from 'next/link'
+import { ArrowRightIcon } from 'lucide-react'
 
 type HeroSectionProps = {
   data: Home['heroSetion']
@@ -33,13 +35,16 @@ export default function HeroSection({ data }: HeroSectionProps) {
               </h1>
 
               {data?.heroSectionDescription ? (
-                <p className="sm:text-lg text-primary-foreground leading-relaxed opacity-80 p-2 bg-primary/60 border border-primary/30 rounded-2xl backdrop-blur-md sm:bg-transparent sm:border-0 sm:rounded-none sm:backdrop-blur-none">
+                <p className="sm:text-lg text-primary-foreground leading-relaxed opacity-80 p-2 bg-primary/60 border border-primary/30 rounded-2xl backdrop-blur-md xl:bg-transparent xl:border-0 xl:rounded-none xl:backdrop-blur-none">
                   {data.heroSectionDescription}
                 </p>
               ) : null}
             </div>
+            <div className="flex gap-2 mt-8">
+              <Button variant="outline" icon={<ArrowRightIcon />} iconPosition="right" className="w-full sm:w-auto">
+                <Link href="/portal/experts">Our Experts</Link>
+              </Button>
 
-            <div className="mt-8">
               {data?.heroSectionAction ? (
                 <AppointmentForm
                   trigger={
