@@ -24,7 +24,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
         className="object-cover xl:object-contain xl:object-bottom"
         priority
       />
-      <div className="relative 2xl:container w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-25 z-10">
+      <div className="relative 2xl:container w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-25 z-10">
         <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8 xl:gap-12">
           <div className="flex-1 max-w-2xl xl:max-w-none">
             <div className="space-y-6 xl:w-[484px]">
