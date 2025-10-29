@@ -75,7 +75,7 @@ async function createCalendarEvent(booking: BookingWithRelations) {
   }
 }
 
-async function sendEmail(params: {
+export async function sendEmail(params: {
   to: string
   cc?: string[]
   subject: string

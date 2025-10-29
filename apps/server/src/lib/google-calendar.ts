@@ -13,7 +13,6 @@ export function getGoogleCalendarClient() {
     throw new Error('Missing Google service account credentials')
   }
 
-  // Replace escaped newlines in private key
   const formattedPrivateKey = privateKey.replace(/\\n/g, '\n')
 
   const auth = new JWT({
@@ -83,7 +82,7 @@ export async function createGoogleCalendarEvent(params: CreateMeetLinkParams): P
   }
 
   const response = await calendar.events.insert({
-    calendarId: isDevelopment ? config.google.calendarEmail : 'primary',
+    calendarId: config.google.calendarEmail,
     conferenceDataVersion: 1,
     sendNotifications: true,
     requestBody: event,

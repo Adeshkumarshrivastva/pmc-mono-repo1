@@ -135,7 +135,7 @@ export default function DepressionReportPage() {
             router.push('/quiz')
           }}
           onViewExperts={() => {
-            router.push('http://localhost:5173/portal/experts')
+            router.push('/portal/experts')
           }}
           appointmentFormTrigger={
             <AppointmentForm

@@ -63,6 +63,7 @@ export default $config({
     new sst.aws.Function('PmcHonoServer', {
       architecture: 'arm64',
       handler: 'apps/server/src/index.handler',
+      link: [SenderEmail],
       url: {
         router: {
           instance: router,
