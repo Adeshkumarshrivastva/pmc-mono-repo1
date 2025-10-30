@@ -8,7 +8,6 @@ import DeepTmsSection from './_components/deep-tms-section'
 import FAQSection from './_components/faq-section'
 import WhyChooseSection from './_components/why-choose-section'
 import TestimonialSection from './_components/testimonial-section'
-import PackagesSection from './_components/packages-section'
 import BlogsSection from './_components/blogs-section'
 import ExpertsSection from './_components/experts-section'
 import ServicesSection from './_components/services-section'
@@ -25,14 +24,19 @@ export default async function HomePage() {
     faqSection,
     whyChooseSection,
     testimonialSection,
-    packagesSection,
-    blogsSection,
     expertsSection,
     servicesSection,
     achievementSection,
     quizSection,
+    blogsSection,
   } = await payload.findGlobal({
     slug: 'home',
+  })
+
+  const topBlogs = await payload.find({
+    collection: 'blog',
+    sort: '-publishedAt',
+    limit: 3,
   })
 
   const services = await getServices({})
@@ -50,8 +54,7 @@ export default async function HomePage() {
       <AppointmentSection data={appointmentSection} services={services.docs} />
       <TestimonialSection data={testimonialSection} />
       <AchievementSection data={achievementSection} />
-      <FAQSection data={faqSection} />
-      <BlogsSection data={blogsSection} />
+      <BlogsSection data={blogsSection} blogs={topBlogs.docs} />
     </div>
   )
 }
