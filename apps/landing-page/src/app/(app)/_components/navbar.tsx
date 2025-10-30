@@ -25,6 +25,12 @@ const NAV_ITEMS = [
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ] as const
 
+const AWARENESS_ITEMS = [
+  { id: 'blogs', href: '/blogs', label: 'Blogs' },
+  { id: 'webinars', href: '/webinars', label: 'Webinar & Workshops' },
+  { id: 'internship', href: '/internship', label: 'Internship' },
+] as const
+
 const HOVER_DELAY = 400
 
 export default function Navbar({ services }: NavbarProps) {
@@ -52,20 +58,24 @@ export default function Navbar({ services }: NavbarProps) {
         <div className="flex-1 hidden xl:flex items-center justify-center xl:space-x-8">
           {NAV_ITEMS.map((item) => {
             const isActive = `/${pathname.split('/')[1]}` === item.href
-            return item.id === 'services' ? (
-              <ServicesMenu key={item.id} services={services} isActive={isActive} />
-            ) : (
-              <Link
-                key={item.id}
-                href={item.href}
-                className={cn(
-                  'text-lg font-semibold rounded-md px-2 py-1 transition-colors',
-                  isActive ? 'text-primary-foreground' : 'text-primary-foreground/50 hover:text-primary-foreground',
-                )}
-              >
-                {item.label}
-              </Link>
-            )
+            if (item.id === 'services') {
+              return <ServicesMenu key={item.id} services={services} isActive={isActive} />
+            } else if (item.id === 'webinars') {
+              return <AwarenessMenu key={item.id} isActive={isActive} />
+            } else {
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className={cn(
+                    'text-lg font-semibold rounded-md px-2 py-1 transition-colors',
+                    isActive ? 'text-primary-foreground' : 'text-primary-foreground/50 hover:text-primary-foreground',
+                  )}
+                >
+                  {item.label}
+                </Link>
+              )
+            }
           })}
         </div>
 
@@ -186,6 +196,45 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
               })
             : null}
         </div>
+      </HoverCardContent>
+    </HoverCard>
+  )
+}
+
+function AwarenessMenu({ isActive }: { isActive: boolean }) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  return (
+    <HoverCard open={isHovered} openDelay={HOVER_DELAY} onOpenChange={setIsHovered}>
+      <HoverCardTrigger asChild>
+        <Link
+          href={'/webinars'}
+          className={cn(
+            'transition-colors rounded-md px-2 py-1',
+            isActive || isHovered
+              ? 'text-primary-foreground'
+              : 'text-primary-foreground/50 hover:text-primary-foreground',
+          )}
+          onMouseEnter={() => {
+            setIsHovered(true)
+          }}
+        >
+          <button className="flex w-full justify-between text-left items-center text-lg font-semibold space-x-2 cursor-pointer">
+            <span>Awareness</span>
+            <ChevronDown
+              className={cn('size-4 flex-shrink-0 transition-transform duration-200', isHovered ? 'rotate-180' : null)}
+            />
+          </button>
+        </Link>
+      </HoverCardTrigger>
+      <HoverCardContent align="center" className="p-0 flex flex-col w-64 bg-primary-foreground">
+        {AWARENESS_ITEMS.map((item) => (
+          <Link key={item.id} href={item.href} className="flex w-full">
+            <button className="flex w-full text-left items-center py-2 px-4 hover:font-medium hover:bg-accent space-x-2 cursor-pointer">
+              <span>{item.label}</span>
+            </button>
+          </Link>
+        ))}
       </HoverCardContent>
     </HoverCard>
   )
