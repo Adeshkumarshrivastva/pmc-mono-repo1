@@ -21,14 +21,14 @@ const NAV_ITEMS = [
   { id: 'deepTms', href: '/deep-tms', label: 'Deep TMS' },
   { id: 'services', href: '/services', label: 'Services' },
   { id: 'our-experts', href: '/portal/experts', label: 'Our Experts' },
-  { id: 'webinars', href: '/webinars', label: 'Awareness' },
+  { id: 'awareness', href: '/webinars', label: 'Awareness' },
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ] as const
 
 const AWARENESS_ITEMS = [
   { id: 'blogs', href: '/blogs', label: 'Blogs' },
   { id: 'webinars', href: '/webinars', label: 'Webinar & Workshops' },
-  { id: 'internship', href: '/internship', label: 'Internship' },
+  { id: 'internship', href: 'https://ambassador.proactivefoundation.org/', label: 'Internship' },
 ] as const
 
 const HOVER_DELAY = 400
@@ -60,7 +60,7 @@ export default function Navbar({ services }: NavbarProps) {
             const isActive = `/${pathname.split('/')[1]}` === item.href
             if (item.id === 'services') {
               return <ServicesMenu key={item.id} services={services} isActive={isActive} />
-            } else if (item.id === 'webinars') {
+            } else if (item.id === 'awareness') {
               return <AwarenessMenu key={item.id} isActive={isActive} />
             } else {
               return (
@@ -228,13 +228,21 @@ function AwarenessMenu({ isActive }: { isActive: boolean }) {
         </Link>
       </HoverCardTrigger>
       <HoverCardContent align="center" className="p-0 flex flex-col w-64 bg-primary-foreground">
-        {AWARENESS_ITEMS.map((item) => (
-          <Link key={item.id} href={item.href} className="flex w-full">
-            <button className="flex w-full text-left items-center py-2 px-4 hover:font-medium hover:bg-accent space-x-2 cursor-pointer">
-              <span>{item.label}</span>
-            </button>
-          </Link>
-        ))}
+        {AWARENESS_ITEMS.map((item) => {
+          const isExternal = item.href.startsWith('http')
+          return (
+            <Link
+              key={item.id}
+              href={item.href}
+              className="flex w-full"
+              {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
+            >
+              <button className="flex w-full text-left items-center py-2 px-4 hover:font-medium hover:bg-accent space-x-2 cursor-pointer">
+                <span>{item.label}</span>
+              </button>
+            </Link>
+          )
+        })}
       </HoverCardContent>
     </HoverCard>
   )
