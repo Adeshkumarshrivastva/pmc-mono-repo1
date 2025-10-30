@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import type { Service } from '@pmc/server/src/generated/prisma/client'
 import { nanoid } from 'nanoid'
 import { honoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
@@ -17,8 +16,8 @@ import { SERVICE_MODE_CONFIG } from '@/lib/location'
 const serviceFormSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   description: z.string().optional(),
-  price: z.number().min(500, 'Price must be above ₹500'),
-  durationInMinutes: z.number().min(15, 'Duration must be at least 15 minutes'),
+  price: z.string().min(1, 'Price is required'),
+  durationInMinutes: z.string().min(1, 'Duration is required'),
   city: z.string().min(2, 'City is required'),
   country: z.string().min(2, 'Country is required'),
   availableModes: z.array(z.enum(['IN_PERSON', 'VIRTUAL'])).min(1, 'Select at least one mode'),
@@ -27,11 +26,9 @@ const serviceFormSchema = z.object({
 
 type ServiceFormInput = z.infer<typeof serviceFormSchema>
 
-interface ServiceDialogProps {
+type ServiceDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  service: Service | null
-  mode: 'create' | 'edit'
 }
 
 function generateServiceSlug(name: string): string {
@@ -46,15 +43,15 @@ function generateServiceSlug(name: string): string {
   return `${formattedName}-${id}`
 }
 
-export function ServiceDialog({ open, onOpenChange, service, mode }: ServiceDialogProps) {
+export function ServiceDialog({ open, onOpenChange }: ServiceDialogProps) {
   const queryClient = useQueryClient()
 
   const form = useForm<ServiceFormInput>({
-    defaultValues: service || {
+    defaultValues: {
       name: '',
       description: '',
-      price: 0,
-      durationInMinutes: 60,
+      price: '',
+      durationInMinutes: '60',
       city: 'Gurgoan',
       country: 'India',
       availableModes: [],
@@ -64,7 +61,13 @@ export function ServiceDialog({ open, onOpenChange, service, mode }: ServiceDial
   })
 
   const createMutation = useMutation({
-    mutationFn: async (data: ServiceFormInput & { slug: string }) => {
+    mutationFn: async (
+      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes'> & {
+        slug: string
+        price: number
+        durationInMinutes: number
+      },
+    ) => {
       const response = await honoClient.server.service.$post({ json: data })
       if (!response.ok) {
         const error = (await response.json()) as { error?: string }
@@ -89,24 +92,30 @@ export function ServiceDialog({ open, onOpenChange, service, mode }: ServiceDial
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-card border-border">
         <DialogHeader>
-          <DialogTitle className="text-foreground">
-            {mode === 'create' ? 'Create New Service' : 'Edit Service'}
-          </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            {mode === 'create' ? 'Add a new service to your profile' : 'Update the details of your service'}
-          </DialogDescription>
+          <DialogTitle className="text-foreground">Create New Service</DialogTitle>
+          <DialogDescription className="text-muted-foreground">Add a new service to your profile</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((data: ServiceFormInput) => {
-              if (mode === 'create') {
-                const dataWithSlug = {
-                  ...data,
-                  slug: generateServiceSlug(data.name),
-                }
-                createMutation.mutate(dataWithSlug)
+              const dataWithSlug = {
+                ...data,
+                price: Number(data.price),
+                durationInMinutes: Number(data.durationInMinutes),
+                slug: generateServiceSlug(data.name),
               }
+
+              if (dataWithSlug.price < 500) {
+                form.setError('price', { message: 'Price must be above ₹500' })
+                return
+              }
+              if (dataWithSlug.durationInMinutes < 15) {
+                form.setError('durationInMinutes', { message: 'Duration must be at least 15 minutes' })
+                return
+              }
+
+              createMutation.mutate(dataWithSlug)
             })}
             className="space-y-4"
           >
@@ -132,12 +141,7 @@ export function ServiceDialog({ open, onOpenChange, service, mode }: ServiceDial
                   <FormItem>
                     <FormLabel className="text-foreground">Price (₹)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="1000"
-                        {...field}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                      />
+                      <Input type="number" placeholder="1000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -151,12 +155,7 @@ export function ServiceDialog({ open, onOpenChange, service, mode }: ServiceDial
                   <FormItem>
                     <FormLabel className="text-foreground">Duration (minutes)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="60"
-                        {...field}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                      />
+                      <Input type="number" placeholder="60" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -169,7 +168,6 @@ export function ServiceDialog({ open, onOpenChange, service, mode }: ServiceDial
               name="availableModes"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-foreground">Service Location</FormLabel>
                   <div className="space-y-2">
                     <FormField
                       control={form.control}
@@ -243,7 +241,7 @@ export function ServiceDialog({ open, onOpenChange, service, mode }: ServiceDial
                 className="bg-primary text-primary-foreground hover:opacity-90"
                 loading={createMutation.isPending}
               >
-                {createMutation.isPending ? 'Saving...' : mode === 'create' ? 'Create Service' : 'Update Service'}
+                {createMutation.isPending ? 'Saving...' : 'Create Service'}
               </Button>
             </div>
           </form>
