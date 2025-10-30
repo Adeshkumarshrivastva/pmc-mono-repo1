@@ -217,7 +217,7 @@ export default function OurExperts() {
     sortOrder: 'asc',
   })
 
-  const [showFilters, setShowFilters] = useState(false)
+  const [showFilters, setShowFilters] = useState(true)
 
   const fetchExpertQuery = useQuery({
     queryKey: ['experts', filters],
