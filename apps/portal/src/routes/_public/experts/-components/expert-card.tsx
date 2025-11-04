@@ -321,7 +321,7 @@ export default function OurExperts() {
   return (
     <div className="min-h-screen bg-accent">
       <div className="bg-accent border-border">
-        <div className="container mx-auto px-4 py-6">
+        {/* <div className="container mx-auto px-4 py-6">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-foreground mb-3">Our Distinguished Experts</h1>
             <div className="w-24 h-1 bg-primary/50 mx-auto mb-4 rounded-full"></div>
@@ -329,7 +329,7 @@ export default function OurExperts() {
               Connect with our qualified mental health professionals who are here to support your journey to wellness.
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="container mx-auto px-4 py-8">
@@ -344,7 +344,7 @@ export default function OurExperts() {
                 className={`w-6 h-6 transition-all duration-300 ${searchFocused ? 'text-primary animate-pulse' : 'text-primary/70'}`}
               />
               <h2 className="text-3xl font-bold text-foreground bg-gradient-to-r from-primary to-primary bg-clip-text text-transparent">
-                Find Your Perfect Expert
+                Find Your Right Expert
               </h2>
               <Sparkles
                 className={`w-6 h-6 transition-all duration-300 ${searchFocused ? 'text-primary animate-pulse' : 'text-primary/70'}`}
@@ -433,8 +433,8 @@ export default function OurExperts() {
             }}
             className={`flex items-center justify-center gap-3 h-12 px-8 rounded-xl border-2 font-bold transition-all duration-300 shadow-md ${
               showFilters
-                ? 'bg-primary border-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 scale-105'
-                : 'bg-background border-primary/40 text-foreground hover:bg-primary/5 hover:border-primary/60 hover:scale-105'
+                ? 'bg-background border-primary/40 text-foreground hover:bg-primary/5 hover:border-primary/60 hover:scale-105'
+                : 'bg-primary border-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 scale-105'
             }`}
             icon={
               <Filter
@@ -442,7 +442,7 @@ export default function OurExperts() {
               />
             }
           >
-            <span>Advanced Filters</span>
+            <span>Filters</span>
           </Button>
         </div>
 
