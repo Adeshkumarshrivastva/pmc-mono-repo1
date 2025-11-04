@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Search, Filter, Star, Calendar, MapPin, X, UserIcon, Sparkles, TrendingUp } from 'lucide-react'
+import { Search, Filter, Star, Calendar, MapPin, X, UserIcon, Sparkles } from 'lucide-react'
 import type { ExpertType, ServiceMode, DayOfWeek } from '@pmc/server/src/generated/prisma/client'
 import type { SortBy } from '@pmc/server/src/routes/experts/experts.input'
 import { match } from 'ts-pattern'
@@ -217,7 +217,7 @@ export default function OurExperts() {
     sortOrder: 'asc',
   })
 
-  const [showFilters, setShowFilters] = useState(true)
+  const [showFilters, setShowFilters] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
 
   const fetchExpertQuery = useQuery({
@@ -247,7 +247,7 @@ export default function OurExperts() {
     const searchAsNumber = parseInt(searchTerm, 10)
     const isNumericSearch = !isNaN(searchAsNumber) && searchTerm === searchAsNumber.toString()
 
-    return experts.filter((expert) => {
+    const filtered = experts.filter((expert) => {
       if (expert.name?.toLowerCase().includes(searchTerm)) {
         return true
       }
@@ -291,8 +291,7 @@ export default function OurExperts() {
 
       if (expert.experienceInYears !== null && expert.experienceInYears !== undefined) {
         if (isNumericSearch) {
-          const yearsDiff = Math.abs(expert.experienceInYears - searchAsNumber)
-          if (yearsDiff <= 1) {
+          if (expert.experienceInYears >= searchAsNumber) {
             return true
           }
         } else {
@@ -304,6 +303,16 @@ export default function OurExperts() {
 
       return false
     })
+
+    if (isNumericSearch) {
+      return filtered.sort((a, b) => {
+        const expA = a.experienceInYears || 0
+        const expB = b.experienceInYears || 0
+        return expA - expB
+      })
+    }
+
+    return filtered
   }, [fetchExpertQuery.data?.experts, filters.search])
 
   const locationOptions = generateLocationOptions(allExpertsQuery.data?.experts)
@@ -336,7 +345,7 @@ export default function OurExperts() {
         <div className="mb-10">
           <div
             className={`bg-gradient-to-br from-primary/10 via-primary/5 to-primary/10 rounded-3xl border-2 p-10 shadow-xl transition-all duration-300 ${
-              searchFocused ? 'border-primary shadow-2xl shadow-primary/20 scale-[1.01]' : 'border-primary/30 shadow-lg'
+              searchFocused ? 'border-primary shadow-lg shadow-primary/20 ' : 'border-primary/30 shadow-lg'
             }`}
           >
             <div className="flex items-center justify-center gap-3 mb-5">
@@ -376,7 +385,7 @@ export default function OurExperts() {
                     placeholder="Start typing to search experts..."
                     className={`w-full h-16 pl-16 pr-14 border-2 rounded-2xl text-base font-medium shadow-lg transition-all duration-300 bg-background text-foreground placeholder-muted-foreground/60 ${
                       searchFocused
-                        ? 'border-primary ring-4 ring-primary/20 shadow-xl'
+                        ? 'border-primary ring-4 ring-primary/20 shadow-xs'
                         : 'border-primary/40 hover:border-primary/60'
                     }`}
                     value={filters.search}
@@ -398,17 +407,6 @@ export default function OurExperts() {
                 </div>
               </div>
             </div>
-
-            {filters.search && (
-              <div className="flex justify-center animate-in fade-in slide-in-from-top-2 duration-300">
-                <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-primary/15 border-2 border-primary/30 rounded-full shadow-md">
-                  <TrendingUp className="w-5 h-5 text-primary" />
-                  <span className="text-sm font-medium text-foreground">
-                    Searching: <span className="text-primary font-bold text-base ml-1">"{filters.search}"</span>
-                  </span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
