@@ -52,6 +52,7 @@ export default $config({
     const GoogleCalendarEmail = new sst.Secret('GOOGLE_CALENDAR_EMAIL')
     const SmsServiceUserId = new sst.Secret('SMS_SERVICE_USERID')
     const SmsServicePassword = new sst.Secret('SMS_SERVICE_PASSWORD')
+    const PortalMediaBucket = new sst.aws.Bucket('PMC_PORTAL_MEDIA_BUCKET')
 
     const SenderEmail =
       $app.stage === 'production'
@@ -63,7 +64,7 @@ export default $config({
     new sst.aws.Function('PmcHonoServer', {
       architecture: 'arm64',
       handler: 'apps/server/src/index.handler',
-      link: [SenderEmail],
+      link: [SenderEmail, PortalMediaBucket],
       url: {
         router: {
           instance: router,
@@ -89,6 +90,7 @@ export default $config({
         GOOGLE_CALENDAR_EMAIL: GoogleCalendarEmail.value,
         SMS_SERVICE_USERID: SmsServiceUserId.value,
         SMS_SERVICE_PASSWORD: SmsServicePassword.value,
+        S3_BUCKET: PortalMediaBucket.name,
       },
       copyFiles: [
         {

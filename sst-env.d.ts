@@ -53,6 +53,10 @@ declare module 'sst' {
       name: string
       type: 'sst.aws.Bucket'
     }
+    PMC_PORTAL_MEDIA_BUCKET: {
+      name: string
+      type: 'sst.aws.Bucket'
+    }
     PmcHonoServer: {
       name: string
       type: 'sst.aws.Function'
