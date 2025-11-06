@@ -1,6 +1,7 @@
 import {
   CalendarDaysIcon,
-  // ClipboardListIcon,
+  ClipboardListIcon,
+
   // ClockIcon,
   HomeIcon,
   LayoutDashboardIcon,
@@ -159,13 +160,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     path: '/patient/profile',
     availableForUserRoles: ['PATIENT'],
   },
-  // {
-  //   type: 'link',
-  //   icon: ClipboardListIcon,
-  //   name: 'Services',
-  //   path: '/expert/services',
-  //   availableForUserRoles: ['EXPERT'],
-  // },
+  {
+    type: 'link',
+    icon: ClipboardListIcon,
+    name: 'Services',
+    path: '/expert/services',
+    availableForUserRoles: ['EXPERT'],
+  },
   // {
   //   type: 'link',
   //   icon: ClockIcon,
