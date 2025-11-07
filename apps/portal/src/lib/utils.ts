@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { ZodError } from 'zod'
+import { env } from './env'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -43,4 +44,8 @@ export function downloadBlobAsFile(blob: Blob, filename = 'file') {
   link.click()
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
+}
+
+export function getFileUrl(filename: string): string | undefined {
+  return `${env.VITE_PUBLIC_API_BASE_URL}/server/file/${filename}`
 }
