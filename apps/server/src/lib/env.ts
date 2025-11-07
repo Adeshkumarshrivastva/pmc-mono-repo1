@@ -25,5 +25,9 @@ export const env = z
     SMS_SERVICE_USERID: z.string(),
     SMS_SERVICE_PASSWORD: z.string(),
     BROWSERLESS_WS_ENDPOINT: z.string(),
+    S3_ACCESS_KEY: z.string(),
+    S3_SECRET_KEY: z.string(),
+    S3_REGION: z.string(),
+    S3_BUCKET: z.string(),
   })
   .parse(process.env)
