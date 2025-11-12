@@ -813,8 +813,8 @@ export interface Home {
     experts?: (string | Expert)[] | null
     action?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -994,8 +994,8 @@ export interface DeepTm {
     action?: string | null
     cardAction?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -1267,8 +1267,8 @@ export interface AboutUs {
     action?: string | null
     subAction?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -1475,10 +1475,10 @@ export interface HomeSelect<T extends boolean = true> {
         experts?: T
         action?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T
@@ -1644,10 +1644,10 @@ export interface DeepTmsSelect<T extends boolean = true> {
         action?: T
         cardAction?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T
@@ -1822,10 +1822,10 @@ export interface AboutUsSelect<T extends boolean = true> {
         action?: T
         subAction?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T
