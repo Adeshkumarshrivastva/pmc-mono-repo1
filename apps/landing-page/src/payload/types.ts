@@ -738,6 +738,25 @@ export interface Home {
         }[]
       | null
   }
+  mapSection?: {
+    title?: string | null
+    description?: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    image?: (string | null) | Media
+  }
   treatmentSection?: {
     title?: string | null
     premaryImage?: (string | null) | Media
@@ -1401,6 +1420,13 @@ export interface HomeSelect<T extends boolean = true> {
               stampImage?: T
               id?: T
             }
+      }
+  mapSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        image?: T
       }
   treatmentSection?:
     | T

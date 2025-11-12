@@ -6,6 +6,7 @@ import { testimonialSection } from '../fields/testimonial-section'
 import { serivicesSection } from '../fields/services-section'
 import { achievementSection } from '../fields/achievement-section'
 import { quizSection } from '../fields/quiz-section'
+import { mapSection } from '../fields/map-section'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -122,6 +123,7 @@ export const Home: GlobalConfig = {
         },
       ],
     },
+    mapSection,
     {
       name: 'treatmentSection',
       label: 'Treatment Section',
