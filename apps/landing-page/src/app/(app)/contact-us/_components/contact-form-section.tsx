@@ -5,9 +5,9 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { useMutation } from '@tanstack/react-query'
-import { ContactUs, Service } from '@/payload/types'
+import type { ContactUs, Service } from '@/payload/types'
 import { Button } from '@/components/ui/button'
-import { leadFormInput, LeadFormInput } from '@/payload/actions/leads/leads.input'
+import { leadFormInput, type LeadFormInput } from '@/payload/actions/leads/leads.input'
 import { createLead } from '@/payload/actions'
 
 type ContactFormSectionProps = {
