@@ -77,6 +77,7 @@ export interface Config {
     leads: Lead
     appointments: Appointment
     webinars: Webinar
+    assessments: Assessment
     'payload-locked-documents': PayloadLockedDocument
     'payload-preferences': PayloadPreference
     'payload-migrations': PayloadMigration
@@ -97,6 +98,7 @@ export interface Config {
     leads: LeadsSelect<false> | LeadsSelect<true>
     appointments: AppointmentsSelect<false> | AppointmentsSelect<true>
     webinars: WebinarsSelect<false> | WebinarsSelect<true>
+    assessments: AssessmentsSelect<false> | AssessmentsSelect<true>
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
@@ -399,6 +401,25 @@ export interface Webinar {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assessments".
+ */
+export interface Assessment {
+  id: string
+  title: string
+  image: string | Media
+  /**
+   * The URL path for this assessment
+   */
+  route: string
+  /**
+   * Lower numbers appear first
+   */
+  order: number
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -443,6 +464,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'webinars'
         value: string | Webinar
+      } | null)
+    | ({
+        relationTo: 'assessments'
+        value: string | Assessment
       } | null)
   globalSlug?: string | null
   user: {
@@ -640,6 +665,18 @@ export interface WebinarsSelect<T extends boolean = true> {
   poster?: T
   videoLink?: T
   description?: T
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assessments_select".
+ */
+export interface AssessmentsSelect<T extends boolean = true> {
+  title?: T
+  image?: T
+  route?: T
+  order?: T
   updatedAt?: T
   createdAt?: T
 }
