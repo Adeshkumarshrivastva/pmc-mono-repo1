@@ -7,7 +7,7 @@ import MissionVisionSection from './_components/mission-vision-section'
 import OpportunitySection from './_components/opportunity-section'
 import TeamMembersSection from './_components/team-members-section'
 import ExpertsSection from '../_components/experts-section'
-import AppointmentSection from '../_components/appointment-section'
+import ContactSection from '../_components/contact-section'
 
 export default async function Page() {
   const payload = await getPayloadClient()
@@ -18,7 +18,7 @@ export default async function Page() {
     teamMembersSection,
     expertsSection,
     opportunitiesSection,
-    appointmentSection,
+    contactSection,
   } = await payload.findGlobal({
     slug: 'about-us',
   })
@@ -33,7 +33,7 @@ export default async function Page() {
       <TeamMembersSection data={teamMembersSection} />
       <ExpertsSection data={expertsSection} />
       <OpportunitySection data={opportunitiesSection} />
-      <AppointmentSection data={appointmentSection} services={services.docs} />
+      <ContactSection data={contactSection} services={services.docs} />
     </div>
   )
 }

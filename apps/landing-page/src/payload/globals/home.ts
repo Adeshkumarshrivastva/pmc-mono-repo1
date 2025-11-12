@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { appointmentSection } from '../fields/appointment-section'
+import { contactSection } from '../fields/contact-section'
 import { faqSection } from '../fields/faq-section'
 import { expertsSection } from '../fields/experts-section'
 import { testimonialSection } from '../fields/testimonial-section'
@@ -292,7 +292,7 @@ export const Home: GlobalConfig = {
     },
     serivicesSection,
     expertsSection,
-    appointmentSection,
+    contactSection,
     quizSection,
     testimonialSection,
     faqSection,

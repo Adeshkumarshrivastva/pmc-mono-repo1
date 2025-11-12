@@ -1,6 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { expertsSection } from '../fields/experts-section'
-import { appointmentSection } from '../fields/appointment-section'
+import { contactSection } from '../fields/contact-section'
 
 export const AboutUs: GlobalConfig = {
   slug: 'about-us',
@@ -249,6 +249,6 @@ export const AboutUs: GlobalConfig = {
         },
       ],
     },
-    appointmentSection,
+    contactSection,
   ],
 }
