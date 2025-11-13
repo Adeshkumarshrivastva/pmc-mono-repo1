@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Search, Filter, Star, Calendar, MapPin, X, UserIcon } from 'lucide-react'
+import { Search, Filter, Star, Calendar, MapPin, X, UserIcon, Sparkles } from 'lucide-react'
 import type { ExpertType, ServiceMode, DayOfWeek } from '@pmc/server/src/generated/prisma/client'
 import type { SortBy } from '@pmc/server/src/routes/experts/experts.input'
 import { match } from 'ts-pattern'
@@ -217,11 +217,12 @@ export default function OurExperts() {
     sortOrder: 'asc',
   })
 
-  const [showFilters, setShowFilters] = useState(true)
+  const [showFilters, setShowFilters] = useState(false)
+  const [searchFocused, setSearchFocused] = useState(false)
 
   const fetchExpertQuery = useQuery({
-    queryKey: ['experts', filters],
-    queryFn: () => fetchExperts(filters),
+    queryKey: ['experts', { ...filters, search: undefined }],
+    queryFn: () => fetchExperts({ ...filters, search: '' }),
   })
 
   const allExpertsQuery = useQuery({
@@ -233,6 +234,86 @@ export default function OurExperts() {
         sortOrder: 'asc',
       }),
   })
+
+  const filteredExperts = useMemo(() => {
+    const experts = fetchExpertQuery.data?.experts || []
+
+    if (!filters.search || filters.search.trim() === '') {
+      return experts
+    }
+
+    const searchTerm = filters.search.trim().toLowerCase()
+
+    const searchAsNumber = parseInt(searchTerm, 10)
+    const isNumericSearch = !isNaN(searchAsNumber) && searchTerm === searchAsNumber.toString()
+
+    const filtered = experts.filter((expert) => {
+      if (expert.name?.toLowerCase().includes(searchTerm)) {
+        return true
+      }
+
+      if (expert.user?.name?.toLowerCase().includes(searchTerm)) {
+        return true
+      }
+
+      if (expert.gender?.toLowerCase().includes(searchTerm)) {
+        return true
+      }
+
+      if (expert.type?.toLowerCase().includes(searchTerm)) {
+        return true
+      }
+
+      if (expert.city?.toLowerCase().includes(searchTerm)) {
+        return true
+      }
+
+      if (expert.country?.toLowerCase().includes(searchTerm)) {
+        return true
+      }
+
+      if (Array.isArray(expert.expertise)) {
+        if (expert.expertise.some((e) => e.toLowerCase().includes(searchTerm))) {
+          return true
+        }
+      } else if (typeof expert.expertise === 'string') {
+        const expertiseStr = expert.expertise as string
+        if (expertiseStr.toLowerCase().includes(searchTerm)) {
+          return true
+        }
+      }
+
+      if (expert.servicesProvided) {
+        if (expert.servicesProvided.some((service) => service.name?.toLowerCase().includes(searchTerm))) {
+          return true
+        }
+      }
+
+      if (expert.experienceInYears !== null && expert.experienceInYears !== undefined) {
+        if (isNumericSearch) {
+          if (expert.experienceInYears >= searchAsNumber) {
+            return true
+          }
+        } else {
+          if (expert.experienceInYears.toString().includes(searchTerm)) {
+            return true
+          }
+        }
+      }
+
+      return false
+    })
+
+    if (isNumericSearch) {
+      return filtered.sort((a, b) => {
+        const expA = a.experienceInYears || 0
+        const expB = b.experienceInYears || 0
+        return expA - expB
+      })
+    }
+
+    return filtered
+  }, [fetchExpertQuery.data?.experts, filters.search])
 
   const locationOptions = generateLocationOptions(allExpertsQuery.data?.experts)
 
@@ -249,7 +330,7 @@ export default function OurExperts() {
   return (
     <div className="min-h-screen bg-accent">
       <div className="bg-accent border-border">
-        <div className="container mx-auto px-4 py-6">
+        {/* <div className="container mx-auto px-4 py-6">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-foreground mb-3">Our Distinguished Experts</h1>
             <div className="w-24 h-1 bg-primary/50 mx-auto mb-4 rounded-full"></div>
@@ -257,58 +338,114 @@ export default function OurExperts() {
               Connect with our qualified mental health professionals who are here to support your journey to wellness.
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between mb-8">
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground mb-1">Available Experts</h2>
-            <p className="text-muted-foreground">
-              {match(fetchExpertQuery)
-                .with(
-                  { status: 'success' },
-                  ({ data }) =>
-                    `Showing ${data.experts?.length || 0} expert${(data.experts?.length || 0) !== 1 ? 's' : ''} ready to help`,
-                )
-                .with({ status: 'pending' }, () => 'Loading experts...')
-                .with({ status: 'error' }, ({ error }) => `Error loading experts:${error}`)
-                .otherwise(() => 'Loading...')}
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-            <div className="relative lg:w-96">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search by name"
-                className="w-full h-12 pl-12 pr-4 border border-border rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground"
-                value={filters.search}
-                onChange={(e) => {
-                  updateFilter('search', e.target.value)
-                }}
+        <div className="mb-10">
+          <div
+            className={`bg-gradient-to-br from-primary/10 via-primary/5 to-primary/10 rounded-3xl border-2 p-10 shadow-xl transition-all duration-300 ${
+              searchFocused ? 'border-primary shadow-lg shadow-primary/20 ' : 'border-primary/30 shadow-lg'
+            }`}
+          >
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <Sparkles
+                className={`w-6 h-6 transition-all duration-300 ${searchFocused ? 'text-primary animate-pulse' : 'text-primary/70'}`}
+              />
+              <h2 className="text-3xl font-bold text-foreground bg-gradient-to-r from-primary to-primary bg-clip-text text-transparent">
+                Find Your Right Expert
+              </h2>
+              <Sparkles
+                className={`w-6 h-6 transition-all duration-300 ${searchFocused ? 'text-primary animate-pulse' : 'text-primary/70'}`}
               />
             </div>
 
-            <Button
-              onClick={() => {
-                setShowFilters(!showFilters)
-              }}
-              className={`flex items-center justify-center gap-2 h-12 px-6 rounded-xl border-2 font-medium transition-all duration-200 min-w-[120px] ${
-                showFilters
-                  ? 'bg-primary/25 border-primary text-primary hover:bg-primary/10'
-                  : 'bg-background border-border text-foreground hover:bg-accent hover:border-border'
-              }`}
-              icon={<Filter className="w-4 h-4 flex-shrink-0" />}
-            >
-              <span>Filters</span>
-            </Button>
+            <p className="text-center text-muted-foreground mb-8 max-w-3xl mx-auto text-lg leading-relaxed">
+              Search by <span className="font-semibold text-foreground">name</span>,{' '}
+              <span className="font-semibold text-foreground">specialization</span>,{' '}
+              <span className="font-semibold text-foreground">location</span>,{' '}
+              <span className="font-semibold text-foreground">experience</span>, or any keyword to discover the right
+              professional for you
+            </p>
+
+            <div className="max-w-5xl mx-auto mb-6">
+              <div className="relative group">
+                <div
+                  className={`absolute -inset-0.5 bg-gradient-to-r from-primary to-primary/50 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-300 ${searchFocused ? 'opacity-40' : ''}`}
+                ></div>
+
+                <div className="relative">
+                  <div className="absolute left-5 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <Search
+                      className={`w-7 h-7 transition-all duration-300 ${searchFocused ? 'text-primary scale-110' : 'text-primary/70'}`}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Start typing to search experts..."
+                    className={`w-full h-16 pl-16 pr-14 border-2 rounded-2xl text-base font-medium shadow-lg transition-all duration-300 bg-background text-foreground placeholder-muted-foreground/60 ${
+                      searchFocused
+                        ? 'border-primary ring-4 ring-primary/20 shadow-xs'
+                        : 'border-primary/40 hover:border-primary/60'
+                    }`}
+                    value={filters.search}
+                    onChange={(e) => {
+                      updateFilter('search', e.target.value)
+                    }}
+                    onFocus={() => setSearchFocused(true)}
+                    onBlur={() => setSearchFocused(false)}
+                  />
+                  {filters.search && (
+                    <button
+                      onClick={() => updateFilter('search', '')}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2.5 hover:bg-primary/10 rounded-full transition-all duration-200 group/clear"
+                      aria-label="Clear search"
+                    >
+                      <X className="w-5 h-5 text-muted-foreground group-hover/clear:text-foreground transition-colors" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
+        <div className="mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-background border border-border rounded-full shadow-sm">
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+            <p className="text-muted-foreground font-medium">
+              {match(fetchExpertQuery)
+                .with(
+                  { status: 'success' },
+                  () =>
+                    `${filteredExperts.length || 0} expert${filteredExperts.length !== 1 ? 's' : ''} ${filters.search ? 'found' : 'ready to help'}`,
+                )
+                .with({ status: 'pending' }, () => 'Loading experts...')
+                .with({ status: 'error' }, ({ error }) => `Error loading experts: ${error}`)
+                .otherwise(() => 'Loading...')}
+            </p>
+          </div>
+          <Button
+            onClick={() => {
+              setShowFilters(!showFilters)
+            }}
+            className={`flex items-center justify-center gap-3 h-12 px-8 rounded-xl border-2 font-bold transition-all duration-300 shadow-md ${
+              showFilters
+                ? 'bg-background border-primary/40 text-foreground hover:bg-primary/5 hover:border-primary/60 hover:scale-105'
+                : 'bg-primary border-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 scale-105'
+            }`}
+            icon={
+              <Filter
+                className={`w-5 h-5 transition-all duration-300 ${showFilters ? 'rotate-180 scale-110' : 'rotate-0'}`}
+              />
+            }
+          >
+            <span>Filters</span>
+          </Button>
+        </div>
+
         {showFilters ? (
-          <div className="bg-background border border-border rounded-xl shadow-lg mb-8 overflow-hidden">
+          <div className="bg-background border border-border rounded-2xl shadow-xl mb-8 overflow-hidden animate-in slide-in-from-top-4 duration-300">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-foreground">Filter Experts</h3>
@@ -395,7 +532,13 @@ export default function OurExperts() {
                     placeholder="Select specializations..."
                     options={specializationOptions}
                     multiple={true}
-                    value={filters.expertise ? filters.expertise.split(',').map((tag) => tag.trim()) : []}
+                    value={
+                      filters.expertise
+                        ? String(filters.expertise)
+                            .split(',')
+                            .map((tag) => tag.trim())
+                        : []
+                    }
                     onValueChange={(value) => {
                       const expertiseString = Array.isArray(value) ? value.join(', ') : ''
                       updateFilter('expertise', expertiseString || undefined)
@@ -455,20 +598,28 @@ export default function OurExperts() {
               </div>
             </div>
           ))
-          .with({ status: 'success' }, ({ data }) => {
-            const experts = data.experts || []
-
-            return experts.length === 0 ? (
+          .with({ status: 'success' }, () => {
+            return filteredExperts.length === 0 ? (
               <div className="text-center py-16">
                 <div className="bg-background border border-border rounded-2xl p-12 max-w-md mx-auto">
                   <div className="text-foreground text-xl mb-3 font-semibold">No experts found</div>
                   <p className="text-muted-foreground">
-                    Try adjusting your filters or search criteria to find the right professional for you.
+                    {filters.search
+                      ? `No experts match your search "${filters.search}". Try different keywords.`
+                      : 'Try adjusting your filters or search criteria to find the right professional for you.'}
                   </p>
+                  {filters.search && (
+                    <Button
+                      onClick={() => updateFilter('search', '')}
+                      className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 py-2"
+                    >
+                      Clear Search
+                    </Button>
+                  )}
                 </div>
               </div>
             ) : (
-              <ExpertsGrid experts={experts} />
+              <ExpertsGrid experts={filteredExperts} />
             )
           })
           .otherwise(() => null)}
