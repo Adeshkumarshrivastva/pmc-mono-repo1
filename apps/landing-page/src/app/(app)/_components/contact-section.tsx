@@ -5,67 +5,42 @@ import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
-import { getHours } from 'date-fns'
 import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '@/components/ui/icons'
 import type { Home, Service } from '@/payload/types'
 import { Button } from '@/components/ui/button'
-import { type AppointmentFormInput, appointmentFormInput } from '@/payload/actions/appointments/appointments.input'
-import { createAppointment } from '@/payload/actions/appointments/appointments.actions'
-import { env } from '@/env'
+import { leadFormInput, type LeadFormInput } from '@/payload/actions/leads/leads.input'
+import { createLead } from '@/payload/actions'
 
-type AppointmentSectionProps = {
-  data: Home['appointmentSection']
+type ContactSectionProps = {
+  data: Home['contactSection']
   services: Service[]
 }
 
-export default function AppointmentSection({ data, services }: AppointmentSectionProps) {
-  const appointmentData = data?.appointmentSection
-  const router = useRouter()
+export default function ContactSection({ data, services }: ContactSectionProps) {
+  const contactData = data?.contactSection
 
-  const form = useForm<AppointmentFormInput>({
+  const form = useForm<LeadFormInput>({
     defaultValues: {
       fullName: '',
       phone: '',
+      email: '',
       serviceId: '',
       subServiceId: '',
       message: '',
-      amount: '1000',
-      dateTime: new Date().toLocaleString(),
     },
-    resolver: zodResolver(appointmentFormInput),
+    resolver: zodResolver(leadFormInput),
   })
 
   const serviceId = useWatch({ control: form.control, name: 'serviceId' })
   const subServices = services.find((service) => service.id === serviceId)?.subservices?.docs ?? []
 
-  const appointmentFormMutation = useMutation({
-    mutationFn: createAppointment,
-    onSuccess: (data) => {
-      const { fullName, email, phone, dateTime } = form.getValues()
-      const options = {
-        key: env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? 'rzp_live_rmfc3SEgWtvd52',
-        amount: Number(data.amount) * 100,
-        currency: 'INR',
-        order_id: data.orderId,
-        name: 'Appointment Booking',
-        prefill: { fullName, email, phone, dateTime },
-        modal: {
-          escape: false,
-          ondismiss: () => {
-            toast.error('Payment was not completed. Please try again.')
-          },
-        },
-        handler: () => {
-          router.push(`/appointment-success?appointmentId=${data.appointmentId}`)
-        },
-        description: 'Payment for appointment booking',
-        theme: {
-          color: '#385246',
-        },
-      }
-      const rzp = new (window as any).Razorpay(options)
-      rzp.open()
+  const contactFormMutation = useMutation({
+    mutationFn: createLead,
+    onSuccess: () => {
+      toast('Thank you for your interest!', {
+        description: 'We will get back to you as soon as possible.',
+      })
+      form.reset()
     },
     onError: () => {
       toast('Failed to submit the form. Please try again later.', {
@@ -74,16 +49,6 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
     },
   })
 
-  const handleSubmit = (values: AppointmentFormInput) => {
-    if (getHours(values.dateTime) < 9 || getHours(values.dateTime) > 17) {
-      toast.error('Please select a time between 9 AM and 5 PM.', {
-        position: 'top-right',
-      })
-      return
-    }
-    appointmentFormMutation.mutate(values)
-  }
-
   return (
     <section className="w-full bg-primary px-4 py-8 sm:px-6 sm:py-12 md:px-8 lg:px-12" id="appointement-section">
       <div className="w-full max-w-7xl mx-auto">
@@ -91,17 +56,17 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-24">
             <div className="flex flex-col h-full mb-8 lg:mb-0">
               <div className="space-y-4 sm:space-y-6 flex-1">
-                <div className="text-primary text-xs sm:text-sm font-bold tracking-wider">APPOINTMENT</div>
+                <div className="text-primary text-xs sm:text-sm font-bold tracking-wider">CONTACT US</div>
 
                 <h2 className="font-semibold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl leading-tight">
-                  {appointmentData?.title}
+                  {contactData?.title}
                 </h2>
 
                 <div className="flex flex-col md:flex-row sm:justify-between gap-6 sm:gap-4 pt-4">
                   <div className="flex-1">
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4">Our Contact</h3>
                     <div className="space-y-2">
-                      {appointmentData?.contacts?.map((contact, index) => (
+                      {contactData?.contacts?.map((contact, index) => (
                         <div key={index} className="text-muted-foreground font-medium text-sm sm:text-base">
                           <a href={`tel:${contact.phone}`} className="hover:text-primary transition-colors">
                             {contact.phone}
@@ -114,15 +79,15 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                   <div className="flex-1">
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4">Location</h3>
                     <div className="text-muted-foreground font-medium text-sm sm:text-base">
-                      {appointmentData?.location}
+                      {contactData?.location}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {appointmentData?.socialMediaLinks && appointmentData?.socialMediaLinks?.length > 0 && (
+              {contactData?.socialMediaLinks && contactData?.socialMediaLinks?.length > 0 && (
                 <div className="flex items-center space-x-3 sm:space-x-4 pt-4 lg:pt-0">
-                  {appointmentData?.socialMediaLinks.map((platform, index) => (
+                  {contactData?.socialMediaLinks.map((platform, index) => (
                     <a href={platform.url ?? ''} target="_blank" key={index}>
                       {match(platform.socialMediaPlatform)
                         .returnType<React.ReactNode>()
@@ -140,7 +105,7 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
 
             <div className="w-full">
               <form
-                onSubmit={form.handleSubmit(handleSubmit)}
+                onSubmit={form.handleSubmit((values) => contactFormMutation.mutate(values))}
                 className="bg-primary-foreground border border-border rounded-xl p-4 sm:p-6 lg:p-8"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -220,38 +185,6 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                     </select>
                   </div>
 
-                  <div className="col-span-1">
-                    <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Date and Time <span className="text-error">*</span>
-                    </label>
-                    <input
-                      {...form.register('dateTime')}
-                      type="datetime-local"
-                      min={new Date().toISOString().slice(0, 16)}
-                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    />
-                  </div>
-
-                  <div className="col-span-1">
-                    <label htmlFor="phone" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Amount <span className="text-error">*</span>
-                    </label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sm text-muted-foreground pointer-events-none">
-                        ₹
-                      </span>
-
-                      <input
-                        {...form.register('amount')}
-                        id="amount"
-                        type="number"
-                        className="text-sm w-full border border-border rounded-lg pl-6 pr-3 py-3
-                 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                        placeholder="1000"
-                      />
-                    </div>
-                  </div>
-
                   <div className="col-span-full sm:col-span-2">
                     <label
                       htmlFor="message"
@@ -270,11 +203,11 @@ export default function AppointmentSection({ data, services }: AppointmentSectio
                   <div className="col-span-full sm:col-span-2 pt-2">
                     <Button
                       type="submit"
-                      disabled={appointmentFormMutation.isPending}
-                      variant="secondary"
+                      disabled={contactFormMutation.isPending || contactFormMutation.isSuccess}
+                      variant="default"
                       className="inline-flex items-center justify-center space-x-2 rounded-lg cursor-pointer bg-primary text-primary-foreground disabled:pointer-events-none disabled:opacity-50 h-12 px-4 w-full py-3 text-sm font-semibold tracking-wider hover:bg-primary/90 transition-colors"
                     >
-                      Confirm & Pay
+                      Submit
                     </Button>
                   </div>
                 </div>

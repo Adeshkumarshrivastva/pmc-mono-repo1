@@ -738,6 +738,25 @@ export interface Home {
         }[]
       | null
   }
+  mapSection?: {
+    title?: string | null
+    description?: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    image?: (string | null) | Media
+  }
   treatmentSection?: {
     title?: string | null
     premaryImage?: (string | null) | Media
@@ -813,8 +832,8 @@ export interface Home {
     experts?: (string | Expert)[] | null
     action?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -994,8 +1013,8 @@ export interface DeepTm {
     action?: string | null
     cardAction?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -1267,8 +1286,8 @@ export interface AboutUs {
     action?: string | null
     subAction?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -1402,6 +1421,13 @@ export interface HomeSelect<T extends boolean = true> {
               id?: T
             }
       }
+  mapSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        image?: T
+      }
   treatmentSection?:
     | T
     | {
@@ -1475,10 +1501,10 @@ export interface HomeSelect<T extends boolean = true> {
         experts?: T
         action?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T
@@ -1644,10 +1670,10 @@ export interface DeepTmsSelect<T extends boolean = true> {
         action?: T
         cardAction?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T
@@ -1822,10 +1848,10 @@ export interface AboutUsSelect<T extends boolean = true> {
         action?: T
         subAction?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T

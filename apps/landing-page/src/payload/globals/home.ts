@@ -1,11 +1,12 @@
 import type { GlobalConfig } from 'payload'
-import { appointmentSection } from '../fields/appointment-section'
+import { contactSection } from '../fields/contact-section'
 import { faqSection } from '../fields/faq-section'
 import { expertsSection } from '../fields/experts-section'
 import { testimonialSection } from '../fields/testimonial-section'
 import { serivicesSection } from '../fields/services-section'
 import { achievementSection } from '../fields/achievement-section'
 import { quizSection } from '../fields/quiz-section'
+import { mapSection } from '../fields/map-section'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -122,6 +123,7 @@ export const Home: GlobalConfig = {
         },
       ],
     },
+    mapSection,
     {
       name: 'treatmentSection',
       label: 'Treatment Section',
@@ -292,7 +294,7 @@ export const Home: GlobalConfig = {
     },
     serivicesSection,
     expertsSection,
-    appointmentSection,
+    contactSection,
     quizSection,
     testimonialSection,
     faqSection,

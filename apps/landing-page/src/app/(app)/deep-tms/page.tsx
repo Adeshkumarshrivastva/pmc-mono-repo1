@@ -3,7 +3,7 @@ import { getPayloadClient } from '@/lib/payload'
 import { getServices } from '@/payload/actions'
 import HeroSection from './_components/hero-section'
 import FAQSection from '../_components/faq-section'
-import AppointmentSection from '../_components/appointment-section'
+import ContactSection from '../_components/contact-section'
 import WorkSection from './_components/work-section'
 import { EligibilitySection } from './_components/eligibility-section'
 import ComparisonTableSection from './_components/comparison-table-section'
@@ -15,7 +15,7 @@ export default async function DeepTmsPage() {
     deepTmsHeroSection,
     deepTmsWorkSection,
     faqSection,
-    appointmentSection,
+    contactSection,
     deepTmsComparisonSection,
     deepTmsEligibilitySection,
     servicesSection,
@@ -32,7 +32,7 @@ export default async function DeepTmsPage() {
       <WorkSection data={deepTmsWorkSection} />
       <EligibilitySection data={deepTmsEligibilitySection} />
       <ComparisonTableSection data={deepTmsComparisonSection} />
-      <AppointmentSection data={appointmentSection} services={services.docs} />
+      <ContactSection data={contactSection} services={services.docs} />
       <ServicesSection data={servicesSection} services={deepTmsServices.docs} />
       <FAQSection data={faqSection} />
     </div>

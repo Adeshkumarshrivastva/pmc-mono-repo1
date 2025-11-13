@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { appointmentSection } from '../fields/appointment-section'
+import { contactSection } from '../fields/contact-section'
 import { faqSection } from '../fields/faq-section'
 import { serivicesSection } from '../fields/services-section'
 
@@ -268,7 +268,7 @@ export const DeepTms: GlobalConfig = {
       ],
     },
     serivicesSection,
-    appointmentSection,
+    contactSection,
     faqSection,
   ],
 }

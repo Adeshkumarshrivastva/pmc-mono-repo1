@@ -1,13 +1,13 @@
 import type { Field } from 'payload'
 
-export const appointmentSection: Field = {
-  name: 'appointmentSection',
-  label: 'Appointment Section',
+export const contactSection: Field = {
+  name: 'contactSection',
+  label: 'Contact Section',
   type: 'group',
   fields: [
     {
-      name: 'appointmentSection',
-      label: 'Appointment Section',
+      name: 'contactSection',
+      label: 'Contact Section',
       type: 'group',
       fields: [
         {
