@@ -5,12 +5,12 @@ import { getURLFromMedia } from '@/payload/utils'
 import Image from 'next/image'
 
 interface BlogDetailPageProps {
-  params: Promise<{ blogId: string }>
+  params: Promise<{ blogSlug: string }>
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
-  const { blogId } = await params
-  const blog = await getBlog({ blogId })
+  const { blogSlug } = await params
+  const blog = await getBlog({ blogSlug })
 
   if (!blog) return notFound()
 

@@ -11,7 +11,7 @@ type BlogCardProps = {
 
 export default function BlogCard({ blog }: BlogCardProps) {
   return (
-    <Link href={`/blogs/${blog.id}`} className="block">
+    <Link href={`/blogs/${blog.slug}`} className="block">
       <article className="relative flex flex-col w-full max-w-sm mx-auto sm:max-w-none sm:mx-0">
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl">
           {blog?.image && (
