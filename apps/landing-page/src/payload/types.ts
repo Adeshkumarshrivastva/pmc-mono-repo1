@@ -194,6 +194,7 @@ export interface Media {
 export interface Blog {
   id: string
   title: string
+  slug: string
   author: string
   category: (string | Service)[]
   image?: (string | null) | Media
@@ -525,6 +526,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface BlogSelect<T extends boolean = true> {
   title?: T
+  slug?: T
   author?: T
   category?: T
   image?: T
