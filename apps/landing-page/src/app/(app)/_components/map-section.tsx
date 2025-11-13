@@ -41,8 +41,8 @@ export default function MapSection({ data }: MapSectionProps) {
             </div>
 
             {data?.image ? (
-              <div className="flex justify-center lg:justify-end">
-                <div className="relative w-full max-w-md lg:max-w-none">
+              <div className="flex justify-center lg:justify-end h-full">
+                <div className="relative w-full">
                   <Image
                     src={getURLFromMedia(data?.image ?? '')}
                     alt="World map showing locations"
