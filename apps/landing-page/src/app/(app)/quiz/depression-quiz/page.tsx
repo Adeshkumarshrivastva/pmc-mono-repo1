@@ -79,7 +79,7 @@ export default function DepressionQuizPage() {
       data: btoa(JSON.stringify(resultsData)),
     })
 
-    router.push(`/quiz/depression-report?${searchParams.toString()}`)
+    router.push(`/quiz/${quiz.slug}-report?${searchParams.toString()}`)
   }
 
   function handleSubmit() {
@@ -92,6 +92,20 @@ export default function DepressionQuizPage() {
 
   function isQuestionAnswered(questionIndex: number) {
     return answers[startIndex + questionIndex] !== undefined
+  }
+
+  function formatQuizAnswers() {
+    return Object.entries(answers).map(([questionIndex, answerValue]) => {
+      const qIndex = parseInt(questionIndex)
+      const question = questions[qIndex]
+      const selectedOption = question?.options.find((opt) => opt.value === answerValue)
+
+      return {
+        questionId: question?.id || '',
+        question: question?.question || '',
+        answer: selectedOption?.label || answerValue,
+      }
+    })
   }
 
   return (
@@ -179,8 +193,14 @@ export default function DepressionQuizPage() {
         open={showContactDialog}
         onOpenChange={setShowContactDialog}
         onSuccess={navigateToResults}
+<<<<<<< Updated upstream:apps/landing-page/src/app/(app)/quiz/depression-quiz/page.tsx
         title="Get Your Depression Assessment Results"
         description="Enter your details to view your personalized depression assessment report"
+=======
+        title={quiz.contactFormTitle || 'Get Your Assessment Results'}
+        description={quiz.contactFormDescription || 'Enter your details to view your personalized assessment report'}
+        quizAnswers={formatQuizAnswers()}
+>>>>>>> Stashed changes:apps/landing-page/src/app/(app)/quiz/-component/quiz.tsx
       />
     </div>
   )

@@ -44,6 +44,24 @@ export const Leads: CollectionConfig = {
       label: 'Message',
       type: 'textarea',
     },
+
+    {
+      name: 'quizAnswers',
+      label: 'Quiz Answers',
+      type: 'array',
+      fields: [
+        {
+          name: 'question',
+          label: 'Question',
+          type: 'text',
+        },
+        {
+          name: 'answer',
+          label: 'Answer',
+          type: 'text',
+        },
+      ],
+    },
   ],
   timestamps: true,
 }

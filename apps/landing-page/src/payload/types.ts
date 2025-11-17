@@ -335,6 +335,13 @@ export interface Lead {
   service?: (string | null) | Service
   subService?: (string | null) | Service
   message?: string | null
+  quizAnswers?:
+    | {
+        question?: string | null
+        answer?: string | null
+        id?: string | null
+      }[]
+    | null
   updatedAt: string
   createdAt: string
 }
@@ -604,6 +611,13 @@ export interface LeadsSelect<T extends boolean = true> {
   service?: T
   subService?: T
   message?: T
+  quizAnswers?:
+    | T
+    | {
+        question?: T
+        answer?: T
+        id?: T
+      }
   updatedAt?: T
   createdAt?: T
 }
