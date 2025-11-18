@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Search, Star, Calendar, MapPin, X, UserIcon, Sparkles } from 'lucide-react'
+import { Search, Star, Calendar, MapPin, X, UserIcon } from 'lucide-react'
 import type { ExpertType, ServiceMode, DayOfWeek } from '@pmc/server/src/generated/prisma/client'
 import type { SortBy } from '@pmc/server/src/routes/experts/experts.input'
 import { match } from 'ts-pattern'
@@ -14,7 +14,7 @@ import { Marquee } from '@/components/ui/marquee'
 import { SERVICE_MODE_CONFIG } from '@/lib/location'
 import { specializationOptions } from '@/lib/expert'
 import { cn } from '@/lib/utils'
-import bgImage from './../../../../assets/bg-expert.svg'
+import bgImage from '@/assets/bg-expert.svg'
 
 type FilterState = {
   search: string
@@ -351,29 +351,9 @@ export default function OurExperts() {
               searchFocused ? 'border-secondary shadow-lg shadow-secondar/20 ' : 'border-secondary/30 shadow-lg'
             }`}
           >
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-black/60 to-primary/70 -z-10"></div>
-            <div className="p-5">
-              <div className="flex items-center justify-center gap-3 mb-5">
-                <Sparkles
-                  className={`w-6 h-6 transition-all duration-300 ${searchFocused ? 'text-secondary animate-pulse' : 'text-secondary/70'}`}
-                />
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary bg-clip-text text-secondary">
-                  Find Your Right Expert
-                </h2>
-                <Sparkles
-                  className={`w-6 h-6 transition-all duration-300 ${searchFocused ? 'text-secondary animate-pulse' : 'text-secondary/70'}`}
-                />
-              </div>
-
-              <p className="text-center text-secondary mb-8 max-w-3xl mx-auto text-lg leading-relaxed">
-                Search by <span className="font-semibold text-accent">name</span>,{' '}
-                <span className="font-semibold text-secondary">specialization</span>,{' '}
-                <span className="font-semibold text-secondary">location</span>,{' '}
-                <span className="font-semibold text-secondary">experience</span>, or any keyword to discover the right
-                professional for you
-              </p>
-
-              <div className="max-w-5xl mx-auto">
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-black/20 to-black/20 -z-10"></div>
+            <div className="p-5 flex flex-col justify-end mt-48">
+              <div className="max-w-5xl mx-auto w-full mb-8">
                 <div className="relative group">
                   <div
                     className={`absolute -inset-0.5 bg-gradient-to-r from-primary to-primary/50 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-300 ${searchFocused ? 'opacity-40' : ''}`}
@@ -412,6 +392,13 @@ export default function OurExperts() {
                   </div>
                 </div>
               </div>
+              <p className="text-center text-secondary mx-auto text-lg leading-relaxed">
+                Search by <span className="font-semibold text-accent">name</span>,{' '}
+                <span className="font-semibold text-secondary">specialization</span>,{' '}
+                <span className="font-semibold text-secondary">location</span>,{' '}
+                <span className="font-semibold text-secondary">experience</span>, or any keyword to discover the right
+                professional for you
+              </p>
             </div>
             <div className="hidden md:block md:px-10">
               <div className="inline-flex items-center gap-2 px-6 py-3 bg-background border border-border rounded-full shadow-sm mb-4">
