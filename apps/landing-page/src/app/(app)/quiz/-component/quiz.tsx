@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import type { Quiz, QuizOption } from '@/lib/types'
+import type { Quiz } from '@/payload/types'
 import { QuestionCard } from './question-card'
 import QuizContactForm from './contact-form'
 
@@ -67,7 +67,7 @@ export default function QuizRender({ quiz }: QuizProps) {
     setShowContactDialog(true)
   }
 
-  function getAnsweredCount(): number {
+  function getAnsweredCount() {
     return Object.keys(answers).length
   }
 
@@ -92,7 +92,7 @@ export default function QuizRender({ quiz }: QuizProps) {
               value={answers[startIndex + index]}
               onChange={(value) => handleAnswerChange(index, value)}
               isAnswered={isQuestionAnswered(index)}
-              options={questionData.options as QuizOption[]}
+              options={questionData.options}
             />
           ))}
         </div>

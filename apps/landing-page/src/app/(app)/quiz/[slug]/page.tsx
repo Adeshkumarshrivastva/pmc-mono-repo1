@@ -1,7 +1,8 @@
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 import config from '@payload-config'
-import type { Quiz } from '@/lib/types'
+
+import type { Quiz } from '@/payload/types'
 import QuizRender from '../-component/quiz'
 
 type QuizPageProps = {

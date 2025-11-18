@@ -407,16 +407,13 @@ export interface Webinar {
  */
 export interface Quiz {
   id: string
+  _order?: string | null
   title: string
   image: string | Media
   /**
    * The URL path for this assessment
    */
-  route: string
-  /**
-   * Lower numbers appear first
-   */
-  order: number
+  slug: string
   /**
    * Shown at the top of the quiz page
    */
@@ -440,8 +437,6 @@ export interface Quiz {
     }[]
     id?: string | null
   }[]
-  contactFormTitle?: string | null
-  contactFormDescription?: string | null
   updatedAt: string
   createdAt: string
 }
@@ -700,10 +695,10 @@ export interface WebinarsSelect<T extends boolean = true> {
  * via the `definition` "quiz_select".
  */
 export interface QuizSelect<T extends boolean = true> {
+  _order?: T
   title?: T
   image?: T
-  route?: T
-  order?: T
+  slug?: T
   description?: T
   questionnaire?:
     | T
@@ -719,8 +714,6 @@ export interface QuizSelect<T extends boolean = true> {
             }
         id?: T
       }
-  contactFormTitle?: T
-  contactFormDescription?: T
   updatedAt?: T
   createdAt?: T
 }
