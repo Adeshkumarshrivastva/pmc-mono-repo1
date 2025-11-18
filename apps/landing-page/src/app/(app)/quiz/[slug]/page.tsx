@@ -39,19 +39,6 @@ export default async function QuizPage({ params }: QuizPageProps) {
   return <QuizRender quiz={serializedQuiz} />
 }
 
-export async function generateStaticParams() {
-  const payload = await getPayload({ config })
-
-  const { docs } = await payload.find({
-    collection: 'quiz',
-    limit: 100,
-  })
-
-  return docs.map((quiz) => ({
-    slug: quiz.slug.replace('/quiz/', ''),
-  }))
-}
-
 export async function generateMetadata({ params }: QuizPageProps) {
   const { slug } = await params
   const payload = await getPayload({ config })
