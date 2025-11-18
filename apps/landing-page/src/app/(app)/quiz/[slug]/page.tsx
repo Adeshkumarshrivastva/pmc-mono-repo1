@@ -12,13 +12,14 @@ type QuizPageProps = {
 }
 
 export default async function QuizPage({ params }: QuizPageProps) {
+  const { slug } = await params
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({
     collection: 'quiz',
     where: {
-      route: {
-        equals: `/quiz/${params.slug}`,
+      slug: {
+        equals: `/quiz/${slug}`,
       },
     },
     limit: 1,
@@ -33,14 +34,6 @@ export default async function QuizPage({ params }: QuizPageProps) {
 
   const serializedQuiz: Quiz = {
     ...quiz,
-    questionnaire: quiz.questionnaire.map((q) => ({
-      question: q.question,
-      options: q.options.map((opt) => ({
-        value: opt.value,
-        label: opt.label,
-        score: opt.score,
-      })),
-    })),
   }
 
   return <QuizRender quiz={serializedQuiz} />
@@ -60,13 +53,14 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: QuizPageProps) {
+  const { slug } = await params
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({
     collection: 'quiz',
     where: {
-      route: {
-        equals: `/quiz/${params.slug}`,
+      slug: {
+        equals: `/quiz/${slug}`,
       },
     },
     limit: 1,

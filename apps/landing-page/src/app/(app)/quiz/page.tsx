@@ -82,16 +82,18 @@ interface AssessmentCardProps {
 function AssessmentCard({ assessment }: AssessmentCardProps) {
   return (
     <Link href={assessment.slug} className="block">
-      <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group overflow-hidden">
-        <CardContent className="flex items-center justify-center min-h-[200px] p-6">
+      <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group overflow-hidden h-full flex flex-col">
+        <CardContent className="flex items-center justify-center p-6 flex-1">
           {assessment.image ? (
-            <Image
-              alt={assessment?.title ?? ''}
-              width={260}
-              height={260}
-              className="object-contain w-full h-auto"
-              src={getURLFromMedia(assessment.image ?? '')}
-            />
+            <div className="relative w-full h-58">
+              <Image
+                alt={assessment.title}
+                fill
+                className="object-cover rounded-md"
+                src={getURLFromMedia(assessment.image ?? '')}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              />
+            </div>
           ) : null}
         </CardContent>
         <CardHeader className="text-center">
