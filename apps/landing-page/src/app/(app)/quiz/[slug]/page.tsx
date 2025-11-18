@@ -55,7 +55,7 @@ export async function generateStaticParams() {
   })
 
   return docs.map((quiz) => ({
-    slug: quiz.route.replace('/quiz/', ''),
+    slug: quiz.slug.replace('/quiz/', ''),
   }))
 }
 

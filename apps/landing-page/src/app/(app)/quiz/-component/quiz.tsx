@@ -159,8 +159,8 @@ export default function QuizRender({ quiz }: QuizProps) {
         open={showContactDialog}
         onOpenChange={setShowContactDialog}
         onSuccess={navigateToResults}
-        title={quiz.contactFormTitle || 'Get Your Assessment Results'}
-        description={quiz.contactFormDescription || 'Enter your details to view your personalized assessment report'}
+        title={'Get Your Assessment Results'}
+        description={'Enter your details to view your personalized assessment report'}
       />
     </div>
   )
