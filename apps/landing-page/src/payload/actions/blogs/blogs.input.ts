@@ -11,7 +11,7 @@ export const getBlogsInput = z.object({
 export type GetBlogsInput = z.infer<typeof getBlogsInput>
 
 export const getBlogInput = z.object({
-  blogId: z.string(),
+  blogSlug: z.string(),
 })
 
 export type GetBlogInput = z.infer<typeof getBlogInput>

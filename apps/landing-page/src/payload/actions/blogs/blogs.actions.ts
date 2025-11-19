@@ -1,7 +1,7 @@
 'use server'
 
 import { getPayloadClient } from '@/lib/payload'
-import { GetBlogInput, GetBlogsInput } from './blogs.input'
+import type { GetBlogInput, GetBlogsInput } from './blogs.input'
 
 export async function getBlogs({ limit, sort, page, search, category }: GetBlogsInput = {}) {
   const payload = await getPayloadClient()
@@ -29,13 +29,18 @@ export async function getBlogs({ limit, sort, page, search, category }: GetBlogs
   })
 }
 
-export async function getBlog({ blogId }: GetBlogInput) {
+export async function getBlog({ blogSlug }: GetBlogInput) {
   const payload = await getPayloadClient()
 
-  const blog = await payload.findByID({
+  const result = await payload.find({
     collection: 'blog',
-    id: blogId,
+    where: {
+      slug: {
+        equals: blogSlug,
+      },
+    },
+    limit: 1,
   })
 
-  return blog
+  return result.docs[0] || null
 }

@@ -17,6 +17,31 @@ export const Blog: CollectionConfig = {
       required: true,
     },
     {
+      name: 'slug',
+      type: 'text',
+      label: 'Slug',
+      required: true,
+      unique: true,
+      admin: {
+        position: 'sidebar',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ data, operation, value }) => {
+            if (operation === 'create' || operation === 'update') {
+              if (!value && data?.title) {
+                return data.title
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/(^-|-$)/g, '')
+              }
+            }
+            return value
+          },
+        ],
+      },
+    },
+    {
       name: 'author',
       type: 'text',
       label: 'Author',
