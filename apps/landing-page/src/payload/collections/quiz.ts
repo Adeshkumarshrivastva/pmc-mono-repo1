@@ -22,12 +22,29 @@ export const Quiz: CollectionConfig = {
     },
     {
       name: 'slug',
-      label: 'slug',
+      label: 'Slug',
       type: 'text',
       required: true,
+      unique: true,
       admin: {
-        placeholder: '/quiz/anxiety-quiz',
-        description: 'The URL path for this assessment',
+        position: 'sidebar',
+        description: 'Auto-generated from title (e.g., /quiz/anxiety-quiz)',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ data, operation, value }) => {
+            if (operation === 'create' || operation === 'update') {
+              if (!value && data?.title) {
+                const baseSlug = data.title
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/(^-|-$)/g, '')
+                return `/quiz/${baseSlug}`
+              }
+            }
+            return value
+          },
+        ],
       },
     },
 

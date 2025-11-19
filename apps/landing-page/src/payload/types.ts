@@ -412,7 +412,7 @@ export interface Quiz {
   title: string
   image: string | Media
   /**
-   * The URL path for this assessment
+   * Auto-generated from title (e.g., /quiz/anxiety-quiz)
    */
   slug: string
   /**

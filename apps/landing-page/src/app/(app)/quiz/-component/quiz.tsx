@@ -31,7 +31,7 @@ export default function QuizRender({ quiz }: QuizProps) {
     }))
   }
 
-  function calculateScore(): number {
+  function calculateScore() {
     let totalScore = 0
     Object.entries(answers).forEach(([questionIndex, answerValue]) => {
       const qIndex = parseInt(questionIndex)
@@ -71,7 +71,7 @@ export default function QuizRender({ quiz }: QuizProps) {
     return Object.keys(answers).length
   }
 
-  function isQuestionAnswered(questionIndex: number): boolean {
+  function isQuestionAnswered(questionIndex: number) {
     return answers[startIndex + questionIndex] !== undefined
   }
 

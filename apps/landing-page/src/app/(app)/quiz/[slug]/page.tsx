@@ -32,11 +32,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
     notFound()
   }
 
-  const serializedQuiz: Quiz = {
-    ...quiz,
-  }
-
-  return <QuizRender quiz={serializedQuiz} />
+  return <QuizRender quiz={quiz} />
 }
 
 export async function generateMetadata({ params }: QuizPageProps) {

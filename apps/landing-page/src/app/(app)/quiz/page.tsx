@@ -23,7 +23,7 @@ export default async function QuizPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
-      <AssessmentSection assessments={assessments as Quiz[]} pageContent={pageContent} />
+      <AssessmentSection assessments={assessments} pageContent={pageContent} />
     </div>
   )
 }
