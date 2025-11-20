@@ -181,7 +181,7 @@ export function ServiceDialog({ open, onOpenChange }: ServiceDialogProps) {
                                 <FormControl>
                                   <Checkbox
                                     checked={field.value?.includes(mode.value)}
-                                    onCheckedChange={(checked) => {
+                                    onCheckedChange={(checked: unknown) => {
                                       const current = field.value || []
                                       field.onChange(
                                         checked ? [...current, mode.value] : current.filter((m) => m !== mode.value),

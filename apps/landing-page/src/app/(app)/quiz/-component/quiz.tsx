@@ -4,51 +4,27 @@ import { useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { QuestionCard } from '../-component/question-card'
-import QuizContactForm from '../-component/contact-form'
+import type { Quiz } from '@/payload/types'
+import { QuestionCard } from './question-card'
+import QuizContactForm from './contact-form'
 
-const questions = [
-  'I feel down hearted and blue.',
-  'Morning is when i feel the best.',
-  'I have crying spells often.',
-  'I have trouble sleeping at night.',
-  'I eat as much as I used to.',
-  'I still enjoy sex.',
-  'I noticed that I am loosing weight.',
-  'I have trouble with constipation.',
-  'My heart beats faster than usual.',
-  'I get tired for no reason.',
-  'My mind is as clear as it used to be.',
-  'I find it easy to do the things I used to do.',
-  "I am restless and can't keep still.",
-  'I feel hopeful about the future.',
-  'I am more irritable than usual.',
-  'I find it easy to make decisions.',
-  'I feel that I am useful and needed.',
-  'My life is pretty full.',
-  'I feel that others would be better off if I were dead.',
-  'I still enjoy the things I used to.',
-]
+type QuizProps = {
+  quiz: Quiz
+}
 
-const options = [
-  { value: 'a', label: 'Not at all' },
-  { value: 'b', label: 'A little' },
-  { value: 'c', label: 'Moderately' },
-  { value: 'd', label: 'A lot' },
-]
-
-export default function DepressionQuizPage() {
+export default function QuizRender({ quiz }: QuizProps) {
   const router = useRouter()
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [currentPage, setCurrentPage] = useState(0)
   const [showContactDialog, setShowContactDialog] = useState(false)
 
+  const questions = quiz.questionnaire
   const questionsPerPage = 1
   const totalPages = Math.ceil(questions.length / questionsPerPage)
   const startIndex = currentPage * questionsPerPage
   const currentQuestions = questions.slice(startIndex, startIndex + questionsPerPage)
 
-  const handleAnswerChange = (questionIndex: number, value: string) => {
+  function handleAnswerChange(questionIndex: number, value: string) {
     setAnswers((prev) => ({
       ...prev,
       [startIndex + questionIndex]: value,
@@ -56,13 +32,17 @@ export default function DepressionQuizPage() {
   }
 
   function calculateScore() {
-    const scoreMap = { a: 0, b: 1, c: 2, d: 3 }
     let totalScore = 0
-
-    Object.values(answers).forEach((answer) => {
-      totalScore += scoreMap[answer as keyof typeof scoreMap] || 0
+    Object.entries(answers).forEach(([questionIndex, answerValue]) => {
+      const qIndex = parseInt(questionIndex)
+      const question = questions[qIndex]
+      if (question) {
+        const option = question.options.find((opt) => opt.value === answerValue)
+        if (option) {
+          totalScore += option.score
+        }
+      }
     })
-
     return totalScore
   }
 
@@ -72,6 +52,7 @@ export default function DepressionQuizPage() {
       answers,
       totalScore: score,
       timestamp: new Date().toISOString(),
+      quizTitle: quiz.title,
     }
 
     const searchParams = new URLSearchParams({
@@ -95,25 +76,23 @@ export default function DepressionQuizPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary-foreground ">
+    <div className="min-h-screen bg-primary-foreground">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Depression Assessment Questionnaire</h1>
-          <p className="text-muted-foreground">Please answer each question based on how youve been feeling recently.</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">{quiz.title}</h1>
+          {quiz.description && <p className="text-muted-foreground">{quiz.description}</p>}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
-          {currentQuestions.map((question, index) => (
+          {currentQuestions.map((questionData, index) => (
             <QuestionCard
               key={startIndex + index}
               questionNumber={startIndex + index + 1}
-              question={question}
+              question={questionData.question}
               value={answers[startIndex + index]}
-              onChange={(value) => {
-                handleAnswerChange(index, value)
-              }}
+              onChange={(value) => handleAnswerChange(index, value)}
               isAnswered={isQuestionAnswered(index)}
-              options={options}
+              options={questionData.options}
             />
           ))}
         </div>
@@ -163,6 +142,7 @@ export default function DepressionQuizPage() {
             </div>
           </div>
         </div>
+
         {currentPage === totalPages - 1 && (
           <div className="mt-6 text-center">
             <Button disabled={getAnsweredCount() < questions.length} onClick={handleSubmit} className="px-8 size-lg">
@@ -179,8 +159,8 @@ export default function DepressionQuizPage() {
         open={showContactDialog}
         onOpenChange={setShowContactDialog}
         onSuccess={navigateToResults}
-        title="Get Your Depression Assessment Results"
-        description="Enter your details to view your personalized depression assessment report"
+        title={'Get Your Assessment Results'}
+        description={'Enter your details to view your personalized assessment report'}
       />
     </div>
   )
