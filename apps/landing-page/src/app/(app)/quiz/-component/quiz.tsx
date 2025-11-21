@@ -60,7 +60,7 @@ export default function QuizRender({ quiz }: QuizProps) {
       data: btoa(JSON.stringify(resultsData)),
     })
 
-    router.push(`/quiz/${quiz.slug}-report?${searchParams.toString()}`)
+    router.push(`https://positivemindcare.com/${quiz.slug}-report?${searchParams.toString()}`)
   }
 
   function handleSubmit() {
