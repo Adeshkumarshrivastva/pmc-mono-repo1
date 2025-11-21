@@ -339,6 +339,9 @@ export interface Lead {
   service?: (string | null) | Service
   subService?: (string | null) | Service
   message?: string | null
+  source?: ('facebook' | 'instagram' | 'linkedin' | 'website' | 'clinic' | 'referral' | 'ads' | 'other')[] | null
+  status?: ('new' | 'contacted' | 'followUp' | 'interested' | 'converted' | 'lost') | null
+  leadLevel?: ('hot' | 'warm' | 'cold') | null
   updatedAt: string
   createdAt: string
 }
@@ -651,6 +654,9 @@ export interface LeadsSelect<T extends boolean = true> {
   service?: T
   subService?: T
   message?: T
+  source?: T
+  status?: T
+  leadLevel?: T
   updatedAt?: T
   createdAt?: T
 }
