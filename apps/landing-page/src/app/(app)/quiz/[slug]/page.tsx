@@ -1,7 +1,8 @@
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 import config from '@payload-config'
-import type { Quiz } from '@/lib/types'
+
+import type { Quiz } from '@/payload/types'
 import QuizRender from '../-component/quiz'
 
 type QuizPageProps = {
@@ -11,13 +12,14 @@ type QuizPageProps = {
 }
 
 export default async function QuizPage({ params }: QuizPageProps) {
+  const { slug } = await params
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({
     collection: 'quiz',
     where: {
-      route: {
-        equals: `/quiz/${params.slug}`,
+      slug: {
+        equals: `/quiz/${slug}`,
       },
     },
     limit: 1,
@@ -30,43 +32,18 @@ export default async function QuizPage({ params }: QuizPageProps) {
     notFound()
   }
 
-  const serializedQuiz: Quiz = {
-    ...quiz,
-    slug: params.slug,
-    questionnaire: quiz.questionnaire.map((q) => ({
-      question: q.question,
-      options: q.options.map((opt) => ({
-        value: opt.value,
-        label: opt.label,
-        score: opt.score,
-      })),
-    })),
-  }
-
-  return <QuizRender quiz={serializedQuiz} />
-}
-
-export async function generateStaticParams() {
-  const payload = await getPayload({ config })
-
-  const { docs } = await payload.find({
-    collection: 'quiz',
-    limit: 100,
-  })
-
-  return docs.map((quiz) => ({
-    slug: quiz.route.replace('/quiz/', ''),
-  }))
+  return <QuizRender quiz={quiz} />
 }
 
 export async function generateMetadata({ params }: QuizPageProps) {
+  const { slug } = await params
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({
     collection: 'quiz',
     where: {
-      route: {
-        equals: `/quiz/${params.slug}`,
+      slug: {
+        equals: `/quiz/${slug}`,
       },
     },
     limit: 1,

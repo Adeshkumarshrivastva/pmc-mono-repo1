@@ -24,6 +24,8 @@ import { OurBlogs } from './globals/our-blogs'
 import { PrivacyPolicy } from './globals/privacy-policy'
 import { TermsAndConditions } from './globals/terms-and-conditions'
 import { Webinars } from './collections/webinars'
+import { Quiz } from './collections/quiz'
+import { QuizPage } from './globals/quiz'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,8 +37,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Blog, Experts, TeamMembers, Testimonial, Services, Leads, Appointments, Webinars],
-  globals: [Home, DeepTms, OurServices, ContactUs, AboutUs, PrivacyPolicy, TermsAndConditions, OurBlogs],
+  collections: [Users, Media, Blog, Experts, TeamMembers, Testimonial, Services, Leads, Appointments, Webinars, Quiz],
+  globals: [Home, DeepTms, OurServices, ContactUs, AboutUs, PrivacyPolicy, TermsAndConditions, OurBlogs, QuizPage],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
   typescript: {

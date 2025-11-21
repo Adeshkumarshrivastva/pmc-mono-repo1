@@ -77,6 +77,7 @@ export interface Config {
     leads: Lead
     appointments: Appointment
     webinars: Webinar
+    quiz: Quiz
     'payload-locked-documents': PayloadLockedDocument
     'payload-preferences': PayloadPreference
     'payload-migrations': PayloadMigration
@@ -97,6 +98,7 @@ export interface Config {
     leads: LeadsSelect<false> | LeadsSelect<true>
     appointments: AppointmentsSelect<false> | AppointmentsSelect<true>
     webinars: WebinarsSelect<false> | WebinarsSelect<true>
+    quiz: QuizSelect<false> | QuizSelect<true>
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
@@ -113,6 +115,7 @@ export interface Config {
     'privacy-policy': PrivacyPolicy
     'terms-and-conditions': TermsAndCondition
     'our-blogs': OurBlog
+    'quiz-page': QuizPage
   }
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>
@@ -123,6 +126,7 @@ export interface Config {
     'privacy-policy': PrivacyPolicySelect<false> | PrivacyPolicySelect<true>
     'terms-and-conditions': TermsAndConditionsSelect<false> | TermsAndConditionsSelect<true>
     'our-blogs': OurBlogsSelect<false> | OurBlogsSelect<true>
+    'quiz-page': QuizPageSelect<false> | QuizPageSelect<true>
   }
   locale: null
   user: User & {
@@ -407,6 +411,45 @@ export interface Webinar {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz".
+ */
+export interface Quiz {
+  id: string
+  _order?: string | null
+  title: string
+  image: string | Media
+  /**
+   * Auto-generated from title (e.g., /quiz/anxiety-quiz)
+   */
+  slug: string
+  /**
+   * Shown at the top of the quiz page
+   */
+  description?: string | null
+  questionnaire: {
+    question: string
+    options: {
+      /**
+       * e.g., "a", "b", "c"
+       */
+      value: string
+      /**
+       * e.g., "Not at all", "Sometimes"
+       */
+      label: string
+      /**
+       * Points awarded for this option
+       */
+      score: number
+      id?: string | null
+    }[]
+    id?: string | null
+  }[]
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -451,6 +494,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'webinars'
         value: string | Webinar
+      } | null)
+    | ({
+        relationTo: 'quiz'
+        value: string | Quiz
       } | null)
   globalSlug?: string | null
   user: {
@@ -656,6 +703,33 @@ export interface WebinarsSelect<T extends boolean = true> {
   poster?: T
   videoLink?: T
   description?: T
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz_select".
+ */
+export interface QuizSelect<T extends boolean = true> {
+  _order?: T
+  title?: T
+  image?: T
+  slug?: T
+  description?: T
+  questionnaire?:
+    | T
+    | {
+        question?: T
+        options?:
+          | T
+          | {
+              value?: T
+              label?: T
+              score?: T
+              id?: T
+            }
+        id?: T
+      }
   updatedAt?: T
   createdAt?: T
 }
@@ -1401,6 +1475,18 @@ export interface OurBlog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-page".
+ */
+export interface QuizPage {
+  id: string
+  heading: string
+  subtitle1?: string | null
+  subtitle2?: string | null
+  updatedAt?: string | null
+  createdAt?: string | null
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -1934,6 +2020,18 @@ export interface TermsAndConditionsSelect<T extends boolean = true> {
 export interface OurBlogsSelect<T extends boolean = true> {
   title?: T
   description?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-page_select".
+ */
+export interface QuizPageSelect<T extends boolean = true> {
+  heading?: T
+  subtitle1?: T
+  subtitle2?: T
   updatedAt?: T
   createdAt?: T
   globalType?: T
