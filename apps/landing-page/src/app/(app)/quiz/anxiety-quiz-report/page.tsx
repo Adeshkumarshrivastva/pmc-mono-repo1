@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { Calendar } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import AppointmentForm from '../../_components/appointment-form'
 import ScoreReport from '../-component/score-report'
 
 type ReportData = {
@@ -22,66 +25,68 @@ type ScoreCategory = {
 
 const scoreCategories: ScoreCategory[] = [
   {
-    level: 'Low Risk',
-    range: '0-7',
+    level: 'Minimal Anxiety',
+    range: '0-9',
     color: 'text-green-600',
     bgColor: 'bg-green-50 border-green-200',
-    description:
-      'Your alcohol consumption appears to be within low-risk guidelines. You demonstrate responsible drinking habits.',
+    description: 'Your responses indicate minimal signs of anxiety. You appear to be managing stress well.',
     recommendations: [
-      'Continue to drink responsibly and within recommended limits',
-      'Be aware of situations that might lead to increased drinking',
-      'Stay informed about safe drinking guidelines',
-      'Maintain healthy lifestyle choices',
+      'Continue practicing healthy stress management techniques',
+      'Maintain regular physical activity and good sleep habits',
+      'Stay connected with your support network',
+      'Keep monitoring your mental wellbeing',
     ],
   },
   {
-    level: 'Increasing Risk',
-    range: '8-15',
+    level: 'Mild Anxiety',
+    range: '10-20',
     color: 'text-yellow-600',
     bgColor: 'bg-yellow-50 border-yellow-200',
-    description:
-      'Your drinking pattern suggests an increasing level of risk. You may be drinking more than is advisable for your health.',
+    description: 'Your responses suggest mild anxiety symptoms that may occasionally affect your daily activities.',
     recommendations: [
-      'Consider reducing your alcohol intake',
-      'Set limits on how much and how often you drink',
-      'Seek advice from a healthcare professional',
-      'Identify triggers that lead to increased drinking',
+      'Practice relaxation techniques like deep breathing or meditation',
+      'Consider talking to a healthcare professional if symptoms persist',
+      'Maintain a regular exercise routine to reduce stress',
+      'Limit caffeine and alcohol intake',
+      'Ensure adequate sleep and rest',
     ],
   },
   {
-    level: 'Higher Risk',
-    range: '16-19',
+    level: 'Moderate Anxiety',
+    range: '21-40',
     color: 'text-orange-600',
     bgColor: 'bg-orange-50 border-orange-200',
     description:
-      'Your responses indicate a higher risk drinking pattern that may be causing harm to your health and wellbeing.',
+      'Your responses indicate moderate anxiety symptoms that likely impact your daily functioning and quality of life.',
     recommendations: [
-      'Seek professional advice from a healthcare provider',
-      'Consider counseling or brief intervention programs',
-      'Evaluate the impact of alcohol on your daily life',
-      'Reach out to support groups or alcohol services',
+      'Seek professional help from a mental health provider',
+      'Consider cognitive behavioral therapy (CBT) or other evidence-based treatments',
+      'Discuss anxiety management strategies with your doctor',
+      'Practice mindfulness and stress reduction techniques regularly',
+      'Build a strong support system with friends and family',
     ],
   },
   {
-    level: 'Possible Dependence',
-    range: '20-40',
+    level: 'Severe Anxiety',
+    range: '41-60',
     color: 'text-red-600',
     bgColor: 'bg-red-50 border-red-200',
     description:
-      'Your responses suggest possible alcohol dependence. Your drinking pattern may require specialized assessment and support.',
+      'Your responses suggest severe anxiety symptoms that significantly interfere with your daily life and wellbeing.',
     recommendations: [
-      'Seek immediate professional help from an addiction specialist',
-      'Consider comprehensive assessment for alcohol dependence',
-      'Explore treatment options including therapy and support groups',
-      'Involve family and friends in your recovery journey',
+      'Seek immediate professional help from a mental health specialist',
+      'Contact a mental health crisis line if you feel overwhelmed',
+      'Consider medication evaluation with a psychiatrist',
+      'Engage in intensive therapy or counseling',
+      'Inform trusted family members or friends about your struggles',
+      'Avoid self-medication with alcohol or substances',
     ],
   },
 ]
 
-const MAX_SCORE = 40
+const MAX_SCORE = 60
 
-export default function AlcoholReportPage() {
+export default function AnxietyReportPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [reportData, setReportData] = useState<ReportData | null>(null)
@@ -127,24 +132,31 @@ export default function AlcoholReportPage() {
           maxScore={MAX_SCORE}
           currentCategory={currentCategory}
           scoreCategories={scoreCategories}
-          reportTitle="Your AUDIT Assessment Report"
+          reportTitle="Your Anxiety Assessment Report"
           timestamp={reportData.timestamp}
           onBack={() => {
             router.back()
           }}
           onRetake={() => {
-            router.push('/quiz')
+            router.push('/quiz/anxiety')
           }}
-          disclaimer="This assessment is a screening tool and not a diagnostic instrument. It should not replace professional medical advice. If you're concerned about your drinking habits, please consult with a qualified healthcare professional or addiction specialist for proper evaluation and support."
+          onViewExperts={() => {
+            router.push('/portal/experts')
+          }}
+          appointmentFormTrigger={
+            <AppointmentForm
+              trigger={
+                <Button
+                  variant="default"
+                  className="flex items-center gap-2 w-full sm:w-auto"
+                  icon={<Calendar className="w-4 h-4" />}
+                >
+                  Book a Consultation
+                </Button>
+              }
+            />
+          }
         />
-
-        <div className="mt-12 text-center">
-          <p className="text-xs text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            This assessment is based on the AUDIT (Alcohol Use Disorders Identification Test) developed by the World
-            Health Organization and is intended for screening purposes only. Results should be discussed with a
-            healthcare professional for proper interpretation and treatment planning.
-          </p>
-        </div>
       </div>
     </div>
   )

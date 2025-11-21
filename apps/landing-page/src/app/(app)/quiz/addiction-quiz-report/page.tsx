@@ -144,7 +144,7 @@ export default function AlcoholReportPage() {
             Back to Assessment
           </Button>
 
-          <h1 className="text-3xl font-bold text-foreground mb-2">Your AUDIT Assessment Report</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Your Addiction Assessment Report</h1>
           <p className="text-muted-foreground">Completed on {formatDate(reportData.timestamp)}</p>
         </div>
 
