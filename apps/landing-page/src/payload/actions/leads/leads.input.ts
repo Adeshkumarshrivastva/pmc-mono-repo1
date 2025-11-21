@@ -16,6 +16,7 @@ export const quizLeadInput = z.object({
   fullName: z.string().min(1),
   email: z.email().optional(),
   phone: z.string(),
+  quizId: objectId,
   quizAnswers: z
     .array(
       z.object({

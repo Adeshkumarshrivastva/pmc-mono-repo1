@@ -176,6 +176,7 @@ export default function QuizRender({ quiz }: QuizProps) {
         title={'Get Your Assessment Results'}
         description={'Enter your details to view your personalized assessment report'}
         quizAnswers={formatQuizAnswers()}
+        quizId={quiz.id}
       />
     </div>
   )

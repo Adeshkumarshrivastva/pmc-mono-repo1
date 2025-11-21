@@ -30,6 +30,7 @@ export default function QuizContactForm({
   title = 'Get Your Results',
   description = 'Please provide your contact information to receive your assessment results',
   quizAnswers = [],
+  quizId,
 }: QuizContactFormProps) {
   const form = useForm<QuizLeadFormInput>({
     defaultValues: {
@@ -37,6 +38,7 @@ export default function QuizContactForm({
       email: '',
       phone: '',
       quizAnswers: quizAnswers,
+      quizId: quizId,
     },
     resolver: zodResolver(quizLeadInput),
   })
@@ -69,6 +71,7 @@ export default function QuizContactForm({
               quizFormMutation.mutate({
                 ...values,
                 quizAnswers: quizAnswers,
+                quizId: quizId || '',
               })
             })}
             className="space-y-4"

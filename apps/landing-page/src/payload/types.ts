@@ -339,6 +339,7 @@ export interface Lead {
   service?: (string | null) | Service
   subService?: (string | null) | Service
   message?: string | null
+  quizId?: (string | null) | Quiz
   quizAnswers?:
     | {
         question?: string | null
@@ -346,6 +347,45 @@ export interface Lead {
         id?: string | null
       }[]
     | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz".
+ */
+export interface Quiz {
+  id: string
+  _order?: string | null
+  title: string
+  image: string | Media
+  /**
+   * Auto-generated from title (e.g., /quiz/anxiety-quiz)
+   */
+  slug: string
+  /**
+   * Shown at the top of the quiz page
+   */
+  description?: string | null
+  questionnaire: {
+    question: string
+    options: {
+      /**
+       * e.g., "a", "b", "c"
+       */
+      value: string
+      /**
+       * e.g., "Not at all", "Sometimes"
+       */
+      label: string
+      /**
+       * Points awarded for this option
+       */
+      score: number
+      id?: string | null
+    }[]
+    id?: string | null
+  }[]
   updatedAt: string
   createdAt: string
 }
@@ -406,45 +446,6 @@ export interface Webinar {
     }
     [k: string]: unknown
   } | null
-  updatedAt: string
-  createdAt: string
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "quiz".
- */
-export interface Quiz {
-  id: string
-  _order?: string | null
-  title: string
-  image: string | Media
-  /**
-   * Auto-generated from title (e.g., /quiz/anxiety-quiz)
-   */
-  slug: string
-  /**
-   * Shown at the top of the quiz page
-   */
-  description?: string | null
-  questionnaire: {
-    question: string
-    options: {
-      /**
-       * e.g., "a", "b", "c"
-       */
-      value: string
-      /**
-       * e.g., "Not at all", "Sometimes"
-       */
-      label: string
-      /**
-       * Points awarded for this option
-       */
-      score: number
-      id?: string | null
-    }[]
-    id?: string | null
-  }[]
   updatedAt: string
   createdAt: string
 }
@@ -658,6 +659,7 @@ export interface LeadsSelect<T extends boolean = true> {
   service?: T
   subService?: T
   message?: T
+  quizId?: T
   quizAnswers?:
     | T
     | {
