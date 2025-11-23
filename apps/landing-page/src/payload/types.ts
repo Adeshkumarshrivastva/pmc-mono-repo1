@@ -399,6 +399,7 @@ export interface Webinar {
     }
     [k: string]: unknown
   } | null
+  slug: string
   updatedAt: string
   createdAt: string
 }
@@ -689,6 +690,7 @@ export interface WebinarsSelect<T extends boolean = true> {
   poster?: T
   videoLink?: T
   description?: T
+  slug?: T
   updatedAt?: T
   createdAt?: T
 }
@@ -982,6 +984,11 @@ export interface Home {
     title?: string | null
     action?: string | null
     featuredBlogs?: (string | Blog)[] | null
+  }
+  webinarsSection?: {
+    title?: string | null
+    description?: string | null
+    action?: string | null
   }
   updatedAt?: string | null
   createdAt?: string | null
@@ -1663,6 +1670,13 @@ export interface HomeSelect<T extends boolean = true> {
         title?: T
         action?: T
         featuredBlogs?: T
+      }
+  webinarsSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        action?: T
       }
   updatedAt?: T
   createdAt?: T
