@@ -1,22 +1,20 @@
 import { notFound } from 'next/navigation'
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import { getPayloadClient } from '@/lib/payload'
 import { getURLFromMedia } from '@/payload/utils'
 import Image from 'next/image'
+import { getWebinar } from '@/payload/actions/webinars/webinars.actions'
 
 interface WebinarPageProps {
-  params: Promise<{ webinarId: string }>
+  params: Promise<{ webinarSlug: string }>
 }
 
 export default async function WebinarPage({ params }: WebinarPageProps) {
-  const { webinarId } = await params
-  const payload = await getPayloadClient()
-  const webinar = await payload.findByID({
-    collection: 'webinars',
-    id: webinarId,
-  })
+  const { webinarSlug } = await params
+  const webinar = await getWebinar({ webinarSlug })
 
-  if (!webinar) return notFound()
+  if (!webinar) {
+    return notFound()
+  }
 
   return (
     <main className="w-full bg-accent">
@@ -56,6 +54,7 @@ export default async function WebinarPage({ params }: WebinarPageProps) {
                 <Image
                   src={getURLFromMedia(webinar.speaker.image)}
                   alt={webinar.speaker.name ?? 'Webinar Speaker'}
+                  fill
                   className="rounded-full object-cover size-20"
                 />
               ) : null}

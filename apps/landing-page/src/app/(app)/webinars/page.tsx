@@ -34,7 +34,7 @@ async function WebinarGrid() {
 }
 
 function WebinarCard({ webinar }: { webinar: Webinar }) {
-  const href = `/webinars/${webinar.id}`
+  const href = `/webinars/${webinar.slug}`
   const date = new Date(webinar.date).toLocaleDateString('en-IN', {
     year: 'numeric',
     month: 'long',
