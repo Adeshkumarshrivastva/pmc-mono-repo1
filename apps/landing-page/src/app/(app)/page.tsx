@@ -14,6 +14,8 @@ import ServicesSection from './_components/services-section'
 import AchievementSection from './_components/achievement-section'
 import QuizSection from './_components/quiz-section'
 import MapSection from './_components/map-section'
+import { getWebinars } from '@/payload/actions/webinars/webinars.actions'
+import WebinarsSection from './_components/webinars-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -31,6 +33,7 @@ export default async function HomePage() {
     achievementSection,
     quizSection,
     blogsSection,
+    webinarsSection,
   } = await payload.findGlobal({
     slug: 'home',
   })
@@ -42,6 +45,7 @@ export default async function HomePage() {
   })
 
   const services = await getServices({})
+  const webinars = await getWebinars({})
 
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
@@ -57,6 +61,7 @@ export default async function HomePage() {
       <ContactSection data={contactSection} services={services.docs} />
       <TestimonialSection data={testimonialSection} />
       <AchievementSection data={achievementSection} />
+      <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
       <BlogsSection data={blogsSection} blogs={topBlogs.docs} />
     </div>
   )
