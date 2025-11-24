@@ -14,7 +14,7 @@ import ServicesSection from './_components/services-section'
 import AchievementSection from './_components/achievement-section'
 import QuizSection from './_components/quiz-section'
 import MapSection from './_components/map-section'
-import { getWebinars } from '@/payload/actions/webinars/webinars.actions'
+import { getWebinars } from '@/payload/actions'
 import WebinarsSection from './_components/webinars-section'
 
 export default async function HomePage() {

@@ -1,5 +1,3 @@
-'use server'
-
 import { z } from 'zod'
 
 export const getWebinarsInput = z.object({

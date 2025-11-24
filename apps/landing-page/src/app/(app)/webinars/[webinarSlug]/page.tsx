@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getURLFromMedia } from '@/payload/utils'
 import Image from 'next/image'
-import { getWebinar } from '@/payload/actions/webinars/webinars.actions'
+import { getWebinar } from '@/payload/actions'
 
 interface WebinarPageProps {
   params: Promise<{ webinarSlug: string }>
