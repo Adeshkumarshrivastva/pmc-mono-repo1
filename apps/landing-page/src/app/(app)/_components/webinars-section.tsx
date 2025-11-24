@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import Autoscroll from 'embla-carousel-auto-scroll'
-import { ArrowRightIcon } from 'lucide-react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import type { Home, Webinar } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { ChatIcon } from '@/components/ui/icons'
+import { Calendar } from 'lucide-react'
 
 type WebinarsSectionProps = {
   data: Home['webinarsSection']
@@ -22,7 +22,7 @@ export default function WebinarsSection({ data, webinars }: WebinarsSectionProps
 
   return (
     <section className="w-full bg-accent">
-      <div className="px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-12 lg:py-24">
+      <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-20 lg:px-12 lg:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-start md:justify-between">
             <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-xl">{data.title}</h2>
@@ -39,45 +39,87 @@ export default function WebinarsSection({ data, webinars }: WebinarsSectionProps
           <Carousel
             opts={{
               loop: true,
-              dragFree: true,
+              dragFree: false,
             }}
             plugins={[
               Autoscroll({
                 speed: 0.7,
                 startDelay: 500,
-                stopOnInteraction: false,
+                stopOnInteraction: true,
                 stopOnMouseEnter: true,
               }),
             ]}
           >
-            <CarouselContent className="w-full mt-8">
-              {webinars.map((webinar) => (
-                <CarouselItem key={webinar.id} className="md:basis-1/3 lg:basis-1/4">
-                  <Link href={`/webinars/${webinar.slug}`} className="group flex flex-col space-y-4 h-full">
-                    {webinar.poster && (
-                      <div className="overflow-hidden rounded-xl bg-muted relative aspect-[4/3] w-full">
-                        <Image
-                          src={getURLFromMedia(webinar.poster)}
-                          alt={webinar.title}
-                          fill
-                          className="object-cover"
-                          loading="lazy"
-                        />
+            <CarouselContent className="mt-8">
+              {webinars.map((webinar) => {
+                return (
+                  <CarouselItem key={webinar.id} className="basis-full">
+                    <div className="flex flex-col gap-4 lg:flex-row bg-primary rounded-2xl overflow-hidden p-4">
+                      <div className="relative w-full lg:w-1/2 h-[250px] sm:h-[280px] lg:h-[350px] bg-muted flex-shrink-0">
+                        {webinar.poster && (
+                          <Image
+                            src={getURLFromMedia(webinar.poster)}
+                            alt={webinar.title}
+                            fill
+                            className="object-cover rounded-3xl"
+                            loading="lazy"
+                          />
+                        )}
                       </div>
-                    )}
-                    <div className="flex-1 rounded-xl bg-primary p-6 shadow-lg transition-shadow duration-300 group-hover:shadow-xl">
-                      <div className="space-y-3 flex flex-col justify-between h-full">
-                        <h3 className="flex-1 text-accent font-semibold text-2xl leading-tight">{webinar.title}</h3>
-                        <div className="text-primary-foreground font-medium flex items-center space-x-2">
-                          View Webinar
-                          <ArrowRightIcon className="size-4 ml-1 group-hover:ml-2 transition-transform duration-300" />
+
+                      <div className="flex-1 flex flex-col justify-between lg:ml-6 min-h-[250px] sm:min-h-[300px] md:py-4">
+                        <h2 className="text-2xl lg:text-4xl font-semibold leading-tight line-clamp-3 text-primary-foreground">
+                          {webinar.title}
+                        </h2>
+
+                        <div className="space-y-4 text-primary-foreground">
+                          <div className="flex gap-3">
+                            <Calendar />
+                            <div className="text-lg font-semibold">
+                              {new Date(webinar.date).toLocaleDateString('en-IN', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              })}
+                            </div>
+                          </div>
+
+                          {webinar.speaker && (
+                            <div className="flex gap-3">
+                              {webinar.speaker.image && (
+                                <Image
+                                  src={getURLFromMedia(webinar.speaker.image)}
+                                  alt={webinar.speaker.name || 'Speaker'}
+                                  width={60}
+                                  height={60}
+                                  className="rounded-md object-cover"
+                                />
+                              )}
+                              <div>
+                                <p className="font-semibold text-2xl">{webinar.speaker.name}</p>
+                                <p className="opacity-70 text-lg">{webinar.speaker.profession}</p>
+                              </div>
+                            </div>
+                          )}
+
+                          <Link href={`/webinars/${webinar.slug}`}>
+                            <Button variant="secondary" className="w-full lg:w-40 font-medium">
+                              View Webinar
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                     </div>
-                  </Link>
-                </CarouselItem>
-              ))}
+                  </CarouselItem>
+                )
+              })}
             </CarouselContent>
+            <div className=" flex justify-center relative">
+              <div className="mt-6 lg:mt-10">
+                <CarouselPrevious className=" relative h-12 w-12" variant={'default'} />
+                <CarouselNext className=" relative h-12 w-12 " variant={'default'} />
+              </div>
+            </div>
           </Carousel>
         </div>
       </div>
