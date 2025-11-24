@@ -8,7 +8,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import type { Home, Webinar } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { ChatIcon } from '@/components/ui/icons'
-import { Calendar } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 
 type WebinarsSectionProps = {
   data: Home['webinarsSection']
@@ -74,7 +74,7 @@ export default function WebinarsSection({ data, webinars }: WebinarsSectionProps
 
                         <div className="space-y-4 text-primary-foreground">
                           <div className="flex gap-3">
-                            <Calendar />
+                            <CalendarIcon />
                             <div className="text-lg font-semibold">
                               {new Date(webinar.date).toLocaleDateString('en-IN', {
                                 year: 'numeric',
