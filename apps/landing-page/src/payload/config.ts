@@ -5,6 +5,7 @@ import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { env } from '@/env'
 import { Home } from './globals/home'
 import { DeepTms } from './globals/deep-tms'
@@ -55,6 +56,10 @@ export default buildConfig({
       },
       bucket: env.PAYLOAD_BUCKET,
       config: {},
+    }),
+    importExportPlugin({
+      collections: ['leads'],
+      disableSave: true,
     }),
   ],
 })
