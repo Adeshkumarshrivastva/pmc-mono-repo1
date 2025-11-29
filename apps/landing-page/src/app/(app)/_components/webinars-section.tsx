@@ -24,7 +24,7 @@ type WebinarsSectionProps = {
 }
 
 export default function WebinarsSection({ data, webinars }: WebinarsSectionProps) {
-  if (!data || !webinars || webinars.length === 0) {
+  if (webinars.length === 0) {
     return null
   }
 
@@ -61,8 +61,8 @@ export default function WebinarsSection({ data, webinars }: WebinarsSectionProps
       <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-20 lg:px-12 lg:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-6 sm:gap-8 md:flex-row md:items-start md:justify-between">
-            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-xl">{data.title}</h2>
-            {data.action && (
+            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-5xl max-w-xl">{data?.title}</h2>
+            {data?.action && (
               <Link href="/webinars">
                 <Button icon={<ChatIcon />} className="w-full sm:w-auto">
                   {data.action}
@@ -70,7 +70,7 @@ export default function WebinarsSection({ data, webinars }: WebinarsSectionProps
               </Link>
             )}
           </div>
-          <h3 className="lg:text-xl mt-6 lg:mb-2">{data.description}</h3>
+          <h3 className="lg:text-xl mt-6 lg:mb-2">{data?.description}</h3>
 
           <Carousel opts={{ loop: true, dragFree: false }} plugins={[autoscrollPlugin]} setApi={setApi}>
             <CarouselContent className="mt-8">
