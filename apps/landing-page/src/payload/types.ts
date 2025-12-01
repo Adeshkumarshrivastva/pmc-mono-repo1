@@ -78,6 +78,7 @@ export interface Config {
     appointments: Appointment
     webinars: Webinar
     quiz: Quiz
+    internships: Internship
     exports: Export
     'payload-jobs': PayloadJob
     'payload-locked-documents': PayloadLockedDocument
@@ -101,6 +102,7 @@ export interface Config {
     appointments: AppointmentsSelect<false> | AppointmentsSelect<true>
     webinars: WebinarsSelect<false> | WebinarsSelect<true>
     quiz: QuizSelect<false> | QuizSelect<true>
+    internships: InternshipsSelect<false> | InternshipsSelect<true>
     exports: ExportsSelect<false> | ExportsSelect<true>
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
@@ -456,6 +458,22 @@ export interface Quiz {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "internships".
+ */
+export interface Internship {
+  id: string
+  fullName: string
+  email: string
+  phoneNumber?: string | null
+  schoolOrUniversity?: string | null
+  degreeOrProgram?: string | null
+  interestedIn: string
+  message?: string | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports".
  */
 export interface Export {
@@ -633,6 +651,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'quiz'
         value: string | Quiz
+      } | null)
+    | ({
+        relationTo: 'internships'
+        value: string | Internship
       } | null)
     | ({
         relationTo: 'exports'
@@ -869,6 +891,21 @@ export interface QuizSelect<T extends boolean = true> {
             }
         id?: T
       }
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "internships_select".
+ */
+export interface InternshipsSelect<T extends boolean = true> {
+  fullName?: T
+  email?: T
+  phoneNumber?: T
+  schoolOrUniversity?: T
+  degreeOrProgram?: T
+  interestedIn?: T
+  message?: T
   updatedAt?: T
   createdAt?: T
 }
