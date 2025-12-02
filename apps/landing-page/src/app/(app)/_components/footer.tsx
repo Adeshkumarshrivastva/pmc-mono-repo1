@@ -131,7 +131,7 @@ const AWARENESS_ITEMS = [
   // { id: 'news', href: '/news', label: 'News' },
   // { id: 'campaigns', href: '/campaigns', label: 'Campaigns' },
   // { id: 'ambassador-program', href: '/ambassador-program', label: 'Ambassador Program' },
-  { id: 'internship', href: 'https://ambassador.proactivefoundation.org', label: 'Internship' },
+  { id: 'internship', href: '/internship', label: 'Internship' },
 ]
 
 const FOLLOW_ITEMS = [
