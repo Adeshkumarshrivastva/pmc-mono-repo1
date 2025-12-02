@@ -28,7 +28,7 @@ const NAV_ITEMS = [
 const AWARENESS_ITEMS = [
   { id: 'blogs', href: '/blogs', label: 'Blogs' },
   { id: 'webinars', href: '/webinars', label: 'Webinar & Workshops' },
-  { id: 'internship', href: 'https://ambassador.proactivefoundation.org/', label: 'Internship' },
+  { id: 'internship', href: '/internship', label: 'Internship' },
 ] as const
 
 const HOVER_DELAY = 400

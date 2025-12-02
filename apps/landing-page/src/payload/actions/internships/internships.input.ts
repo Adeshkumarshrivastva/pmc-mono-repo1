@@ -6,7 +6,7 @@ export const internshipsFormInput = z.object({
   phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits').optional(),
   schoolOrUniversity: z.string().optional(),
   degreeOrProgram: z.string().optional(),
-  interestedIn: z.string(),
+  interestedIn: z.string().min(1),
   message: z.string().optional(),
 })
 
