@@ -28,5 +28,31 @@ export const Webinars: CollectionConfig = {
     },
     { name: 'videoLink', type: 'text' },
     { name: 'description', type: 'richText' },
+    {
+      name: 'slug',
+      type: 'text',
+      label: 'Slug',
+      required: true,
+      unique: true,
+      admin: {
+        position: 'sidebar',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ data, operation, value }) => {
+            if (operation === 'create' || operation === 'update') {
+              if (!value && data?.title) {
+                return data.title
+                  .trim()
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/(^-|-$)/g, '')
+              }
+            }
+            return value
+          },
+        ],
+      },
+    },
   ],
 }
