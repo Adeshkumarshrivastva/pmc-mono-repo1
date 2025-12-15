@@ -351,9 +351,88 @@ export interface Lead {
   service?: (string | null) | Service
   subService?: (string | null) | Service
   message?: string | null
+  quizId?: (string | null) | Quiz
+  quizAnswers?:
+    | {
+        question?: string | null
+        answer?: string | null
+        id?: string | null
+      }[]
+    | null
   source?: ('facebook' | 'instagram' | 'linkedin' | 'website' | 'clinic' | 'referral' | 'ads' | 'other')[] | null
   status?: ('new' | 'contacted' | 'followUp' | 'interested' | 'converted' | 'lost') | null
   leadLevel?: ('hot' | 'warm' | 'cold') | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz".
+ */
+export interface Quiz {
+  id: string
+  _order?: string | null
+  title: string
+  image: string | Media
+  /**
+   * Auto-generated from title (e.g., /quiz/anxiety-quiz)
+   */
+  slug: string
+  /**
+   * Shown at the top of the quiz page
+   */
+  description?: string | null
+  questionnaire: {
+    question: string
+    options: {
+      /**
+       * e.g., "a", "b", "c"
+       */
+      value: string
+      /**
+       * e.g., "Not at all", "Sometimes"
+       */
+      label: string
+      /**
+       * Points awarded for this option
+       */
+      score: number
+      id?: string | null
+    }[]
+    id?: string | null
+  }[]
+  /**
+   * Score thresholds and risk level definitions for the assessment report
+   */
+  riskLevels: {
+    /**
+     * e.g., "Low Risk", "Increasing Risk", "Higher Risk"
+     */
+    level: string
+    /**
+     * Lower bound of the score range
+     */
+    minScore: number
+    /**
+     * Upper bound of the score range
+     */
+    maxScore: number
+    color: 'text-green-600' | 'text-yellow-600' | 'text-orange-600' | 'text-red-600'
+    bgColor:
+      | 'bg-green-50 border-green-200'
+      | 'bg-yellow-50 border-yellow-200'
+      | 'bg-orange-50 border-orange-200'
+      | 'bg-red-50 border-red-200'
+    /**
+     * Summary of what this risk level means
+     */
+    description: string
+    recommendations: {
+      text: string
+      id?: string | null
+    }[]
+    id?: string | null
+  }[]
   updatedAt: string
   createdAt: string
 }
@@ -415,45 +494,6 @@ export interface Webinar {
     [k: string]: unknown
   } | null
   slug: string
-  updatedAt: string
-  createdAt: string
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "quiz".
- */
-export interface Quiz {
-  id: string
-  _order?: string | null
-  title: string
-  image: string | Media
-  /**
-   * Auto-generated from title (e.g., /quiz/anxiety-quiz)
-   */
-  slug: string
-  /**
-   * Shown at the top of the quiz page
-   */
-  description?: string | null
-  questionnaire: {
-    question: string
-    options: {
-      /**
-       * e.g., "a", "b", "c"
-       */
-      value: string
-      /**
-       * e.g., "Not at all", "Sometimes"
-       */
-      label: string
-      /**
-       * Points awarded for this option
-       */
-      score: number
-      id?: string | null
-    }[]
-    id?: string | null
-  }[]
   updatedAt: string
   createdAt: string
 }
@@ -824,6 +864,14 @@ export interface LeadsSelect<T extends boolean = true> {
   service?: T
   subService?: T
   message?: T
+  quizId?: T
+  quizAnswers?:
+    | T
+    | {
+        question?: T
+        answer?: T
+        id?: T
+      }
   source?: T
   status?: T
   leadLevel?: T
@@ -889,6 +937,23 @@ export interface QuizSelect<T extends boolean = true> {
               value?: T
               label?: T
               score?: T
+              id?: T
+            }
+        id?: T
+      }
+  riskLevels?:
+    | T
+    | {
+        level?: T
+        minScore?: T
+        maxScore?: T
+        color?: T
+        bgColor?: T
+        description?: T
+        recommendations?:
+          | T
+          | {
+              text?: T
               id?: T
             }
         id?: T

@@ -14,14 +14,16 @@ export async function createLead({ serviceId, subServiceId, ...rest }: LeadFormI
     },
   })
 }
-export async function createQuizLead({ fullName, email, phone }: QuizLeadFormInput) {
+export async function createQuizLead({ fullName, email, phone, quizAnswers, quizId }: QuizLeadFormInput) {
   const payload = await getPayloadClient()
   await payload.create({
     collection: 'leads',
     data: {
-      fullName: fullName,
-      email: email,
-      phone: phone,
+      fullName,
+      email,
+      phone,
+      quizAnswers,
+      quizId,
     },
   })
 }
