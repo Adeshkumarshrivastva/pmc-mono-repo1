@@ -141,7 +141,12 @@ export default function InternshipPage() {
                   <FormItem>
                     <FormLabel>Message</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Tell us a bit about yourself..." rows={5} {...field} />
+                      <Textarea
+                        placeholder="Tell us a bit about yourself..."
+                        rows={5}
+                        {...field}
+                        className="focus-visible:ring-[1px]"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
