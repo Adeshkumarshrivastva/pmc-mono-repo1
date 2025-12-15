@@ -5,6 +5,7 @@ import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { env } from '@/env'
 import { Home } from './globals/home'
 import { DeepTms } from './globals/deep-tms'
@@ -26,6 +27,7 @@ import { TermsAndConditions } from './globals/terms-and-conditions'
 import { Webinars } from './collections/webinars'
 import { Quiz } from './collections/quiz'
 import { QuizPage } from './globals/quiz'
+import { Internships } from './collections/internships'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -37,7 +39,20 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Blog, Experts, TeamMembers, Testimonial, Services, Leads, Appointments, Webinars, Quiz],
+  collections: [
+    Users,
+    Media,
+    Blog,
+    Experts,
+    TeamMembers,
+    Testimonial,
+    Services,
+    Leads,
+    Appointments,
+    Webinars,
+    Quiz,
+    Internships,
+  ],
   globals: [Home, DeepTms, OurServices, ContactUs, AboutUs, PrivacyPolicy, TermsAndConditions, OurBlogs, QuizPage],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
@@ -55,6 +70,10 @@ export default buildConfig({
       },
       bucket: env.PAYLOAD_BUCKET,
       config: {},
+    }),
+    importExportPlugin({
+      collections: ['leads'],
+      disableSave: true,
     }),
   ],
 })
