@@ -53,6 +53,7 @@ export default function QuizRender({ quiz }: QuizProps) {
       totalScore: score,
       timestamp: new Date().toISOString(),
       quizTitle: quiz.title,
+      riskLevels: quiz.riskLevels,
     }
 
     const searchParams = new URLSearchParams({
@@ -60,7 +61,7 @@ export default function QuizRender({ quiz }: QuizProps) {
       data: btoa(JSON.stringify(resultsData)),
     })
 
-    router.push(`https://positivemindcare.com/${quiz.slug}-report?${searchParams.toString()}`)
+    router.push(`${quiz.slug}/report?${searchParams.toString()}`)
   }
 
   function handleSubmit() {
