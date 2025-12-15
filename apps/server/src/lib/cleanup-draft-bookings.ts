@@ -9,14 +9,14 @@ const logger = createLogger('cleanup-draft-bookings')
  * This prevents stale DRAFT bookings from blocking time slots
  */
 export async function cleanupStaleDraftBookings() {
-  const tenMinutesAgo = dayjs().subtract(5, 'minutes').toDate()
+  const fiveMinutesAgo = dayjs().subtract(5, 'minutes').toDate()
 
   try {
     const result = await prisma.booking.deleteMany({
       where: {
         status: 'DRAFT',
         createdAt: {
-          lt: tenMinutesAgo,
+          lt: fiveMinutesAgo,
         },
       },
     })
