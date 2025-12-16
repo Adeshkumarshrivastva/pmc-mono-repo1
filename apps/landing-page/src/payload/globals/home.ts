@@ -301,6 +301,33 @@ export const Home: GlobalConfig = {
     faqSection,
     achievementSection,
     {
+      name: 'partnersSection',
+      label: 'Partners Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Section Title',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'partners',
+          label: 'Partners',
+          type: 'array',
+          fields: [
+            {
+              name: 'logo',
+              label: 'Partner Logo',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: 'blogsSection',
       label: 'Blogs Section',
       type: 'group',
