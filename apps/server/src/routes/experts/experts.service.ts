@@ -713,3 +713,8 @@ export async function updatePaymentStatus(c: C, input: { status: 'PENDING' | 'CO
 
   return c.json({ success: true, message: `Payment status updated to ${input.status}` })
 }
+
+export async function getAllExperts(c: C) {
+  const experts = await prisma.expert.findMany()
+  return c.json(experts)
+}

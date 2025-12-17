@@ -77,6 +77,10 @@ export interface Config {
     leads: Lead
     appointments: Appointment
     webinars: Webinar
+    quiz: Quiz
+    internships: Internship
+    exports: Export
+    'payload-jobs': PayloadJob
     'payload-locked-documents': PayloadLockedDocument
     'payload-preferences': PayloadPreference
     'payload-migrations': PayloadMigration
@@ -97,6 +101,10 @@ export interface Config {
     leads: LeadsSelect<false> | LeadsSelect<true>
     appointments: AppointmentsSelect<false> | AppointmentsSelect<true>
     webinars: WebinarsSelect<false> | WebinarsSelect<true>
+    quiz: QuizSelect<false> | QuizSelect<true>
+    internships: InternshipsSelect<false> | InternshipsSelect<true>
+    exports: ExportsSelect<false> | ExportsSelect<true>
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
@@ -113,6 +121,7 @@ export interface Config {
     'privacy-policy': PrivacyPolicy
     'terms-and-conditions': TermsAndCondition
     'our-blogs': OurBlog
+    'quiz-page': QuizPage
   }
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>
@@ -123,13 +132,20 @@ export interface Config {
     'privacy-policy': PrivacyPolicySelect<false> | PrivacyPolicySelect<true>
     'terms-and-conditions': TermsAndConditionsSelect<false> | TermsAndConditionsSelect<true>
     'our-blogs': OurBlogsSelect<false> | OurBlogsSelect<true>
+    'quiz-page': QuizPageSelect<false> | QuizPageSelect<true>
   }
   locale: null
   user: User & {
     collection: 'users'
   }
   jobs: {
-    tasks: unknown
+    tasks: {
+      createCollectionExport: TaskCreateCollectionExport
+      inline: {
+        input: unknown
+        output: unknown
+      }
+    }
     workflows: unknown
   }
 }
@@ -194,6 +210,7 @@ export interface Media {
 export interface Blog {
   id: string
   title: string
+  slug: string
   author: string
   category: (string | Service)[]
   image?: (string | null) | Media
@@ -334,6 +351,88 @@ export interface Lead {
   service?: (string | null) | Service
   subService?: (string | null) | Service
   message?: string | null
+  quizId?: (string | null) | Quiz
+  quizAnswers?:
+    | {
+        question?: string | null
+        answer?: string | null
+        id?: string | null
+      }[]
+    | null
+  source?: ('facebook' | 'instagram' | 'linkedin' | 'website' | 'clinic' | 'referral' | 'ads' | 'other')[] | null
+  status?: ('new' | 'contacted' | 'followUp' | 'interested' | 'converted' | 'lost') | null
+  leadLevel?: ('hot' | 'warm' | 'cold') | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz".
+ */
+export interface Quiz {
+  id: string
+  _order?: string | null
+  title: string
+  image: string | Media
+  /**
+   * Auto-generated from title (e.g., /quiz/anxiety-quiz)
+   */
+  slug: string
+  /**
+   * Shown at the top of the quiz page
+   */
+  description?: string | null
+  questionnaire: {
+    question: string
+    options: {
+      /**
+       * e.g., "a", "b", "c"
+       */
+      value: string
+      /**
+       * e.g., "Not at all", "Sometimes"
+       */
+      label: string
+      /**
+       * Points awarded for this option
+       */
+      score: number
+      id?: string | null
+    }[]
+    id?: string | null
+  }[]
+  /**
+   * Score thresholds and risk level definitions for the assessment report
+   */
+  riskLevels: {
+    /**
+     * e.g., "Low Risk", "Increasing Risk", "Higher Risk"
+     */
+    level: string
+    /**
+     * Lower bound of the score range
+     */
+    minScore: number
+    /**
+     * Upper bound of the score range
+     */
+    maxScore: number
+    color: 'text-green-600' | 'text-yellow-600' | 'text-orange-600' | 'text-red-600'
+    bgColor:
+      | 'bg-green-50 border-green-200'
+      | 'bg-yellow-50 border-yellow-200'
+      | 'bg-orange-50 border-orange-200'
+      | 'bg-red-50 border-red-200'
+    /**
+     * Summary of what this risk level means
+     */
+    description: string
+    recommendations: {
+      text: string
+      id?: string | null
+    }[]
+    id?: string | null
+  }[]
   updatedAt: string
   createdAt: string
 }
@@ -394,6 +493,152 @@ export interface Webinar {
     }
     [k: string]: unknown
   } | null
+  slug: string
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "internships".
+ */
+export interface Internship {
+  id: string
+  fullName: string
+  email: string
+  phoneNumber?: string | null
+  schoolOrUniversity?: string | null
+  degreeOrProgram?: string | null
+  interestedIn: string
+  message?: string | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exports".
+ */
+export interface Export {
+  id: string
+  name?: string | null
+  format?: ('csv' | 'json') | null
+  limit?: number | null
+  page?: number | null
+  sort?: string | null
+  sortOrder?: ('asc' | 'desc') | null
+  drafts?: ('yes' | 'no') | null
+  selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null
+  fields?: string[] | null
+  collectionSlug: string
+  where?:
+    | {
+        [k: string]: unknown
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null
+  updatedAt: string
+  createdAt: string
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  focalX?: number | null
+  focalY?: number | null
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: string
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null
+  taskStatus?:
+    | {
+        [k: string]: unknown
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null
+  completedAt?: string | null
+  totalTried?: number | null
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string
+        completedAt: string
+        taskSlug: 'inline' | 'createCollectionExport'
+        taskID: string
+        input?:
+          | {
+              [k: string]: unknown
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null
+        output?:
+          | {
+              [k: string]: unknown
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null
+        state: 'failed' | 'succeeded'
+        error?:
+          | {
+              [k: string]: unknown
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null
+        id?: string | null
+      }[]
+    | null
+  taskSlug?: ('inline' | 'createCollectionExport') | null
+  queue?: string | null
+  waitUntil?: string | null
+  processing?: boolean | null
   updatedAt: string
   createdAt: string
 }
@@ -443,6 +688,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'webinars'
         value: string | Webinar
+      } | null)
+    | ({
+        relationTo: 'quiz'
+        value: string | Quiz
+      } | null)
+    | ({
+        relationTo: 'internships'
+        value: string | Internship
+      } | null)
+    | ({
+        relationTo: 'exports'
+        value: string | Export
+      } | null)
+    | ({
+        relationTo: 'payload-jobs'
+        value: string | PayloadJob
       } | null)
   globalSlug?: string | null
   user: {
@@ -525,6 +786,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface BlogSelect<T extends boolean = true> {
   title?: T
+  slug?: T
   author?: T
   category?: T
   image?: T
@@ -602,6 +864,17 @@ export interface LeadsSelect<T extends boolean = true> {
   service?: T
   subService?: T
   message?: T
+  quizId?: T
+  quizAnswers?:
+    | T
+    | {
+        question?: T
+        answer?: T
+        id?: T
+      }
+  source?: T
+  status?: T
+  leadLevel?: T
   updatedAt?: T
   createdAt?: T
 }
@@ -640,6 +913,125 @@ export interface WebinarsSelect<T extends boolean = true> {
   poster?: T
   videoLink?: T
   description?: T
+  slug?: T
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz_select".
+ */
+export interface QuizSelect<T extends boolean = true> {
+  _order?: T
+  title?: T
+  image?: T
+  slug?: T
+  description?: T
+  questionnaire?:
+    | T
+    | {
+        question?: T
+        options?:
+          | T
+          | {
+              value?: T
+              label?: T
+              score?: T
+              id?: T
+            }
+        id?: T
+      }
+  riskLevels?:
+    | T
+    | {
+        level?: T
+        minScore?: T
+        maxScore?: T
+        color?: T
+        bgColor?: T
+        description?: T
+        recommendations?:
+          | T
+          | {
+              text?: T
+              id?: T
+            }
+        id?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "internships_select".
+ */
+export interface InternshipsSelect<T extends boolean = true> {
+  fullName?: T
+  email?: T
+  phoneNumber?: T
+  schoolOrUniversity?: T
+  degreeOrProgram?: T
+  interestedIn?: T
+  message?: T
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exports_select".
+ */
+export interface ExportsSelect<T extends boolean = true> {
+  name?: T
+  format?: T
+  limit?: T
+  page?: T
+  sort?: T
+  sortOrder?: T
+  drafts?: T
+  selectionToUse?: T
+  fields?: T
+  collectionSlug?: T
+  where?: T
+  updatedAt?: T
+  createdAt?: T
+  url?: T
+  thumbnailURL?: T
+  filename?: T
+  mimeType?: T
+  filesize?: T
+  width?: T
+  height?: T
+  focalX?: T
+  focalY?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T
+  taskStatus?: T
+  completedAt?: T
+  totalTried?: T
+  hasError?: T
+  error?: T
+  log?:
+    | T
+    | {
+        executedAt?: T
+        completedAt?: T
+        taskSlug?: T
+        taskID?: T
+        input?: T
+        output?: T
+        state?: T
+        error?: T
+        id?: T
+      }
+  taskSlug?: T
+  queue?: T
+  waitUntil?: T
+  processing?: T
   updatedAt?: T
   createdAt?: T
 }
@@ -738,6 +1130,25 @@ export interface Home {
         }[]
       | null
   }
+  mapSection?: {
+    title?: string | null
+    description?: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    image?: (string | null) | Media
+  }
   treatmentSection?: {
     title?: string | null
     premaryImage?: (string | null) | Media
@@ -813,8 +1224,8 @@ export interface Home {
     experts?: (string | Expert)[] | null
     action?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -887,6 +1298,11 @@ export interface Home {
     title?: string | null
     action?: string | null
     featuredBlogs?: (string | Blog)[] | null
+  }
+  webinarsSection?: {
+    title?: string | null
+    description?: string | null
+    action?: string | null
   }
   updatedAt?: string | null
   createdAt?: string | null
@@ -994,8 +1410,8 @@ export interface DeepTm {
     action?: string | null
     cardAction?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -1267,8 +1683,8 @@ export interface AboutUs {
     action?: string | null
     subAction?: string | null
   }
-  appointmentSection?: {
-    appointmentSection?: {
+  contactSection?: {
+    contactSection?: {
       title?: string | null
       contacts?:
         | {
@@ -1366,6 +1782,18 @@ export interface OurBlog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-page".
+ */
+export interface QuizPage {
+  id: string
+  heading: string
+  subtitle1?: string | null
+  subtitle2?: string | null
+  updatedAt?: string | null
+  createdAt?: string | null
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -1401,6 +1829,13 @@ export interface HomeSelect<T extends boolean = true> {
               stampImage?: T
               id?: T
             }
+      }
+  mapSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        image?: T
       }
   treatmentSection?:
     | T
@@ -1475,10 +1910,10 @@ export interface HomeSelect<T extends boolean = true> {
         experts?: T
         action?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T
@@ -1549,6 +1984,13 @@ export interface HomeSelect<T extends boolean = true> {
         title?: T
         action?: T
         featuredBlogs?: T
+      }
+  webinarsSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        action?: T
       }
   updatedAt?: T
   createdAt?: T
@@ -1644,10 +2086,10 @@ export interface DeepTmsSelect<T extends boolean = true> {
         action?: T
         cardAction?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T
@@ -1822,10 +2264,10 @@ export interface AboutUsSelect<T extends boolean = true> {
         action?: T
         subAction?: T
       }
-  appointmentSection?:
+  contactSection?:
     | T
     | {
-        appointmentSection?:
+        contactSection?:
           | T
           | {
               title?: T
@@ -1895,6 +2337,49 @@ export interface OurBlogsSelect<T extends boolean = true> {
   updatedAt?: T
   createdAt?: T
   globalType?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-page_select".
+ */
+export interface QuizPageSelect<T extends boolean = true> {
+  heading?: T
+  subtitle1?: T
+  subtitle2?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskCreateCollectionExport".
+ */
+export interface TaskCreateCollectionExport {
+  input: {
+    name?: string | null
+    format?: ('csv' | 'json') | null
+    limit?: number | null
+    page?: number | null
+    sort?: string | null
+    sortOrder?: ('asc' | 'desc') | null
+    drafts?: ('yes' | 'no') | null
+    selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null
+    fields?: string[] | null
+    collectionSlug: string
+    where?:
+      | {
+          [k: string]: unknown
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null
+    user?: string | null
+    userCollection?: string | null
+    exportsCollection?: string | null
+  }
+  output?: unknown
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -1,27 +1,16 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import {
-  Video,
-  MapPin,
-  Clock,
-  Star,
-  type LucideIcon,
-  ArrowLeft,
-  UserIcon,
-  Award,
-  User,
-  BookOpenIcon,
-} from 'lucide-react'
-import type { ExpertType, ServiceMode } from '@pmc/server/src/generated/prisma/client'
+import { MapPin, Star, ArrowLeft, UserIcon, Award, User, BookOpenIcon, ClockIcon } from 'lucide-react'
+import type { ExpertType } from '@pmc/server/src/generated/prisma/client'
 import { match } from 'ts-pattern'
-import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
-import { honoClient, type HonoClient } from '@/lib/hono-client'
+import { honoClient } from '@/lib/hono-client'
 import { cn } from '@/lib/utils'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 import Navbar from '../-components/navbar'
 import { Marquee } from '@/components/ui/marquee'
+import { ServiceCard } from './-components/service-card'
 
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
@@ -146,10 +135,10 @@ function ExpertPage() {
                           {experienceInYears ? (
                             <div>
                               <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                                <Clock className="size-3" />
+                                <ClockIcon className="size-3" />
                                 <span className="text-sm">Experience</span>
                               </div>
-                              <p className="text-sm font-semibold text-primary">{experienceInYears}</p>
+                              <p className="text-sm font-semibold text-primary">{experienceInYears} years</p>
                             </div>
                           ) : null}
 
@@ -274,59 +263,6 @@ function ExpertPage() {
     .otherwise(() => null)
 }
 
-function ServiceCard({
-  service,
-  onBook,
-}: {
-  service: ExpertWithDetails['servicesProvided'][number]
-  onBook: () => void
-}) {
-  return (
-    <div className="bg-card border border-border rounded-xl p-5 hover:shadow-md transition-all duration-200 hover:border-primary/20">
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-foreground mb-2">{service.name}</h3>
-        </div>
-        <div className="text-right ml-4 flex-shrink-0">
-          <div className="text-xl font-bold text-primary">
-            {`${CURRENCY_CONFIG[service.currency].symbol} ${service.price}`}
-          </div>
-
-          <div className="text-sm text-muted-foreground flex items-center gap-1 justify-end">
-            <Clock className="w-3 h-3" />
-            {service.durationInMinutes}min
-          </div>
-        </div>
-      </div>
-
-      <div className="flex gap-2 mb-3 flex-wrap">
-        {service.availableModes.map((mode: ServiceMode) => {
-          const modeConfig = SERVICE_MODE_CONFIG[mode]
-
-          const ServiceIcon = modeConfig.icon
-
-          return (
-            <div
-              key={mode}
-              className="flex items-center gap-1 px-2 py-1 bg-muted/50 border border-border rounded-md text-sm"
-            >
-              {<ServiceIcon className="w-3 h-3 text-muted-foreground" />}
-              <span className="text-foreground">{modeConfig.label}</span>
-            </div>
-          )
-        })}
-      </div>
-
-      <Button
-        onClick={onBook}
-        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg py-2 text-sm font-medium transition-colors"
-      >
-        Book Session
-      </Button>
-    </div>
-  )
-}
-
 function ExpertDetailSkeleton() {
   return (
     <div className="min-h-screen bg-accent">
@@ -362,21 +298,6 @@ async function fetchExpertDetails(expertId: string) {
     throw new Error('Failed to fetch expert details')
   }
   return response.json()
-}
-
-type ExpertWithDetails = InferResponseType<HonoClient['server']['experts'][':expertSlug']['$get'], 200>['expert']
-
-export const SERVICE_MODE_CONFIG: Record<ServiceMode, { label: string; value: ServiceMode; icon: LucideIcon }> = {
-  IN_PERSON: {
-    label: 'In Person',
-    value: 'IN_PERSON',
-    icon: MapPin,
-  },
-  VIRTUAL: {
-    label: 'Virtual',
-    value: 'VIRTUAL',
-    icon: Video,
-  },
 }
 
 const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType }> = {

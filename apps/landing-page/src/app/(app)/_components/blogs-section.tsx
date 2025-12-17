@@ -1,16 +1,17 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { CircleArrowRightIcon, ChatIcon } from '@/components/ui/icons'
-import type { Home } from '@/payload/types'
+import type { Home, Blog } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
-import Image from 'next/image'
 
 type BlogsSectionProps = {
   data: Home['blogsSection']
+  blogs: Blog[]
 }
 
-export default function BlogsSection({ data }: BlogsSectionProps) {
-  if (!data?.featuredBlogs || data.featuredBlogs.length === 0) {
+export default function BlogsSection({ data, blogs }: BlogsSectionProps) {
+  if (!blogs || blogs.length === 0) {
     return null
   }
 
@@ -32,9 +33,7 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-              {data.featuredBlogs.map((blog) => {
-                if (typeof blog === 'string') return null
-
+              {blogs.map((blog) => {
                 return (
                   <article
                     key={blog.id}
@@ -49,9 +48,9 @@ export default function BlogsSection({ data }: BlogsSectionProps) {
                       />
                     </div>
 
-                    <Link href={`/blogs/${blog.id}`}>
-                      <div className="bg-card p-4 sm:p-5 rounded-3xl -mt-10 mx-3 sm:mx-4 shadow-lg lg:absolute lg:left-4 lg:right-4 lg:-bottom-4 lg:max-w-none z-10">
-                        <h3 className="text-base sm:text-lg font-semibold text-primary-foreground mb-2">
+                    <Link href={`/blogs/${blog.slug}`} className="flex flex-col flex-1">
+                      <div className="bg-card flex-col flex-1 justify-between flex p-4 sm:p-5 rounded-3xl -mt-20 mx-3 sm:mx-4 shadow-lg relative left-2 lg:bottom-4">
+                        <h3 className="text-base sm:text-lg font-semibold text-primary-foreground mb-2 line-clamp-2 ">
                           {blog.title}
                         </h3>
 
