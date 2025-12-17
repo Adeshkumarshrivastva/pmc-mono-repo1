@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { BOOKING_PERIODS, type BookingPeriod } from '@/lib/booking'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableSkeleton } from '@/components/ui/table-skeleton'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 type BookingsResponse = InferResponseType<HonoClient['server']['booking']['all-bookings']['$get'], 200>
 type BookingData = BookingsResponse['data'][number]
@@ -124,11 +125,98 @@ function AdminBookingsPage() {
     },
   })
 
+  const getBookingStatsQuery = useQuery({
+    queryKey: ['admin-booking-stats'],
+    queryFn: async () => {
+      const response = await honoClient.server.booking['all-booking-stats'].$get()
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch booking stats')
+      }
+
+      const data = await response.json()
+      return {
+        totalBookings: data[0] as number,
+        upcomingBookings: data[1] as number,
+        completedBookings: Array.isArray(data[2]) ? data[2].length : 0,
+        cancelledBookings: Array.isArray(data[3]) ? data[3].length : 0,
+      }
+    },
+  })
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Bookings</h1>
         <p className="text-muted-foreground mt-2">Manage all bookings in the system</p>
+      </div>
+
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {match(getBookingStatsQuery)
+          .returnType<React.ReactNode>()
+          .with({ status: 'pending' }, () => (
+            <>
+              {[...Array(4)].map((_, i) => (
+                <Card key={i} className="animate-pulse">
+                  <CardHeader>
+                    <CardTitle className="text-muted-foreground text-sm font-medium">Loading...</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="bg-muted h-8 w-20 rounded"></div>
+                  </CardContent>
+                </Card>
+              ))}
+            </>
+          ))
+          .with({ status: 'error' }, () => (
+            <div className="col-span-full">
+              <Card>
+                <CardContent className="pt-6">
+                  <p className="text-destructive text-sm">Failed to load booking stats</p>
+                </CardContent>
+              </Card>
+            </div>
+          ))
+          .with({ status: 'success' }, ({ data }) => (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-muted-foreground text-sm font-medium">Total Bookings</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{data.totalBookings}</div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-muted-foreground text-sm font-medium">Upcoming Bookings</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{data.upcomingBookings}</div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-muted-foreground text-sm font-medium">Completed Bookings</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{data.completedBookings}</div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-muted-foreground text-sm font-medium">Cancelled Bookings</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">{data.cancelledBookings}</div>
+                </CardContent>
+              </Card>
+            </>
+          ))
+          .otherwise(() => null)}
       </div>
 
       <Tabs value={period} className="w-full">

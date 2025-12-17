@@ -642,3 +642,8 @@ export async function updateExpert(c: C, data: ExpertProfileInput) {
 
   return c.json(updated)
 }
+
+export async function getAllExperts(c: C) {
+  const experts = await prisma.expert.findMany()
+  return c.json(experts)
+}

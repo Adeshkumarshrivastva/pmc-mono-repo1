@@ -220,9 +220,11 @@ export async function getAllBookings(c: C) {
   const periodFilter =
     period === 'upcoming'
       ? {
-          startDateTime: {
-            gte: now,
-          },
+          OR: [
+            { startDateTime: { gte: now } },
+            // currently ongoing bookings
+            { startDateTime: { lt: now }, endDateTime: { gt: now } },
+          ],
         }
       : {
           startDateTime: {
@@ -283,6 +285,48 @@ export async function getAllBookings(c: C) {
       totalPages: Math.ceil(total / pageSize),
     },
   })
+}
+
+export async function getBookingStats(c: C) {
+  const now = dayjs().toDate()
+
+  const allBookingsQuery = prisma.booking.count({
+    where: {
+      status: 'BOOKED',
+    },
+  })
+
+  const upcomingBookingsQuery = prisma.booking.count({
+    where: {
+      status: 'BOOKED',
+      OR: [
+        { startDateTime: { gte: now } },
+        // currently ongoing bookings
+        { startDateTime: { lt: now }, endDateTime: { gt: now } },
+      ],
+    },
+  })
+
+  const completedBookingsQuery = prisma.booking.findMany({
+    where: {
+      status: 'COMPLETED',
+    },
+  })
+
+  const cancelledBookingsQuery = prisma.booking.findMany({
+    where: {
+      status: 'CANCELLED',
+    },
+  })
+
+  const stats = await Promise.all([
+    allBookingsQuery,
+    upcomingBookingsQuery,
+    completedBookingsQuery,
+    cancelledBookingsQuery,
+  ])
+
+  return c.json(stats)
 }
 
 async function isSlotAvailable(

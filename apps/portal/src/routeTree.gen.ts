@@ -22,6 +22,8 @@ import { Route as AppPatientBookingsIndexRouteImport } from './routes/_app/patie
 import { Route as AppExpertServicesIndexRouteImport } from './routes/_app/expert/services/index'
 import { Route as AppExpertProfileIndexRouteImport } from './routes/_app/expert/profile/index'
 import { Route as AppExpertBookingsIndexRouteImport } from './routes/_app/expert/bookings/index'
+import { Route as AppAdminPaymentsIndexRouteImport } from './routes/_app/admin/payments/index'
+import { Route as AppAdminExpertsIndexRouteImport } from './routes/_app/admin/experts/index'
 import { Route as AppAdminBookingsIndexRouteImport } from './routes/_app/admin/bookings/index'
 import { Route as PublicExpertsExpertSlugServiceSlugRouteImport } from './routes/_public/experts/$expertSlug/$serviceSlug'
 import { Route as AppExpertServicesServiceIdRouteImport } from './routes/_app/expert/services/$serviceId'
@@ -90,6 +92,16 @@ const AppExpertBookingsIndexRoute = AppExpertBookingsIndexRouteImport.update({
   path: '/expert/bookings/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminPaymentsIndexRoute = AppAdminPaymentsIndexRouteImport.update({
+  id: '/admin/payments/',
+  path: '/admin/payments/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminExpertsIndexRoute = AppAdminExpertsIndexRouteImport.update({
+  id: '/admin/experts/',
+  path: '/admin/experts/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAdminBookingsIndexRoute = AppAdminBookingsIndexRouteImport.update({
   id: '/admin/bookings/',
   path: '/admin/bookings/',
@@ -118,6 +130,8 @@ export interface FileRoutesByFullPath {
   '/expert/services/$serviceId': typeof AppExpertServicesServiceIdRoute
   '/experts/$expertSlug/$serviceSlug': typeof PublicExpertsExpertSlugServiceSlugRoute
   '/admin/bookings': typeof AppAdminBookingsIndexRoute
+  '/admin/experts': typeof AppAdminExpertsIndexRoute
+  '/admin/payments': typeof AppAdminPaymentsIndexRoute
   '/expert/bookings': typeof AppExpertBookingsIndexRoute
   '/expert/profile': typeof AppExpertProfileIndexRoute
   '/expert/services': typeof AppExpertServicesIndexRoute
@@ -134,6 +148,8 @@ export interface FileRoutesByTo {
   '/expert/services/$serviceId': typeof AppExpertServicesServiceIdRoute
   '/experts/$expertSlug/$serviceSlug': typeof PublicExpertsExpertSlugServiceSlugRoute
   '/admin/bookings': typeof AppAdminBookingsIndexRoute
+  '/admin/experts': typeof AppAdminExpertsIndexRoute
+  '/admin/payments': typeof AppAdminPaymentsIndexRoute
   '/expert/bookings': typeof AppExpertBookingsIndexRoute
   '/expert/profile': typeof AppExpertProfileIndexRoute
   '/expert/services': typeof AppExpertServicesIndexRoute
@@ -153,6 +169,8 @@ export interface FileRoutesById {
   '/_app/expert/services/$serviceId': typeof AppExpertServicesServiceIdRoute
   '/_public/experts/$expertSlug/$serviceSlug': typeof PublicExpertsExpertSlugServiceSlugRoute
   '/_app/admin/bookings/': typeof AppAdminBookingsIndexRoute
+  '/_app/admin/experts/': typeof AppAdminExpertsIndexRoute
+  '/_app/admin/payments/': typeof AppAdminPaymentsIndexRoute
   '/_app/expert/bookings/': typeof AppExpertBookingsIndexRoute
   '/_app/expert/profile/': typeof AppExpertProfileIndexRoute
   '/_app/expert/services/': typeof AppExpertServicesIndexRoute
@@ -171,6 +189,8 @@ export interface FileRouteTypes {
     | '/expert/services/$serviceId'
     | '/experts/$expertSlug/$serviceSlug'
     | '/admin/bookings'
+    | '/admin/experts'
+    | '/admin/payments'
     | '/expert/bookings'
     | '/expert/profile'
     | '/expert/services'
@@ -187,6 +207,8 @@ export interface FileRouteTypes {
     | '/expert/services/$serviceId'
     | '/experts/$expertSlug/$serviceSlug'
     | '/admin/bookings'
+    | '/admin/experts'
+    | '/admin/payments'
     | '/expert/bookings'
     | '/expert/profile'
     | '/expert/services'
@@ -205,6 +227,8 @@ export interface FileRouteTypes {
     | '/_app/expert/services/$serviceId'
     | '/_public/experts/$expertSlug/$serviceSlug'
     | '/_app/admin/bookings/'
+    | '/_app/admin/experts/'
+    | '/_app/admin/payments/'
     | '/_app/expert/bookings/'
     | '/_app/expert/profile/'
     | '/_app/expert/services/'
@@ -314,6 +338,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppExpertBookingsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/payments/': {
+      id: '/_app/admin/payments/'
+      path: '/admin/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AppAdminPaymentsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/experts/': {
+      id: '/_app/admin/experts/'
+      path: '/admin/experts'
+      fullPath: '/admin/experts'
+      preLoaderRoute: typeof AppAdminExpertsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/admin/bookings/': {
       id: '/_app/admin/bookings/'
       path: '/admin/bookings'
@@ -344,6 +382,8 @@ interface AppRouteChildren {
   AppPatientDashboardRoute: typeof AppPatientDashboardRoute
   AppExpertServicesServiceIdRoute: typeof AppExpertServicesServiceIdRoute
   AppAdminBookingsIndexRoute: typeof AppAdminBookingsIndexRoute
+  AppAdminExpertsIndexRoute: typeof AppAdminExpertsIndexRoute
+  AppAdminPaymentsIndexRoute: typeof AppAdminPaymentsIndexRoute
   AppExpertBookingsIndexRoute: typeof AppExpertBookingsIndexRoute
   AppExpertProfileIndexRoute: typeof AppExpertProfileIndexRoute
   AppExpertServicesIndexRoute: typeof AppExpertServicesIndexRoute
@@ -356,6 +396,8 @@ const AppRouteChildren: AppRouteChildren = {
   AppPatientDashboardRoute: AppPatientDashboardRoute,
   AppExpertServicesServiceIdRoute: AppExpertServicesServiceIdRoute,
   AppAdminBookingsIndexRoute: AppAdminBookingsIndexRoute,
+  AppAdminExpertsIndexRoute: AppAdminExpertsIndexRoute,
+  AppAdminPaymentsIndexRoute: AppAdminPaymentsIndexRoute,
   AppExpertBookingsIndexRoute: AppExpertBookingsIndexRoute,
   AppExpertProfileIndexRoute: AppExpertProfileIndexRoute,
   AppExpertServicesIndexRoute: AppExpertServicesIndexRoute,
