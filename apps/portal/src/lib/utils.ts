@@ -44,3 +44,12 @@ export function downloadBlobAsFile(blob: Blob, filename = 'file') {
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
 }
+
+export type WithBasicProps<T = unknown> = T & {
+  className?: string
+  style?: React.CSSProperties
+}
+
+export function noise(val: number, minValue: number = 0, maxValue: number = 1) {
+  return Math.max(Math.min((Math.sin(val * 12.9898 + val * 78.233) * 43758.5453) % Math.PI, maxValue), minValue)
+}

@@ -181,4 +181,11 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     path: '/expert/profile',
     availableForUserRoles: ['EXPERT'],
   },
+  {
+    type: 'link',
+    icon: CalendarDaysIcon,
+    name: 'All Bookings',
+    path: '/admin/bookings',
+    availableForUserRoles: ['ADMIN'],
+  },
 ]

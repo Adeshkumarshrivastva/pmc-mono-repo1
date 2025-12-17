@@ -210,6 +210,81 @@ export async function createBooking(c: C, input: CreateBookingInput) {
   }
 }
 
+export async function getAllBookings(c: C) {
+  const page = Number(c.req.query('page') || '1')
+  const pageSize = Number(c.req.query('pageSize') || '10')
+  const period = c.req.query('period') || 'upcoming'
+  const skip = (page - 1) * pageSize
+
+  const now = new Date()
+  const periodFilter =
+    period === 'upcoming'
+      ? {
+          startDateTime: {
+            gte: now,
+          },
+        }
+      : {
+          startDateTime: {
+            lt: now,
+          },
+        }
+
+  const [bookings, total] = await Promise.all([
+    prisma.booking.findMany({
+      where: periodFilter,
+      skip,
+      take: pageSize,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        expert: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        patient: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+                phoneNumber: true,
+              },
+            },
+          },
+        },
+        service: {
+          select: {
+            name: true,
+            price: true,
+            currency: true,
+          },
+        },
+      },
+    }),
+    prisma.booking.count({
+      where: periodFilter,
+    }),
+  ])
+
+  return c.json({
+    data: bookings,
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    },
+  })
+}
+
 async function isSlotAvailable(
   expertId: string,
   startDateTime: Date,
