@@ -424,3 +424,27 @@ async function isSlotAvailable(
 
   return { isAvailable: true }
 }
+
+export async function getBookingWithPayments(c: C, bookingId: string) {
+  const booking = await prisma.booking.findUnique({
+    where: {
+      id: bookingId,
+    },
+    include: {
+      payments: true,
+      expert: {
+        include: { user: true },
+      },
+      patient: {
+        include: { user: true },
+      },
+      service: true,
+    },
+  })
+
+  if (!booking) {
+    return c.json({ error: 'Booking not found' }, 404)
+  }
+
+  return c.json({ success: true, booking })
+}
