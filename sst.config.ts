@@ -53,6 +53,9 @@ export default $config({
     const SmsServiceUserId = new sst.Secret('SMS_SERVICE_USERID')
     const SmsServicePassword = new sst.Secret('SMS_SERVICE_PASSWORD')
     const PortalMediaBucket = new sst.aws.Bucket('PMC_PORTAL_MEDIA_BUCKET')
+    const S3AccessKey = new sst.Secret('S3_ACCESS_KEY')
+    const S3SecretKey = new sst.Secret('S3_SECRET_KEY')
+    const S3Region = new sst.Secret('S3_REGION')
 
     const SenderEmail =
       $app.stage === 'production'
@@ -60,6 +63,27 @@ export default $config({
             sender: 'no-reply@positivemindcare.com',
           })
         : sst.aws.Email.get('SenderEmail', 'no-reply-dev@positivemindcare.com')
+
+    const getServerEnvironment = () => ({
+      BETTER_AUTH_SECRET: BetterAuthSecret.value,
+      DATABASE_URL: DatabaseUrl.value,
+      GOOGLE_CLIENT_ID: GoogleClientId.value,
+      GOOGLE_CLIENT_SECRET: GoogleClientSecret.value,
+      RAZORPAY_KEY_ID: RazorpayKeyId.value,
+      RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
+      JWT_SECRET: JwtSecret.value,
+      WHATSAPP_API_KEY_SECRET: WhatsappApiKeySecret.value,
+      WHATSAPP_LICENCE_NUMBER_SECRET: WhatsappLicenceNumberSecret.value,
+      WHATSAPP_TEST_NUMBER_SECRET: WhatsappTestNumberSecret.value,
+      EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
+      BROWSERLESS_WS_ENDPOINT: BrowserlessWsEndpoint.value,
+      GOOGLE_SERVICE_ACCOUNT_EMAIL: GoogleServiceAccountEmail.value,
+      GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: GoogleServiceAccountPrivateKey.value,
+      GOOGLE_CALENDAR_EMAIL: GoogleCalendarEmail.value,
+      SMS_SERVICE_USERID: SmsServiceUserId.value,
+      SMS_SERVICE_PASSWORD: SmsServicePassword.value,
+      S3_BUCKET: PortalMediaBucket.name,
+    })
 
     new sst.aws.Function('PmcHonoServer', {
       architecture: 'arm64',
@@ -72,26 +96,7 @@ export default $config({
         },
         cors: false,
       },
-      environment: {
-        BETTER_AUTH_SECRET: BetterAuthSecret.value,
-        DATABASE_URL: DatabaseUrl.value,
-        GOOGLE_CLIENT_ID: GoogleClientId.value,
-        GOOGLE_CLIENT_SECRET: GoogleClientSecret.value,
-        RAZORPAY_KEY_ID: RazorpayKeyId.value,
-        RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
-        JWT_SECRET: JwtSecret.value,
-        WHATSAPP_API_KEY_SECRET: WhatsappApiKeySecret.value,
-        WHATSAPP_LICENCE_NUMBER_SECRET: WhatsappLicenceNumberSecret.value,
-        WHATSAPP_TEST_NUMBER_SECRET: WhatsappTestNumberSecret.value,
-        EMAIL_SENDER: $interpolate`${SenderEmail.sender}`,
-        BROWSERLESS_WS_ENDPOINT: BrowserlessWsEndpoint.value,
-        GOOGLE_SERVICE_ACCOUNT_EMAIL: GoogleServiceAccountEmail.value,
-        GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: GoogleServiceAccountPrivateKey.value,
-        GOOGLE_CALENDAR_EMAIL: GoogleCalendarEmail.value,
-        SMS_SERVICE_USERID: SmsServiceUserId.value,
-        SMS_SERVICE_PASSWORD: SmsServicePassword.value,
-        S3_BUCKET: PortalMediaBucket.name,
-      },
+      environment: getServerEnvironment(),
       copyFiles: [
         {
           from: 'apps/server/src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
@@ -103,6 +108,23 @@ export default $config({
         },
       ],
     })
+
+    if ($app.stage === 'production') {
+      new sst.aws.Cron('CleanupDraftBookingsCron', {
+        schedule: 'rate(5 minutes)',
+        job: {
+          architecture: 'arm64',
+          handler: 'apps/server/src/cron.handler',
+          environment: getServerEnvironment(),
+          copyFiles: [
+            {
+              from: 'apps/server/src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
+              to: 'src/generated/prisma/libquery_engine-linux-arm64-openssl-3.0.x.so.node',
+            },
+          ],
+        },
+      })
+    }
 
     new sst.aws.StaticSite('PmcPortal', {
       build: {

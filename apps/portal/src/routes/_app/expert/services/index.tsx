@@ -42,40 +42,38 @@ function ExpertService() {
       const services = data?.services || []
 
       return (
-        <div className="min-h-screen bg-background ">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-2xl font-bold text-foreground">Services</h1>
-              <Button onClick={() => setIsDialogOpen(true)} variant="default" icon={<Plus className="size-4" />}>
-                Add New
+        <div className="flex flex-col space-y-6 bg-background ">
+          <div className="flex justify-between items-center">
+            <h1 className="text-xl font-bold text-foreground">Services</h1>
+            <Button onClick={() => setIsDialogOpen(true)} variant="default" icon={<Plus className="size-4" />}>
+              Add New
+            </Button>
+          </div>
+
+          {services.length === 0 ? (
+            <div className="bg-card rounded-lg border-2 border-border p-12 text-center shadow-sm">
+              <p className="text-muted-foreground text-lg mb-4">No services yet</p>
+              <Button
+                onClick={() => setIsDialogOpen(true)}
+                className="bg-primary text-primary-foreground hover:opacity-90"
+              >
+                Create your first service
               </Button>
             </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+              {services.map((service) => (
+                <ServiceCard key={service.id} service={service} />
+              ))}
+            </div>
+          )}
 
-            {services.length === 0 ? (
-              <div className="bg-card rounded-lg border-2 border-border p-12 text-center shadow-sm">
-                <p className="text-muted-foreground text-lg mb-4">No services yet</p>
-                <Button
-                  onClick={() => setIsDialogOpen(true)}
-                  className="bg-primary text-primary-foreground hover:opacity-90"
-                >
-                  Create your first service
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                {services.map((service) => (
-                  <ServiceCard key={service.id} service={service} />
-                ))}
-              </div>
-            )}
-
-            <ServiceDialog
-              open={isDialogOpen}
-              onOpenChange={() => {
-                setIsDialogOpen(false)
-              }}
-            />
-          </div>
+          <ServiceDialog
+            open={isDialogOpen}
+            onOpenChange={() => {
+              setIsDialogOpen(false)
+            }}
+          />
         </div>
       )
     })

@@ -16,6 +16,16 @@ export const quizLeadInput = z.object({
   fullName: z.string().min(1),
   email: z.email().optional(),
   phone: z.string(),
+  quizId: objectId,
+  quizAnswers: z
+    .array(
+      z.object({
+        questionId: z.string().optional(),
+        question: z.string().optional(),
+        answer: z.string().optional(),
+      }),
+    )
+    .optional(),
 })
 
 export type QuizLeadFormInput = z.infer<typeof quizLeadInput>

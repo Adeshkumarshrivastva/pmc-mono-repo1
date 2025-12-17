@@ -53,6 +53,7 @@ export default function QuizRender({ quiz }: QuizProps) {
       totalScore: score,
       timestamp: new Date().toISOString(),
       quizTitle: quiz.title,
+      riskLevels: quiz.riskLevels,
     }
 
     const searchParams = new URLSearchParams({
@@ -60,7 +61,7 @@ export default function QuizRender({ quiz }: QuizProps) {
       data: btoa(JSON.stringify(resultsData)),
     })
 
-    router.push(`/quiz/depression-report?${searchParams.toString()}`)
+    router.push(`${quiz.slug}/report?${searchParams.toString()}`)
   }
 
   function handleSubmit() {
@@ -73,6 +74,20 @@ export default function QuizRender({ quiz }: QuizProps) {
 
   function isQuestionAnswered(questionIndex: number) {
     return answers[startIndex + questionIndex] !== undefined
+  }
+
+  function formatQuizAnswers() {
+    return Object.entries(answers).map(([questionIndex, answerValue]) => {
+      const qIndex = parseInt(questionIndex)
+      const question = questions[qIndex]
+      const selectedOption = question?.options.find((opt) => opt.value === answerValue)
+
+      return {
+        questionId: question?.id || '',
+        question: question?.question || '',
+        answer: selectedOption?.label || answerValue,
+      }
+    })
   }
 
   return (
@@ -161,6 +176,8 @@ export default function QuizRender({ quiz }: QuizProps) {
         onSuccess={navigateToResults}
         title={'Get Your Assessment Results'}
         description={'Enter your details to view your personalized assessment report'}
+        quizAnswers={formatQuizAnswers()}
+        quizId={quiz.id}
       />
     </div>
   )

@@ -210,6 +210,125 @@ export async function createBooking(c: C, input: CreateBookingInput) {
   }
 }
 
+export async function getAllBookings(c: C) {
+  const page = Number(c.req.query('page') || '1')
+  const pageSize = Number(c.req.query('pageSize') || '10')
+  const period = c.req.query('period') || 'upcoming'
+  const skip = (page - 1) * pageSize
+
+  const now = new Date()
+  const periodFilter =
+    period === 'upcoming'
+      ? {
+          OR: [
+            { startDateTime: { gte: now } },
+            // currently ongoing bookings
+            { startDateTime: { lt: now }, endDateTime: { gt: now } },
+          ],
+        }
+      : {
+          startDateTime: {
+            lt: now,
+          },
+        }
+
+  const [bookings, total] = await Promise.all([
+    prisma.booking.findMany({
+      where: periodFilter,
+      skip,
+      take: pageSize,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        expert: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        patient: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+                phoneNumber: true,
+              },
+            },
+          },
+        },
+        service: {
+          select: {
+            name: true,
+            price: true,
+            currency: true,
+          },
+        },
+      },
+    }),
+    prisma.booking.count({
+      where: periodFilter,
+    }),
+  ])
+
+  return c.json({
+    data: bookings,
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    },
+  })
+}
+
+export async function getBookingStats(c: C) {
+  const now = dayjs().toDate()
+
+  const allBookingsQuery = prisma.booking.count({
+    where: {
+      status: 'BOOKED',
+    },
+  })
+
+  const upcomingBookingsQuery = prisma.booking.count({
+    where: {
+      status: 'BOOKED',
+      OR: [
+        { startDateTime: { gte: now } },
+        // currently ongoing bookings
+        { startDateTime: { lt: now }, endDateTime: { gt: now } },
+      ],
+    },
+  })
+
+  const completedBookingsQuery = prisma.booking.findMany({
+    where: {
+      status: 'COMPLETED',
+    },
+  })
+
+  const cancelledBookingsQuery = prisma.booking.findMany({
+    where: {
+      status: 'CANCELLED',
+    },
+  })
+
+  const stats = await Promise.all([
+    allBookingsQuery,
+    upcomingBookingsQuery,
+    completedBookingsQuery,
+    cancelledBookingsQuery,
+  ])
+
+  return c.json(stats)
+}
+
 async function isSlotAvailable(
   expertId: string,
   startDateTime: Date,
@@ -304,4 +423,28 @@ async function isSlotAvailable(
   }
 
   return { isAvailable: true }
+}
+
+export async function getBookingWithPayments(c: C, bookingId: string) {
+  const booking = await prisma.booking.findUnique({
+    where: {
+      id: bookingId,
+    },
+    include: {
+      payments: true,
+      expert: {
+        include: { user: true },
+      },
+      patient: {
+        include: { user: true },
+      },
+      service: true,
+    },
+  })
+
+  if (!booking) {
+    return c.json({ error: 'Booking not found' }, 404)
+  }
+
+  return c.json({ success: true, booking })
 }

@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { useState } from 'react'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,6 +13,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Combobox } from '@/components/ui/combo-box'
 import { honoClient } from '@/lib/hono-client'
 import { genderOptions, specializationOptions } from '@/lib/expert'
+import { getFileUrl } from '@/lib/utils'
 
 const profileFormSchema = z.object({
   name: z.string().min(3),
@@ -22,6 +24,7 @@ const profileFormSchema = z.object({
   country: z.string(),
   timezone: z.string(),
   expertise: z.array(z.string()),
+  photoId: z.string().optional(),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
@@ -43,6 +46,7 @@ export const Route = createFileRoute('/_app/expert/profile/')({
 
 function ExpertProfile() {
   const { expert } = Route.useLoaderData()
+  const [currentFileName, setCurrentFileName] = useState<string | undefined>(expert.file?.fileName)
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -55,6 +59,34 @@ function ExpertProfile() {
       country: expert.country,
       timezone: expert.timezone,
       expertise: expert.expertise,
+      photoId: expert.file?.id,
+    },
+  })
+
+  const uploadFileMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const res = await honoClient.server.file.upload.$post({ form: { file } })
+      const data = await res.json()
+      if (!('file' in data)) {
+        throw new Error(data.error || 'File upload failed')
+      }
+      return data.file
+    },
+    onSuccess: async (file) => {
+      const updatedExpertRes = await honoClient.server.experts.expert.$patch({
+        json: { ...form.getValues(), photoId: file.id },
+      })
+      if (!updatedExpertRes.ok) {
+        throw new Error('Failed to link file to expert')
+      }
+      const updatedExpert = await updatedExpertRes.json()
+
+      setCurrentFileName(updatedExpert.file?.fileName)
+      form.setValue('photoId', updatedExpert.file?.id ?? undefined)
+      toast.success('Profile picture updated!')
+    },
+    onError: (err) => {
+      toast.error(err?.message || 'Failed to upload file')
     },
   })
 
@@ -74,6 +106,14 @@ function ExpertProfile() {
     },
   })
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      return
+    }
+    uploadFileMutation.mutate(file)
+  }
+
   return (
     <Form {...form}>
       <form
@@ -84,18 +124,16 @@ function ExpertProfile() {
       >
         <h1 className="text-2xl font-semibold mb-8">Profile</h1>
 
-        <div className="flex items-center space-x-4 mb-8">
-          <div className="w-24 h-24 rounded-sm bg-gray-200 overflow-hidden">
-            {expert.image ? (
-              <img src={expert.image} alt={expert.name} className="w-full h-full object-cover" />
+        <div className="flex flex-col gap-2">
+          <div className="w-32 h-32 rounded-sm bg-gray-200 overflow-hidden">
+            {currentFileName ? (
+              <img src={getFileUrl(currentFileName)} alt={expert.name} className="w-full h-full object-cover" />
             ) : (
               <div className="flex items-center justify-center w-full h-full text-gray-500">No Image</div>
             )}
           </div>
 
-          <Button disabled variant="outline" size="sm">
-            Upload Photo
-          </Button>
+          <Input type="file" accept="image/*" onChange={handleFileChange} className="w-60" />
         </div>
 
         <FormField
@@ -240,7 +278,7 @@ function ExpertProfile() {
         </div>
 
         <div className="flex space-x-4 pt-4">
-          <Button type="submit" disabled={updateProfileMutation.isPending}>
+          <Button type="submit" disabled={updateProfileMutation.isPending || uploadFileMutation.isPending}>
             Save Changes
           </Button>
         </div>

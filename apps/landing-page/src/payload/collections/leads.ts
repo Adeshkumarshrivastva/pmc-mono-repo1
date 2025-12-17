@@ -49,6 +49,30 @@ export const Leads: CollectionConfig = {
       type: 'textarea',
     },
     {
+      name: 'quizId',
+      label: 'Quiz Name',
+      type: 'relationship',
+      relationTo: 'quiz',
+      hasMany: false,
+    },
+    {
+      name: 'quizAnswers',
+      label: 'Quiz Answers',
+      type: 'array',
+      fields: [
+        {
+          name: 'question',
+          label: 'Question',
+          type: 'text',
+        },
+        {
+          name: 'answer',
+          label: 'Answer',
+          type: 'text',
+        },
+      ],
+    },
+    {
       name: 'source',
       label: 'Source',
       type: 'select',

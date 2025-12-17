@@ -108,6 +108,94 @@ export const Quiz: CollectionConfig = {
         },
       ],
     },
+    {
+      name: 'riskLevels',
+      label: 'Risk Levels',
+      type: 'array',
+      required: true,
+      admin: {
+        description: 'Score thresholds and risk level definitions for the assessment report',
+      },
+      fields: [
+        {
+          name: 'level',
+          label: 'Level Name',
+          type: 'text',
+          required: true,
+          admin: {
+            description: 'e.g., "Low Risk", "Increasing Risk", "Higher Risk"',
+          },
+        },
+        {
+          name: 'minScore',
+          label: 'Minimum Score',
+          type: 'number',
+          required: true,
+          admin: {
+            description: 'Lower bound of the score range',
+          },
+        },
+        {
+          name: 'maxScore',
+          label: 'Maximum Score',
+          type: 'number',
+          required: true,
+          admin: {
+            description: 'Upper bound of the score range',
+          },
+        },
+        {
+          name: 'color',
+          label: 'Text Color',
+          type: 'select',
+          required: true,
+          defaultValue: 'text-green-600',
+          options: [
+            { label: 'Green', value: 'text-green-600' },
+            { label: 'Yellow', value: 'text-yellow-600' },
+            { label: 'Orange', value: 'text-orange-600' },
+            { label: 'Red', value: 'text-red-600' },
+          ],
+        },
+        {
+          name: 'bgColor',
+          label: 'Background Color',
+          type: 'select',
+          required: true,
+          defaultValue: 'bg-green-50 border-green-200',
+          options: [
+            { label: 'Green', value: 'bg-green-50 border-green-200' },
+            { label: 'Yellow', value: 'bg-yellow-50 border-yellow-200' },
+            { label: 'Orange', value: 'bg-orange-50 border-orange-200' },
+            { label: 'Red', value: 'bg-red-50 border-red-200' },
+          ],
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'textarea',
+          required: true,
+          admin: {
+            description: 'Summary of what this risk level means',
+          },
+        },
+        {
+          name: 'recommendations',
+          label: 'Recommendations',
+          type: 'array',
+          required: true,
+          minRows: 1,
+          fields: [
+            {
+              name: 'text',
+              label: 'Recommendation',
+              type: 'text',
+              required: true,
+            },
+          ],
+        },
+      ],
+    },
   ],
   orderable: true,
   timestamps: true,

@@ -12,14 +12,14 @@ type QuizPageProps = {
 }
 
 export default async function QuizPage({ params }: QuizPageProps) {
-  const { slug } = await params
+  const { slug } = params
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({
     collection: 'quiz',
     where: {
       slug: {
-        equals: `/quiz/${slug}`,
+        equals: slug,
       },
     },
     limit: 1,
@@ -36,14 +36,14 @@ export default async function QuizPage({ params }: QuizPageProps) {
 }
 
 export async function generateMetadata({ params }: QuizPageProps) {
-  const { slug } = await params
+  const { slug } = params
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({
     collection: 'quiz',
     where: {
       slug: {
-        equals: `/quiz/${slug}`,
+        equals: slug,
       },
     },
     limit: 1,

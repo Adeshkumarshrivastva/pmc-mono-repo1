@@ -81,7 +81,7 @@ interface AssessmentCardProps {
 
 function AssessmentCard({ assessment }: AssessmentCardProps) {
   return (
-    <Link href={assessment.slug} className="block">
+    <Link href={`/quiz/${assessment.slug}`} className="block">
       <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group overflow-hidden h-full flex flex-col">
         <CardContent className="flex items-center justify-center p-6 flex-1">
           {assessment.image ? (

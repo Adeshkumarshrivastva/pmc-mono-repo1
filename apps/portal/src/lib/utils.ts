@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { ZodError } from 'zod'
+import { env } from './env'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -43,4 +44,17 @@ export function downloadBlobAsFile(blob: Blob, filename = 'file') {
   link.click()
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
+}
+
+export function getFileUrl(filename: string): string | undefined {
+  return `${env.VITE_PUBLIC_API_BASE_URL}/server/file/${filename}`
+}
+
+export type WithBasicProps<T = unknown> = T & {
+  className?: string
+  style?: React.CSSProperties
+}
+
+export function noise(val: number, minValue: number = 0, maxValue: number = 1) {
+  return Math.max(Math.min((Math.sin(val * 12.9898 + val * 78.233) * 43758.5453) % Math.PI, maxValue), minValue)
 }
