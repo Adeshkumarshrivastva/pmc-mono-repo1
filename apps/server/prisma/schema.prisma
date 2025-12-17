@@ -304,7 +304,7 @@ model Payment {
   serviceName      String
   servicePrice     Float
   serviceCurrency  String
-  booking          Booking       @relation(fields: [bookingId], references: [id])
+  booking          Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   bookingId        String        @db.ObjectId
   // TODO: Add razorpay fields
   razorpayOrderId  String?       @unique

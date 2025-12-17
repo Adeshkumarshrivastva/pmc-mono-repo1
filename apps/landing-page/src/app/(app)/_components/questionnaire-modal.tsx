@@ -41,8 +41,7 @@ export default function QuestionnaireModal({ trigger }: QuestionnaireModalProps)
     }
 
     if (isLastQuestion) {
-      const filterables = window.btoa(JSON.stringify(answers))
-      router.push(`/our-experts?filterable=${filterables}`)
+      router.push(`portal/experts`)
     } else {
       setActiveQuestionIndex((current) => current + 1)
     }

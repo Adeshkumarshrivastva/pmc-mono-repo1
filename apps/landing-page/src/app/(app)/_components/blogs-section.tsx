@@ -48,9 +48,9 @@ export default function BlogsSection({ data, blogs }: BlogsSectionProps) {
                       />
                     </div>
 
-                    <Link href={`/blogs/${blog.id}`}>
-                      <div className="bg-card p-4 sm:p-5 rounded-3xl -mt-10 mx-3 sm:mx-4 shadow-lg lg:absolute lg:left-4 lg:right-4 lg:-bottom-4 lg:max-w-none z-10">
-                        <h3 className="text-base sm:text-lg font-semibold text-primary-foreground mb-2">
+                    <Link href={`/blogs/${blog.slug}`} className="flex flex-col flex-1">
+                      <div className="bg-card flex-col flex-1 justify-between flex p-4 sm:p-5 rounded-3xl -mt-20 mx-3 sm:mx-4 shadow-lg relative left-2 lg:bottom-4">
+                        <h3 className="text-base sm:text-lg font-semibold text-primary-foreground mb-2 line-clamp-2 ">
                           {blog.title}
                         </h3>
 

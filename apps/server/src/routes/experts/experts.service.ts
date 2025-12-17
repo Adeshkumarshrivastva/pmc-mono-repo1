@@ -437,6 +437,7 @@ export async function getExpertBookings(c: C, input: ExpertBookingsSearchQuery) 
           },
         },
         prescription: true,
+        payments: true,
       },
       orderBy: input.period === 'past' ? { endDateTime: 'desc' } : { startDateTime: 'asc' },
     })
@@ -643,4 +644,79 @@ export async function updateExpert(c: C, data: ExpertProfileInput) {
   })
 
   return c.json(updated)
+}
+
+export async function updatePaymentStatus(c: C, input: { status: 'PENDING' | 'COMPLETED' }) {
+  const userId = c.var.user?.id
+  const bookingId = c.req.param('bookingId')
+
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 400)
+  }
+
+  const expert = await prisma.expert.findUnique({
+    where: { userId },
+  })
+
+  if (!expert) {
+    return c.json({ error: 'Expert profile not found' }, 404)
+  }
+
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: {
+      expert: { select: { id: true } },
+    },
+  })
+
+  if (!booking) {
+    return c.json({ error: 'Booking not found' }, 404)
+  }
+
+  if (booking.expert.id !== expert.id) {
+    return c.json({ error: 'Unauthorized: You do not own this booking' }, 403)
+  }
+
+  if (booking.status === 'CANCELLED') {
+    return c.json({ error: 'Cannot update payment for cancelled booking' }, 400)
+  }
+
+  const payment = await prisma.payment.findFirst({
+    where: {
+      bookingId,
+      paymentMode: 'OFFLINE',
+    },
+  })
+
+  if (!payment) {
+    return c.json({ error: 'No offline payment found for this booking' }, 404)
+  }
+
+  if (payment.paymentMode !== 'OFFLINE') {
+    return c.json({ error: 'Can only manually update offline payments' }, 400)
+  }
+
+  if (payment.status === input.status) {
+    return c.json({ error: `Payment is already marked as ${input.status}` }, 400)
+  }
+
+  await prisma.$transaction([
+    prisma.payment.update({
+      where: { id: payment.id },
+      data: { status: input.status },
+    }),
+    prisma.booking.update({
+      where: { id: booking.id },
+      data: {
+        status: input.status === 'COMPLETED' ? 'BOOKED' : booking.status,
+      },
+    }),
+  ])
+
+  return c.json({ success: true, message: `Payment status updated to ${input.status}` })
+}
+
+export async function getAllExperts(c: C) {
+  const experts = await prisma.expert.findMany()
+  return c.json(experts)
 }

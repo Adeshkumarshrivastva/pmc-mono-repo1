@@ -74,8 +74,6 @@ function ExpertService() {
               onOpenChange={() => {
                 setIsDialogOpen(false)
               }}
-              service={null}
-              mode="create"
             />
           </div>
         </div>

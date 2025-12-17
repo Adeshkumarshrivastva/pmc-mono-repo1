@@ -1,10 +1,10 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { CheckCircleIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { getURLFromMedia } from '@/payload/utils'
 import type { Home } from '@/payload/types'
-import { CheckCircleIcon } from 'lucide-react'
 
 type QuizSectionProps = {
   data: Home['quizSection']

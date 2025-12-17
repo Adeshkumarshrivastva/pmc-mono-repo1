@@ -1,6 +1,7 @@
 import {
   CalendarDaysIcon,
   ClipboardListIcon,
+  CreditCardIcon,
 
   // ClockIcon,
   HomeIcon,
@@ -180,5 +181,27 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     name: 'Profile',
     path: '/expert/profile',
     availableForUserRoles: ['EXPERT'],
+  },
+  {
+    type: 'link',
+    icon: CalendarDaysIcon,
+    name: 'All Bookings',
+    path: '/admin/bookings',
+    availableForUserRoles: ['ADMIN'],
+  },
+  {
+    type: 'link',
+    icon: UserIcon,
+    name: 'Experts',
+    path: '/admin/experts',
+    availableForUserRoles: ['ADMIN'],
+  },
+
+  {
+    type: 'link',
+    icon: CreditCardIcon,
+    name: 'Payments',
+    path: '/admin/payments',
+    availableForUserRoles: ['ADMIN'],
   },
 ]
