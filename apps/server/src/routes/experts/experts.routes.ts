@@ -21,11 +21,13 @@ import {
   downloadPrescription,
   getExpert,
   updateExpert,
+  getAllExperts,
 } from './experts.service'
-import { authMiddleware } from '../../middleware/auth.middleware'
+import { authMiddleware, requirePermission } from '../../middleware/auth.middleware'
 
 export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .get('/', zValidator('query', expertSearchQuery), async (c) => getExperts(c, c.req.valid('query')))
+  .get('/all-experts', authMiddleware, requirePermission(['ADMIN']), async (c) => getAllExperts(c))
   .get('/bookings', authMiddleware, zValidator('query', expertBookingsSearchQuery), async (c) =>
     getExpertBookings(c, c.req.valid('query')),
   )

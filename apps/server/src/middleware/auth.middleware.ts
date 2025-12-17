@@ -12,3 +12,19 @@ export const authMiddleware = async (c: Context, next: Next) => {
   c.set('user', session.user)
   return next()
 }
+
+export const requirePermission = (role: ('EXPERT' | 'ADMIN' | 'PATIENT')[]) => {
+  return async (c: Context, next: Next) => {
+    const user = c.get('user')
+
+    if (!user) {
+      return c.json({ error: 'Unauthorized' }, 403)
+    }
+
+    if (!role.includes(user.role)) {
+      return c.json({ error: 'Forbidden: Insufficient permissions' }, 403)
+    }
+
+    return next()
+  }
+}
