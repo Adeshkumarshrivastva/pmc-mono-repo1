@@ -3,79 +3,61 @@
 import type { Home } from '@/payload/types'
 import { getAltFromFromMedia, getURLFromMedia } from '@/payload/utils'
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import Autoscroll from 'embla-carousel-auto-scroll'
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 
 type PartnersSectionProps = {
-  data: Home['partnersSection']
+  data?: Home['partnersSection']
 }
 
 export default function PartnersSection({ data }: PartnersSectionProps) {
-  const scrollRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-
-    let rafId: number
-    const speed = 0.5
-
-    const scroll = () => {
-      el.scrollLeft += speed
-
-      if (el.scrollLeft >= el.scrollWidth / 2) {
-        el.scrollLeft = 0
-      }
-
-      rafId = requestAnimationFrame(scroll)
-    }
-
-    rafId = requestAnimationFrame(scroll)
-    return () => cancelAnimationFrame(rafId)
-  }, [])
-
   if (!data || !data.partners?.length) return null
 
   return (
     <section className="w-full bg-background">
       <div className="px-4 py-10 sm:px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
-          {/* Title */}
-          <div className="flex items-start">
-            {data.title && (
-              <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-10">
-                {data.title}
-              </h2>
-            )}
-          </div>
+          {/* Section Title (LEFT aligned) */}
+          {data.title && <h2 className="text-3xl md:text-4xl font-bold text-left text-primary mb-10">{data.title}</h2>}
 
-          {/* Carousel viewport */}
-          <div ref={scrollRef} className="overflow-hidden">
-            <div className="flex gap-6">
-              {[...data.partners, ...data.partners].map((partner, index) => {
-                if (!partner?.logo) return null
+          {/* Embla Carousel with Autoscroll */}
+          <Carousel
+            opts={{
+              loop: true,
+              dragFree: true,
+            }}
+            plugins={[
+              Autoscroll({
+                speed: 0.6,
+                startDelay: 500,
+                stopOnInteraction: false,
+                stopOnMouseEnter: true,
+              }),
+            ]}
+          >
+            <CarouselContent>
+              {data.partners.map((partner) => {
+                // if (!partner?.logo) {return null}
 
-                const logoUrl =
-                  typeof partner.logo === 'string'
-                    ? partner.logo
-                    : getURLFromMedia(partner.logo)
+                const logoUrl = typeof partner.logo === 'string' ? partner.logo : getURLFromMedia(partner.logo)
 
                 return (
-                  <div
-                    key={`${partner.id ?? index}-${index}`}
-                    className="flex items-center justify-center min-w-[220px] rounded-xl border bg-white px-6 py-8 shadow-sm transition hover:shadow-md"
-                  >
-                    <Image
-                      src={logoUrl}
-                      alt={getAltFromFromMedia(partner.logo)}
-                      width={160}
-                      height={80}
-                      className="object-contain"
-                    />
-                  </div>
+                  <CarouselItem key={partner.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/4">
+                    <div className="flex items-center justify-center h-full rounded-xl border bg-white px-6 py-8 shadow-sm transition hover:shadow-md">
+                      <Image
+                        src={logoUrl}
+                        alt={getAltFromFromMedia(partner.logo)}
+                        width={160}
+                        height={80}
+                        className="object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  </CarouselItem>
                 )
               })}
-            </div>
-          </div>
+            </CarouselContent>
+          </Carousel>
         </div>
       </div>
     </section>
