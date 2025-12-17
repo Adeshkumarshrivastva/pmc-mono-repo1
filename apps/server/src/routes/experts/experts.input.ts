@@ -161,6 +161,7 @@ export const expertProfileInput = z.object({
   country: z.string(),
   timezone: z.string(),
   expertise: z.array(z.string()),
+  photoId: z.string().optional(),
 })
 
 export type ExpertProfileInput = z.infer<typeof expertProfileInput>

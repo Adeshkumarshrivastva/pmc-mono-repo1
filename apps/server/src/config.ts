@@ -48,6 +48,12 @@ export const configSchema = z.object({
     password: z.string(),
   }),
   browserlessWsUrl: z.string(),
+  minio: z.object({
+    accessKey: z.string(),
+    secretKey: z.string(),
+    region: z.string(),
+    bucket: z.string(),
+  }),
 })
 
 export type ConfigSchema = z.infer<typeof configSchema>
@@ -89,6 +95,12 @@ function getConfig() {
         password: env.SMS_SERVICE_PASSWORD,
       },
       browserlessWsUrl: env.BROWSERLESS_WS_ENDPOINT,
+      minio: {
+        accessKey: env.S3_ACCESS_KEY,
+        secretKey: env.S3_SECRET_KEY,
+        region: env.S3_REGION,
+        bucket: env.S3_BUCKET,
+      },
     })
 
     return config

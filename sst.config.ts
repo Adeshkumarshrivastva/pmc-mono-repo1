@@ -53,6 +53,9 @@ export default $config({
     const SmsServiceUserId = new sst.Secret('SMS_SERVICE_USERID')
     const SmsServicePassword = new sst.Secret('SMS_SERVICE_PASSWORD')
     const PortalMediaBucket = new sst.aws.Bucket('PMC_PORTAL_MEDIA_BUCKET')
+    const S3AccessKey = new sst.Secret('S3_ACCESS_KEY')
+    const S3SecretKey = new sst.Secret('S3_SECRET_KEY')
+    const S3Region = new sst.Secret('S3_REGION')
 
     const SenderEmail =
       $app.stage === 'production'

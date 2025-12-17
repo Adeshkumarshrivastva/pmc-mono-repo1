@@ -616,6 +616,7 @@ export async function getExpert(c: C) {
   }
   const expert = await prisma.expert.findUnique({
     where: { userId },
+    include: { file: true },
   })
 
   if (!expert) {
@@ -639,6 +640,7 @@ export async function updateExpert(c: C, data: ExpertProfileInput) {
   const updated = await prisma.expert.update({
     where: { id: expert.id },
     data,
+    include: { file: true },
   })
 
   return c.json(updated)
