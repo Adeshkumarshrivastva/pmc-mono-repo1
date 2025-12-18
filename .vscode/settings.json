@@ -1,5 +1,0 @@
-{
-    "gitlens.enable": true,
-  "gitlens.pullRequests.enabled": true,
-  "gitlens.pullRequests.autoLoad": true
-}

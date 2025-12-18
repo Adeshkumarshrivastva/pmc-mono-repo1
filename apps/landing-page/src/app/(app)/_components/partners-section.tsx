@@ -11,16 +11,15 @@ type PartnersSectionProps = {
 }
 
 export default function PartnersSection({ data }: PartnersSectionProps) {
-  if (!data || !data.partners?.length) return null
-
+  if (!data || !data.partners?.length) {
+    return null
+  }
   return (
     <section className="w-full bg-background">
       <div className="px-4 py-10 sm:px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
-          {/* Section Title (LEFT aligned) */}
           {data.title && <h2 className="text-3xl md:text-4xl font-bold text-left text-primary mb-10">{data.title}</h2>}
 
-          {/* Embla Carousel with Autoscroll */}
           <Carousel
             opts={{
               loop: true,
@@ -37,8 +36,6 @@ export default function PartnersSection({ data }: PartnersSectionProps) {
           >
             <CarouselContent>
               {data.partners.map((partner) => {
-                // if (!partner?.logo) {return null}
-
                 const logoUrl = typeof partner.logo === 'string' ? partner.logo : getURLFromMedia(partner.logo)
 
                 return (
