@@ -31,8 +31,13 @@ export const Route = createFileRoute('/_public/experts/$expertSlug/$serviceSlug'
       queryFn: getUserSession,
     })
 
-    if (session.data) {
-      return { service, user: session.data.user }
+    if (session.data?.user) {
+      const patient = await queryClient.fetchQuery({
+        queryKey: ['patient-details'],
+        queryFn: fetchPatientDetails,
+      })
+
+      return { service, user: session.data.user, patient }
     }
 
     return { service }
@@ -52,7 +57,7 @@ function ExpertServiceBookingPage() {
   const router = useRouter()
 
   const { expertSlug, serviceSlug } = Route.useParams()
-  const { service, user } = Route.useLoaderData()
+  const { service, user, patient } = Route.useLoaderData()
   const [mode, setMode] = useState<BookingMode>({ type: 'select_slot' })
 
   const { month, year } = useBooking()
@@ -157,6 +162,8 @@ function ExpertServiceBookingPage() {
                         paymentMode={service.paymentMode}
                         price={service.price}
                         currency={service.currency}
+                        patientName={patient?.name}
+                        patientEmail={patient?.email || undefined}
                       />
                     </div>
                   </div>
@@ -193,4 +200,12 @@ async function fetchMonthlyAvailableSlots(expertSlug: string, serviceSlug: strin
   }
   const slots = await res.json()
   return slots
+}
+
+async function fetchPatientDetails() {
+  const res = await honoClient.server.patient['patient-details'].$get()
+  if (!res.ok) {
+    return null
+  }
+  return res.json()
 }

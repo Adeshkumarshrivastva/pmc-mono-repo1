@@ -83,6 +83,9 @@ export default $config({
       SMS_SERVICE_USERID: SmsServiceUserId.value,
       SMS_SERVICE_PASSWORD: SmsServicePassword.value,
       S3_BUCKET: PortalMediaBucket.name,
+      S3_ACCESS_KEY: S3AccessKey.value,
+      S3_SECRET_KEY: S3SecretKey.value,
+      S3_REGION: S3Region.value,
     })
 
     new sst.aws.Function('PmcHonoServer', {
