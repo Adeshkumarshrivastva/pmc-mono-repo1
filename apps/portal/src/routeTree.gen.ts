@@ -119,16 +119,18 @@ const AppAdminBookingsIndexRoute = AppAdminBookingsIndexRouteImport.update({
   path: '/admin/bookings/',
   getParentRoute: () => AppRoute,
 } as any)
-const PublicExpertsExpertSlugServiceSlugRoute = PublicExpertsExpertSlugServiceSlugRouteImport.update({
-  id: '/_public/experts/$expertSlug/$serviceSlug',
-  path: '/experts/$expertSlug/$serviceSlug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppExpertServicesServiceIdRoute = AppExpertServicesServiceIdRouteImport.update({
-  id: '/expert/services/$serviceId',
-  path: '/expert/services/$serviceId',
-  getParentRoute: () => AppRoute,
-} as any)
+const PublicExpertsExpertSlugServiceSlugRoute =
+  PublicExpertsExpertSlugServiceSlugRouteImport.update({
+    id: '/_public/experts/$expertSlug/$serviceSlug',
+    path: '/experts/$expertSlug/$serviceSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AppExpertServicesServiceIdRoute =
+  AppExpertServicesServiceIdRouteImport.update({
+    id: '/expert/services/$serviceId',
+    path: '/expert/services/$serviceId',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute

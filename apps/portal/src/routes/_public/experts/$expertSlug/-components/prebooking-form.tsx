@@ -28,6 +28,8 @@ type PrebookingFormProps = {
   paymentMode: PaymentMode
   price: number
   currency: string
+  patientName?: string
+  patientEmail?: string
 }
 
 const prebookingFormSchema = z.object({
@@ -44,6 +46,8 @@ export default function PrebookingForm({
   paymentMode,
   price,
   currency,
+  patientName,
+  patientEmail,
 }: PrebookingFormProps) {
   invariant(serviceId, 'service id must be present')
   invariant(expertId, 'expert Id must be present')
@@ -57,6 +61,8 @@ export default function PrebookingForm({
   const form = useForm({
     defaultValues: {
       serviceMode: availableModes[0],
+      patientName: patientName || '',
+      patientEmail: patientEmail || '',
     },
     resolver: zodResolver(prebookingFormSchema),
   })

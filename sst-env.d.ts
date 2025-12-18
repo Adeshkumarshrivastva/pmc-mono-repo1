@@ -90,6 +90,10 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    S3_SECRET_KEY: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     SMS_SERVICE_PASSWORD: {
       type: 'sst.sst.Secret'
       value: string
