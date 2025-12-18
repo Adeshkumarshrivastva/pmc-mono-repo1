@@ -66,11 +66,12 @@ const AppExpertDashboardRoute = AppExpertDashboardRouteImport.update({
   path: '/expert/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
-const PublicExpertsExpertSlugIndexRoute = PublicExpertsExpertSlugIndexRouteImport.update({
-  id: '/_public/experts/$expertSlug/',
-  path: '/experts/$expertSlug/',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const PublicExpertsExpertSlugIndexRoute =
+  PublicExpertsExpertSlugIndexRouteImport.update({
+    id: '/_public/experts/$expertSlug/',
+    path: '/experts/$expertSlug/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AppPatientBookingsIndexRoute = AppPatientBookingsIndexRouteImport.update({
   id: '/patient/bookings/',
   path: '/patient/bookings/',
@@ -91,6 +92,18 @@ const AppExpertBookingsIndexRoute = AppExpertBookingsIndexRouteImport.update({
   path: '/expert/bookings/',
   getParentRoute: () => AppRoute,
 } as any)
+const PublicExpertsExpertSlugServiceSlugRoute =
+  PublicExpertsExpertSlugServiceSlugRouteImport.update({
+    id: '/_public/experts/$expertSlug/$serviceSlug',
+    path: '/experts/$expertSlug/$serviceSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AppExpertServicesServiceIdRoute =
+  AppExpertServicesServiceIdRouteImport.update({
+    id: '/expert/services/$serviceId',
+    path: '/expert/services/$serviceId',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppAdminPaymentsIndexRoute = AppAdminPaymentsIndexRouteImport.update({
   id: '/admin/payments/',
   path: '/admin/payments/',
@@ -418,7 +431,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PublicBookingsBookingIdRoute: PublicBookingsBookingIdRoute,
   PublicExpertsIndexRoute: PublicExpertsIndexRoute,
-  PublicExpertsExpertSlugServiceSlugRoute: PublicExpertsExpertSlugServiceSlugRoute,
+  PublicExpertsExpertSlugServiceSlugRoute:
+    PublicExpertsExpertSlugServiceSlugRoute,
   PublicExpertsExpertSlugIndexRoute: PublicExpertsExpertSlugIndexRoute,
 }
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

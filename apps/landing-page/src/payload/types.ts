@@ -1294,6 +1294,15 @@ export interface Home {
         }[]
       | null
   }
+  partnersSection: {
+    title: string
+    partners?:
+      | {
+          logo: string | Media
+          id?: string | null
+        }[]
+      | null
+  }
   blogsSection?: {
     title?: string | null
     action?: string | null
@@ -1975,6 +1984,17 @@ export interface HomeSelect<T extends boolean = true> {
               number?: T
               label?: T
               icon?: T
+              id?: T
+            }
+      }
+  partnersSection?:
+    | T
+    | {
+        title?: T
+        partners?:
+          | T
+          | {
+              logo?: T
               id?: T
             }
       }

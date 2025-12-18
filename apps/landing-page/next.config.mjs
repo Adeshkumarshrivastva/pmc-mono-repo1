@@ -9,6 +9,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'positivemindcare.com',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/api/media/**'
+      }
     ],
   },
 }

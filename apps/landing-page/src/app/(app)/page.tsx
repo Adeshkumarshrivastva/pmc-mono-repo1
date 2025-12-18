@@ -16,6 +16,7 @@ import QuizSection from './_components/quiz-section'
 import MapSection from './_components/map-section'
 import { getWebinars } from '@/payload/actions'
 import WebinarsSection from './_components/webinars-section'
+import PartnersSection from './_components/partners-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -31,6 +32,7 @@ export default async function HomePage() {
     expertsSection,
     servicesSection,
     achievementSection,
+    partnersSection,
     quizSection,
     blogsSection,
     webinarsSection,
@@ -61,6 +63,7 @@ export default async function HomePage() {
       <ContactSection data={contactSection} services={services.docs} />
       <TestimonialSection data={testimonialSection} />
       <AchievementSection data={achievementSection} />
+      <PartnersSection data={partnersSection} />
       <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
       <BlogsSection data={blogsSection} blogs={topBlogs.docs} />
     </div>

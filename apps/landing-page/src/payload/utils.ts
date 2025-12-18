@@ -16,3 +16,12 @@ export function getURLFromMedia(media: Media | string) {
   }
   return ''
 }
+
+export function getAltFromFromMedia(media: Media | string) {
+  if (typeof media === 'string') {
+    return `https://positivemindcare.com${media}`
+  } else if (media && typeof media.alt === 'string') {
+    return `https://positivemindcare.com${media.url}`
+  }
+  return ''
+}
