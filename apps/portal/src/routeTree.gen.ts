@@ -92,18 +92,6 @@ const AppExpertBookingsIndexRoute = AppExpertBookingsIndexRouteImport.update({
   path: '/expert/bookings/',
   getParentRoute: () => AppRoute,
 } as any)
-const PublicExpertsExpertSlugServiceSlugRoute =
-  PublicExpertsExpertSlugServiceSlugRouteImport.update({
-    id: '/_public/experts/$expertSlug/$serviceSlug',
-    path: '/experts/$expertSlug/$serviceSlug',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const AppExpertServicesServiceIdRoute =
-  AppExpertServicesServiceIdRouteImport.update({
-    id: '/expert/services/$serviceId',
-    path: '/expert/services/$serviceId',
-    getParentRoute: () => AppRoute,
-  } as any)
 const AppAdminPaymentsIndexRoute = AppAdminPaymentsIndexRouteImport.update({
   id: '/admin/payments/',
   path: '/admin/payments/',

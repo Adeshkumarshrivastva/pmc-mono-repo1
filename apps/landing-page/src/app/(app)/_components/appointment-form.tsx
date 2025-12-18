@@ -67,14 +67,9 @@ function InputForm() {
 
   return (
     <form
-      onSubmit={form.handleSubmit(
-        (values) => {
-          appointmentFormMutation.mutate(values)
-        },
-        (errors) => {
-          console.log('Form errors:', errors)
-        },
-      )}
+      onSubmit={form.handleSubmit((values) => {
+        appointmentFormMutation.mutate(values)
+      })}
       className="border border-border rounded-xl p-4 sm:p-6 lg:p-8"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -131,7 +126,7 @@ function InputForm() {
           <Button
             type="submit"
             className="w-full py-3 text-sm font-semibold tracking-wider hover:bg-primary/90 transition-colors"
-            disabled={appointmentFormMutation.isPending}
+            disabled={appointmentFormMutation.isPending || appointmentFormMutation.isSuccess}
           >
             Make Appointment
           </Button>

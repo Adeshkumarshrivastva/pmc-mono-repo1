@@ -6,13 +6,13 @@ import type { Quiz } from '@/payload/types'
 import QuizRender from '../-component/quiz'
 
 type QuizPageProps = {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function QuizPage({ params }: QuizPageProps) {
-  const { slug } = params
+  const { slug } = await params
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({
@@ -36,7 +36,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
 }
 
 export async function generateMetadata({ params }: QuizPageProps) {
-  const { slug } = params
+  const { slug } = await params
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({

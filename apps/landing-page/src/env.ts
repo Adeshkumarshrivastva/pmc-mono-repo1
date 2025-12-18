@@ -12,6 +12,9 @@ export const env = createEnv({
     PAYLOAD_BUCKET: z.string(),
     RAZORPAY_KEY_ID: z.string(),
     RAZORPAY_KEY_SECRET: z.string(),
+    ZOHO_CLIENT_ID: z.string(),
+    ZOHO_CLIENT_SECRET: z.string(),
+    ZOHO_REFRESH_TOKEN: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -34,5 +37,8 @@ export const env = createEnv({
     RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
     RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,
     NEXT_PUBLIC_RAZORPAY_KEY_ID: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+    ZOHO_CLIENT_ID: process.env.ZOHO_CLIENT_ID,
+    ZOHO_CLIENT_SECRET: process.env.ZOHO_CLIENT_SECRET,
+    ZOHO_REFRESH_TOKEN: process.env.ZOHO_REFRESH_TOKEN,
   },
 })
