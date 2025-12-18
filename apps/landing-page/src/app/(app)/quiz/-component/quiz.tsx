@@ -77,17 +77,24 @@ export default function QuizRender({ quiz }: QuizProps) {
   }
 
   function formatQuizAnswers() {
-    return Object.entries(answers).map(([questionIndex, answerValue]) => {
-      const qIndex = parseInt(questionIndex)
-      const question = questions[qIndex]
-      const selectedOption = question?.options.find((opt) => opt.value === answerValue)
+    return Object.entries(answers)
+      .map(([questionIndex, answerValue]) => {
+        const qIndex = parseInt(questionIndex)
+        const question = questions[qIndex]
 
-      return {
-        questionId: question?.id || '',
-        question: question?.question || '',
-        answer: selectedOption?.label || answerValue,
-      }
-    })
+        if (!question) {
+          return null
+        }
+
+        const selectedOption = question.options.find((opt) => opt.value === answerValue)
+
+        return {
+          questionId: question.id,
+          question: question.question,
+          answer: selectedOption?.label || answerValue,
+        }
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null)
   }
 
   return (
@@ -177,7 +184,7 @@ export default function QuizRender({ quiz }: QuizProps) {
         title={'Get Your Assessment Results'}
         description={'Enter your details to view your personalized assessment report'}
         quizAnswers={formatQuizAnswers()}
-        quizId={quiz.id}
+        quiz={quiz}
       />
     </div>
   )
