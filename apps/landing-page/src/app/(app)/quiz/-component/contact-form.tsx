@@ -9,12 +9,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+
 interface QuizContactFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
   title?: string
   description?: string
+  quizId?: string
+  quizAnswers?: Array<{
+    question: string
+    answer: string
+  }>
 }
 
 export default function QuizContactForm({
@@ -23,12 +29,16 @@ export default function QuizContactForm({
   onSuccess,
   title = 'Get Your Results',
   description = 'Please provide your contact information to receive your assessment results',
+  quizAnswers = [],
+  quizId,
 }: QuizContactFormProps) {
   const form = useForm<QuizLeadFormInput>({
     defaultValues: {
       fullName: '',
       email: '',
       phone: '',
+      quizAnswers: quizAnswers,
+      quizId: quizId,
     },
     resolver: zodResolver(quizLeadInput),
   })
@@ -58,7 +68,11 @@ export default function QuizContactForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
-              quizFormMutation.mutate(values)
+              quizFormMutation.mutate({
+                ...values,
+                quizAnswers: quizAnswers,
+                quizId: quizId || '',
+              })
             })}
             className="space-y-4"
           >

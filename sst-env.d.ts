@@ -82,6 +82,14 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    S3_ACCESS_KEY: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
+    S3_REGION: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     SMS_SERVICE_PASSWORD: {
       type: 'sst.sst.Secret'
       value: string
