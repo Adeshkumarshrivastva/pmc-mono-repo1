@@ -1,22 +1,23 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import * as React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import * as z from 'zod'
-import dayjs from 'dayjs'
 import { toast } from 'sonner'
 import { TrashIcon, CirclePlusIcon } from 'lucide-react'
+import { useMutation } from '@tanstack/react-query'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
+import { localMinutesToUtcMinutes, MINUTES_PER_DAY, minutesToDate, toHHMMA, utcMinutesToLocalMinutes } from '@/lib/date'
+import dayjs from '@/lib/dayjs'
 
 export const Route = createFileRoute('/_app/expert/availability/')({
   component: ExpertAvailability,
   beforeLoad: ({ context: { user } }) => {
-    if (user.role === 'PATIENT') {
-      throw redirect({ to: '/patient/dashboard' })
+    if (user.role !== 'EXPERT') {
+      throw redirect({ to: '/' })
     }
   },
   loader: async ({ context: { queryClient, user } }) => {
@@ -36,7 +37,6 @@ export const Route = createFileRoute('/_app/expert/availability/')({
   },
 })
 
-const MINUTES_PER_DAY = 24 * 60
 const SLOT_INTERVAL_MINUTES = 15
 
 type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -51,14 +51,10 @@ const DAY_LABELS: { index: DayIndex; label: string }[] = [
   { index: 0, label: 'Sunday' },
 ]
 
-function minutesToLabel(minutes: number) {
-  return dayjs().startOf('day').add(minutes, 'minute').format('hh:mm A')
-}
-
 const TIME_OPTIONS: { value: number; label: string }[] = (() => {
   const options: { value: number; label: string }[] = []
   for (let m = 0; m < MINUTES_PER_DAY; m += SLOT_INTERVAL_MINUTES) {
-    options.push({ value: m, label: minutesToLabel(m) })
+    options.push({ value: m, label: toHHMMA(minutesToDate(m, dayjs().toDate())) })
   }
   return options
 })()
@@ -76,7 +72,6 @@ const timeRangeSchema = z
 const dayAvailabilitySchema = z
   .object({
     dayIndex: z.number(),
-    label: z.string(),
     ranges: z.array(timeRangeSchema),
   })
   .refine(
@@ -95,78 +90,42 @@ const dayAvailabilitySchema = z
     },
   )
 
-const formSchema = z.object({
+const validationSchema = z.object({
   days: z.array(dayAvailabilitySchema),
 })
 
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof validationSchema>
 
-const defaultDays: FormValues['days'] = DAY_LABELS.map((d) => ({
-  dayIndex: d.index,
-  label: d.label,
-  ranges: [],
-}))
+interface DayAvailabilityFieldProps {
+  dayIndex: number
+  dayLabel: string
+  form: ReturnType<typeof useForm<FormValues>>
+}
 
 function ExpertAvailability() {
   const { availabilityData } = Route.useLoaderData()
 
-  const initialDays = React.useMemo(() => {
-    if (!availabilityData || !('days' in availabilityData)) return defaultDays
-
-    return defaultDays.map((defaultDay) => {
-      const fetchedDay = availabilityData.days.find(
-        (d: { dayIndex: number; ranges: { startMinutes: number; endMinutes: number }[] }) =>
-          d.dayIndex === defaultDay.dayIndex,
-      )
-      return {
-        ...defaultDay,
-        ranges: fetchedDay ? fetchedDay.ranges : [],
-      }
-    })
-  }, [availabilityData])
-
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(validationSchema),
     defaultValues: {
-      days: initialDays,
+      days: availabilityData.days,
     },
-    mode: 'onSubmit',
   })
 
-  React.useEffect(() => {
-    form.reset({ days: initialDays })
-  }, [initialDays, form])
+  const daysField = useFieldArray({
+    control: form.control,
+    name: 'days',
+  })
 
-  const handleResetAll = () => {
-    form.setValue('days', defaultDays, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    })
-  }
-
-  const handleSaveAvailability = async (values: FormValues) => {
-    try {
-      const res = await honoClient.server.experts.availability.$post({
-        json: {
-          days: values.days.map((d) => ({
-            dayIndex: d.dayIndex,
-            ranges: d.ranges,
-          })),
-        },
-      })
-
-      if (res.ok) {
-        toast.success('Availability updated successfully')
-        form.reset(values)
-      } else {
-        toast.error('Failed to update availability')
-      }
-    } catch (error) {
-      console.error(error)
-      toast.error('An error occurred while saving availability')
-    }
-  }
+  const saveAvaialbilityMutation = useMutation({
+    mutationFn: saveAvailability,
+    onSuccess: () => {
+      toast.success('Availability updated successfully')
+    },
+    onError: () => {
+      toast.error('Failed to update availability')
+    },
+  })
 
   return (
     <div className="flex flex-col gap-6">
@@ -180,175 +139,156 @@ function ExpertAvailability() {
 
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(
-            handleSaveAvailability,
-            () => {
-              toast.error('Please fix the errors in your availability before saving')
-            },
-          )}
+          onSubmit={form.handleSubmit((values) => {
+            saveAvaialbilityMutation.mutate(values)
+          })}
           className="space-y-6 max-w-xl"
         >
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Weekly schedule</span>
             <div className="flex items-center gap-2">
               <div className="flex justify-end">
-                <Button type="submit" disabled={!form.formState.isDirty || form.formState.isSubmitting}>
-                  {form.formState.isSubmitting ? (
-                    <>
-                      Saving...
-                    </>
-                  ) : (
-                    'Save availability'
-                  )}
+                <Button
+                  type="submit"
+                  disabled={!form.formState.isDirty || saveAvaialbilityMutation.isPending}
+                  loading={saveAvaialbilityMutation.isPending}
+                >
+                  Save availability
                 </Button>
               </div>
-              <Button type="button" variant="ghost" size="sm" onClick={handleResetAll}>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  form.reset(availabilityData)
+                }}
+              >
                 Reset all
               </Button>
             </div>
           </div>
 
           <div className="rounded-lg border bg-muted/40 p-4 space-y-3">
-            {form.watch('days').map((day, dayIndex) => {
-              const rangesName = `days.${dayIndex}.ranges` as const
-              const ranges = form.watch(rangesName) ?? []
+            {daysField.fields.map((dayField, dayFieldIndex) => {
+              const label = DAY_LABELS.find((d) => d.index === dayField.dayIndex)?.label
 
               return (
-                <div key={day.dayIndex} className="space-y-2">
-                  <div className="grid grid-cols-3 items-center">
-                    <div className="text-l font-medium">{day.label}</div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        const current = ranges ?? []
-                        const next = [
-                          ...current,
-                          {
-                            startMinutes: 9 * 60,
-                            endMinutes: 17 * 60,
-                          },
-                        ]
-                        form.setValue(rangesName, next, { shouldValidate: true, shouldDirty: true })
-                      }}
-                      className="justify-self-center ml-34"
-                    >
-                      <CirclePlusIcon className="size-4" />
-                    </Button>
-                  </div>
-
-                  <div className="space-y-2 pl-10">
-                    {ranges.map((_, rangeIndex) => (
-                      <div
-                        key={`${day.dayIndex}-${rangeIndex}`}
-                        className="flex flex-wrap items-center gap-2 rounded-md bg-background p-2"
-                      >
-
-                        <FormField
-                          control={form.control}
-                          name={`days.${dayIndex}.ranges.${rangeIndex}.startMinutes`}
-                          render={({ field }) => (
-                            <FormItem className="w-32">
-                              <FormLabel className="text-xs">From</FormLabel>
-                              <FormControl>
-                                <Select
-                                  value={field.value !== undefined ? String(field.value) : ''}
-                                  onValueChange={(val) => {
-                                    field.onChange(Number(val))
-                                    void form.trigger(`days.${dayIndex}`)
-                                  }}
-                                >
-                                  <SelectTrigger className="h-8 text-xs">
-                                    <SelectValue placeholder="Start" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {TIME_OPTIONS.map((opt) => (
-                                      <SelectItem key={opt.value} value={String(opt.value)}>
-                                        {opt.label}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name={`days.${dayIndex}.ranges.${rangeIndex}.endMinutes`}
-                          render={({ field }) => (
-                            <FormItem className="w-32">
-                              <FormLabel className="text-xs">To</FormLabel>
-                              <FormControl>
-                                <Select
-                                  value={field.value !== undefined ? String(field.value) : ''}
-                                  onValueChange={(val) => {
-                                    field.onChange(Number(val))
-                                    void form.trigger(`days.${dayIndex}`)
-                                  }}
-                                >
-                                  <SelectTrigger className="h-8 text-xs">
-                                    <SelectValue placeholder="End" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {TIME_OPTIONS.map((opt) => (
-                                      <SelectItem key={opt.value} value={String(opt.value)}>
-                                        {opt.label}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name={`days.${dayIndex}.ranges.${rangeIndex}.startMinutes`}
-                          render={({ }) => (
-                            <FormItem className="w-32">
-                              <FormLabel className="text-xs">ㅤ</FormLabel>
-                              <FormControl>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => {
-                                    const current = ranges ?? []
-                                    const next = current.filter((_, idx) => idx !== rangeIndex)
-                                    form.setValue(
-                                      `days.${dayIndex}`,
-                                      { ...day, ranges: next },
-                                      {
-                                        shouldValidate: true,
-                                        shouldDirty: true,
-                                        shouldTouch: true,
-                                      },
-                                    )
-                                  }}
-                                  className="mr-1"
-                                >
-                                  <TrashIcon className="size-4" />
-                                </Button>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <DayAvailabilityField key={dayField.id} dayIndex={dayFieldIndex} dayLabel={label ?? ''} form={form} />
               )
             })}
           </div>
         </form>
       </Form>
+    </div>
+  )
+}
+
+function DayAvailabilityField({ dayIndex, dayLabel, form }: DayAvailabilityFieldProps) {
+  const rangesField = useFieldArray({
+    control: form.control,
+    name: `days.${dayIndex}.ranges`,
+  })
+
+  return (
+    <div className="space-y-2">
+      <div className="flex justify-between items-center">
+        <div className="text-l font-medium">{dayLabel}</div>
+        <div className="flex justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={() => {
+              rangesField.append({ startMinutes: 270, endMinutes: 390 })
+            }}
+          >
+            <CirclePlusIcon className="size-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-2 pl-10">
+        {rangesField.fields.map((range, rangeIndex) => (
+          <div key={range.id} className="flex flex-wrap items-center group gap-2 rounded-md bg-background p-2">
+            <FormField
+              control={form.control}
+              name={`days.${dayIndex}.ranges.${rangeIndex}.startMinutes`}
+              render={({ field }) => (
+                <FormItem className="w-32">
+                  <FormLabel className="text-xs">From</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value !== undefined ? String(utcMinutesToLocalMinutes(field.value)) : ''}
+                      onValueChange={(val) => {
+                        field.onChange(localMinutesToUtcMinutes(Number(val)))
+                        void form.trigger(`days.${dayIndex}`)
+                      }}
+                    >
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="Start" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TIME_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={String(opt.value)}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name={`days.${dayIndex}.ranges.${rangeIndex}.endMinutes`}
+              render={({ field }) => (
+                <FormItem className="w-32">
+                  <FormLabel className="text-xs">To</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value !== undefined ? String(utcMinutesToLocalMinutes(field.value)) : ''}
+                      onValueChange={(val) => {
+                        field.onChange(localMinutesToUtcMinutes(Number(val)))
+                        void form.trigger(`days.${dayIndex}`)
+                      }}
+                    >
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="End" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TIME_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={String(opt.value)}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="w-32">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  rangesField.remove(rangeIndex)
+                }}
+                className="mr-1 opacity-10 group-hover:opacity-100"
+              >
+                <TrashIcon className="size-4" />
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -359,4 +299,21 @@ async function fetchExpertAvailability() {
     throw new Error('Failed to fetch availability')
   }
   return res.json()
+}
+
+async function saveAvailability(values: FormValues) {
+  const res = await honoClient.server.experts.availability.$post({
+    json: {
+      days: values.days.map((d) => ({
+        dayIndex: d.dayIndex,
+        ranges: d.ranges,
+      })),
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error('Failed to save availability')
+  }
+  const data = await res.json()
+  return data
 }
