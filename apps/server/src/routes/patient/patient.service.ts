@@ -122,3 +122,93 @@ export async function getPatientBookings(c: C, input: PatientBookingsSearchQuery
     return c.json({ error: 'Failed to fetch booking' }, 500)
   }
 }
+
+export async function getPatientDashboard(c: C) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const patient = await prisma.patient.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        timezone: true,
+      },
+    })
+
+    if (!patient) {
+      return c.json({ error: 'Patient profile not found' }, 404)
+    }
+
+    const now = dayjs().toDate()
+
+    const [totalBookings, upcomingBookings, completedBookings, recentBookings] = await Promise.all([
+      prisma.booking.count({
+        where: {
+          patientId: patient.id,
+        },
+      }),
+      prisma.booking.findMany({
+        where: {
+          patientId: patient.id,
+          OR: [
+            { startDateTime: { gte: now } },
+            { startDateTime: { lt: now }, endDateTime: { gt: now } },
+          ],
+        },
+        include: {
+          expert: {
+            include: {
+              user: true,
+            },
+          },
+          service: true,
+        },
+        orderBy: { startDateTime: 'asc' },
+        take: 3,
+      }),
+      prisma.booking.count({
+        where: {
+          patientId: patient.id,
+          status: 'COMPLETED',
+        },
+      }),
+      prisma.booking.findMany({
+        where: {
+          patientId: patient.id,
+        },
+        include: {
+          expert: {
+            include: {
+              user: true,
+            },
+          },
+          service: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+      }),
+    ])
+
+    return c.json({
+      success: true,
+      patient,
+      stats: {
+        totalBookings,
+        upcomingBookingsCount: upcomingBookings.length,
+        completedBookings,
+      },
+      upcomingBookings,
+      recentBookings,
+    })
+  } catch {
+    return c.json({ error: 'Failed to fetch dashboard data' }, 500)
+  }
+}
