@@ -2,7 +2,7 @@ import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import type { Prisma } from '../../generated/prisma'
 import dayjs from '../../lib/dayjs'
-import type { PatientBookingsSearchQuery } from './patient.input'
+import type { PatientBookingsSearchQuery, UpdatePatientInput } from './patient.input'
 
 export async function getPatients(c: C) {
   const page = Number(c.req.query('page') || '1')
@@ -35,6 +35,28 @@ export async function getPatientByUserId(c: C) {
   const patient = await prisma.patient.findUnique({
     where: {
       userId: c.get('user')?.id,
+    },
+  })
+
+  return c.json(patient)
+}
+
+export async function updatePatientByUserId(c: C, input: UpdatePatientInput) {
+  const userId = c.get('user')?.id
+
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 401)
+  }
+
+  const patient = await prisma.patient.update({
+    where: {
+      userId,
+    },
+    data: {
+      name: input.name,
+      email: input.email || null,
+      phoneNumber: input.phoneNumber,
+      timezone: input.timezone,
     },
   })
 

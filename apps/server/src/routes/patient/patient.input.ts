@@ -8,3 +8,12 @@ export const patientBookingsSearchQuery = z.object({
 })
 
 export type PatientBookingsSearchQuery = z.infer<typeof patientBookingsSearchQuery>
+
+export const updatePatientInput = z.object({
+  name: z.string().min(3),
+  email: z.string().email().optional().or(z.literal('')),
+  phoneNumber: z.string().min(10),
+  timezone: z.string(),
+})
+
+export type UpdatePatientInput = z.infer<typeof updatePatientInput>
