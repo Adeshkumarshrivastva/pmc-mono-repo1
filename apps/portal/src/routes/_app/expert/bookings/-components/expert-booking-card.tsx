@@ -1,11 +1,17 @@
 import { CalendarIcon, ChevronDownIcon, UserIcon } from 'lucide-react'
 import { match } from 'ts-pattern'
+import type { InferResponseType } from 'hono/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import dayjs from '@/lib/dayjs'
 import { formatDateTimeRange } from '@/lib/date'
-import type { Booking, BookingPeriod } from '@/lib/booking'
+import type { BookingPeriod } from '@/lib/booking'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
+import type { honoClient } from '@/lib/hono-client'
+
+type ExpertBookingsResponse = InferResponseType<(typeof honoClient)['server']['experts']['bookings']['$get'], 200>
+
+type Booking = ExpertBookingsResponse['bookings'][number]
 
 type BookingCardProps = {
   booking: Booking

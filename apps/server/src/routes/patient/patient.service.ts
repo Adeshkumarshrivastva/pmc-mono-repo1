@@ -1,5 +1,8 @@
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
+import type { Prisma } from '../../generated/prisma'
+import dayjs from '../../lib/dayjs'
+import type { PatientBookingsSearchQuery } from './patient.input'
 
 export async function getPatients(c: C) {
   const page = Number(c.req.query('page') || '1')
@@ -36,4 +39,64 @@ export async function getPatientByUserId(c: C) {
   })
 
   return c.json(patient)
+}
+
+export async function getPatientBookings(c: C, input: PatientBookingsSearchQuery) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const patient = await prisma.patient.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        id: true,
+        userId: true,
+      },
+    })
+
+    if (!patient) {
+      return c.json({ error: 'Patient profile not found' }, 404)
+    }
+
+    const bookingsWhereInput: Prisma.BookingWhereInput = {
+      patientId: patient.id,
+    }
+    const now = dayjs().toDate()
+
+    if (input.period === 'upcoming') {
+      bookingsWhereInput.OR = [
+        { startDateTime: { gte: now } },
+        // currently ongoing bookings
+        { startDateTime: { lt: now }, endDateTime: { gt: now } },
+      ]
+    } else if (input.period === 'past') {
+      bookingsWhereInput.endDateTime = { lt: now }
+    } else if (input.period === 'fixed') {
+      bookingsWhereInput.startDateTime = { gte: input.startDate }
+
+      bookingsWhereInput.endDateTime = { lte: input.endDate }
+    }
+
+    const bookings = await prisma.booking.findMany({
+      where: bookingsWhereInput,
+      include: {
+        expert: {
+          include: {
+            user: true,
+          },
+        },
+        prescription: true,
+        payments: true,
+      },
+      orderBy: input.period === 'past' ? { endDateTime: 'desc' } : { startDateTime: 'asc' },
+    })
+
+    return c.json({ success: true, bookings })
+  } catch {
+    return c.json({ error: 'Failed to fetch booking' }, 500)
+  }
 }
