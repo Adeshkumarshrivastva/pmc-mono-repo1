@@ -171,3 +171,19 @@ export const updatePaymentStatusInput = z.object({
 })
 
 export type UpdatePaymentStatusInput = z.infer<typeof updatePaymentStatusInput>
+
+export const updateAvailabilityInput = z.object({
+  days: z.array(
+    z.object({
+      dayIndex: z.number().min(0).max(6),
+      ranges: z.array(
+        z.object({
+          startMinutes: z.number(),
+          endMinutes: z.number(),
+        }),
+      ),
+    }),
+  ),
+})
+
+export type UpdateAvailabilityInput = z.infer<typeof updateAvailabilityInput>
