@@ -1,11 +1,9 @@
 import { CalendarIcon, UserIcon } from 'lucide-react'
-import { match } from 'ts-pattern'
 import type { InferResponseType } from 'hono/client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import dayjs from '@/lib/dayjs'
 import { formatDateTimeRange } from '@/lib/date'
 import type { BookingPeriod } from '@/lib/booking'
-import { Button } from '@/components/ui/button'
 import type { honoClient } from '@/lib/hono-client'
 
 type PatientBookingsResponse = InferResponseType<(typeof honoClient)['server']['patient']['bookings']['$get'], 200>
@@ -19,7 +17,7 @@ type PatientBookingCardProps = {
   onReschedule?: () => void
 }
 
-export default function PatientBookingCard({ booking, period, onViewDetails }: PatientBookingCardProps) {
+export default function PatientBookingCard({ booking, onViewDetails }: PatientBookingCardProps) {
   return (
     <Card
       className="transition-all duration-200 cursor-pointer h-full flex flex-col relative"
@@ -31,15 +29,6 @@ export default function PatientBookingCard({ booking, period, onViewDetails }: P
       <CardHeader>
         <div className="flex justify-between items-start gap-3">
           <CardTitle className="text-lg font-semibold flex-1 min-w-0">{booking.serviceName}</CardTitle>
-          {match(period)
-            .with('past', () => {
-              return booking.prescription ? (
-                <Button variant="outline" className="capitalize">
-                  View Prescription
-                </Button>
-              ) : null
-            })
-            .otherwise(() => null)}
         </div>
       </CardHeader>
       <CardContent className="space-y-3 flex-1">

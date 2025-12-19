@@ -1,5 +1,6 @@
 import type { InferResponseType } from 'hono/client'
 import type { honoClient } from '@/lib/hono-client'
+import { formatPaymentDate, getPaymentStatusColor } from '@/lib/payment'
 
 type PatientBookingsResponse = InferResponseType<(typeof honoClient)['server']['patient']['bookings']['$get'], 200>
 
@@ -15,21 +16,47 @@ export default function PaymentArea({ payment }: PaymentAreaProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <strong>Amount:</strong> {payment.amountCurrency} {payment.amountPaid}
-      </div>
+    <div className="rounded-lg border bg-card p-6 shadow-sm">
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-muted-foreground">Amount</p>
+          <p className="text-2xl font-bold">
+            {payment.amountCurrency} {payment.amountPaid?.toLocaleString()}
+          </p>
+        </div>
 
-      <div>
-        <strong>Payment Status:</strong>
-        <span className={`ml-2 ${payment.status === 'COMPLETED' ? 'text-green-600' : 'text-yellow-600'}`}>
-          {payment.status}
-        </span>
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-muted-foreground">Payment Status</p>
+          <div>
+            <span
+              className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium ${getPaymentStatusColor(payment.status)}`}
+            >
+              {payment.status}
+            </span>
+          </div>
+        </div>
+
+        {payment.paymentMode && (
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-muted-foreground">Payment Mode</p>
+            <p className="text-base font-medium capitalize">{payment.paymentMode.toLowerCase()}</p>
+          </div>
+        )}
+
+        {payment.createdAt && (
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-muted-foreground">Payment Date</p>
+            <p className="text-base font-medium">{formatPaymentDate(payment.createdAt)}</p>
+          </div>
+        )}
       </div>
 
       {payment.razorpayOrderId && (
-        <div className="text-sm text-muted-foreground">
-          <strong>Order ID:</strong> {payment.razorpayOrderId}
+        <div className="mt-4 border-t pt-4">
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-muted-foreground">Order ID</p>
+            <p className="font-mono text-sm">{payment.razorpayOrderId}</p>
+          </div>
         </div>
       )}
     </div>
