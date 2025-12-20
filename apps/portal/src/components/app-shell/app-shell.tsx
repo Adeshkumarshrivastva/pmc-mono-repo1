@@ -202,7 +202,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     path: '/admin/experts',
     availableForUserRoles: ['ADMIN'],
   },
-
+  {
+    type: 'link',
+    icon: UserIcon,
+    name: 'Patients',
+    path: '/admin/patients',
+    availableForUserRoles: ['ADMIN'],
+  },
   {
     type: 'link',
     icon: CreditCardIcon,
