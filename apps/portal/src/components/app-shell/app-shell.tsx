@@ -148,6 +148,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
   },
   {
     type: 'link',
+    icon: LayoutDashboardIcon,
+    name: 'Home',
+    path: '/admin/dashboard',
+    availableForUserRoles: ['ADMIN'],
+  },
+  {
+    type: 'link',
     icon: CalendarDaysIcon,
     name: 'My Bookings',
     path: '/patient/bookings',
@@ -195,7 +202,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     path: '/admin/experts',
     availableForUserRoles: ['ADMIN'],
   },
-
+  {
+    type: 'link',
+    icon: UserIcon,
+    name: 'Patients',
+    path: '/admin/patients',
+    availableForUserRoles: ['ADMIN'],
+  },
   {
     type: 'link',
     icon: CreditCardIcon,

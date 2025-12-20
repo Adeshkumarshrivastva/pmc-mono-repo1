@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { match } from 'ts-pattern'
 import { useQuery } from '@tanstack/react-query'
 import { Spinner } from '@/components/ui/spinner'
@@ -13,11 +13,6 @@ import { BOOKING_PERIODS, type BookingPeriod } from '@/lib/booking'
 
 export const Route = createFileRoute('/_app/expert/bookings/')({
   component: ExpertBookings,
-  beforeLoad: ({ context: { user } }) => {
-    if (user.role !== 'EXPERT') {
-      throw redirect({ to: '/' })
-    }
-  },
   loader: ({ context: { user } }) => {
     return { user }
   },

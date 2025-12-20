@@ -1,36 +1,28 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useFieldArray, useForm } from 'react-hook-form'
-import * as z from 'zod'
-import { toast } from 'sonner'
-import { TrashIcon, CirclePlusIcon } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
-import { Spinner } from '@/components/ui/spinner'
+import { useForm, useFieldArray } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { toast } from 'sonner'
+import type { InferResponseType } from 'hono'
+import { TrashIcon, CirclePlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
+import type { HonoClient } from '@/lib/hono-client'
 import { localMinutesToUtcMinutes, MINUTES_PER_DAY, minutesToDate, toHHMMA, utcMinutesToLocalMinutes } from '@/lib/date'
 import dayjs from '@/lib/dayjs'
 
-export const Route = createFileRoute('/_app/expert/availability/')({
-  component: ExpertAvailability,
-  loader: async ({ context: { queryClient, user } }) => {
-    const availabilityData = await queryClient.ensureQueryData({
-      queryKey: ['expert-availability', user.id],
-      queryFn: fetchExpertAvailability,
-    })
-    return { user, availabilityData }
-  },
-  pendingComponent: () => {
-    return (
-      <div className="flex h-screen w-full items-center justify-center gap-2">
-        <Spinner />
-        <div className="text-muted-foreground text-xs font-medium">Loading...</div>
-      </div>
-    )
-  },
-})
+type AvailabilityData = InferResponseType<
+  HonoClient['server']['admin']['experts'][':expertId']['availability']['$get'],
+  200
+>
+
+interface ExpertAvailabilityFormProps {
+  expertId: string
+  initialData?: AvailabilityData
+  onSuccess?: () => void
+}
 
 const SLOT_INTERVAL_MINUTES = 15
 
@@ -97,13 +89,11 @@ interface DayAvailabilityFieldProps {
   form: ReturnType<typeof useForm<FormValues>>
 }
 
-function ExpertAvailability() {
-  const { availabilityData } = Route.useLoaderData()
-
+export default function ExpertAvailabilityForm({ expertId, initialData, onSuccess }: ExpertAvailabilityFormProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      days: availabilityData.days,
+      days: initialData?.days || [],
     },
   })
 
@@ -112,70 +102,70 @@ function ExpertAvailability() {
     name: 'days',
   })
 
-  const saveAvaialbilityMutation = useMutation({
-    mutationFn: saveAvailability,
+  const saveAvailabilityMutation = useMutation({
+    mutationFn: async (values: FormValues) => {
+      const response = await honoClient.server.admin.experts[':expertId'].availability.$post({
+        param: { expertId },
+        json: {
+          days: values.days.map((d) => ({
+            dayIndex: d.dayIndex,
+            ranges: d.ranges,
+          })),
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save availability')
+      }
+
+      return response.json()
+    },
     onSuccess: () => {
       toast.success('Availability updated successfully')
+      onSuccess?.()
     },
-    onError: () => {
-      toast.error('Failed to update availability')
+    onError: (error) => {
+      toast.error(error.message || 'Failed to update availability')
     },
   })
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Set your weekly availability</h1>
-        <p className="text-muted-foreground text-sm">
-          Choose the times when patients can book sessions with you. Availability is based on 15-minute slots and is
-          applied every week.
-        </p>
-      </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit((values) => saveAvailabilityMutation.mutate(values))} className="space-y-6">
+        <div className="flex max-w-lg items-center justify-between">
+          <span className="text-sm font-medium text-muted-foreground">Weekly schedule</span>
+          <div className="flex items-center gap-2">
+            <Button
+              type="submit"
+              disabled={!form.formState.isDirty || saveAvailabilityMutation.isPending}
+              loading={saveAvailabilityMutation.isPending}
+            >
+              Save availability
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                form.reset({ days: initialData?.days || [] })
+              }}
+            >
+              Reset all
+            </Button>
+          </div>
+        </div>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit((values) => {
-            saveAvaialbilityMutation.mutate(values)
+        <div className="rounded-lg border bg-muted/40 p-4 space-y-3 max-w-lg">
+          {daysField.fields.map((dayField, dayFieldIndex) => {
+            const label = DAY_LABELS.find((d) => d.index === dayField.dayIndex)?.label
+
+            return (
+              <DayAvailabilityField key={dayField.id} dayIndex={dayFieldIndex} dayLabel={label ?? ''} form={form} />
+            )
           })}
-          className="space-y-6 max-w-xl"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Weekly schedule</span>
-            <div className="flex items-center gap-2">
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  disabled={!form.formState.isDirty || saveAvaialbilityMutation.isPending}
-                  loading={saveAvaialbilityMutation.isPending}
-                >
-                  Save availability
-                </Button>
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  form.reset(availabilityData)
-                }}
-              >
-                Reset all
-              </Button>
-            </div>
-          </div>
-
-          <div className="rounded-lg border bg-muted/40 p-4 space-y-3">
-            {daysField.fields.map((dayField, dayFieldIndex) => {
-              const label = DAY_LABELS.find((d) => d.index === dayField.dayIndex)?.label
-
-              return (
-                <DayAvailabilityField key={dayField.id} dayIndex={dayFieldIndex} dayLabel={label ?? ''} form={form} />
-              )
-            })}
-          </div>
-        </form>
-      </Form>
-    </div>
+        </div>
+      </form>
+    </Form>
   )
 }
 
@@ -286,29 +276,4 @@ function DayAvailabilityField({ dayIndex, dayLabel, form }: DayAvailabilityField
       </div>
     </div>
   )
-}
-
-async function fetchExpertAvailability() {
-  const res = await honoClient.server.experts.availability.$get()
-  if (!res.ok) {
-    throw new Error('Failed to fetch availability')
-  }
-  return res.json()
-}
-
-async function saveAvailability(values: FormValues) {
-  const res = await honoClient.server.experts.availability.$post({
-    json: {
-      days: values.days.map((d) => ({
-        dayIndex: d.dayIndex,
-        ranges: d.ranges,
-      })),
-    },
-  })
-
-  if (!res.ok) {
-    throw new Error('Failed to save availability')
-  }
-  const data = await res.json()
-  return data
 }
