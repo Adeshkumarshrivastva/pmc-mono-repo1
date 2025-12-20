@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { match } from 'ts-pattern'
 import { Calendar, Clock, TrendingUp, User } from 'lucide-react'
@@ -11,11 +11,6 @@ import dayjs from '@/lib/dayjs'
 
 export const Route = createFileRoute('/_app/patient/dashboard')({
   component: PatientDashboard,
-  beforeLoad: ({ context: { user } }) => {
-    if (user.role === 'EXPERT') {
-      throw redirect({ to: '/expert/dashboard' })
-    }
-  },
   loader: ({ context: { user } }) => {
     return { user }
   },

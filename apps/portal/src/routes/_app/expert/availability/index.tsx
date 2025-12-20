@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -15,11 +15,6 @@ import dayjs from '@/lib/dayjs'
 
 export const Route = createFileRoute('/_app/expert/availability/')({
   component: ExpertAvailability,
-  beforeLoad: ({ context: { user } }) => {
-    if (user.role !== 'EXPERT') {
-      throw redirect({ to: '/' })
-    }
-  },
   loader: async ({ context: { queryClient, user } }) => {
     const availabilityData = await queryClient.ensureQueryData({
       queryKey: ['expert-availability', user.id],

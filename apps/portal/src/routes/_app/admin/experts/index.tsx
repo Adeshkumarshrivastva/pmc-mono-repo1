@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import type { InferResponseType } from 'hono'
@@ -72,11 +72,6 @@ const columns: ColumnDef<ExpertData>[] = [
 
 export const Route = createFileRoute('/_app/admin/experts/')({
   component: AdminExpertsPage,
-  beforeLoad: ({ context: { user } }) => {
-    if (user.role === 'PATIENT') {
-      throw redirect({ to: '/patient/dashboard' })
-    }
-  },
   pendingComponent: () => {
     return (
       <div className="flex h-screen w-full items-center justify-center gap-2">

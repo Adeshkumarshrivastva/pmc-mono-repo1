@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import React, { useState } from 'react'
 import { format } from 'date-fns'
@@ -88,11 +88,7 @@ const columns: ColumnDef<PaymentData>[] = [
 
 export const Route = createFileRoute('/_app/admin/payments/')({
   component: AdminPaymentsPage,
-  beforeLoad: ({ context: { user } }) => {
-    if (user.role === 'PATIENT') {
-      throw redirect({ to: '/patient/dashboard' })
-    }
-  },
+
   pendingComponent: () => {
     return (
       <div className="flex h-screen w-full items-center justify-center gap-2">
