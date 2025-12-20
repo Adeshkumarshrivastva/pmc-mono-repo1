@@ -158,10 +158,7 @@ export async function getPatientDashboard(c: C) {
       prisma.booking.findMany({
         where: {
           patientId: patient.id,
-          OR: [
-            { startDateTime: { gte: now } },
-            { startDateTime: { lt: now }, endDateTime: { gt: now } },
-          ],
+          OR: [{ startDateTime: { gte: now } }, { startDateTime: { lt: now }, endDateTime: { gt: now } }],
         },
         include: {
           expert: {

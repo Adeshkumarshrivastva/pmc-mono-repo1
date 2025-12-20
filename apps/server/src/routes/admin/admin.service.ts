@@ -237,16 +237,8 @@ export async function updateExpertAvailability(c: C, expertId: string, input: Up
 
     const availabilityRecords = input.days.flatMap((day) =>
       day.ranges.map((range) => {
-        const startTime = dayjs()
-          .startOf('day')
-          .add(range.startMinutes, 'minutes')
-          .utc()
-          .toDate()
-        const endTime = dayjs()
-          .startOf('day')
-          .add(range.endMinutes, 'minutes')
-          .utc()
-          .toDate()
+        const startTime = dayjs().startOf('day').add(range.startMinutes, 'minutes').utc().toDate()
+        const endTime = dayjs().startOf('day').add(range.endMinutes, 'minutes').utc().toDate()
 
         return {
           expertId: expertId,

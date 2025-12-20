@@ -117,7 +117,9 @@ function PatientBookings() {
                                 <SheetTitle>Booking Summary</SheetTitle>
                               </SheetHeader>
                               <Separator />
-                              <PatientBookingInfo booking={bookings.find((booking) => booking.id === selectedBooking)!} />
+                              <PatientBookingInfo
+                                booking={bookings.find((booking) => booking.id === selectedBooking)!}
+                              />
                             </SheetContent>
                           </Sheet>
                         ) : null}
