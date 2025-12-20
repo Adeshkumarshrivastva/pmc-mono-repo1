@@ -18,6 +18,7 @@ import { Route as PublicBookingsBookingIdRouteImport } from './routes/_public/bo
 import { Route as AppPatientDashboardRouteImport } from './routes/_app/patient/dashboard'
 import { Route as AppExpertDashboardRouteImport } from './routes/_app/expert/dashboard'
 import { Route as PublicExpertsExpertSlugIndexRouteImport } from './routes/_public/experts/$expertSlug/index'
+import { Route as AppPatientProfileIndexRouteImport } from './routes/_app/patient/profile/index'
 import { Route as AppPatientBookingsIndexRouteImport } from './routes/_app/patient/bookings/index'
 import { Route as AppExpertServicesIndexRouteImport } from './routes/_app/expert/services/index'
 import { Route as AppExpertProfileIndexRouteImport } from './routes/_app/expert/profile/index'
@@ -73,6 +74,11 @@ const PublicExpertsExpertSlugIndexRoute =
     path: '/experts/$expertSlug/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AppPatientProfileIndexRoute = AppPatientProfileIndexRouteImport.update({
+  id: '/patient/profile/',
+  path: '/patient/profile/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPatientBookingsIndexRoute = AppPatientBookingsIndexRouteImport.update({
   id: '/patient/bookings/',
   path: '/patient/bookings/',
@@ -144,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/expert/profile': typeof AppExpertProfileIndexRoute
   '/expert/services': typeof AppExpertServicesIndexRoute
   '/patient/bookings': typeof AppPatientBookingsIndexRoute
+  '/patient/profile': typeof AppPatientProfileIndexRoute
   '/experts/$expertSlug': typeof PublicExpertsExpertSlugIndexRoute
 }
 export interface FileRoutesByTo {
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/expert/profile': typeof AppExpertProfileIndexRoute
   '/expert/services': typeof AppExpertServicesIndexRoute
   '/patient/bookings': typeof AppPatientBookingsIndexRoute
+  '/patient/profile': typeof AppPatientProfileIndexRoute
   '/experts/$expertSlug': typeof PublicExpertsExpertSlugIndexRoute
 }
 export interface FileRoutesById {
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/_app/expert/profile/': typeof AppExpertProfileIndexRoute
   '/_app/expert/services/': typeof AppExpertServicesIndexRoute
   '/_app/patient/bookings/': typeof AppPatientBookingsIndexRoute
+  '/_app/patient/profile/': typeof AppPatientProfileIndexRoute
   '/_public/experts/$expertSlug/': typeof PublicExpertsExpertSlugIndexRoute
 }
 export interface FileRouteTypes {
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/expert/profile'
     | '/expert/services'
     | '/patient/bookings'
+    | '/patient/profile'
     | '/experts/$expertSlug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/expert/profile'
     | '/expert/services'
     | '/patient/bookings'
+    | '/patient/profile'
     | '/experts/$expertSlug'
   id:
     | '__root__'
@@ -246,6 +257,7 @@ export interface FileRouteTypes {
     | '/_app/expert/profile/'
     | '/_app/expert/services/'
     | '/_app/patient/bookings/'
+    | '/_app/patient/profile/'
     | '/_public/experts/$expertSlug/'
   fileRoutesById: FileRoutesById
 }
@@ -322,6 +334,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/experts/$expertSlug'
       preLoaderRoute: typeof PublicExpertsExpertSlugIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/patient/profile/': {
+      id: '/_app/patient/profile/'
+      path: '/patient/profile'
+      fullPath: '/patient/profile'
+      preLoaderRoute: typeof AppPatientProfileIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/patient/bookings/': {
       id: '/_app/patient/bookings/'
@@ -409,6 +428,7 @@ interface AppRouteChildren {
   AppExpertProfileIndexRoute: typeof AppExpertProfileIndexRoute
   AppExpertServicesIndexRoute: typeof AppExpertServicesIndexRoute
   AppPatientBookingsIndexRoute: typeof AppPatientBookingsIndexRoute
+  AppPatientProfileIndexRoute: typeof AppPatientProfileIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -424,6 +444,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppExpertProfileIndexRoute: AppExpertProfileIndexRoute,
   AppExpertServicesIndexRoute: AppExpertServicesIndexRoute,
   AppPatientBookingsIndexRoute: AppPatientBookingsIndexRoute,
+  AppPatientProfileIndexRoute: AppPatientProfileIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

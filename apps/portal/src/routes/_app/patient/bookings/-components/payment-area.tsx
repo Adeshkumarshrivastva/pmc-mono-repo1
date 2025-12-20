@@ -1,42 +1,19 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
-import { honoClient } from '@/lib/hono-client'
-import { getErrorMessage } from '@/lib/utils'
+import type { InferResponseType } from 'hono/client'
+import type { honoClient } from '@/lib/hono-client'
 import { formatPaymentDate, getPaymentStatusColor } from '@/lib/payment'
-import type { Booking } from '@/lib/booking'
+
+type PatientBookingsResponse = InferResponseType<(typeof honoClient)['server']['patient']['bookings']['$get'], 200>
+
+type Booking = PatientBookingsResponse['bookings'][number]
 
 type PaymentAreaProps = {
-  bookingId: string
   payment?: Booking['payments'][number]
 }
 
-export default function PaymentArea({ bookingId, payment }: PaymentAreaProps) {
-  const queryClient = useQueryClient()
-
-  const updatePaymentStatusMutation = useMutation({
-    mutationFn: async (status: 'PENDING' | 'COMPLETED') => {
-      const res = await honoClient.server.experts[':bookingId'].payment.status.$patch({
-        param: { bookingId },
-        json: { status },
-      })
-      if (!res.ok) throw new Error(await res.text())
-      return res.json()
-    },
-    onSuccess: (data) => {
-      toast.success(data.message || 'Payment status updated')
-      queryClient.invalidateQueries({ queryKey: ['get-expert-bookings'] })
-    },
-    onError: (error) => {
-      toast.error(getErrorMessage(error))
-    },
-  })
-
+export default function PaymentArea({ payment }: PaymentAreaProps) {
   if (!payment) {
-    return <p className="text-sm text-muted-foreground">No offline payment found.</p>
+    return <p className="text-sm text-muted-foreground">No payment information available</p>
   }
-
-  const nextStatus = payment.status === 'PENDING' ? 'COMPLETED' : 'PENDING'
 
   return (
     <div className="rounded-lg border bg-card p-6 shadow-sm">
@@ -82,20 +59,6 @@ export default function PaymentArea({ bookingId, payment }: PaymentAreaProps) {
           </div>
         </div>
       )}
-
-      <div className="mt-6">
-        <Button
-          onClick={() => {
-            updatePaymentStatusMutation.mutate(nextStatus)
-          }}
-          disabled={updatePaymentStatusMutation.isPending}
-          variant="default"
-          className="min-w-44"
-          loading={updatePaymentStatusMutation.isPending}
-        >
-          Mark as {nextStatus}
-        </Button>
-      </div>
     </div>
   )
 }
