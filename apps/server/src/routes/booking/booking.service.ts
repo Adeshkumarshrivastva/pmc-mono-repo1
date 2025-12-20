@@ -38,8 +38,8 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     return c.json({ error: 'Expert not found' }, 404)
   }
 
-  if (expert.userId === user.id) {
-    return c.json({ error: 'Expert can not book their own service' }, 403)
+  if (user.role !== 'PATIENT') {
+    return c.json({ error: 'Only patients can book services' }, 403)
   }
 
   const service = await prisma.service.findUnique({
