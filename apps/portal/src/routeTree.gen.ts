@@ -34,6 +34,7 @@ import { Route as AppAdminExpertsIndexRouteImport } from './routes/_app/admin/ex
 import { Route as AppAdminBookingsIndexRouteImport } from './routes/_app/admin/bookings/index'
 import { Route as PublicExpertsExpertSlugServiceSlugRouteImport } from './routes/_public/experts/$expertSlug/$serviceSlug'
 import { Route as AppExpertServicesServiceIdRouteImport } from './routes/_app/expert/services/$serviceId'
+import { Route as AppAdminExpertsExpertIdEditRouteImport } from './routes/_app/admin/experts/$expertId/edit'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -162,6 +163,12 @@ const AppExpertServicesServiceIdRoute =
     path: '/services/$serviceId',
     getParentRoute: () => AppExpertRoute,
   } as any)
+const AppAdminExpertsExpertIdEditRoute =
+  AppAdminExpertsExpertIdEditRouteImport.update({
+    id: '/experts/$expertId/edit',
+    path: '/experts/$expertId/edit',
+    getParentRoute: () => AppAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/admin': typeof AppAdminRouteWithChildren
@@ -187,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/patient/bookings': typeof AppPatientBookingsIndexRoute
   '/patient/profile': typeof AppPatientProfileIndexRoute
   '/experts/$expertSlug': typeof PublicExpertsExpertSlugIndexRoute
+  '/admin/experts/$expertId/edit': typeof AppAdminExpertsExpertIdEditRoute
 }
 export interface FileRoutesByTo {
   '/admin': typeof AppAdminRouteWithChildren
@@ -212,6 +220,7 @@ export interface FileRoutesByTo {
   '/patient/bookings': typeof AppPatientBookingsIndexRoute
   '/patient/profile': typeof AppPatientProfileIndexRoute
   '/experts/$expertSlug': typeof PublicExpertsExpertSlugIndexRoute
+  '/admin/experts/$expertId/edit': typeof AppAdminExpertsExpertIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -240,6 +249,7 @@ export interface FileRoutesById {
   '/_app/patient/bookings/': typeof AppPatientBookingsIndexRoute
   '/_app/patient/profile/': typeof AppPatientProfileIndexRoute
   '/_public/experts/$expertSlug/': typeof PublicExpertsExpertSlugIndexRoute
+  '/_app/admin/experts/$expertId/edit': typeof AppAdminExpertsExpertIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/patient/bookings'
     | '/patient/profile'
     | '/experts/$expertSlug'
+    | '/admin/experts/$expertId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/admin'
@@ -292,6 +303,7 @@ export interface FileRouteTypes {
     | '/patient/bookings'
     | '/patient/profile'
     | '/experts/$expertSlug'
+    | '/admin/experts/$expertId/edit'
   id:
     | '__root__'
     | '/_app'
@@ -319,6 +331,7 @@ export interface FileRouteTypes {
     | '/_app/patient/bookings/'
     | '/_app/patient/profile/'
     | '/_public/experts/$expertSlug/'
+    | '/_app/admin/experts/$expertId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -507,6 +520,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppExpertServicesServiceIdRouteImport
       parentRoute: typeof AppExpertRoute
     }
+    '/_app/admin/experts/$expertId/edit': {
+      id: '/_app/admin/experts/$expertId/edit'
+      path: '/experts/$expertId/edit'
+      fullPath: '/admin/experts/$expertId/edit'
+      preLoaderRoute: typeof AppAdminExpertsExpertIdEditRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
   }
 }
 
@@ -516,6 +536,7 @@ interface AppAdminRouteChildren {
   AppAdminExpertsIndexRoute: typeof AppAdminExpertsIndexRoute
   AppAdminPatientsIndexRoute: typeof AppAdminPatientsIndexRoute
   AppAdminPaymentsIndexRoute: typeof AppAdminPaymentsIndexRoute
+  AppAdminExpertsExpertIdEditRoute: typeof AppAdminExpertsExpertIdEditRoute
 }
 
 const AppAdminRouteChildren: AppAdminRouteChildren = {
@@ -524,6 +545,7 @@ const AppAdminRouteChildren: AppAdminRouteChildren = {
   AppAdminExpertsIndexRoute: AppAdminExpertsIndexRoute,
   AppAdminPatientsIndexRoute: AppAdminPatientsIndexRoute,
   AppAdminPaymentsIndexRoute: AppAdminPaymentsIndexRoute,
+  AppAdminExpertsExpertIdEditRoute: AppAdminExpertsExpertIdEditRoute,
 }
 
 const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(

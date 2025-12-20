@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import React from 'react'
 import type { InferResponseType } from 'hono'
 import type { ColumnDef } from '@tanstack/react-table'
 import { match } from 'ts-pattern'
@@ -12,10 +12,6 @@ import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
 import { DataTable } from '@/components/ui/data-table'
 import { TableSkeleton } from '@/components/ui/table-skeleton'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import ExpertInfoForm from './-components/expert-info-form'
-import ExpertAvailabilityForm from './-components/expert-availability-form'
 
 type ExpertsResponse = InferResponseType<HonoClient['server']['experts']['all-experts']['$get'], 200>
 type ExpertData = ExpertsResponse[number]
@@ -33,9 +29,6 @@ export const Route = createFileRoute('/_app/admin/experts/')({
 })
 
 function AdminExpertsPage() {
-  const [selectedExpert, setSelectedExpert] = useState<ExpertData | null>(null)
-  const [dialogOpen, setDialogOpen] = useState(false)
-
   const getAllExpertsQuery = useQuery({
     queryKey: ['admin-experts'],
     queryFn: async () => {
@@ -107,17 +100,11 @@ function AdminExpertsPage() {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setSelectedExpert(row.original)
-            setDialogOpen(true)
-          }}
-          icon={<Edit className="h-4 w-4" />}
-        >
-          Edit
-        </Button>
+        <Link to="/admin/experts/$expertId/edit" params={{ expertId: row.original.id }}>
+          <Button variant="outline" size="sm" icon={<Edit className="h-4 w-4" />}>
+            Edit
+          </Button>
+        </Link>
       ),
     },
   ]
@@ -141,41 +128,6 @@ function AdminExpertsPage() {
           <DataTable columns={columns} data={data} emptyMessage="No experts found" />
         ))
         .otherwise(() => null)}
-
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Expert: {selectedExpert?.name}</DialogTitle>
-            <DialogDescription>Update expert information and availability</DialogDescription>
-          </DialogHeader>
-
-          {selectedExpert && (
-            <Tabs defaultValue="info" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="info">Expert Information</TabsTrigger>
-                <TabsTrigger value="availability">Availability</TabsTrigger>
-              </TabsList>
-              <TabsContent value="info" className="mt-4">
-                <ExpertInfoForm
-                  expertId={selectedExpert.id}
-                  onSuccess={() => {
-                    setDialogOpen(false)
-                    getAllExpertsQuery.refetch()
-                  }}
-                />
-              </TabsContent>
-              <TabsContent value="availability" className="mt-4">
-                <ExpertAvailabilityForm
-                  expertId={selectedExpert.id}
-                  onSuccess={() => {
-                    setDialogOpen(false)
-                  }}
-                />
-              </TabsContent>
-            </Tabs>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

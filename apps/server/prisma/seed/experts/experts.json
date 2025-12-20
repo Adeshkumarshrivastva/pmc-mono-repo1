@@ -25,20 +25,6 @@
     "price": 1500
   },
   {
-    "name": "Ms. Diksha Joshi",
-    "phoneNumber": "917289944985",
-    "email": "psychologist@positivemindcare.com",
-    "type": "COUNSELLING_PSYCHOLOGIST",
-    "qualification": "Ph.D. Scholar, M.Sc. in Clinical Psychology",
-    "experienceInYears": 3,
-    "bio": "I am a counselling psychologist with over 3 years of experience. I focus on anxiety, depression, and stress management using an eclectic therapeutic approach. I am  empathetic, non-judgmental, and supportive.and active listener ,I help my clients to overcome their past issues and regain their ability to face challenges in future. With the help of counselling, I improve their quality of life and I work with children and adults. ",
-    "expertise": ["Anxiety Disorders", "Depression", "Stress Management", "Self-Esteem Building", "Work-Life Balance"],
-    "gender": "FEMALE",
-    "image": "https://positivemindcare.com/api/media/file/Professional%20Photo-3.jpg",
-    "availableModes": ["VIRTUAL"],
-    "price": 1200
-  },
-  {
     "name": "Dr. Akriti Jaiswal",
     "phoneNumber": "919690078822",
     "email": "akritijaiswal081992@gmail.com",

@@ -195,7 +195,7 @@ function DayAvailabilityField({ dayIndex, dayLabel, form }: DayAvailabilityField
             variant="outline"
             size="icon"
             onClick={() => {
-              rangesField.append({ startMinutes: 270, endMinutes: 390 })
+              rangesField.append({ startMinutes: 270, endMinutes: 690 })
             }}
           >
             <CirclePlusIcon className="size-4" />

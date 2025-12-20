@@ -1,15 +1,16 @@
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { Spinner } from '@/components/ui/spinner'
+import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
+import type { HonoClient } from '@/lib/hono-client'
 
 const expertInfoSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -23,35 +24,26 @@ const expertInfoSchema = z.object({
 })
 
 type ExpertInfoFormValues = z.infer<typeof expertInfoSchema>
+type ExpertData = InferResponseType<HonoClient['server']['admin']['experts'][':expertId']['$get'], 200>
 
 interface ExpertInfoFormProps {
   expertId: string
+  initialData?: ExpertData
   onSuccess?: () => void
 }
 
-export default function ExpertInfoForm({ expertId, onSuccess }: ExpertInfoFormProps) {
-  const expertQuery = useQuery({
-    queryKey: ['admin-expert-details', expertId],
-    queryFn: async () => {
-      const response = await honoClient.server.admin.experts[':expertId'].$get({
-        param: { expertId },
-      })
-      if (!response.ok) throw new Error('Failed to fetch expert details')
-      return response.json()
-    },
-  })
-
+export default function ExpertInfoForm({ expertId, initialData, onSuccess }: ExpertInfoFormProps) {
   const form = useForm<ExpertInfoFormValues>({
     resolver: zodResolver(expertInfoSchema),
     defaultValues: {
-      name: expertQuery?.data?.name || '',
-      qualifications: expertQuery?.data?.qualifications || '',
-      bio: expertQuery?.data?.bio || '',
-      gender: expertQuery?.data?.gender,
-      city: expertQuery?.data?.city,
-      country: expertQuery?.data?.country,
-      timezone: expertQuery?.data?.timezone,
-      expertise: expertQuery?.data?.expertise?.join(', ') || '',
+      name: initialData?.name || '',
+      qualifications: initialData?.qualifications || '',
+      bio: initialData?.bio || '',
+      gender: initialData?.gender || 'MALE',
+      city: initialData?.city || '',
+      country: initialData?.country || '',
+      timezone: initialData?.timezone || '',
+      expertise: initialData?.expertise?.join(', ') || '',
     },
   })
 
@@ -82,7 +74,6 @@ export default function ExpertInfoForm({ expertId, onSuccess }: ExpertInfoFormPr
     },
     onSuccess: () => {
       toast.success('Expert information updated successfully')
-      expertQuery.refetch()
       onSuccess?.()
     },
     onError: (error) => {
@@ -90,21 +81,18 @@ export default function ExpertInfoForm({ expertId, onSuccess }: ExpertInfoFormPr
     },
   })
 
-  if (expertQuery.isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Spinner />
-      </div>
-    )
-  }
-
-  if (expertQuery.isError || !expertQuery.data) {
-    return <div className="text-center py-8 text-muted-foreground">Failed to load expert details</div>
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit((values) => updateMutation.mutate(values))} className="space-y-6">
+        {initialData?.image && (
+          <div className="flex flex-col gap-2">
+            <FormLabel>Profile Photo</FormLabel>
+            <div className="w-32 h-32 rounded-sm bg-gray-200 overflow-hidden">
+              <img src={initialData.image} alt={initialData?.name} className="w-full h-full object-cover" />
+            </div>
+          </div>
+        )}
+
         <FormField
           name="name"
           control={form.control}

@@ -1,19 +1,26 @@
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import type { InferResponseType } from 'hono'
 import { TrashIcon, CirclePlusIcon } from 'lucide-react'
-import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
+import type { HonoClient } from '@/lib/hono-client'
 import { localMinutesToUtcMinutes, MINUTES_PER_DAY, minutesToDate, toHHMMA, utcMinutesToLocalMinutes } from '@/lib/date'
 import dayjs from '@/lib/dayjs'
 
+type AvailabilityData = InferResponseType<
+  HonoClient['server']['admin']['experts'][':expertId']['availability']['$get'],
+  200
+>
+
 interface ExpertAvailabilityFormProps {
   expertId: string
+  initialData?: AvailabilityData
   onSuccess?: () => void
 }
 
@@ -82,25 +89,12 @@ interface DayAvailabilityFieldProps {
   form: ReturnType<typeof useForm<FormValues>>
 }
 
-export default function ExpertAvailabilityForm({ expertId, onSuccess }: ExpertAvailabilityFormProps) {
-  const availabilityQuery = useQuery({
-    queryKey: ['admin-expert-availability', expertId],
-    queryFn: async () => {
-      const response = await honoClient.server.admin.experts[':expertId'].availability.$get({
-        param: { expertId },
-      })
-      if (!response.ok) throw new Error('Failed to fetch availability')
-      return response.json()
-    },
-  })
-
+export default function ExpertAvailabilityForm({ expertId, initialData, onSuccess }: ExpertAvailabilityFormProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(validationSchema),
-    values: availabilityQuery.data
-      ? {
-          days: availabilityQuery.data.days,
-        }
-      : undefined,
+    defaultValues: {
+      days: initialData?.days || [],
+    },
   })
 
   const daysField = useFieldArray({
@@ -128,7 +122,6 @@ export default function ExpertAvailabilityForm({ expertId, onSuccess }: ExpertAv
     },
     onSuccess: () => {
       toast.success('Availability updated successfully')
-      availabilityQuery.refetch()
       onSuccess?.()
     },
     onError: (error) => {
@@ -136,22 +129,10 @@ export default function ExpertAvailabilityForm({ expertId, onSuccess }: ExpertAv
     },
   })
 
-  if (availabilityQuery.isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Spinner />
-      </div>
-    )
-  }
-
-  if (availabilityQuery.isError) {
-    return <div className="text-center py-8 text-muted-foreground">Failed to load availability</div>
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit((values) => saveAvailabilityMutation.mutate(values))} className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex max-w-lg items-center justify-between">
           <span className="text-sm font-medium text-muted-foreground">Weekly schedule</span>
           <div className="flex items-center gap-2">
             <Button
@@ -166,7 +147,7 @@ export default function ExpertAvailabilityForm({ expertId, onSuccess }: ExpertAv
               variant="ghost"
               size="sm"
               onClick={() => {
-                form.reset(availabilityQuery.data)
+                form.reset({ days: initialData?.days || [] })
               }}
             >
               Reset all
@@ -174,11 +155,13 @@ export default function ExpertAvailabilityForm({ expertId, onSuccess }: ExpertAv
           </div>
         </div>
 
-        <div className="rounded-lg border bg-muted/40 p-4 space-y-3">
+        <div className="rounded-lg border bg-muted/40 p-4 space-y-3 max-w-lg">
           {daysField.fields.map((dayField, dayFieldIndex) => {
             const label = DAY_LABELS.find((d) => d.index === dayField.dayIndex)?.label
 
-            return <DayAvailabilityField key={dayField.id} dayIndex={dayFieldIndex} dayLabel={label ?? ''} form={form} />
+            return (
+              <DayAvailabilityField key={dayField.id} dayIndex={dayFieldIndex} dayLabel={label ?? ''} form={form} />
+            )
           })}
         </div>
       </form>
@@ -202,7 +185,7 @@ function DayAvailabilityField({ dayIndex, dayLabel, form }: DayAvailabilityField
             variant="outline"
             size="icon"
             onClick={() => {
-              rangesField.append({ startMinutes: 270, endMinutes: 390 })
+              rangesField.append({ startMinutes: 270, endMinutes: 690 })
             }}
           >
             <CirclePlusIcon className="size-4" />
