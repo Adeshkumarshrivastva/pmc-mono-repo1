@@ -2,8 +2,7 @@ import {
   CalendarDaysIcon,
   ClipboardListIcon,
   CreditCardIcon,
-
-  // ClockIcon,
+  ClockIcon,
   HomeIcon,
   LayoutDashboardIcon,
   UserIcon,
@@ -168,13 +167,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     path: '/expert/services',
     availableForUserRoles: ['EXPERT'],
   },
-  // {
-  //   type: 'link',
-  //   icon: ClockIcon,
-  //   name: 'Availability',
-  //   path: '/expert/availability',
-  //   availableForUserRoles: ['EXPERT'],
-  // },
+  {
+    type: 'link',
+    icon: ClockIcon,
+    name: 'Availability',
+    path: '/expert/availability',
+    availableForUserRoles: ['EXPERT'],
+  },
   {
     type: 'link',
     icon: UserIcon,

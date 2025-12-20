@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { PrismaClient } from '../../src/generated/prisma'
+import { seedAdmins } from './admins/admins'
 import { seedExperts } from './experts/experts'
 
 const prisma = new PrismaClient()
@@ -11,6 +12,10 @@ async function main() {
 
   if (seedAll || process.env.SEED_EXPERTS === 'true') {
     seedMethods.push({ name: 'experts', method: seedExperts })
+  }
+
+  if (seedAll || process.env.SEED_ADMINS === 'true') {
+    seedMethods.push({ name: 'admins', method: seedAdmins })
   }
 
   for (const { name, method } of seedMethods) {

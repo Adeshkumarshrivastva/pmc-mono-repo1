@@ -56,6 +56,9 @@ export default $config({
     const S3AccessKey = new sst.Secret('S3_ACCESS_KEY')
     const S3SecretKey = new sst.Secret('S3_SECRET_KEY')
     const S3Region = new sst.Secret('S3_REGION')
+    const ZohoClientId = new sst.Secret('ZOHO_CLIENT_ID')
+    const ZohoClientSecret = new sst.Secret('ZOHO_CLIENT_SECRET')
+    const ZohoRefreshToken = new sst.Secret('ZOHO_REFRESH_TOKEN')
 
     const SenderEmail =
       $app.stage === 'production'
@@ -166,6 +169,9 @@ export default $config({
         RAZORPAY_KEY_ID: RazorpayKeyId.value,
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
         NEXT_PUBLIC_RAZORPAY_KEY_ID: $interpolate`${RazorpayKeyId.value}`,
+        ZOHO_CLIENT_ID: ZohoClientId.value,
+        ZOHO_CLIENT_SECRET: ZohoClientSecret.value,
+        ZOHO_REFRESH_TOKEN: ZohoRefreshToken.value,
       },
     })
   },

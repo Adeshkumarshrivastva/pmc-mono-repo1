@@ -2,9 +2,9 @@ import { z } from 'zod'
 import { objectId } from '@/lib/validation'
 
 export const appointmentFormInput = z.object({
-  fullName: z.string().min(1),
+  fullName: z.string().min(1).max(100),
   email: z.union([z.email(), z.literal('')]).optional(),
-  phone: z.string().min(10),
+  phone: z.string().min(10).max(15),
   serviceId: z.union([objectId, z.literal('')]),
   subServiceId: z.union([objectId, z.literal('')]),
   dateTime: z.string().min(1),
