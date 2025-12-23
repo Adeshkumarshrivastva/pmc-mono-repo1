@@ -827,3 +827,65 @@ export async function getAvailability(c: C) {
 
   return c.json({ days })
 }
+
+export async function getExpertDashboard(c: C) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const expert = await prisma.expert.findUnique({
+      where: { userId },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const now = dayjs().toDate()
+
+    const [totalBookings, upcomingBookings, completedBookings, cancelledBookings] = await Promise.all([
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: { not: 'DRAFT' },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: { in: ['BOOKED', 'RESCHEDULED'] },
+          endDateTime: { gt: now },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: 'COMPLETED',
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: 'CANCELLED',
+        },
+      }),
+    ])
+
+    return c.json({
+      success: true,
+      stats: {
+        totalBookings,
+        upcomingBookings,
+        completedBookings,
+        cancelledBookings,
+      },
+    })
+  } catch {
+    return c.json({ error: `Failed to detch dashboard data` }, 500)
+  }
+}

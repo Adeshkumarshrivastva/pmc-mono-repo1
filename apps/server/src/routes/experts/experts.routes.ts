@@ -27,6 +27,7 @@ import {
   getAllExperts,
   updateAvailability,
   getAvailability,
+  getExpertDashboard
 } from './experts.service'
 import { authMiddleware, requirePermission } from '../../middleware/auth.middleware'
 
@@ -67,3 +68,4 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
     async (c) =>
       getExpertMonthlyAvailableSlots(c, c.req.param('expertSlug'), c.req.param('serviceSlug'), c.req.valid('query')),
   )
+  .get('/dashboard', authMiddleware, async (c) => getExpertDashboard(c))
