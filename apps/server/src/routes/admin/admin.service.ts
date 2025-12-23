@@ -169,6 +169,7 @@ export async function updateExpertInfo(c: C, expertId: string, input: UpdateExpe
         timezone: input.timezone,
         expertise: input.expertise,
         photoId: input.photoId,
+        experienceInYears: input.experienceInYears,
       },
     })
 

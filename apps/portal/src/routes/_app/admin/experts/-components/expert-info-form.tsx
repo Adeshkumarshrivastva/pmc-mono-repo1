@@ -21,6 +21,7 @@ const expertInfoSchema = z.object({
   country: z.string().min(1, 'Country is required'),
   timezone: z.string().min(1, 'Timezone is required'),
   expertise: z.string(),
+  experienceInYears: z.number().int().min(0, 'Experience must be 0 or greater').optional(),
 })
 
 type ExpertInfoFormValues = z.infer<typeof expertInfoSchema>
@@ -44,6 +45,7 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
       country: initialData?.country || '',
       timezone: initialData?.timezone || '',
       expertise: initialData?.expertise?.join(', ') || '',
+      experienceInYears: initialData?.experienceInYears || undefined,
     },
   })
 
@@ -63,6 +65,7 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
             .split(',')
             .map((e) => e.trim())
             .filter(Boolean),
+          experienceInYears: values.experienceInYears,
         },
       })
 
@@ -137,6 +140,27 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
               <FormLabel>Qualifications</FormLabel>
               <FormControl>
                 <Textarea placeholder="MBBS, MD Psychiatry" {...field} rows={3} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="experienceInYears"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Experience (Years)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="10"
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e.target.value ? Number(e.target.value) : undefined)
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

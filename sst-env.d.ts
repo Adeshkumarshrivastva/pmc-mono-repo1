@@ -3,137 +3,137 @@
 /* eslint-disable */
 /* deno-fmt-ignore-file */
 
-declare module 'sst' {
+declare module "sst" {
   export interface Resource {
-    BETTER_AUTH_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "BETTER_AUTH_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    BROWSERLESS_WS_ENDPOINT: {
-      type: 'sst.sst.Secret'
-      value: string
+    "BROWSERLESS_WS_ENDPOINT": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    DATABASE_URL: {
-      type: 'sst.sst.Secret'
-      value: string
+    "DATABASE_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    GOOGLE_CALENDAR_EMAIL: {
-      type: 'sst.sst.Secret'
-      value: string
+    "GOOGLE_CALENDAR_EMAIL": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    GOOGLE_CLIENT_ID: {
-      type: 'sst.sst.Secret'
-      value: string
+    "GOOGLE_CLIENT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    GOOGLE_CLIENT_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "GOOGLE_CLIENT_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    GOOGLE_SERVICE_ACCOUNT_EMAIL: {
-      type: 'sst.sst.Secret'
-      value: string
+    "GOOGLE_SERVICE_ACCOUNT_EMAIL": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: {
-      type: 'sst.sst.Secret'
-      value: string
+    "GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    JWT_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "JWT_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    PAYLOAD_DB_URL: {
-      type: 'sst.sst.Secret'
-      value: string
+    "PAYLOAD_DB_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    PAYLOAD_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "PAYLOAD_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    PMC_LANDING_PAGE_MEDIA_BUCKET: {
-      name: string
-      type: 'sst.aws.Bucket'
+    "PMC_LANDING_PAGE_MEDIA_BUCKET": {
+      "name": string
+      "type": "sst.aws.Bucket"
     }
-    PMC_PORTAL_MEDIA_BUCKET: {
-      name: string
-      type: 'sst.aws.Bucket'
+    "PMC_PORTAL_MEDIA_BUCKET": {
+      "name": string
+      "type": "sst.aws.Bucket"
     }
-    PmcHonoServer: {
-      name: string
-      type: 'sst.aws.Function'
-      url: string
+    "PmcHonoServer": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
     }
-    PmcLandingPage: {
-      type: 'sst.aws.Nextjs'
-      url: string
+    "PmcLandingPage": {
+      "type": "sst.aws.Nextjs"
+      "url": string
     }
-    PmcPortal: {
-      type: 'sst.aws.StaticSite'
-      url: string
+    "PmcPortal": {
+      "type": "sst.aws.StaticSite"
+      "url": string
     }
-    PmcRouter: {
-      type: 'sst.aws.Router'
-      url: string
+    "PmcRouter": {
+      "type": "sst.aws.Router"
+      "url": string
     }
-    RAZORPAY_KEY_ID: {
-      type: 'sst.sst.Secret'
-      value: string
+    "RAZORPAY_KEY_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    RAZORPAY_KEY_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "RAZORPAY_KEY_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    S3_ACCESS_KEY: {
-      type: 'sst.sst.Secret'
-      value: string
+    "S3_ACCESS_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    S3_REGION: {
-      type: 'sst.sst.Secret'
-      value: string
+    "S3_REGION": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    S3_SECRET_KEY: {
-      type: 'sst.sst.Secret'
-      value: string
+    "S3_SECRET_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    SMS_SERVICE_PASSWORD: {
-      type: 'sst.sst.Secret'
-      value: string
+    "SMS_SERVICE_PASSWORD": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    SMS_SERVICE_USERID: {
-      type: 'sst.sst.Secret'
-      value: string
+    "SMS_SERVICE_USERID": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    SenderEmail: {
-      configSet: string
-      sender: string
-      type: 'sst.aws.Email'
+    "SenderEmail": {
+      "configSet": string
+      "sender": string
+      "type": "sst.aws.Email"
     }
-    WHATSAPP_API_KEY_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "WHATSAPP_API_KEY_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    WHATSAPP_LICENCE_NUMBER_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "WHATSAPP_LICENCE_NUMBER_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    WHATSAPP_TEST_NUMBER_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "WHATSAPP_TEST_NUMBER_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    ZOHO_CLIENT_ID: {
-      type: 'sst.sst.Secret'
-      value: string
+    "ZOHO_CLIENT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    ZOHO_CLIENT_SECRET: {
-      type: 'sst.sst.Secret'
-      value: string
+    "ZOHO_CLIENT_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    ZOHO_REFRESH_TOKEN: {
-      type: 'sst.sst.Secret'
-      value: string
+    "ZOHO_REFRESH_TOKEN": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
   }
 }
 /// <reference path="sst-env.d.ts" />
 
-import 'sst'
+import "sst"
 export {}

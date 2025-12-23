@@ -10,6 +10,7 @@ export const updateExpertInfoInput = z.object({
   timezone: z.string(),
   expertise: z.array(z.string()),
   photoId: z.string().optional(),
+  experienceInYears: z.number().int().min(0).optional(),
 })
 
 export type UpdateExpertInfoInput = z.infer<typeof updateExpertInfoInput>
