@@ -311,30 +311,14 @@ export const Home: GlobalConfig = {
           type: 'text',
           required: true,
         },
-
         {
-          name: 'universityPartners',
-          label: 'University Partners',
+          name: 'partners',
+          label: 'Partners',
           type: 'array',
           fields: [
             {
               name: 'logo',
-              label: 'University Logo',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
-            },
-          ],
-        },
-
-        {
-          name: 'hospitalPartners',
-          label: 'Hospital Partners',
-          type: 'array',
-          fields: [
-            {
-              name: 'logo',
-              label: 'Hospital Logo',
+              label: 'Partner Logo',
               type: 'upload',
               relationTo: 'media',
               required: true,
@@ -343,7 +327,6 @@ export const Home: GlobalConfig = {
         },
       ],
     },
-
     {
       name: 'blogsSection',
       label: 'Blogs Section',
