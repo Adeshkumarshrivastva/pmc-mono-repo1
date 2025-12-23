@@ -27,7 +27,7 @@ import {
   getAllExperts,
   updateAvailability,
   getAvailability,
-  getExpertDashboard
+  getExpertDashboard,
 } from './experts.service'
 import { authMiddleware, requirePermission } from '../../middleware/auth.middleware'
 
