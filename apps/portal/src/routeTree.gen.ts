@@ -66,12 +66,25 @@ const AppExpertDashboardRoute = AppExpertDashboardRouteImport.update({
   path: '/expert/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+<<<<<<< HEAD
 const PublicExpertsExpertSlugIndexRoute =
   PublicExpertsExpertSlugIndexRouteImport.update({
     id: '/_public/experts/$expertSlug/',
     path: '/experts/$expertSlug/',
     getParentRoute: () => rootRouteImport,
   } as any)
+=======
+const PublicExpertsExpertSlugIndexRoute = PublicExpertsExpertSlugIndexRouteImport.update({
+  id: '/_public/experts/$expertSlug/',
+  path: '/experts/$expertSlug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppPatientProfileIndexRoute = AppPatientProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => AppPatientRoute,
+} as any)
+>>>>>>> 0f4c48f (create university and hospitals tabs)
 const AppPatientBookingsIndexRoute = AppPatientBookingsIndexRouteImport.update({
   id: '/patient/bookings/',
   path: '/patient/bookings/',
@@ -88,6 +101,7 @@ const AppExpertProfileIndexRoute = AppExpertProfileIndexRouteImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 const AppExpertBookingsIndexRoute = AppExpertBookingsIndexRouteImport.update({
+<<<<<<< HEAD
   id: '/expert/bookings/',
   path: '/expert/bookings/',
   getParentRoute: () => AppRoute,
@@ -119,15 +133,57 @@ const AppAdminBookingsIndexRoute = AppAdminBookingsIndexRouteImport.update({
   path: '/admin/bookings/',
   getParentRoute: () => AppRoute,
 } as any)
+=======
+  id: '/bookings/',
+  path: '/bookings/',
+  getParentRoute: () => AppExpertRoute,
+} as any)
+const AppExpertAvailabilityIndexRoute = AppExpertAvailabilityIndexRouteImport.update({
+  id: '/availability/',
+  path: '/availability/',
+  getParentRoute: () => AppExpertRoute,
+} as any)
+const AppAdminPaymentsIndexRoute = AppAdminPaymentsIndexRouteImport.update({
+  id: '/payments/',
+  path: '/payments/',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminPatientsIndexRoute = AppAdminPatientsIndexRouteImport.update({
+  id: '/patients/',
+  path: '/patients/',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminExpertsIndexRoute = AppAdminExpertsIndexRouteImport.update({
+  id: '/experts/',
+  path: '/experts/',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminBookingsIndexRoute = AppAdminBookingsIndexRouteImport.update({
+  id: '/bookings/',
+  path: '/bookings/',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+>>>>>>> 0f4c48f (create university and hospitals tabs)
 const PublicExpertsExpertSlugServiceSlugRoute = PublicExpertsExpertSlugServiceSlugRouteImport.update({
   id: '/_public/experts/$expertSlug/$serviceSlug',
   path: '/experts/$expertSlug/$serviceSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppExpertServicesServiceIdRoute = AppExpertServicesServiceIdRouteImport.update({
+<<<<<<< HEAD
   id: '/expert/services/$serviceId',
   path: '/expert/services/$serviceId',
   getParentRoute: () => AppRoute,
+=======
+  id: '/services/$serviceId',
+  path: '/services/$serviceId',
+  getParentRoute: () => AppExpertRoute,
+} as any)
+const AppAdminExpertsExpertIdEditRoute = AppAdminExpertsExpertIdEditRouteImport.update({
+  id: '/experts/$expertId/edit',
+  path: '/experts/$expertId/edit',
+  getParentRoute: () => AppAdminRoute,
+>>>>>>> 0f4c48f (create university and hospitals tabs)
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -394,10 +450,66 @@ interface AppRouteChildren {
   AppAdminBookingsIndexRoute: typeof AppAdminBookingsIndexRoute
   AppAdminExpertsIndexRoute: typeof AppAdminExpertsIndexRoute
   AppAdminPaymentsIndexRoute: typeof AppAdminPaymentsIndexRoute
+<<<<<<< HEAD
   AppExpertBookingsIndexRoute: typeof AppExpertBookingsIndexRoute
   AppExpertProfileIndexRoute: typeof AppExpertProfileIndexRoute
   AppExpertServicesIndexRoute: typeof AppExpertServicesIndexRoute
   AppPatientBookingsIndexRoute: typeof AppPatientBookingsIndexRoute
+=======
+  AppAdminExpertsExpertIdEditRoute: typeof AppAdminExpertsExpertIdEditRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminDashboardRoute: AppAdminDashboardRoute,
+  AppAdminBookingsIndexRoute: AppAdminBookingsIndexRoute,
+  AppAdminExpertsIndexRoute: AppAdminExpertsIndexRoute,
+  AppAdminPatientsIndexRoute: AppAdminPatientsIndexRoute,
+  AppAdminPaymentsIndexRoute: AppAdminPaymentsIndexRoute,
+  AppAdminExpertsExpertIdEditRoute: AppAdminExpertsExpertIdEditRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(AppAdminRouteChildren)
+
+interface AppExpertRouteChildren {
+  AppExpertDashboardRoute: typeof AppExpertDashboardRoute
+  AppExpertServicesServiceIdRoute: typeof AppExpertServicesServiceIdRoute
+  AppExpertAvailabilityIndexRoute: typeof AppExpertAvailabilityIndexRoute
+  AppExpertBookingsIndexRoute: typeof AppExpertBookingsIndexRoute
+  AppExpertProfileIndexRoute: typeof AppExpertProfileIndexRoute
+  AppExpertServicesIndexRoute: typeof AppExpertServicesIndexRoute
+}
+
+const AppExpertRouteChildren: AppExpertRouteChildren = {
+  AppExpertDashboardRoute: AppExpertDashboardRoute,
+  AppExpertServicesServiceIdRoute: AppExpertServicesServiceIdRoute,
+  AppExpertAvailabilityIndexRoute: AppExpertAvailabilityIndexRoute,
+  AppExpertBookingsIndexRoute: AppExpertBookingsIndexRoute,
+  AppExpertProfileIndexRoute: AppExpertProfileIndexRoute,
+  AppExpertServicesIndexRoute: AppExpertServicesIndexRoute,
+}
+
+const AppExpertRouteWithChildren = AppExpertRoute._addFileChildren(AppExpertRouteChildren)
+
+interface AppPatientRouteChildren {
+  AppPatientDashboardRoute: typeof AppPatientDashboardRoute
+  AppPatientBookingsIndexRoute: typeof AppPatientBookingsIndexRoute
+  AppPatientProfileIndexRoute: typeof AppPatientProfileIndexRoute
+}
+
+const AppPatientRouteChildren: AppPatientRouteChildren = {
+  AppPatientDashboardRoute: AppPatientDashboardRoute,
+  AppPatientBookingsIndexRoute: AppPatientBookingsIndexRoute,
+  AppPatientProfileIndexRoute: AppPatientProfileIndexRoute,
+}
+
+const AppPatientRouteWithChildren = AppPatientRoute._addFileChildren(AppPatientRouteChildren)
+
+interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRouteWithChildren
+  AppExpertRoute: typeof AppExpertRouteWithChildren
+  AppPatientRoute: typeof AppPatientRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
+>>>>>>> 0f4c48f (create university and hospitals tabs)
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -431,10 +543,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PublicBookingsBookingIdRoute: PublicBookingsBookingIdRoute,
   PublicExpertsIndexRoute: PublicExpertsIndexRoute,
-  PublicExpertsExpertSlugServiceSlugRoute:
-    PublicExpertsExpertSlugServiceSlugRoute,
+  PublicExpertsExpertSlugServiceSlugRoute: PublicExpertsExpertSlugServiceSlugRoute,
   PublicExpertsExpertSlugIndexRoute: PublicExpertsExpertSlugIndexRoute,
 }
-export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()

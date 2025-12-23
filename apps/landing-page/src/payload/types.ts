@@ -1296,12 +1296,25 @@ export interface Home {
   }
   partnersSection: {
     title: string
+<<<<<<< HEAD
     partners?:
+=======
+    universityPartners?:
+>>>>>>> 0f4c48f (create university and hospitals tabs)
       | {
           logo: string | Media
           id?: string | null
         }[]
       | null
+<<<<<<< HEAD
+=======
+    hospitalPartners?:
+      | {
+          logo: string | Media
+          id?: string | null
+        }[]
+      | null
+>>>>>>> 0f4c48f (create university and hospitals tabs)
   }
   blogsSection?: {
     title?: string | null
@@ -1991,12 +2004,25 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T
+<<<<<<< HEAD
         partners?:
+=======
+        universityPartners?:
+>>>>>>> 0f4c48f (create university and hospitals tabs)
           | T
           | {
               logo?: T
               id?: T
             }
+<<<<<<< HEAD
+=======
+        hospitalPartners?:
+          | T
+          | {
+              logo?: T
+              id?: T
+            }
+>>>>>>> 0f4c48f (create university and hospitals tabs)
       }
   blogsSection?:
     | T
