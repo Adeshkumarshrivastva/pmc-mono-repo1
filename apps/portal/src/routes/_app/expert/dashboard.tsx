@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { match } from 'ts-pattern'
-import { Calendar, Clock, TrendingUp, XCircle, UserCheck, DollarSign } from 'lucide-react'
+import { Calendar, Clock, TrendingUp, XCircle, UserCheck, DollarSign, ClockFading, ClipboardList } from 'lucide-react'
 import { Spinner } from '@/components/ui/spinner'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
@@ -237,6 +237,41 @@ function ExpertDashboard() {
                 </CardContent>
               </Card>
             </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>Manage platform resources</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Link
+                    to="/expert/availability"
+                    className="inline-flex h-auto py-4 flex-col items-start rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4"
+                  >
+                    <ClockFading className="h-5 w-5 mb-2" />
+                    <span className="font-semibold">Update Availability</span>
+                    <span className="text-xs text-muted-foreground">Update your availability schedule</span>
+                  </Link>
+                  <Link
+                    to="/expert/bookings"
+                    className="inline-flex h-auto py-4 flex-col items-start rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4"
+                  >
+                    <Calendar className="h-5 w-5 mb-2" />
+                    <span className="font-semibold">Manage Bookings</span>
+                    <span className="text-xs text-muted-foreground">View all bookings</span>
+                  </Link>
+                  <Link
+                    to="/expert/services"
+                    className="inline-flex h-auto py-4 flex-col items-start rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4"
+                  >
+                    <ClipboardList className="h-5 w-5 mb-2" />
+                    <span className="font-semibold">Manage Services</span>
+                    <span className="text-xs text-muted-foreground">Manage provided services</span>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
           </>
         ))
         .otherwise(() => null)}
