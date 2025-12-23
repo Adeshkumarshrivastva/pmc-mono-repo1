@@ -41,6 +41,7 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .post('/bookings/prescription', authMiddleware, zValidator('json', createPrescriptionInput), async (c) =>
     createPrescription(c, c.req.valid('json')),
   )
+  .get('/dashboard', authMiddleware, async (c) => getExpertDashboard(c))
   .patch('/bookings/prescription', authMiddleware, zValidator('json', updatePrescriptionInput), async (c) =>
     updatePrescription(c, c.req.valid('json')),
   )
@@ -68,4 +69,3 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
     async (c) =>
       getExpertMonthlyAvailableSlots(c, c.req.param('expertSlug'), c.req.param('serviceSlug'), c.req.valid('query')),
   )
-  .get('/dashboard', authMiddleware, async (c) => getExpertDashboard(c))
