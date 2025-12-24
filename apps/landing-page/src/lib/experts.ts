@@ -8,6 +8,7 @@ export function getFileUrl(fileName: string) {
 
 const expertSchema = z.object({
   id: z.string(),
+  slug: z.string(),
   name: z.string(),
   type: z.string(),
   bio: z.string().optional(),

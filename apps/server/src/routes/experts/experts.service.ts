@@ -833,6 +833,7 @@ export async function getPublicExpertsList(c: C) {
     const experts = await prisma.expert.findMany({
       select: {
         id: true,
+        slug: true,
         name: true,
         type: true,
         bio: true,

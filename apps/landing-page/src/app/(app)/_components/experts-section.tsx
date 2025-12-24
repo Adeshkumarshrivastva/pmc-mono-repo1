@@ -10,6 +10,7 @@ import { getURLFromMedia } from '@/payload/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AppointmentForm from './appointment-form'
 import { getFileUrl, type Expert } from '@/lib/experts'
+import Link from 'next/link'
 
 type ExpertsSectionProps = { data: Home['expertsSection']; experts: Expert[] }
 
@@ -102,17 +103,15 @@ export default function ExpertsSection({ data, experts }: ExpertsSectionProps) {
                         )}
 
                         <div className="flex pt-5 justify-center md:justify-start">
-                          <AppointmentForm
-                            trigger={
-                              <Button
-                                icon={<CallIcon />}
-                                variant="secondary"
-                                className="font-normal text-sm sm:text-base w-full max-w-[264px]"
-                              >
-                                {data?.action}
-                              </Button>
-                            }
-                          />
+                          <Link href={`/portal/experts/${expert.slug}`} className="w-full max-w-[264px]">
+                            <Button
+                              icon={<CallIcon />}
+                              variant="secondary"
+                              className="font-normal text-sm sm:text-base w-full"
+                            >
+                              {data?.action}
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                     </div>
