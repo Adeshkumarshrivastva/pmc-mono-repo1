@@ -137,7 +137,7 @@ export default function ExpertAvailabilityForm({ expertId, initialData, onSucces
           <div className="flex items-center gap-2">
             <Button
               type="submit"
-              disabled={!form.formState.isDirty || saveAvailabilityMutation.isPending}
+              disabled={saveAvailabilityMutation.isPending}
               loading={saveAvailabilityMutation.isPending}
             >
               Save availability

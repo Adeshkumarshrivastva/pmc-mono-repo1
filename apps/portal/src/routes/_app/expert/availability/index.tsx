@@ -145,7 +145,7 @@ function ExpertAvailability() {
               <div className="flex justify-end">
                 <Button
                   type="submit"
-                  disabled={!form.formState.isDirty || saveAvaialbilityMutation.isPending}
+                  disabled={saveAvaialbilityMutation.isPending}
                   loading={saveAvaialbilityMutation.isPending}
                 >
                   Save availability

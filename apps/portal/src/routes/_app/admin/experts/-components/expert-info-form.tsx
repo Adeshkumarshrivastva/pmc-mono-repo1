@@ -226,8 +226,8 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
         />
 
         <div className="flex justify-end space-x-4">
-          <Button type="submit" disabled={updateMutation.isPending || !form.formState.isDirty}>
-            {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+          <Button type="submit" disabled={updateMutation.isPending} loading={updateMutation.isPending}>
+            Save Changes
           </Button>
         </div>
       </form>
