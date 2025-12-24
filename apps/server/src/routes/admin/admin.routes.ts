@@ -15,12 +15,8 @@ import { createExpertInput, updateExpertInfoInput, updateAvailabilityInput } fro
 
 export const adminApp = new Hono<{ Variables: HonoContext }>()
   .get('/dashboard', authMiddleware, requirePermission(['ADMIN']), (c) => getAdminDashboard(c))
-  .post(
-    '/experts',
-    authMiddleware,
-    requirePermission(['ADMIN']),
-    zValidator('json', createExpertInput),
-    (c) => createExpert(c, c.req.valid('json')),
+  .post('/experts', authMiddleware, requirePermission(['ADMIN']), zValidator('json', createExpertInput), (c) =>
+    createExpert(c, c.req.valid('json')),
   )
   .get('/experts/:expertId', authMiddleware, requirePermission(['ADMIN']), (c) =>
     getExpertDetails(c, c.req.param('expertId')),
