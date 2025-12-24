@@ -7,6 +7,7 @@ import {
   createExpert,
   getExpertDetails,
   updateExpertInfo,
+  deleteExpert,
   getExpertAvailability,
   updateExpertAvailability,
 } from './admin.service'
@@ -30,6 +31,9 @@ export const adminApp = new Hono<{ Variables: HonoContext }>()
     requirePermission(['ADMIN']),
     zValidator('json', updateExpertInfoInput),
     (c) => updateExpertInfo(c, c.req.param('expertId'), c.req.valid('json')),
+  )
+  .delete('/experts/:expertId', authMiddleware, requirePermission(['ADMIN']), (c) =>
+    deleteExpert(c, c.req.param('expertId')),
   )
   .get('/experts/:expertId/availability', authMiddleware, requirePermission(['ADMIN']), (c) =>
     getExpertAvailability(c, c.req.param('expertId')),

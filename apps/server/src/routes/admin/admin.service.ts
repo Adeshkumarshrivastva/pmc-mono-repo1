@@ -41,7 +41,7 @@ export async function getAdminDashboard(c: C) {
       recentPatients,
       bookingsByStatus,
     ] = await Promise.all([
-      prisma.expert.count(),
+      prisma.expert.count({ where: { isDeleted: false } }),
       prisma.patient.count(),
       prisma.booking.count(),
       prisma.payment.aggregate({
@@ -93,6 +93,7 @@ export async function getAdminDashboard(c: C) {
         },
       }),
       prisma.expert.findMany({
+        where: { isDeleted: false },
         include: {
           user: true,
         },
@@ -251,6 +252,28 @@ export async function updateExpertInfo(c: C, expertId: string, input: UpdateExpe
     return c.json({ success: true, expert })
   } catch {
     return c.json({ error: 'Failed to update expert information' }, 500)
+  }
+}
+
+export async function deleteExpert(c: C, expertId: string) {
+  try {
+    const expert = await prisma.expert.findUnique({
+      where: { id: expertId },
+      select: { id: true, userId: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert not found' }, 404)
+    }
+
+    await prisma.expert.update({
+      where: { id: expertId },
+      data: { isDeleted: true },
+    })
+
+    return c.json({ success: true, message: 'Expert deleted successfully' })
+  } catch (error) {
+    return c.json({ error: `Failed to delete expert - ${getErrorMessage(error)}` }, 500)
   }
 }
 

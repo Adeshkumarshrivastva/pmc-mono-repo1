@@ -32,7 +32,9 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
     const { page, limit } = query
     const skip = (page - 1) * limit
 
-    const whereClause: Prisma.ExpertWhereInput = {}
+    const whereClause: Prisma.ExpertWhereInput = {
+      isDeleted: false,
+    }
 
     if (query.search) {
       whereClause.OR = [
@@ -138,8 +140,8 @@ function getSortValue(sortBy: SortBy, expert: ExpertSearchResponse): string | nu
 
 export async function getExpertFromSlug(c: C, expertSlug: string) {
   try {
-    const expert = await prisma.expert.findUnique({
-      where: { slug: expertSlug },
+    const expert = await prisma.expert.findFirst({
+      where: { slug: expertSlug, isDeleted: false },
       include: {
         servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
       },
@@ -160,8 +162,8 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
 
 export async function getExpertServiceFromSlug(c: C, expertSlug: string, serviceSlug: string) {
   try {
-    const expert = await prisma.expert.findUnique({
-      where: { slug: expertSlug },
+    const expert = await prisma.expert.findFirst({
+      where: { slug: expertSlug, isDeleted: false },
       select: { id: true },
     })
 
@@ -199,7 +201,7 @@ export async function getExpertMonthlyAvailableSlots(
     const { month, year } = query
 
     const expert = await prisma.expert.findFirst({
-      where: { slug: expertSlug },
+      where: { slug: expertSlug, isDeleted: false },
       select: { id: true },
     })
 
@@ -718,7 +720,9 @@ export async function updatePaymentStatus(c: C, input: { status: 'PENDING' | 'CO
 }
 
 export async function getAllExperts(c: C) {
-  const experts = await prisma.expert.findMany()
+  const experts = await prisma.expert.findMany({
+    where: { isDeleted: false },
+  })
   return c.json(experts)
 }
 

@@ -123,6 +123,7 @@ model Expert {
   experienceInYears Int?
   file              File?                @relation(fields: [photoId], references: [id])
   photoId           String?              @db.ObjectId
+  isDeleted         Boolean              @default(false)
 }
 
 enum DayOfWeek {
