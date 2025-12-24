@@ -2,6 +2,7 @@ import type { Dayjs } from 'dayjs'
 import dayjs from './dayjs'
 
 export const MINUTES_PER_HOUR = 60
+export const MINUTES_PER_DAY = 24 * MINUTES_PER_HOUR
 export const DEFAULT_TIMEZONE = dayjs.tz.guess() || 'Asia/Kolkata'
 
 export const today = dayjs().tz(DEFAULT_TIMEZONE).toDate()
@@ -28,6 +29,12 @@ export function utcMinutesToLocalMinutes(utcMinutes: number, timeZone: string = 
   const localTime = utcTime.tz(timeZone)
 
   return localTime.hour() * MINUTES_PER_HOUR + localTime.minute()
+}
+
+export function localMinutesToUtcMinutes(minutes: number, timeZone: string = DEFAULT_TIMEZONE) {
+  const localTime = dayjs().tz(timeZone).startOf('day').add(minutes, 'minute')
+  const utcTime = localTime.utc()
+  return utcTime.hour() * MINUTES_PER_HOUR + utcTime.minute()
 }
 
 export function utcDateToLocalDate(date: Date, timeZone: string = DEFAULT_TIMEZONE) {

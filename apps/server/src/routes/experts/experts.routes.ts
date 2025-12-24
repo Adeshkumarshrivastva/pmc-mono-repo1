@@ -9,6 +9,7 @@ import {
   expertSearchQuery,
   updatePaymentStatusInput,
   updatePrescriptionInput,
+  updateAvailabilityInput,
 } from './experts.input'
 import {
   getExpertFromSlug,
@@ -24,6 +25,9 @@ import {
   updateExpert,
   updatePaymentStatus,
   getAllExperts,
+  updateAvailability,
+  getAvailability,
+  getExpertDashboard,
 } from './experts.service'
 import { authMiddleware, requirePermission } from '../../middleware/auth.middleware'
 
@@ -37,6 +41,7 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .post('/bookings/prescription', authMiddleware, zValidator('json', createPrescriptionInput), async (c) =>
     createPrescription(c, c.req.valid('json')),
   )
+  .get('/dashboard', authMiddleware, async (c) => getExpertDashboard(c))
   .patch('/bookings/prescription', authMiddleware, zValidator('json', updatePrescriptionInput), async (c) =>
     updatePrescription(c, c.req.valid('json')),
   )
@@ -49,6 +54,10 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .get('/expert', authMiddleware, async (c) => getExpert(c))
   .patch('/expert', authMiddleware, zValidator('json', expertProfileInput), async (c) =>
     updateExpert(c, c.req.valid('json')),
+  )
+  .get('/availability', authMiddleware, async (c) => getAvailability(c))
+  .post('/availability', authMiddleware, zValidator('json', updateAvailabilityInput), async (c) =>
+    updateAvailability(c, c.req.valid('json')),
   )
   .get('/:expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
   .get('/:expertSlug/service/:serviceSlug', async (c) =>

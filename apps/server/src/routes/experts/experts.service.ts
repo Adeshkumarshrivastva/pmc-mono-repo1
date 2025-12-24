@@ -1,5 +1,5 @@
 import { match } from 'ts-pattern'
-import type { Prisma } from '../../generated/prisma'
+import { DayOfWeek, type Prisma } from '../../generated/prisma'
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import { getErrorMessage } from '../../lib/utils'
@@ -13,6 +13,7 @@ import {
   type CreatePrescriptionInput,
   type UpdatePrescriptionInput,
   type ExpertProfileInput,
+  type UpdateAvailabilityInput,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 import {
@@ -719,4 +720,251 @@ export async function updatePaymentStatus(c: C, input: { status: 'PENDING' | 'CO
 export async function getAllExperts(c: C) {
   const experts = await prisma.expert.findMany()
   return c.json(experts)
+}
+
+export async function updateAvailability(c: C, input: UpdateAvailabilityInput) {
+  const userId = c.var.user?.id
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 401)
+  }
+
+  const expert = await prisma.expert.findUnique({
+    where: { userId },
+    select: { id: true },
+  })
+
+  if (!expert) {
+    return c.json({ error: 'Expert profile not found' }, 404)
+  }
+
+  const DAY_INDEX_TO_ENUM: Record<number, DayOfWeek> = {
+    0: DayOfWeek.SUNDAY,
+    1: DayOfWeek.MONDAY,
+    2: DayOfWeek.TUESDAY,
+    3: DayOfWeek.WEDNESDAY,
+    4: DayOfWeek.THURSDAY,
+    5: DayOfWeek.FRIDAY,
+    6: DayOfWeek.SATURDAY,
+  }
+
+  const BASE_DATE = dayjs('2025-01-01').startOf('day')
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.expertAvailability.deleteMany({
+        where: { expertId: expert.id },
+      })
+
+      const newRecords = input.days.flatMap((day) => {
+        const dayEnum = DAY_INDEX_TO_ENUM[day.dayIndex]
+        if (!dayEnum) return []
+
+        return day.ranges.map((range) => ({
+          expertId: expert.id,
+          dayOfTheWeek: dayEnum,
+          startTime: BASE_DATE.add(range.startMinutes, 'minute').toDate(),
+          endTime: BASE_DATE.add(range.endMinutes, 'minute').toDate(),
+          isActive: true,
+        }))
+      })
+
+      if (newRecords.length > 0) {
+        await tx.expertAvailability.createMany({ data: newRecords })
+      }
+    })
+
+    return c.json({ success: true })
+  } catch (error) {
+    const errorMessage = getErrorMessage(error)
+    return c.json({ error: `Failed to update availability - ${errorMessage}` }, 500)
+  }
+}
+
+export async function getAvailability(c: C) {
+  const userId = c.var.user?.id
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 401)
+  }
+
+  const expert = await prisma.expert.findUnique({
+    where: { userId },
+    select: { id: true },
+  })
+
+  if (!expert) {
+    return c.json({ error: 'Expert profile not found' }, 404)
+  }
+
+  const DAY_ENUM_TO_INDEX: Record<DayOfWeek, number> = {
+    [DayOfWeek.SUNDAY]: 0,
+    [DayOfWeek.MONDAY]: 1,
+    [DayOfWeek.TUESDAY]: 2,
+    [DayOfWeek.WEDNESDAY]: 3,
+    [DayOfWeek.THURSDAY]: 4,
+    [DayOfWeek.FRIDAY]: 5,
+    [DayOfWeek.SATURDAY]: 6,
+  }
+
+  const availability = await prisma.expertAvailability.findMany({
+    where: { expertId: expert.id },
+  })
+
+  const daysMap = new Map<number, { dayIndex: number; ranges: { startMinutes: number; endMinutes: number }[] }>()
+
+  for (let i = 0; i <= 6; i++) {
+    daysMap.set(i, { dayIndex: i, ranges: [] })
+  }
+
+  availability.forEach((record) => {
+    const dayIndex = DAY_ENUM_TO_INDEX[record.dayOfTheWeek]
+    const startMinutes = dayjs(record.startTime).hour() * 60 + dayjs(record.startTime).minute()
+    const endMinutes = dayjs(record.endTime).hour() * 60 + dayjs(record.endTime).minute()
+
+    daysMap.get(dayIndex)?.ranges.push({ startMinutes, endMinutes })
+  })
+
+  const days = Array.from(daysMap.values())
+
+  return c.json({ days })
+}
+
+export async function getExpertDashboard(c: C) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const expert = await prisma.expert.findUnique({
+      where: { userId },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const now = dayjs().toDate()
+    const thirtyDaysAgo = dayjs().subtract(30, 'days').toDate()
+
+    const [
+      totalBookings,
+      upcomingBookings,
+      completedBookings,
+      cancelledBookings,
+      totalPatients,
+      totalRevenue,
+      recentBookings,
+      recentPatients,
+    ] = await Promise.all([
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: { not: 'DRAFT' },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: { in: ['BOOKED', 'RESCHEDULED'] },
+          endDateTime: { gt: now },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: 'COMPLETED',
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: 'CANCELLED',
+        },
+      }),
+      prisma.booking
+        .findMany({
+          where: {
+            expertId: expert.id,
+            status: { not: 'DRAFT' },
+          },
+          select: {
+            patientId: true,
+          },
+          distinct: ['patientId'],
+        })
+        .then((bookings) => bookings.length),
+      prisma.payment.aggregate({
+        where: {
+          booking: {
+            expertId: expert.id,
+          },
+          status: 'COMPLETED',
+        },
+        _sum: {
+          amountPaid: true,
+        },
+      }),
+      prisma.booking.findMany({
+        where: {
+          expertId: expert.id,
+          createdAt: { gte: thirtyDaysAgo },
+        },
+        include: {
+          patient: {
+            include: {
+              user: true,
+            },
+          },
+          service: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+      }),
+      prisma.booking
+        .findMany({
+          where: {
+            expertId: expert.id,
+            createdAt: { gte: thirtyDaysAgo },
+          },
+          select: {
+            patientId: true,
+          },
+          distinct: ['patientId'],
+          orderBy: { createdAt: 'desc' },
+          take: 5,
+        })
+        .then(async (bookings) => {
+          const patientIds = bookings.map((b) => b.patientId)
+          return prisma.patient.findMany({
+            where: {
+              id: { in: patientIds },
+            },
+            include: {
+              user: true,
+            },
+            orderBy: { createdAt: 'desc' },
+          })
+        }),
+    ])
+
+    return c.json({
+      success: true,
+      stats: {
+        totalBookings,
+        upcomingBookings,
+        completedBookings,
+        cancelledBookings,
+        totalPatients,
+        totalRevenue: totalRevenue._sum.amountPaid || 0,
+      },
+      recentBookings,
+      recentPatients,
+    })
+  } catch (error) {
+    console.error(error)
+    return c.json({ error: `Failed to fetch dashboard data` }, 500)
+  }
 }

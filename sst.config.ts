@@ -56,6 +56,9 @@ export default $config({
     const S3AccessKey = new sst.Secret('S3_ACCESS_KEY')
     const S3SecretKey = new sst.Secret('S3_SECRET_KEY')
     const S3Region = new sst.Secret('S3_REGION')
+    const ZohoClientId = new sst.Secret('ZOHO_CLIENT_ID')
+    const ZohoClientSecret = new sst.Secret('ZOHO_CLIENT_SECRET')
+    const ZohoRefreshToken = new sst.Secret('ZOHO_REFRESH_TOKEN')
 
     const SenderEmail =
       $app.stage === 'production'
@@ -83,6 +86,9 @@ export default $config({
       SMS_SERVICE_USERID: SmsServiceUserId.value,
       SMS_SERVICE_PASSWORD: SmsServicePassword.value,
       S3_BUCKET: PortalMediaBucket.name,
+      S3_ACCESS_KEY: S3AccessKey.value,
+      S3_SECRET_KEY: S3SecretKey.value,
+      S3_REGION: S3Region.value,
     })
 
     new sst.aws.Function('PmcHonoServer', {
@@ -163,6 +169,9 @@ export default $config({
         RAZORPAY_KEY_ID: RazorpayKeyId.value,
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
         NEXT_PUBLIC_RAZORPAY_KEY_ID: $interpolate`${RazorpayKeyId.value}`,
+        ZOHO_CLIENT_ID: ZohoClientId.value,
+        ZOHO_CLIENT_SECRET: ZohoClientSecret.value,
+        ZOHO_REFRESH_TOKEN: ZohoRefreshToken.value,
       },
     })
   },

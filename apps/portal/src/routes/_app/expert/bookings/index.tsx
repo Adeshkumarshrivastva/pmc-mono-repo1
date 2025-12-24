@@ -1,23 +1,18 @@
 import { useState } from 'react'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { match } from 'ts-pattern'
 import { useQuery } from '@tanstack/react-query'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
 import { honoClient } from '@/lib/hono-client'
-import BookingCard from './-components/booking-card'
-import BookingInfo from './-components/booking-info'
+import BookingCard from './-components/expert-booking-card'
+import BookingInfo from './-components/expert-booking-info'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { BOOKING_PERIODS, type BookingPeriod } from '@/lib/booking'
 
 export const Route = createFileRoute('/_app/expert/bookings/')({
   component: ExpertBookings,
-  beforeLoad: ({ context: { user } }) => {
-    if (user.role === 'PATIENT') {
-      throw redirect({ to: '/patient/dashboard' })
-    }
-  },
   loader: ({ context: { user } }) => {
     return { user }
   },

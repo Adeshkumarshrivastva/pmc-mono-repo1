@@ -15,8 +15,9 @@ export type LeadFormInput = z.infer<typeof leadFormInput>
 export const quizLeadInput = z.object({
   fullName: z.string().min(1),
   email: z.email().optional(),
-  phone: z.string(),
+  phone: z.string().min(10).max(15),
   quizId: objectId,
+  quizName: z.string(),
   quizAnswers: z
     .array(
       z.object({

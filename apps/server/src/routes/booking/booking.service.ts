@@ -38,8 +38,8 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     return c.json({ error: 'Expert not found' }, 404)
   }
 
-  if (expert.userId === user.id) {
-    return c.json({ error: 'Expert can not book their own service' }, 403)
+  if (user.role !== 'PATIENT') {
+    return c.json({ error: 'Only patients can book services' }, 403)
   }
 
   const service = await prisma.service.findUnique({
@@ -56,7 +56,7 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     return c.json({ error: 'Service does not belong to the provided expert' }, 409)
   }
 
-  let patient = await prisma.patient.findUnique({
+  let patient = await prisma.patient.findFirst({
     where: {
       userId: user.id,
     },
@@ -66,6 +66,21 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     patient = await prisma.patient.create({
       data: {
         userId: user.id,
+        name: input.patientName,
+        email: input.patientEmail,
+        phoneNumber: user.phoneNumber!,
+      },
+    })
+  }
+
+  if (patient.name !== input.patientName || patient.email !== input.patientEmail) {
+    await prisma.patient.update({
+      where: {
+        id: patient.id,
+      },
+      data: {
+        name: input.patientName,
+        email: input.patientEmail,
       },
     })
   }
@@ -290,11 +305,7 @@ export async function getAllBookings(c: C) {
 export async function getBookingStats(c: C) {
   const now = dayjs().toDate()
 
-  const allBookingsQuery = prisma.booking.count({
-    where: {
-      status: 'BOOKED',
-    },
-  })
+  const allBookingsQuery = prisma.booking.count()
 
   const upcomingBookingsQuery = prisma.booking.count({
     where: {
@@ -307,13 +318,13 @@ export async function getBookingStats(c: C) {
     },
   })
 
-  const completedBookingsQuery = prisma.booking.findMany({
+  const completedBookingsQuery = prisma.booking.count({
     where: {
       status: 'COMPLETED',
     },
   })
 
-  const cancelledBookingsQuery = prisma.booking.findMany({
+  const cancelledBookingsQuery = prisma.booking.count({
     where: {
       status: 'CANCELLED',
     },

@@ -2,62 +2,45 @@
 
 import { getPayloadClient } from '@/lib/payload'
 import type { AppointmentFormInput, AppointmentFormUpdateInput, DeleteAppointmentInput } from './appointments.input'
-import { createOrder } from '../payments/payments.action'
+import { zohoAPI } from '@/lib/zoho'
 
-export async function createAppointment({ serviceId, subServiceId, ...rest }: AppointmentFormInput) {
+export async function createAppointment({ serviceId, subServiceId, dateTime, ...rest }: AppointmentFormInput) {
   const payload = await getPayloadClient()
   const amount = rest?.amount ? Number(rest.amount) : 0
-  const appointment = await payload.create({
-    collection: 'appointments',
-    data: {
-      ...rest,
-      amount,
-      service: serviceId,
-      subService: subServiceId,
-      paymentStatus: 'unpaid',
-    },
-  })
 
-  if (appointment && amount && amount > 0) {
-    try {
-      const order = await createOrder({
-        amount: amount,
-      })
+  const date = new Date(dateTime).toLocaleString()
 
-      await payload.update({
-        collection: 'appointments',
-        where: {
-          id: {
-            equals: appointment.id,
-          },
-        },
-        data: {
-          orderId: order.orderId,
-          paymentStatus: 'pending',
-        },
-      })
-
-      return {
-        orderId: order.orderId,
+  await Promise.allSettled([
+    payload.create({
+      collection: 'appointments',
+      data: {
+        ...rest,
         amount,
-        appointmentId: appointment.id,
-        message: 'Appointment created successfully, please complete the payment.',
-      }
-    } catch (error) {
-      await payload.delete({
-        collection: 'appointments',
-        id: appointment.id,
-      })
+        service: serviceId,
+        subService: subServiceId,
+        paymentStatus: 'unpaid',
+        dateTime: date,
+      },
+    }),
+    payload.create({
+      collection: 'leads',
+      data: {
+        fullName: rest.fullName,
+        email: rest.email,
+        phone: rest.phone,
+      },
+    }),
+    zohoAPI.createLead({
+      firstName: rest.fullName.split(' ')[0],
+      lastName: rest.fullName.split(' ')[1] ?? rest.fullName,
+      phone: rest.phone,
+      email: rest.email,
+      leadSource: 'Website',
+    }),
+  ])
 
-      return {
-        error: 'Failed to create payment order. Please try again later.',
-      }
-    }
-  } else {
-    return {
-      appointmentId: appointment.id,
-      message: 'Appointment created successfully.',
-    }
+  return {
+    message: 'Appointment created successfully.',
   }
 }
 

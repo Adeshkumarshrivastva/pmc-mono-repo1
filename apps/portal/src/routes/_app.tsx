@@ -1,19 +1,14 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { CURRENT_SESSION_QUERY_KEY, getUserSession } from '@/queries/session'
 import { Spinner } from '@/components/ui/spinner'
 import AppShell from '@/components/app-shell'
 
 export const Route = createFileRoute('/_app')({
   component: AppLayout,
-  beforeLoad: async ({ context: { queryClient } }) => {
-    const session = await queryClient.ensureQueryData({
-      queryKey: CURRENT_SESSION_QUERY_KEY,
-      queryFn: getUserSession,
-    })
-    if (!session.data) {
+  beforeLoad: async ({ context: { sessionData } }) => {
+    if (!sessionData.data) {
       throw redirect({ to: '/login' })
     }
-    return { user: session.data.user }
+    return { user: sessionData.data.user }
   },
   loader: ({ context: { user } }) => {
     return { user }

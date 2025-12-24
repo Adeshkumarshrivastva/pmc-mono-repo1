@@ -2,8 +2,7 @@ import {
   CalendarDaysIcon,
   ClipboardListIcon,
   CreditCardIcon,
-
-  // ClockIcon,
+  ClockIcon,
   HomeIcon,
   LayoutDashboardIcon,
   UserIcon,
@@ -149,6 +148,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
   },
   {
     type: 'link',
+    icon: LayoutDashboardIcon,
+    name: 'Home',
+    path: '/admin/dashboard',
+    availableForUserRoles: ['ADMIN'],
+  },
+  {
+    type: 'link',
     icon: CalendarDaysIcon,
     name: 'My Bookings',
     path: '/patient/bookings',
@@ -168,13 +174,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     path: '/expert/services',
     availableForUserRoles: ['EXPERT'],
   },
-  // {
-  //   type: 'link',
-  //   icon: ClockIcon,
-  //   name: 'Availability',
-  //   path: '/expert/availability',
-  //   availableForUserRoles: ['EXPERT'],
-  // },
+  {
+    type: 'link',
+    icon: ClockIcon,
+    name: 'Availability',
+    path: '/expert/availability',
+    availableForUserRoles: ['EXPERT'],
+  },
   {
     type: 'link',
     icon: UserIcon,
@@ -196,7 +202,13 @@ const APP_SHELL_ITEMS: AppShellItem[] = [
     path: '/admin/experts',
     availableForUserRoles: ['ADMIN'],
   },
-
+  {
+    type: 'link',
+    icon: UserIcon,
+    name: 'Patients',
+    path: '/admin/patients',
+    availableForUserRoles: ['ADMIN'],
+  },
   {
     type: 'link',
     icon: CreditCardIcon,

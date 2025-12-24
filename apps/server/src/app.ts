@@ -12,6 +12,8 @@ import { webhooksApp } from './routes/webhooks/webhooks.routes'
 import { servicesApp } from './routes/services/services.routes'
 import { fileApp } from './routes/file/file.routes'
 import { paymentApp } from './routes/payment/payment.routes'
+import { patientApp } from './routes/patient/patient.routes'
+import { adminApp } from './routes/admin/admin.routes'
 
 invariant(config, 'config must be present')
 
@@ -40,6 +42,8 @@ const app = new Hono<{ Variables: HonoContext }>()
   .route('/service', servicesApp)
   .route('/file', fileApp)
   .route('/payment', paymentApp)
+  .route('/patient', patientApp)
+  .route('/admin', adminApp)
 
 export { app }
 export type App = typeof app
