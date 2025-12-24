@@ -154,11 +154,10 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
               <FormLabel>Experience (Years)</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
                   placeholder="10"
                   {...field}
                   onChange={(e) => {
-                    field.onChange(e.target.value ? Number(e.target.value) : undefined)
+                    field.onChange(e.target.value ? Number(e.target.value) : '')
                   }}
                 />
               </FormControl>
