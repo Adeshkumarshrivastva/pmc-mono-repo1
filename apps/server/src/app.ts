@@ -24,14 +24,14 @@ const app = new Hono<{ Variables: HonoContext }>()
       origin: [config.cors.origin],
       credentials: true,
       exposeHeaders: ['Content-Length'],
-      allowMethods: ['POST', 'GET', 'PATCH', 'OPTIONS'],
+      allowMethods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
       allowHeaders: ['Content-Type', 'Authorization'],
     }),
   )
   .get('/', (c) => {
     return c.json({ message: 'Hello World' })
   })
-  .on(['POST', 'GET', 'OPTIONS'], '/auth/*', (c) => {
+  .on(['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'], '/auth/*', (c) => {
     return auth.handler(c.req.raw)
   })
   .route('/experts', expertsApp)
