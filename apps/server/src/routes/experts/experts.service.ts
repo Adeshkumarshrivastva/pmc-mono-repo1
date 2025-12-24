@@ -827,3 +827,144 @@ export async function getAvailability(c: C) {
 
   return c.json({ days })
 }
+
+export async function getExpertDashboard(c: C) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const expert = await prisma.expert.findUnique({
+      where: { userId },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const now = dayjs().toDate()
+    const thirtyDaysAgo = dayjs().subtract(30, 'days').toDate()
+
+    const [
+      totalBookings,
+      upcomingBookings,
+      completedBookings,
+      cancelledBookings,
+      totalPatients,
+      totalRevenue,
+      recentBookings,
+      recentPatients,
+    ] = await Promise.all([
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: { not: 'DRAFT' },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: { in: ['BOOKED', 'RESCHEDULED'] },
+          endDateTime: { gt: now },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: 'COMPLETED',
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: 'CANCELLED',
+        },
+      }),
+      prisma.booking
+        .findMany({
+          where: {
+            expertId: expert.id,
+            status: { not: 'DRAFT' },
+          },
+          select: {
+            patientId: true,
+          },
+          distinct: ['patientId'],
+        })
+        .then((bookings) => bookings.length),
+      prisma.payment.aggregate({
+        where: {
+          booking: {
+            expertId: expert.id,
+          },
+          status: 'COMPLETED',
+        },
+        _sum: {
+          amountPaid: true,
+        },
+      }),
+      prisma.booking.findMany({
+        where: {
+          expertId: expert.id,
+          createdAt: { gte: thirtyDaysAgo },
+        },
+        include: {
+          patient: {
+            include: {
+              user: true,
+            },
+          },
+          service: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+      }),
+      prisma.booking
+        .findMany({
+          where: {
+            expertId: expert.id,
+            createdAt: { gte: thirtyDaysAgo },
+          },
+          select: {
+            patientId: true,
+          },
+          distinct: ['patientId'],
+          orderBy: { createdAt: 'desc' },
+          take: 5,
+        })
+        .then(async (bookings) => {
+          const patientIds = bookings.map((b) => b.patientId)
+          return prisma.patient.findMany({
+            where: {
+              id: { in: patientIds },
+            },
+            include: {
+              user: true,
+            },
+            orderBy: { createdAt: 'desc' },
+          })
+        }),
+    ])
+
+    return c.json({
+      success: true,
+      stats: {
+        totalBookings,
+        upcomingBookings,
+        completedBookings,
+        cancelledBookings,
+        totalPatients,
+        totalRevenue: totalRevenue._sum.amountPaid || 0,
+      },
+      recentBookings,
+      recentPatients,
+    })
+  } catch (error) {
+    console.error(error)
+    return c.json({ error: `Failed to fetch dashboard data` }, 500)
+  }
+}
