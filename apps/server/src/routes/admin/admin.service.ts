@@ -1,9 +1,11 @@
+import { nanoid } from 'nanoid'
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import dayjs from '../../lib/dayjs'
-import type { UpdateExpertInfoInput, UpdateAvailabilityInput } from './admin.input'
+import type { UpdateExpertInfoInput, UpdateAvailabilityInput, CreateExpertInput } from './admin.input'
 import { DayOfWeek } from '../../generated/prisma'
 import { dateToMinutes } from '../../lib/date'
+import { getErrorMessage } from '../../lib/utils'
 
 const DAY_MAP: Record<number, DayOfWeek> = {
   0: 'SUNDAY',
@@ -134,6 +136,78 @@ export async function getAdminDashboard(c: C) {
   }
 }
 
+export async function createExpert(c: C, input: CreateExpertInput) {
+  try {
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: input.email }, ...(input.phoneNumber ? [{ phoneNumber: input.phoneNumber }] : [])],
+      },
+    })
+
+    if (existingUser) {
+      const existingExpert = await prisma.expert.findUnique({
+        where: { userId: existingUser.id },
+      })
+
+      if (existingExpert) {
+        return c.json({ error: 'An expert profile already exists for this user' }, 400)
+      }
+    }
+
+    let userId: string
+
+    if (existingUser) {
+      userId = existingUser.id
+      await prisma.user.update({
+        where: { id: existingUser.id },
+        data: { role: 'EXPERT' },
+      })
+    } else {
+      const newUser = await prisma.user.create({
+        data: {
+          id: nanoid(),
+          email: input.email,
+          phoneNumber: input.phoneNumber,
+          emailVerified: false,
+          phoneNumberVerified: input.phoneNumber ? true : false,
+          name: input.name,
+          role: 'EXPERT',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      })
+      userId = newUser.id
+    }
+
+    const slug = generateExpertSlug(input.name)
+
+    const expert = await prisma.expert.create({
+      data: {
+        userId,
+        slug,
+        name: input.name,
+        type: input.type,
+        qualifications: input.qualifications,
+        bio: input.bio,
+        gender: input.gender,
+        city: input.city,
+        country: input.country,
+        timezone: input.timezone,
+        expertise: input.expertise,
+        experienceInYears: input.experienceInYears,
+        photoId: input.photoId,
+      },
+      include: {
+        user: true,
+      },
+    })
+
+    return c.json({ success: true, expert })
+  } catch (error) {
+    return c.json({ error: `Failed to create expert - ${getErrorMessage(error)}` }, 500)
+  }
+}
+
 export async function getExpertDetails(c: C, expertId: string) {
   try {
     const expert = await prisma.expert.findUnique({
@@ -142,6 +216,7 @@ export async function getExpertDetails(c: C, expertId: string) {
         user: true,
         servicesProvided: true,
         availability: true,
+        file: true,
       },
     })
 
@@ -259,4 +334,16 @@ export async function updateExpertAvailability(c: C, expertId: string, input: Up
   } catch {
     return c.json({ error: 'Failed to update availability' }, 500)
   }
+}
+
+function generateExpertSlug(name: string): string {
+  const formattedName = name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+
+  const id = nanoid(4)
+
+  return `${formattedName}-${id}`
 }

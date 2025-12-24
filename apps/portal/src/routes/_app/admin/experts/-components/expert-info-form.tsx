@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import { useState } from 'react'
 import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form'
@@ -11,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
+import { getFileUrl } from '@/lib/utils'
 
 const expertInfoSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -22,6 +24,7 @@ const expertInfoSchema = z.object({
   timezone: z.string().min(1, 'Timezone is required'),
   expertise: z.string(),
   experienceInYears: z.number().int().min(0, 'Experience must be 0 or greater').optional(),
+  photoId: z.string().optional(),
 })
 
 type ExpertInfoFormValues = z.infer<typeof expertInfoSchema>
@@ -34,6 +37,8 @@ interface ExpertInfoFormProps {
 }
 
 export default function ExpertInfoForm({ expertId, initialData, onSuccess }: ExpertInfoFormProps) {
+  const [currentFileName, setCurrentFileName] = useState<string | undefined>(initialData?.file?.fileName)
+
   const form = useForm<ExpertInfoFormValues>({
     resolver: zodResolver(expertInfoSchema),
     defaultValues: {
@@ -46,8 +51,36 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
       timezone: initialData?.timezone || '',
       expertise: initialData?.expertise?.join(', ') || '',
       experienceInYears: initialData?.experienceInYears || undefined,
+      photoId: initialData?.file?.id,
     },
   })
+
+  const uploadFileMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const res = await honoClient.server.file.upload.$post({ form: { file } })
+      const data = await res.json()
+      if (!('file' in data)) {
+        throw new Error(data.error || 'File upload failed')
+      }
+      return data.file
+    },
+    onSuccess: (file) => {
+      setCurrentFileName(file.fileName)
+      form.setValue('photoId', file.id)
+      toast.success('Photo uploaded successfully')
+    },
+    onError: (err) => {
+      toast.error(err?.message || 'Failed to upload photo')
+    },
+  })
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      return
+    }
+    uploadFileMutation.mutate(file)
+  }
 
   const updateMutation = useMutation({
     mutationFn: async (values: ExpertInfoFormValues) => {
@@ -66,6 +99,7 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
             .map((e) => e.trim())
             .filter(Boolean),
           experienceInYears: values.experienceInYears,
+          photoId: values.photoId,
         },
       })
 
@@ -87,14 +121,24 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit((values) => updateMutation.mutate(values))} className="space-y-6">
-        {initialData?.image && (
-          <div className="flex flex-col gap-2">
-            <FormLabel>Profile Photo</FormLabel>
-            <div className="w-32 h-32 rounded-sm bg-gray-200 overflow-hidden">
-              <img src={initialData.image} alt={initialData?.name} className="w-full h-full object-cover" />
-            </div>
+        <div className="flex flex-col gap-2">
+          <FormLabel>Profile Photo</FormLabel>
+          <div className="w-32 h-32 rounded-sm bg-gray-200 overflow-hidden">
+            {currentFileName ? (
+              <img src={getFileUrl(currentFileName)} alt={initialData?.name} className="w-full h-full object-cover" />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full text-gray-500">No Image</div>
+            )}
           </div>
-        )}
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={uploadFileMutation.isPending}
+            className="w-60"
+          />
+          {uploadFileMutation.isPending && <p className="text-sm text-muted-foreground">Uploading...</p>}
+        </div>
 
         <FormField
           name="name"

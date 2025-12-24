@@ -4,7 +4,7 @@ import React from 'react'
 import type { InferResponseType } from 'hono'
 import type { ColumnDef } from '@tanstack/react-table'
 import { match } from 'ts-pattern'
-import { Edit } from 'lucide-react'
+import { Edit, Plus } from 'lucide-react'
 import { Spinner } from '@/components/ui/spinner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -111,9 +111,14 @@ function AdminExpertsPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Experts</h1>
-        <p className="text-muted-foreground mt-2">Manage all experts in the system</p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Experts</h1>
+          <p className="text-muted-foreground mt-2">Manage all experts in the system</p>
+        </div>
+        <Link to="/admin/experts/add">
+          <Button icon={<Plus className="h-4 w-4" />}>Add Expert</Button>
+        </Link>
       </div>
 
       {match(getAllExpertsQuery)

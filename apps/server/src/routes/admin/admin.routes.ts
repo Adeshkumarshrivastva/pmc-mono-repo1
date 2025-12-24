@@ -4,15 +4,23 @@ import type { HonoContext } from '../../lib/context'
 import { authMiddleware, requirePermission } from '../../middleware/auth.middleware'
 import {
   getAdminDashboard,
+  createExpert,
   getExpertDetails,
   updateExpertInfo,
   getExpertAvailability,
   updateExpertAvailability,
 } from './admin.service'
-import { updateExpertInfoInput, updateAvailabilityInput } from './admin.input'
+import { createExpertInput, updateExpertInfoInput, updateAvailabilityInput } from './admin.input'
 
 export const adminApp = new Hono<{ Variables: HonoContext }>()
   .get('/dashboard', authMiddleware, requirePermission(['ADMIN']), (c) => getAdminDashboard(c))
+  .post(
+    '/experts',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    zValidator('json', createExpertInput),
+    (c) => createExpert(c, c.req.valid('json')),
+  )
   .get('/experts/:expertId', authMiddleware, requirePermission(['ADMIN']), (c) =>
     getExpertDetails(c, c.req.param('expertId')),
   )

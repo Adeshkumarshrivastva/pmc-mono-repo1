@@ -963,8 +963,7 @@ export async function getExpertDashboard(c: C) {
       recentBookings,
       recentPatients,
     })
-  } catch (error) {
-    console.error(error)
+  } catch {
     return c.json({ error: `Failed to fetch dashboard data` }, 500)
   }
 }
