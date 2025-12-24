@@ -1,11 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import React from 'react'
+import React, { useState } from 'react'
 import type { InferResponseType } from 'hono'
 import type { ColumnDef } from '@tanstack/react-table'
 import { match } from 'ts-pattern'
 import { Spinner } from '@/components/ui/spinner'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
 import { DataTable } from '@/components/ui/data-table'
@@ -66,10 +67,13 @@ export const Route = createFileRoute('/_app/admin/patients/')({
 })
 
 function AdminPatientsPage() {
+  const [filter, setFilter] = useState<'all' | 'day' | 'week' | 'month'>('all')
+
   const getAllPatientsQuery = useQuery({
-    queryKey: ['admin-patients'],
+    queryKey: ['admin-patients', filter],
     queryFn: async () => {
-      const response = await honoClient.server.patient.patients.$get()
+      const query = filter === 'all' ? {} : { filter }
+      const response = await honoClient.server.patient.patients.$get({ query })
 
       if (!response.ok) {
         throw new Error('Failed to fetch patients')
@@ -81,9 +85,25 @@ function AdminPatientsPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Patients</h1>
-        <p className="text-muted-foreground mt-2">Manage all patients in the system</p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Patients</h1>
+          <p className="text-muted-foreground mt-2">Manage all patients in the system</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Filter by:</span>
+          <Select value={filter} onValueChange={(value) => setFilter(value as typeof filter)}>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Time</SelectItem>
+              <SelectItem value="day">Today</SelectItem>
+              <SelectItem value="week">Last 7 Days</SelectItem>
+              <SelectItem value="month">Last 30 Days</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {match(getAllPatientsQuery)
