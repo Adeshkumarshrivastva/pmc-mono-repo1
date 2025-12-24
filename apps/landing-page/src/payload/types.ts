@@ -1296,7 +1296,13 @@ export interface Home {
   }
   partnersSection: {
     title: string
-    partners?:
+    universityPartners?:
+      | {
+          logo: string | Media
+          id?: string | null
+        }[]
+      | null
+    hospitalPartners?:
       | {
           logo: string | Media
           id?: string | null
@@ -1991,7 +1997,13 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T
-        partners?:
+        universityPartners?:
+          | T
+          | {
+              logo?: T
+              id?: T
+            }
+        hospitalPartners?:
           | T
           | {
               logo?: T
