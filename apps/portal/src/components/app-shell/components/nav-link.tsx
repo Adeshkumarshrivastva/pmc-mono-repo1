@@ -10,7 +10,7 @@ type NavLinkProps = React.ComponentProps<typeof Link> & {
 
 export default function NavLink({ children, icon: Icon, ...linkProps }: NavLinkProps) {
   return (
-    <MatchRoute to={linkProps.to} params={linkProps.params}>
+    <MatchRoute to={linkProps.to} params={linkProps.params} fuzzy>
       {(match) => {
         return (
           <Link {...linkProps}>

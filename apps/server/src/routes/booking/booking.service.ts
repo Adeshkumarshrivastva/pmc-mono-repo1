@@ -24,9 +24,10 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     return c.json({ error: 'User not found' }, 404)
   }
 
-  const expert = await prisma.expert.findUnique({
+  const expert = await prisma.expert.findFirst({
     where: {
       id: input.expertId,
+      isDeleted: false,
     },
     select: {
       id: true,
