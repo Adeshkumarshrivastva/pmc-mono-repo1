@@ -13,9 +13,12 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
 import { getFileUrl } from '@/lib/utils'
+import PhoneInput from '@/components/ui/phone-input'
 
 const expertInfoSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
+  email: z.email('Valid email is required'),
+  phoneNumber: z.string(),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),
@@ -43,6 +46,8 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
     resolver: zodResolver(expertInfoSchema),
     defaultValues: {
       name: initialData?.name || '',
+      email: initialData?.user?.email || '',
+      phoneNumber: initialData?.user?.phoneNumber || '',
       qualifications: initialData?.qualifications || '',
       bio: initialData?.bio || '',
       gender: initialData?.gender || 'MALE',
@@ -88,6 +93,8 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
         param: { expertId },
         json: {
           name: values.name,
+          email: values.email,
+          phoneNumber: values.phoneNumber,
           qualifications: values.qualifications,
           bio: values.bio,
           gender: values.gender,
@@ -153,6 +160,36 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
             </FormItem>
           )}
         />
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            name="email"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="expert@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="phoneNumber"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone Number</FormLabel>
+                <FormControl>
+                  <PhoneInput {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           name="gender"

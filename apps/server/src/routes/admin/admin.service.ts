@@ -233,7 +233,26 @@ export async function getExpertDetails(c: C, expertId: string) {
 
 export async function updateExpertInfo(c: C, expertId: string, input: UpdateExpertInfoInput) {
   try {
-    const expert = await prisma.expert.update({
+    const expert = await prisma.expert.findUnique({
+      where: { id: expertId },
+      select: { userId: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert not found' }, 404)
+    }
+
+    // Update user's email and phone number
+    await prisma.user.update({
+      where: { id: expert.userId },
+      data: {
+        email: input.email,
+        phoneNumber: input.phoneNumber,
+      },
+    })
+
+    // Update expert information
+    const updatedExpert = await prisma.expert.update({
       where: { id: expertId },
       data: {
         name: input.name,
@@ -249,9 +268,9 @@ export async function updateExpertInfo(c: C, expertId: string, input: UpdateExpe
       },
     })
 
-    return c.json({ success: true, expert })
-  } catch {
-    return c.json({ error: 'Failed to update expert information' }, 500)
+    return c.json({ success: true, expert: updatedExpert })
+  } catch (error) {
+    return c.json({ error: `Failed to update expert information - ${getErrorMessage(error)}` }, 500)
   }
 }
 

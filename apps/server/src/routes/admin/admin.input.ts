@@ -20,6 +20,8 @@ export type CreateExpertInput = z.infer<typeof createExpertInput>
 
 export const updateExpertInfoInput = z.object({
   name: z.string().min(3),
+  email: z.string().email(),
+  phoneNumber: z.string().optional(),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),
