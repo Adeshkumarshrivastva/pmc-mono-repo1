@@ -828,6 +828,31 @@ export async function getAvailability(c: C) {
   return c.json({ days })
 }
 
+export async function getPublicExpertsList(c: C) {
+  try {
+    const experts = await prisma.expert.findMany({
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        bio: true,
+        image: true,
+        file: {
+          select: {
+            fileName: true,
+            bucket: true,
+          },
+        },
+      },
+    })
+
+    return c.json(experts)
+  } catch (error) {
+    const errorMessage = getErrorMessage(error)
+    return c.json({ error: `Failed to fetch public experts list - ${errorMessage}` }, 500)
+  }
+}
+
 export async function getExpertDashboard(c: C) {
   try {
     const userId = c.var.user?.id

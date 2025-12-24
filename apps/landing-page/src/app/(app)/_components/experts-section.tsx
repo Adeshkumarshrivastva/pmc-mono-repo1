@@ -9,18 +9,24 @@ import type { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AppointmentForm from './appointment-form'
+import { getFileUrl, type Expert } from '@/lib/experts'
 
-type ExpertsSectionProps = { data: Home['expertsSection'] }
+type ExpertsSectionProps = { data: Home['expertsSection']; experts: Expert[] }
 
-export default function ExpertsSection({ data }: ExpertsSectionProps) {
-  const experts = Array.isArray(data?.experts) ? data.experts.filter((e) => typeof e !== 'string') : []
+function toTitleCase(str: string) {
+  return str
+    .replace(/_/g, ' ')
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+}
 
+export default function ExpertsSection({ data, experts }: ExpertsSectionProps) {
   const [startIdx, setStartIdx] = useState(0)
   const [activeTab, setActiveTab] = useState<'psychologist' | 'psychiatrist'>('psychiatrist')
   const cardsPerPage = 2
 
   const filteredExperts = useMemo(
-    () => experts.filter((e) => e.profession?.toLowerCase() === activeTab),
+    () => experts.filter((e) => e.type?.toLowerCase().includes(activeTab)),
     [experts, activeTab],
   )
 
@@ -78,20 +84,20 @@ export default function ExpertsSection({ data }: ExpertsSectionProps) {
                           alt="expert"
                           width={180}
                           height={190}
-                          className="h-auto w-full max-w-[180px] sm:w-[140px] lg:w-[180px] object-contain py-2 rounded-xl bg-primary shadow-[0px_0px_4px_0px_#FEFEE3]"
-                          src={getURLFromMedia(expert?.image ?? '')}
+                          className="h-[190px] w-full max-w-[180px] sm:w-[140px] lg:w-[180px] object-cover py-2 rounded-xl bg-primary shadow-[0px_0px_4px_0px_#FEFEE3]"
+                          src={expert.image}
                         />
                       </div>
 
                       <div className="flex flex-col justify-around pr-0 sm:pr-3 lg:pr-5 space-y-3 sm:space-y-3">
                         <div className="text-accent text-center sm:text-left">
-                          <p className="font-semibold text-xl sm:text-xl lg:text-2xl">{expert.expertName}</p>
-                          <p className="text-sm sm:text-base">{expert.profession}</p>
+                          <p className="font-semibold text-xl sm:text-xl lg:text-2xl">{expert.name}</p>
+                          <p className="text-sm sm:text-base">{toTitleCase(expert.type)}</p>
                         </div>
 
-                        {expert.headline && (
+                        {expert.bio && (
                           <div className="text-accent opacity-80 text-center sm:text-left text-sm sm:text-base line-clamp-3">
-                            <RichText data={expert.headline} disableContainer />
+                            <p>{expert.bio}</p>
                           </div>
                         )}
 
