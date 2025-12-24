@@ -16,7 +16,6 @@ type PartnersSectionProps = {
 
 export default function PartnersSection({ data }: PartnersSectionProps) {
   const [activeTab, setActiveTab] = useState<'university' | 'hospital'>('university')
-  console.log('partners data', data)
   if (!data || (!data.universityPartners?.length && !data.hospitalPartners?.length)) {
     return null
   }
