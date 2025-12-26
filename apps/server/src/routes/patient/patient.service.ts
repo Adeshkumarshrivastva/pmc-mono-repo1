@@ -2,7 +2,7 @@ import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import type { Prisma } from '../../generated/prisma'
 import dayjs from '../../lib/dayjs'
-import type { PatientBookingsSearchQuery, UpdatePatientInput } from './patient.input'
+import type { PatientBookingsSearchQuery, SendTrialSessionEmailInput, UpdatePatientInput } from './patient.input'
 
 export async function getPatients(c: C) {
   const page = Number(c.req.query('page') || '1')
@@ -208,4 +208,20 @@ export async function getPatientDashboard(c: C) {
   } catch {
     return c.json({ error: 'Failed to fetch dashboard data' }, 500)
   }
+}
+
+export async function sendTrialSessionEmail(c: C, input: SendTrialSessionEmailInput) {
+  const { name, date, phoneNumber, email } = input
+  const sessionDate = new Date(date)
+
+  console.log('Trial Session Request:', {
+    name,
+    phoneNumber,
+    email,
+    sessionDate,
+  })
+
+  return c.json({
+    message: true,
+  })
 }

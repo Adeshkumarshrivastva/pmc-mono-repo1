@@ -7,9 +7,10 @@ import {
   getPatientByUserId,
   getPatientDashboard,
   getPatients,
+  sendTrialSessionEmail,
   updatePatientByUserId,
 } from './patient.service'
-import { patientBookingsSearchQuery, updatePatientInput } from './patient.input'
+import { patientBookingsSearchQuery, sendTrialSessionEmailInput, updatePatientInput } from './patient.input'
 
 export const patientApp = new Hono<{ Variables: HonoContext }>()
   .get('/patients', authMiddleware, requirePermission(['ADMIN']), (c) => getPatients(c))
@@ -29,3 +30,6 @@ export const patientApp = new Hono<{ Variables: HonoContext }>()
     async (c) => getPatientBookings(c, c.req.valid('query')),
   )
   .get('/dashboard', authMiddleware, requirePermission(['PATIENT']), (c) => getPatientDashboard(c))
+  .post('/send-trial-sesssion', zValidator('json', sendTrialSessionEmailInput), (c) =>
+    sendTrialSessionEmail(c, c.req.valid('json')),
+  )

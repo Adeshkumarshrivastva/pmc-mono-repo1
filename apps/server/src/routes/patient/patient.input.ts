@@ -17,3 +17,12 @@ export const updatePatientInput = z.object({
 })
 
 export type UpdatePatientInput = z.infer<typeof updatePatientInput>
+
+export const sendTrialSessionEmailInput = z.object({
+  name: z.string().min(3),
+  phoneNumber: z.string().min(10).max(15),
+  email: z.string().email().optional(),
+  date: z.string(),
+})
+
+export type SendTrialSessionEmailInput = z.infer<typeof sendTrialSessionEmailInput>

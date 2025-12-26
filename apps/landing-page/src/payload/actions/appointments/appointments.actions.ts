@@ -8,7 +8,7 @@ export async function createAppointment({ serviceId, subServiceId, dateTime, ...
   const payload = await getPayloadClient()
   const amount = rest?.amount ? Number(rest.amount) : 0
 
-  const date = new Date(dateTime).toLocaleString()
+  const formattedDate = new Date(dateTime).toLocaleString()
 
   await Promise.allSettled([
     payload.create({
@@ -19,9 +19,10 @@ export async function createAppointment({ serviceId, subServiceId, dateTime, ...
         service: serviceId,
         subService: subServiceId,
         paymentStatus: 'unpaid',
-        dateTime: date,
+        dateTime: formattedDate,
       },
     }),
+
     payload.create({
       collection: 'leads',
       data: {
@@ -30,6 +31,7 @@ export async function createAppointment({ serviceId, subServiceId, dateTime, ...
         phone: rest.phone,
       },
     }),
+
     zohoAPI.createLead({
       firstName: rest.fullName.split(' ')[0],
       lastName: rest.fullName.split(' ')[1] ?? rest.fullName,
@@ -40,6 +42,7 @@ export async function createAppointment({ serviceId, subServiceId, dateTime, ...
   ])
 
   return {
+    success: true,
     message: 'Appointment created successfully.',
   }
 }
@@ -47,12 +50,10 @@ export async function createAppointment({ serviceId, subServiceId, dateTime, ...
 export async function getAppointmentById(id: string) {
   const payload = await getPayloadClient()
 
-  const appointment = await payload.findByID({
+  return await payload.findByID({
     collection: 'appointments',
     id,
   })
-
-  return appointment
 }
 
 export async function updateAppointment({ id, ...rest }: AppointmentFormUpdateInput) {
