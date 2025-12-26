@@ -17,6 +17,7 @@ import MapSection from './_components/map-section'
 import { getWebinars } from '@/payload/actions'
 import WebinarsSection from './_components/webinars-section'
 import PartnersSection from './_components/partners-section'
+import { fetchPublicExperts } from '@/lib/experts'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -49,6 +50,8 @@ export default async function HomePage() {
   const services = await getServices({})
   const webinars = await getWebinars({})
 
+  const experts = await fetchPublicExperts()
+
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
       <HeroSection data={heroSetion} />
@@ -58,7 +61,7 @@ export default async function HomePage() {
       <ServicesSection data={servicesSection} services={services.docs} />
       <TreatmentSection data={treatmentSection} />
       <WhyChooseSection data={whyChooseSection} />
-      <ExpertsSection data={expertsSection} />
+      <ExpertsSection data={expertsSection} experts={experts} />
       {/* <PackagesSection data={packagesSection} /> */}
       <ContactSection data={contactSection} services={services.docs} />
       <TestimonialSection data={testimonialSection} />

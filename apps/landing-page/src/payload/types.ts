@@ -1221,7 +1221,6 @@ export interface Home {
   }
   expertsSection?: {
     title?: string | null
-    experts?: (string | Expert)[] | null
     action?: string | null
   }
   contactSection?: {
@@ -1674,7 +1673,6 @@ export interface AboutUs {
   }
   expertsSection?: {
     title?: string | null
-    experts?: (string | Expert)[] | null
     action?: string | null
   }
   opportunitiesSection?: {
@@ -1922,7 +1920,6 @@ export interface HomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T
-        experts?: T
         action?: T
       }
   contactSection?:
@@ -2284,7 +2281,6 @@ export interface AboutUsSelect<T extends boolean = true> {
     | T
     | {
         title?: T
-        experts?: T
         action?: T
       }
   opportunitiesSection?:
