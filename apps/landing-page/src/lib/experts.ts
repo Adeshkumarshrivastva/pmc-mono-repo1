@@ -1,16 +1,22 @@
+import { env } from '@/env'
 import * as z from 'zod'
 
-const API_BASE_URL = 'https://d31eagfyx01jm2.cloudfront.net'
-
 export function getFileUrl(fileName: string) {
-  return `${API_BASE_URL}/server/file/${fileName}`
+  return `${env.API_BASE_URL}/server/file/${fileName}`
 }
 
 const expertSchema = z.object({
   id: z.string(),
   slug: z.string(),
   name: z.string(),
-  type: z.string(),
+  type: z.enum([
+    'PSYCHOLOGIST',
+    'PSYCHIATRIST',
+    'CLINICAL_PSYCHOLOGIST',
+    'CONSULTANT_PHYSICIAN',
+    'REHABILITATION_PSYCHOLOGIST',
+    'COUNSELLING_PSYCHOLOGIST',
+  ]),
   bio: z.string().optional(),
   image: z.string(),
   file: z.object().nullable(),
@@ -20,7 +26,7 @@ export type Expert = z.infer<typeof expertSchema>
 
 export async function fetchPublicExperts() {
   try {
-    const res = await fetch(`${API_BASE_URL}/server/experts/public/list`)
+    const res = await fetch(`${env.API_BASE_URL}/server/experts/public/list`)
 
     if (!res.ok) {
       throw new Error(`Failed to fetch experts`)

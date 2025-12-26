@@ -55,13 +55,13 @@ export default function ExpertsSection({ data, experts }: ExpertsSectionProps) {
                   <TabsList className="border border-primary w-full sm:w-[400px] py-6 px-1">
                     <TabsTrigger
                       value="psychiatrist"
-                      className="cursor-pointer text-primary data-[state=active]:bg-primary dark:data-[state=active]:text-accent dark:text-primary p-5 font-normal text-lg"
+                      className="cursor-pointer p-5 font-normal text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                     >
                       Psychiatrists
                     </TabsTrigger>
                     <TabsTrigger
                       value="psychologist"
-                      className="cursor-pointer text-primary data-[state=active]:bg-primary dark:data-[state=active]:text-accent dark:text-primary p-5 font-normal text-lg"
+                      className="cursor-pointer p-5 font-normal text-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                     >
                       Psychologists
                     </TabsTrigger>
@@ -93,7 +93,7 @@ export default function ExpertsSection({ data, experts }: ExpertsSectionProps) {
                       <div className="flex flex-col justify-around pr-0 sm:pr-3 lg:pr-5 space-y-3 sm:space-y-3">
                         <div className="text-accent text-center sm:text-left">
                           <p className="font-semibold text-xl sm:text-xl lg:text-2xl">{expert.name}</p>
-                          <p className="text-sm sm:text-base">{toTitleCase(expert.type)}</p>
+                          <p className="text-sm sm:text-base">{EXPERT_TYPE_CONFIG[expert.type]}</p>
                         </div>
 
                         {expert.bio && (
@@ -103,7 +103,11 @@ export default function ExpertsSection({ data, experts }: ExpertsSectionProps) {
                         )}
 
                         <div className="flex pt-5 justify-center md:justify-start">
-                          <Link href={`/portal/experts/${expert.slug}`} className="w-full max-w-[264px]">
+                          <Link
+                            href={`/portal/experts/${expert.slug}`}
+                            className="w-full max-w-[264px]"
+                            target="_blank"
+                          >
                             <Button
                               icon={<CallIcon />}
                               variant="secondary"
@@ -143,4 +147,13 @@ export default function ExpertsSection({ data, experts }: ExpertsSectionProps) {
       </div>
     </section>
   )
+}
+
+const EXPERT_TYPE_CONFIG: Record<Expert['type'], string> = {
+  PSYCHOLOGIST: 'Psychologist',
+  PSYCHIATRIST: 'Psychiatrist',
+  CLINICAL_PSYCHOLOGIST: 'Clinical Psychologist',
+  CONSULTANT_PHYSICIAN: 'Consultant Physician',
+  REHABILITATION_PSYCHOLOGIST: 'Rehabilitation Psychologist',
+  COUNSELLING_PSYCHOLOGIST: 'Counselling Psychologist',
 }
