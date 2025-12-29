@@ -2,7 +2,7 @@ import { env } from '@/env'
 import * as z from 'zod'
 
 export function getFileUrl(fileName: string) {
-  return `${env.API_BASE_URL}/server/file/${fileName}`
+  return `${env.NEXT_PUBLIC_API_BASE_URL}/server/file/${fileName}`
 }
 
 const expertSchema = z.object({
@@ -30,7 +30,7 @@ export type Expert = z.infer<typeof expertSchema>
 
 export async function fetchPublicExperts() {
   try {
-    const res = await fetch(`${env.API_BASE_URL}/server/experts/public/list`)
+    const res = await fetch(`${env.NEXT_PUBLIC_API_BASE_URL}/server/experts/public/list`)
 
     if (!res.ok) {
       throw new Error(`Failed to fetch experts`)

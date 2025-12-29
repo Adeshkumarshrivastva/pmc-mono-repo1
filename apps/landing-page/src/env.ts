@@ -24,6 +24,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_RAZORPAY_KEY_ID: z.string().optional(),
+    NEXT_PUBLIC_API_BASE_URL: z.string().optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -42,5 +43,6 @@ export const env = createEnv({
     ZOHO_CLIENT_SECRET: process.env.ZOHO_CLIENT_SECRET,
     ZOHO_REFRESH_TOKEN: process.env.ZOHO_REFRESH_TOKEN,
     API_BASE_URL: process.env.API_BASE_URL,
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
 })
