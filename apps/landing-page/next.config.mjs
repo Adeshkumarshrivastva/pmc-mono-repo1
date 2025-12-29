@@ -14,6 +14,10 @@ const nextConfig = {
         hostname: 'localhost',
         port: '3001',
         pathname: '/api/media/**'
+      },
+      {
+        protocol: 'https',
+        hostname: '*.cloudfront.net',
       }
     ],
   },

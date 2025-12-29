@@ -93,6 +93,7 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
         servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
         user: { select: { id: true, name: true, image: true } },
         availability: true,
+        file: true,
       },
       skip,
       take: limit,

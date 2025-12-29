@@ -173,6 +173,7 @@ export default $config({
         ZOHO_CLIENT_SECRET: ZohoClientSecret.value,
         ZOHO_REFRESH_TOKEN: ZohoRefreshToken.value,
         API_BASE_URL: $interpolate`${router.url}`,
+        NEXT_PUBLIC_API_BASE_URL: $interpolate`${router.url}`,
       },
     })
   },
