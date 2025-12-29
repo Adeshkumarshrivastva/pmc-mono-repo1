@@ -19,7 +19,11 @@ const expertSchema = z.object({
   ]),
   bio: z.string().optional(),
   image: z.string(),
-  file: z.object().nullable(),
+  file: z
+    .object({
+      fileName: z.string(),
+    })
+    .nullable(),
 })
 
 export type Expert = z.infer<typeof expertSchema>
