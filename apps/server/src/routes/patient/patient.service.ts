@@ -3,6 +3,7 @@ import { prisma } from '../../lib/db'
 import type { Prisma } from '../../generated/prisma'
 import dayjs from '../../lib/dayjs'
 import type { PatientBookingsSearchQuery, SendTrialSessionEmailInput, UpdatePatientInput } from './patient.input'
+import { sendTrialSessionEmail } from '../../lib/email'
 
 export async function getPatients(c: C) {
   const page = Number(c.req.query('page') || '1')
@@ -66,6 +67,7 @@ export async function updatePatientByUserId(c: C, input: UpdatePatientInput) {
 export async function getPatientBookings(c: C, input: PatientBookingsSearchQuery) {
   try {
     const userId = c.var.user?.id
+
     if (!userId) {
       return c.json({ error: 'Missing userId' }, 400)
     }
@@ -87,19 +89,18 @@ export async function getPatientBookings(c: C, input: PatientBookingsSearchQuery
     const bookingsWhereInput: Prisma.BookingWhereInput = {
       patientId: patient.id,
     }
+
     const now = dayjs().toDate()
 
     if (input.period === 'upcoming') {
       bookingsWhereInput.OR = [
         { startDateTime: { gte: now } },
-        // currently ongoing bookings
         { startDateTime: { lt: now }, endDateTime: { gt: now } },
       ]
     } else if (input.period === 'past') {
       bookingsWhereInput.endDateTime = { lt: now }
     } else if (input.period === 'fixed') {
       bookingsWhereInput.startDateTime = { gte: input.startDate }
-
       bookingsWhereInput.endDateTime = { lte: input.endDate }
     }
 
@@ -126,6 +127,7 @@ export async function getPatientBookings(c: C, input: PatientBookingsSearchQuery
 export async function getPatientDashboard(c: C) {
   try {
     const userId = c.var.user?.id
+
     if (!userId) {
       return c.json({ error: 'Missing userId' }, 400)
     }
@@ -210,16 +212,14 @@ export async function getPatientDashboard(c: C) {
   }
 }
 
-export async function sendTrialSessionEmail(c: C, input: SendTrialSessionEmailInput) {
-  const { name, date, phoneNumber, email } = input
-  const sessionDate = new Date(date)
-
-  console.log('Trial Session Request:', {
-    name,
-    phoneNumber,
-    email,
-    sessionDate,
-  })
+export async function sendTrialSessionEmailController(c: C, input: SendTrialSessionEmailInput) {
+  if (input.email) {
+    await sendTrialSessionEmail({
+      to: input.email,
+      cc: ['helpdesk@positivemindcare.com'],
+      input,
+    })
+  }
 
   return c.json({
     message: true,

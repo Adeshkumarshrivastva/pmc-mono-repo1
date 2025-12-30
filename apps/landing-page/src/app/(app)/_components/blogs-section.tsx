@@ -11,7 +11,9 @@ type BlogsSectionProps = {
 }
 
 export default function BlogsSection({ data, blogs }: BlogsSectionProps) {
-  if (!blogs || blogs.length === 0) return null
+  if (!blogs || blogs.length === 0) {
+    return null
+  }
 
   return (
     <section className="w-full bg-accent">

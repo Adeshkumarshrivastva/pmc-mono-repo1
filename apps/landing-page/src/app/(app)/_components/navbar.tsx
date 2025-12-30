@@ -81,7 +81,7 @@ export default function Navbar({ services }: NavbarProps) {
 
         {showBookingButton && (
           <Button variant="secondary" icon={<CallIcon />} className="hidden xl:flex" onClick={handleBooking}>
-            Book Appointment
+            Contact Us
           </Button>
         )}
 
