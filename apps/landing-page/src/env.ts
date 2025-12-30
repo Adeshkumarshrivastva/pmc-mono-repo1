@@ -24,7 +24,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_RAZORPAY_KEY_ID: z.string().optional(),
-    NEXT_PUBLIC_API_BASE_URL: z.string().optional(),
+    NEXT_PUBLIC_API_BASE_URL: z.string().default('https://positivemindcare.com'),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
