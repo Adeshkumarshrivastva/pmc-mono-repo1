@@ -10,6 +10,7 @@ import {
   updatePaymentStatusInput,
   updatePrescriptionInput,
   updateAvailabilityInput,
+  bulkCreateBlockedDatesInput,
 } from './experts.input'
 import {
   getExpertFromSlug,
@@ -29,6 +30,8 @@ import {
   getAvailability,
   getExpertDashboard,
   getPublicExpertsList,
+  deleteBlockedDate,
+  bulkCreateBlockedDates,
 } from './experts.service'
 import { authMiddleware, requirePermission } from '../../middleware/auth.middleware'
 
@@ -60,6 +63,14 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .get('/availability', authMiddleware, async (c) => getAvailability(c))
   .post('/availability', authMiddleware, zValidator('json', updateAvailabilityInput), async (c) =>
     updateAvailability(c, c.req.valid('json')),
+  )
+  .post(
+    '/availability/block-dates/bulk-create', authMiddleware,
+    zValidator('json', bulkCreateBlockedDatesInput),
+    async (c) => bulkCreateBlockedDates(c, c.req.valid('json')),
+  )
+  .delete('/availability/block-dates/:blockedDateId', authMiddleware, async (c) =>
+    deleteBlockedDate(c, c.req.param('blockedDateId')),
   )
   .get('/:expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
   .get('/:expertSlug/service/:serviceSlug', async (c) =>
