@@ -40,6 +40,10 @@ export async function createAppointment({ serviceId, subServiceId, dateTime, ...
       leadSource: 'Website',
     }),
   ])
+   return {
+    success: true,
+    message: 'Appointment created successfully.',
+  }
 }
 
 export async function getAppointmentById(id: string) {

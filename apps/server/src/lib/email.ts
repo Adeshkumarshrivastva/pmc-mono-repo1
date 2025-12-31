@@ -1,9 +1,11 @@
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
-import dayjs from './dayjs'
+import { render } from '@react-email/render'
 import { config } from '../config'
 import { getErrorMessage } from './utils'
 import { createLogger } from './logger'
 
+
+import TrialSessionEmail from '../emails/trial-session-email'
 import type { SendTrialSessionEmailInput } from '../routes/patient/patient.input'
 
 const sesClient = new SESv2Client()
@@ -18,33 +20,14 @@ export async function sendTrialSessionEmail({
   cc: string[]
   input: SendTrialSessionEmailInput
 }) {
-  const { name, phoneNumber, date } = input
-
-  const formattedDate = dayjs(date).format('DD MMM YYYY, hh:mm A')
-
   const subject = 'Your Trial Session is Booked'
 
-  const htmlContent = `
-    <p>Hi ${name},</p>
-
-    <p>Your trial session has been successfully scheduled.</p>
-
-    <p>
-      <strong>Date & Time:</strong> ${formattedDate}<br />
-      <strong>Phone:</strong> ${phoneNumber}
-    </p>
-
-    <p>
-      Our team will contact you shortly with further details.
-    </p>
-
-    <p>
-      Thanks & regards,<br />
-      Team
-    </p>
-  `
-
   try {
+    
+    const htmlContent = await render(
+      TrialSessionEmail({ input }),
+    )
+
     await sesClient.send(
       new SendEmailCommand({
         FromEmailAddress: config.email.emailSender,
@@ -55,7 +38,9 @@ export async function sendTrialSessionEmail({
         Content: {
           Simple: {
             Subject: { Data: subject },
-            Body: { Html: { Data: htmlContent } },
+            Body: {
+              Html: { Data: htmlContent },
+            },
           },
         },
       }),
@@ -63,6 +48,8 @@ export async function sendTrialSessionEmail({
 
     logger.info(`Trial session email sent successfully: ${to}`)
   } catch (error) {
-    logger.error(`Failed to send trial session email: ${getErrorMessage(error)} [email=${to}]`)
+    logger.error(
+      `Failed to send trial session email: ${getErrorMessage(error)} [email=${to}]`,
+    )
   }
 }
