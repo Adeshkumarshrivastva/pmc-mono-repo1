@@ -30,18 +30,9 @@ export const Leads: CollectionConfig = {
       required: true,
     },
     {
-      name: 'service',
-      label: 'Service',
-      type: 'relationship',
-      relationTo: 'services',
-      hasMany: false,
-    },
-    {
-      name: 'subService',
-      label: 'Sub Service',
-      type: 'relationship',
-      relationTo: 'services',
-      hasMany: false,
+      name: 'serviceName',
+      label: 'Service Name',
+      type: 'text',
     },
     {
       name: 'message',

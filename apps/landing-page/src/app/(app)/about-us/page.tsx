@@ -33,7 +33,7 @@ export default async function Page() {
       <TeamMembersSection data={teamMembersSection} />
       {/* <ExpertsSection data={expertsSection} /> */}
       <OpportunitySection data={opportunitiesSection} />
-      <ContactSection data={contactSection} services={services.docs} />
+      <ContactSection data={contactSection} />
     </div>
   )
 }

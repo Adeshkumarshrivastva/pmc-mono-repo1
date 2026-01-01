@@ -32,7 +32,7 @@ export default async function DeepTmsPage() {
       <WorkSection data={deepTmsWorkSection} />
       <EligibilitySection data={deepTmsEligibilitySection} />
       <ComparisonTableSection data={deepTmsComparisonSection} />
-      <ContactSection data={contactSection} services={services.docs} />
+      <ContactSection data={contactSection} />
       <ServicesSection data={servicesSection} services={deepTmsServices.docs} />
       <FAQSection data={faqSection} />
     </div>
