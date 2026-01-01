@@ -14,9 +14,20 @@ import {
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/check-box'
-import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
+import { localMinutesToUtcMinutes, MINUTES_PER_DAY, minutesToDate, toHHMMA, utcMinutesToLocalMinutes } from '@/lib/date'
 import dayjs from '@/lib/dayjs'
+
+const SLOT_INTERVAL_MINUTES = 15
+
+const TIME_OPTIONS: { value: number; label: string }[] = (() => {
+  const options: { value: number; label: string }[] = []
+  for (let m = 0; m < MINUTES_PER_DAY; m += SLOT_INTERVAL_MINUTES) {
+    options.push({ value: m, label: toHHMMA(minutesToDate(m, dayjs().toDate())) })
+  }
+  return options
+})()
 
 interface BlockedDatesCalendarProps {
   blockedDates: { id: string; startDate: string; endDate: string }[]
@@ -29,8 +40,8 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedDates, setSelectedDates] = useState<Date[] | undefined>([])
   const [isAllDay, setIsAllDay] = useState(true)
-  const [startTime, setStartTime] = useState('10:00')
-  const [endTime, setEndTime] = useState('17:00')
+  const [startMinutes, setStartMinutes] = useState(270)
+  const [endMinutes, setEndMinutes] = useState(690)
 
   const visibleBlockedDates = blockedDates.sort(
     (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
@@ -39,7 +50,7 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
 
   // Create blocked dates
   const bulkCreateMutation = useMutation({
-    mutationFn: async (dates: { startDate: string; endDate: string }[]) => {
+    mutationFn: async (dates: { startDate: number; endDate: number }[]) => {
       const res = await honoClient.server.experts.availability['block-dates']['bulk-create'].$post({
         json: { dates },
       })
@@ -76,14 +87,20 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
     },
   })
 
-  // Check if date is disabled
+  // Disable certain days in calendar
   const isDateDisabled = (date: Date) => {
-    const today = dayjs().startOf('day')
-    const currentMetricInfo = dayjs(date)
+    if (dayjs(date).isBefore(dayjs().startOf('day'))) return true
+    if (!workingDayIndices.has(date.getDay())) return true
 
-    if (currentMetricInfo.isBefore(today)) return true
-    const dayIndex = date.getDay()
-    if (!workingDayIndices.has(dayIndex)) return true
+    const isBlocked = blockedDates.some(
+      (block) =>
+        dayjs(date).isSame(block.startDate, 'day') ||
+        dayjs(date).isSame(block.endDate, 'day') ||
+        (dayjs(date).isAfter(block.startDate, 'day') && dayjs(date).isBefore(block.endDate, 'day')),
+    )
+
+    if (isBlocked) return true
+
     return false
   }
 
@@ -91,8 +108,8 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
     setIsDialogOpen(true)
     setSelectedDates([])
     setIsAllDay(true)
-    setStartTime('10:00')
-    setEndTime('17:00')
+    setStartMinutes(270)
+    setEndMinutes(690)
   }
 
   // Handle dialog save
@@ -101,24 +118,31 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
       toast.error('Please select at least one date')
       return
     }
-    const payload = selectedDates.map((date) => {
-      let start = dayjs(date)
-      let end = dayjs(date)
-      if (isAllDay) {
-        start = start.startOf('day')
-        end = end.endOf('day')
-      } else {
-        const [startHour, startMinute] = startTime.split(':').map(Number)
-        const [endHour, endMinute] = endTime.split(':').map(Number)
 
-        start = start.hour(startHour).minute(startMinute)
-        end = end.hour(endHour).minute(endMinute)
-      }
-      return {
-        startDate: start.toISOString(),
-        endDate: end.toISOString(),
+    const payload = selectedDates.map((date) => {
+      const localDate = dayjs(date)
+
+      if (isAllDay) {
+        return {
+          startDate: localDate.startOf('day').valueOf(),
+          endDate: localDate.endOf('day').valueOf(),
+        }
+      } else {
+        const localStartMinutes = utcMinutesToLocalMinutes(startMinutes)
+        const localEndMinutes = utcMinutesToLocalMinutes(endMinutes)
+
+        const startHours = Math.floor(localStartMinutes / 60)
+        const startMins = localStartMinutes % 60
+        const endHours = Math.floor(localEndMinutes / 60)
+        const endMins = localEndMinutes % 60
+
+        return {
+          startDate: localDate.hour(startHours).minute(startMins).second(0).millisecond(0).valueOf(),
+          endDate: localDate.hour(endHours).minute(endMins).second(0).millisecond(0).valueOf(),
+        }
       }
     })
+
     bulkCreateMutation.mutate(payload)
   }
 
@@ -173,6 +197,7 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
                 selected={selectedDates}
                 onSelect={setSelectedDates}
                 disabled={isDateDisabled}
+                showOutsideDays={false}
                 className="rounded-md border-0"
               />
             </div>
@@ -183,19 +208,42 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
               </div>
 
               {!isAllDay && (
-                <div className="grid grid-rows-2 gap-4">
+                <div className="grid gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="start-time">Start Time</Label>
-                    <Input
-                      id="start-time"
-                      type="time"
-                      value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
-                    />
+                    <Select
+                      value={String(utcMinutesToLocalMinutes(startMinutes))}
+                      onValueChange={(val) => setStartMinutes(localMinutesToUtcMinutes(Number(val)))}
+                    >
+                      <SelectTrigger id="start-time">
+                        <SelectValue placeholder="Start" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TIME_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={String(opt.value)}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="end-time">End Time</Label>
-                    <Input id="end-time" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                    <Select
+                      value={String(utcMinutesToLocalMinutes(endMinutes))}
+                      onValueChange={(val) => setEndMinutes(localMinutesToUtcMinutes(Number(val)))}
+                    >
+                      <SelectTrigger id="end-time">
+                        <SelectValue placeholder="End" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TIME_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={String(opt.value)}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               )}
