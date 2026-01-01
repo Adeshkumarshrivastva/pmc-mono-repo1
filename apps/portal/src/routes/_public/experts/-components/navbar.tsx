@@ -1,4 +1,4 @@
-import { Link, useLocation } from '@tanstack/react-router'
+import { Link, useLocation, useRouteContext } from '@tanstack/react-router'
 import { useState } from 'react'
 import { MenuIcon } from 'lucide-react'
 import type { Service } from '@pmc/server/src/generated/prisma/client'
@@ -6,6 +6,7 @@ import { Logo } from '@/components/ui/logo'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
 type NavbarProps = { services: Service[] }
 
@@ -23,6 +24,8 @@ export default function Navbar({}: NavbarProps) {
   const location = useLocation()
   const pathname = location.pathname
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { sessionData } = useRouteContext({ from: '__root__' })
+  const isLoggedIn = !!sessionData?.data?.user
 
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
@@ -54,6 +57,22 @@ export default function Navbar({}: NavbarProps) {
           })}
         </div>
 
+        <div className="hidden xl:block">
+          {isLoggedIn ? (
+            <Link to="/">
+              <Button variant="secondary" size="lg">
+                DASHBOARD
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/login">
+              <Button variant="secondary" size="lg">
+                SIGN IN
+              </Button>
+            </Link>
+          )}
+        </div>
+
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger className="block xl:hidden">
             <MenuIcon />
@@ -70,6 +89,21 @@ export default function Navbar({}: NavbarProps) {
                       </a>
                     </div>
                   ))}
+                  <div className="text-lg pt-4">
+                    {isLoggedIn ? (
+                      <Link to="/" onClick={() => setSheetOpen(false)}>
+                        <Button variant="secondary" className="w-full" size="lg">
+                          DASHBOARD
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Link to="/login" onClick={() => setSheetOpen(false)}>
+                        <Button variant="secondary" className="w-full" size="lg">
+                          SIGN IN
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </SheetDescription>
             </SheetHeader>
