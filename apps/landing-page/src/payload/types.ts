@@ -1099,6 +1099,10 @@ export interface Home {
         }[]
       | null;
   };
+  bookingSection?: {
+    title?: string | null;
+    description?: string | null;
+  };
   deepTmsSection?: {
     title?: string | null;
     description?: {
@@ -1847,6 +1851,12 @@ export interface HomeSelect<T extends boolean = true> {
               value?: T;
               id?: T;
             };
+      };
+  bookingSection?:
+    | T
+    | {
+        title?: T;
+        description?: T;
       };
   deepTmsSection?:
     | T

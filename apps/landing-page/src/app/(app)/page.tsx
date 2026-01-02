@@ -18,6 +18,7 @@ import { getWebinars } from '@/payload/actions'
 import WebinarsSection from './_components/webinars-section'
 import PartnersSection from './_components/partners-section'
 import { fetchPublicExperts } from '@/lib/experts'
+import BookingSection from './_components/booking-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -37,6 +38,7 @@ export default async function HomePage() {
     quizSection,
     blogsSection,
     webinarsSection,
+    bookingSection,
   } = await payload.findGlobal({
     slug: 'home',
   })
@@ -55,6 +57,7 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
       <HeroSection data={heroSetion} />
+      <BookingSection data={bookingSection} />
       <DeepTmsSection data={deepTmsSection} />
       <MapSection data={mapSection} />
       <QuizSection data={quizSection} />

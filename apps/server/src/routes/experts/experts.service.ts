@@ -855,6 +855,7 @@ export async function getAvailability(c: C) {
 export async function getPublicExpertsList(c: C) {
   try {
     const experts = await prisma.expert.findMany({
+      where: { isDeleted: false },
       select: {
         id: true,
         slug: true,
@@ -862,6 +863,15 @@ export async function getPublicExpertsList(c: C) {
         type: true,
         bio: true,
         image: true,
+        city: true,
+        country: true,
+        avgRating: true,
+        expertise: true,
+        experienceInYears: true,
+        gender: true,
+        user: { select: { id: true, name: true, image: true } },
+        servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
+        availability: true,
         file: {
           select: {
             fileName: true,
