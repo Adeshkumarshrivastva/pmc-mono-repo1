@@ -189,10 +189,6 @@ export async function getPatientDashboard(c: C) {
 }
 
 export async function sendTrialSessionEmail(c: C, input: SendTrialSessionEmailInput) {
-  if (!input.email) {
-    return c.json({ error: 'Email is required' }, 400)
-  }
-
   try {
     const htmlContent = await render(TrialSessionEmail({ input }))
 
