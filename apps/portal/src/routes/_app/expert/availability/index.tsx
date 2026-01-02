@@ -10,8 +10,8 @@ import { Button } from '@/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
-import { localMinutesToUtcMinutes, MINUTES_PER_DAY, minutesToDate, toHHMMA, utcMinutesToLocalMinutes } from '@/lib/date'
-import dayjs from '@/lib/dayjs'
+import { localMinutesToUtcMinutes, utcMinutesToLocalMinutes } from '@/lib/date'
+import { TIME_OPTIONS } from '@/lib/booking'
 import { BlockedDatesCalendar } from './-components/blocked-dates-calendar'
 
 export const Route = createFileRoute('/_app/expert/availability/')({
@@ -33,8 +33,6 @@ export const Route = createFileRoute('/_app/expert/availability/')({
   },
 })
 
-const SLOT_INTERVAL_MINUTES = 15
-
 type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 const DAY_LABELS: { index: DayIndex; label: string }[] = [
@@ -46,14 +44,6 @@ const DAY_LABELS: { index: DayIndex; label: string }[] = [
   { index: 6, label: 'Saturday' },
   { index: 0, label: 'Sunday' },
 ]
-
-const TIME_OPTIONS: { value: number; label: string }[] = (() => {
-  const options: { value: number; label: string }[] = []
-  for (let m = 0; m < MINUTES_PER_DAY; m += SLOT_INTERVAL_MINUTES) {
-    options.push({ value: m, label: toHHMMA(minutesToDate(m, dayjs().toDate())) })
-  }
-  return options
-})()
 
 const timeRangeSchema = z
   .object({

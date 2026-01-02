@@ -191,8 +191,8 @@ export type UpdateAvailabilityInput = z.infer<typeof updateAvailabilityInput>
 export const bulkCreateBlockedDatesInput = z.object({
   dates: z.array(
     z.object({
-      startDate: z.number(),
-      endDate: z.number(),
+      startDate: z.coerce.date(),
+      endDate: z.coerce.date(),
     }),
   ),
 })

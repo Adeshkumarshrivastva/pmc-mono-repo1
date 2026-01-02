@@ -1072,9 +1072,7 @@ export async function bulkCreateBlockedDates(c: C, input: BulkCreateBlockedDates
   }
 
   for (const date of input.dates) {
-    const start = new Date(date.startDate)
-    const end = new Date(date.endDate)
-    if (start >= end) {
+    if (date.startDate >= date.endDate) {
       return c.json({ error: 'Start date must be before end date for all entries' }, 400)
     }
   }
@@ -1082,8 +1080,8 @@ export async function bulkCreateBlockedDates(c: C, input: BulkCreateBlockedDates
   try {
     const records = input.dates.map((d) => ({
       expertId: expert.id,
-      startDate: new Date(d.startDate),
-      endDate: new Date(d.endDate),
+      startDate: d.startDate,
+      endDate: d.endDate,
     }))
 
     const blockedDates = await prisma.expertBlockDates.createMany({

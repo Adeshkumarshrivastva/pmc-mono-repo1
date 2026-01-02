@@ -65,7 +65,8 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
     updateAvailability(c, c.req.valid('json')),
   )
   .post(
-    '/availability/block-dates/bulk-create', authMiddleware,
+    '/availability/block-dates/bulk-create',
+    authMiddleware,
     zValidator('json', bulkCreateBlockedDatesInput),
     async (c) => bulkCreateBlockedDates(c, c.req.valid('json')),
   )
