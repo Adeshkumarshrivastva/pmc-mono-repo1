@@ -4,14 +4,15 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { toast } from 'sonner'
 import { TrashIcon, CirclePlusIcon } from 'lucide-react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
-import { localMinutesToUtcMinutes, MINUTES_PER_DAY, minutesToDate, toHHMMA, utcMinutesToLocalMinutes } from '@/lib/date'
-import dayjs from '@/lib/dayjs'
+import { localMinutesToUtcMinutes, utcMinutesToLocalMinutes } from '@/lib/date'
+import { TIME_OPTIONS } from '@/lib/booking'
+import { BlockedDatesCalendar } from './-components/blocked-dates-calendar'
 
 export const Route = createFileRoute('/_app/expert/availability/')({
   component: ExpertAvailability,
@@ -32,8 +33,6 @@ export const Route = createFileRoute('/_app/expert/availability/')({
   },
 })
 
-const SLOT_INTERVAL_MINUTES = 15
-
 type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 const DAY_LABELS: { index: DayIndex; label: string }[] = [
@@ -45,14 +44,6 @@ const DAY_LABELS: { index: DayIndex; label: string }[] = [
   { index: 6, label: 'Saturday' },
   { index: 0, label: 'Sunday' },
 ]
-
-const TIME_OPTIONS: { value: number; label: string }[] = (() => {
-  const options: { value: number; label: string }[] = []
-  for (let m = 0; m < MINUTES_PER_DAY; m += SLOT_INTERVAL_MINUTES) {
-    options.push({ value: m, label: toHHMMA(minutesToDate(m, dayjs().toDate())) })
-  }
-  return options
-})()
 
 const timeRangeSchema = z
   .object({
@@ -98,7 +89,13 @@ interface DayAvailabilityFieldProps {
 }
 
 function ExpertAvailability() {
-  const { availabilityData } = Route.useLoaderData()
+  const { availabilityData: initialData, user } = Route.useLoaderData()
+
+  const { data: availabilityData } = useSuspenseQuery({
+    queryKey: ['expert-availability', user.id],
+    queryFn: fetchExpertAvailability,
+    initialData,
+  })
 
   const form = useForm<FormValues>({
     resolver: zodResolver(validationSchema),
@@ -123,7 +120,7 @@ function ExpertAvailability() {
   })
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold tracking-tight">Set your weekly availability</h1>
         <p className="text-muted-foreground text-sm">
@@ -137,7 +134,7 @@ function ExpertAvailability() {
           onSubmit={form.handleSubmit((values) => {
             saveAvaialbilityMutation.mutate(values)
           })}
-          className="space-y-6 max-w-xl"
+          className="space-y-6 flex-col col-start-1"
         >
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Weekly schedule</span>
@@ -175,6 +172,8 @@ function ExpertAvailability() {
           </div>
         </form>
       </Form>
+
+      <BlockedDatesCalendar blockedDates={availabilityData.blockedDates} availabilityDays={availabilityData.days} />
     </div>
   )
 }
