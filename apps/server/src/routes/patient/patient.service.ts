@@ -1,9 +1,19 @@
+import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
+import { render } from '@react-email/render'
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import type { Prisma } from '../../generated/prisma'
 import dayjs from '../../lib/dayjs'
-import type { PatientBookingsSearchQuery, SendTrialSessionEmailInput, UpdatePatientInput } from './patient.input'
-import { sendTrialSessionEmail } from '../../lib/email'
+
+import TrialSessionEmail from '../../emails/trial-session-email'
+import { config } from '../../config'
+import { createLogger } from '../../lib/logger'
+import { getErrorMessage } from '../../lib/utils'
+
+import type { PatientBookingsSearchQuery, UpdatePatientInput, SendTrialSessionEmailInput } from './patient.input'
+
+const sesClient = new SESv2Client()
+const logger = createLogger('trial-session-email')
 
 export async function getPatients(c: C) {
   const page = Number(c.req.query('page') || '1')
@@ -14,9 +24,7 @@ export async function getPatients(c: C) {
     prisma.patient.findMany({
       skip,
       take: pageSize,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
       include: {
         user: {
           select: {
@@ -34,9 +42,7 @@ export async function getPatients(c: C) {
 
 export async function getPatientByUserId(c: C) {
   const patient = await prisma.patient.findUnique({
-    where: {
-      userId: c.get('user')?.id,
-    },
+    where: { userId: c.get('user')?.id },
   })
 
   return c.json(patient)
@@ -50,9 +56,7 @@ export async function updatePatientByUserId(c: C, input: UpdatePatientInput) {
   }
 
   const patient = await prisma.patient.update({
-    where: {
-      userId,
-    },
+    where: { userId },
     data: {
       name: input.name,
       email: input.email || null,
@@ -73,13 +77,8 @@ export async function getPatientBookings(c: C, input: PatientBookingsSearchQuery
     }
 
     const patient = await prisma.patient.findUnique({
-      where: {
-        userId: userId,
-      },
-      select: {
-        id: true,
-        userId: true,
-      },
+      where: { userId },
+      select: { id: true },
     })
 
     if (!patient) {
@@ -107,11 +106,7 @@ export async function getPatientBookings(c: C, input: PatientBookingsSearchQuery
     const bookings = await prisma.booking.findMany({
       where: bookingsWhereInput,
       include: {
-        expert: {
-          include: {
-            user: true,
-          },
-        },
+        expert: { include: { user: true } },
         prescription: true,
         payments: true,
       },
@@ -133,9 +128,7 @@ export async function getPatientDashboard(c: C) {
     }
 
     const patient = await prisma.patient.findUnique({
-      where: {
-        userId: userId,
-      },
+      where: { userId },
       select: {
         id: true,
         name: true,
@@ -152,43 +145,26 @@ export async function getPatientDashboard(c: C) {
     const now = dayjs().toDate()
 
     const [totalBookings, upcomingBookings, completedBookings, recentBookings] = await Promise.all([
-      prisma.booking.count({
-        where: {
-          patientId: patient.id,
-        },
-      }),
+      prisma.booking.count({ where: { patientId: patient.id } }),
       prisma.booking.findMany({
         where: {
           patientId: patient.id,
           OR: [{ startDateTime: { gte: now } }, { startDateTime: { lt: now }, endDateTime: { gt: now } }],
         },
         include: {
-          expert: {
-            include: {
-              user: true,
-            },
-          },
+          expert: { include: { user: true } },
           service: true,
         },
         orderBy: { startDateTime: 'asc' },
         take: 3,
       }),
       prisma.booking.count({
-        where: {
-          patientId: patient.id,
-          status: 'COMPLETED',
-        },
+        where: { patientId: patient.id, status: 'COMPLETED' },
       }),
       prisma.booking.findMany({
-        where: {
-          patientId: patient.id,
-        },
+        where: { patientId: patient.id },
         include: {
-          expert: {
-            include: {
-              user: true,
-            },
-          },
+          expert: { include: { user: true } },
           service: true,
         },
         orderBy: { createdAt: 'desc' },
@@ -212,16 +188,35 @@ export async function getPatientDashboard(c: C) {
   }
 }
 
-export async function sendTrialSessionEmailController(c: C, input: SendTrialSessionEmailInput) {
-  if (input.email) {
-    await sendTrialSessionEmail({
-      to: input.email,
-      cc: ['helpdesk@positivemindcare.com'],
-      input,
-    })
+export async function sendTrialSessionEmail(c: C, input: SendTrialSessionEmailInput) {
+  if (!input.email) {
+    return c.json({ error: 'Email is required' }, 400)
   }
 
-  return c.json({
-    message: true,
-  })
+  try {
+    const htmlContent = await render(TrialSessionEmail({ input }))
+
+    await sesClient.send(
+      new SendEmailCommand({
+        FromEmailAddress: config.email.emailSender,
+        Destination: {
+          ToAddresses: [input.email],
+          CcAddresses: ['helpdesk@positivemindcare.com'],
+        },
+        Content: {
+          Simple: {
+            Subject: { Data: 'Your Trial Session is Booked' },
+            Body: {
+              Html: { Data: htmlContent },
+            },
+          },
+        },
+      }),
+    )
+
+    return c.json({ success: true })
+  } catch (error) {
+    logger.error(`Failed to send trial session email: ${getErrorMessage(error)}`)
+    return c.json({ error: 'Failed to send email' }, 500)
+  }
 }
