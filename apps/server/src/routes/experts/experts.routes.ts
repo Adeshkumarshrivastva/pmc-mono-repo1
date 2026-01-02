@@ -67,10 +67,11 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .post(
     '/availability/block-dates/bulk-create',
     authMiddleware,
+    requirePermission(['EXPERT']),
     zValidator('json', bulkCreateBlockedDatesInput),
     async (c) => bulkCreateBlockedDates(c, c.req.valid('json')),
   )
-  .delete('/availability/block-dates/:blockedDateId', authMiddleware, async (c) =>
+  .delete('/availability/block-dates/:blockedDateId', authMiddleware, requirePermission(['EXPERT']), async (c) =>
     deleteBlockedDate(c, c.req.param('blockedDateId')),
   )
   .get('/:expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))

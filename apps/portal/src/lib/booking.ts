@@ -30,7 +30,6 @@ export type Booking = InferResponseType<HonoClient['server']['experts']['booking
 export const BOOKING_PERIODS = ['upcoming', 'past'] as const
 export type BookingPeriod = (typeof BOOKING_PERIODS)[number]
 
-// Time slot configuration
 export const SLOT_INTERVAL_MINUTES = 15
 
 // Generate time options for dropdowns (00:00 AM - 11:45 PM in 15-minute intervals)
