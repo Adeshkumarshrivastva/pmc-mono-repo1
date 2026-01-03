@@ -10,11 +10,16 @@
   --primary-foreground: #fff;
   --muted-foreground: #606060;
   --accent: #fefee3;
+  --card-accent: #e8eedf;
   --accent-foreground: #254d47;
   --card: #778c6e;
   --card-foreground: #fefee3;
   --border: #d0d0d0;
   --error: #9f0712;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --ring: #a1a1a1;
+  --sidebar-ring: #a1a1a1;
   --font-family: 'Figtree', sans-serif;
   --font-display: 'Barlow', sans-serif;
 }
@@ -26,13 +31,46 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
+  --color-card-accent: var(--card-accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-border: var(--border);
   --color-error: var(--error);
+  --color-ring: var(--ring);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --default-font-family: var(--font-family);
   --font-display: var(--font-display);
+
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) infinite linear;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
 }
 
 .list-bullet {
