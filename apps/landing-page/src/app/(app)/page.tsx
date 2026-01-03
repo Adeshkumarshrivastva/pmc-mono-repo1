@@ -2,6 +2,7 @@ import { getPayloadClient } from '@/lib/payload'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { getServices } from '@/payload/actions'
 import HeroSection from './_components/hero-section'
+import BookingSection from './_components/booking-section'
 import TreatmentSection from './_components/treatment-section'
 import ContactSection from './_components/contact-section'
 import DeepTmsSection from './_components/deep-tms-section'
@@ -18,12 +19,12 @@ import { getWebinars } from '@/payload/actions'
 import WebinarsSection from './_components/webinars-section'
 import PartnersSection from './_components/partners-section'
 import { fetchPublicExperts } from '@/lib/experts'
-import BookingSection from './_components/booking-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
   const {
     heroSetion,
+    bookingSection,
     deepTmsSection,
     mapSection,
     treatmentSection,
@@ -38,7 +39,6 @@ export default async function HomePage() {
     quizSection,
     blogsSection,
     webinarsSection,
-    bookingSection,
   } = await payload.findGlobal({
     slug: 'home',
   })
