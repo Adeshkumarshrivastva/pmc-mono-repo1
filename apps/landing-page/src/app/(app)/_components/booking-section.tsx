@@ -364,7 +364,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                 <input
                   type="text"
                   placeholder="Start typing to search experts..."
-                  className="flex-1 h-12 px-4 bg-transparent focus-visible:outline-card-accent placeholder:text-gray-400 text-base"
+                  className="flex-1 h-12 px-4 bg-transparent focus-visible:outline-none placeholder:text-gray-400 text-base"
                   value={filters.search}
                   onChange={(e) => updateFilter('search', e.target.value)}
                   onFocus={() => setSearchFocused(true)}
