@@ -176,7 +176,9 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
           </div>
 
           <Button
-            className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-lg text-xs transition-colors"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-xl transition-colors"
+            variant="custom"
+            size="custom"
             onClick={() => router.push(`/experts/${expert.slug}`)}
           >
             BOOK
@@ -189,7 +191,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
 
 function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 mb-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6">
       {experts.map((expert) => (
         <ExpertGrid key={expert.id} expert={expert} />
       ))}
@@ -358,11 +360,11 @@ export default function BookingSection({ data }: BookingSectionProps) {
         </div>
 
         {/* Main */}
-        <div className="flex flex-col md:flex-row gap-10 items-start">
+        <div className="flex flex-col md:flex-row gap-10 items-start mb-6">
           {/* Left Column */}
           <div className="w-full md:w-72 lg:w-80 flex flex-col gap-8 flex-shrink-0">
             {/* Search Bar */}
-            <div className="pb-2">
+            <div>
               <div className="bg-white rounded-xl shadow-lg p-2 flex items-center">
                 <input
                   type="text"
@@ -469,7 +471,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Specializations</label>
                       <Combobox
-                        placeholder="Special..."
+                        placeholder="Select Specializations"
                         options={specializationOptions}
                         multiple={true}
                         value={
@@ -489,7 +491,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Location</label>
                       <Combobox
-                        placeholder="Location"
+                        placeholder="Select Location"
                         options={locationOptions}
                         value={filters.location || ''}
                         onValueChange={(value) => {
