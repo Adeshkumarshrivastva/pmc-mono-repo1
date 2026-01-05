@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { Star, Calendar, MapPin, X, UserIcon, Filter } from 'lucide-react'
+import { Search, Star, Calendar, MapPin, X, UserIcon, Filter } from 'lucide-react'
 import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
 import { Combobox } from '@/components/ui/combo-box'
@@ -318,7 +318,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
   }
 
   return (
-    <section className="w-full bg-primary p-10">
+    <section className="w-full bg-primary px-4 py-8">
       <div className="container max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div className="max-w-2xl">
@@ -360,10 +360,11 @@ export default function BookingSection({ data }: BookingSectionProps) {
             {/* Search Bar */}
             <div>
               <div className="bg-white rounded-xl shadow-lg p-2 flex items-center">
+                <Search className={`h-7 w-7 mr-2 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`} />
                 <input
                   type="text"
                   placeholder="Start typing to search experts..."
-                  className="flex-1 bg-transparent border-none focus:ring-0 text-slate-800 placeholder:text-gray-400 h-12 px-4 text-base"
+                  className="flex-1 h-12 px-4 bg-transparent focus-visible:outline-card-accent placeholder:text-gray-400 text-base"
                   value={filters.search}
                   onChange={(e) => updateFilter('search', e.target.value)}
                   onFocus={() => setSearchFocused(true)}
@@ -372,9 +373,9 @@ export default function BookingSection({ data }: BookingSectionProps) {
                 {filters.search && (
                   <button
                     onClick={() => updateFilter('search', '')}
-                    className="p-2 ml-2 hover:bg-card-accent rounded-lg transition-colors"
+                    className="p-1 ml-2 hover:bg-card-accent rounded-lg transition-colors"
                   >
-                    <X className="w-5 h-5 text-muted-foreground" />
+                    <X className="w-6 h-6 text-muted-foreground" />
                   </button>
                 )}
               </div>
@@ -465,7 +466,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Specializations</label>
                       <Combobox
-                        placeholder="Select Specializations"
+                        placeholder="Select"
                         options={specializationOptions}
                         multiple={true}
                         value={
@@ -487,7 +488,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                       <Combobox
                         placeholder="Select Location"
                         options={locationOptions}
-                        value={filters.location || ''}
+                        value={filters.location || 'GURGAON'}
                         onValueChange={(value) => {
                           const locationValue = Array.isArray(value) ? value[0] : value
                           updateFilter('location', locationValue || undefined)
