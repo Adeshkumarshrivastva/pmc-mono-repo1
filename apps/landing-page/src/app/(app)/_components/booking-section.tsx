@@ -343,12 +343,6 @@ export default function BookingSection({ data }: BookingSectionProps) {
                   Book Session
                 </TabsTrigger>
                 <TabsTrigger
-                  value="quick"
-                  className="cursor-pointer p-5 font-normal text-lg data-[state=active]:bg-accent data-[state=active]:text-primary data-[state=inactive]:text-accent"
-                >
-                  Quick Test
-                </TabsTrigger>
-                <TabsTrigger
                   value="advanced"
                   className="cursor-pointer p-5 font-normal text-lg data-[state=active]:bg-accent data-[state=active]:text-primary data-[state=inactive]:text-accent"
                 >
