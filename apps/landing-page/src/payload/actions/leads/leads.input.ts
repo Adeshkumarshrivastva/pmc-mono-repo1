@@ -2,11 +2,15 @@ import { z } from 'zod'
 import { objectId } from '@/lib/validation'
 
 export const leadFormInput = z.object({
-  fullName: z.string().min(1),
-  email: z.email(),
-  phone: z.string().min(1),
-  service: z.string(),
-  message: z.string().min(1),
+  fullName: z.string().min(1, 'Full name is required'),
+
+  email: z.string().email('Invalid email address').optional().or(z.literal('')),
+
+  phone: z.string().min(1, 'Phone number is required'),
+
+  service: z.string().min(1, 'Service is required'),
+
+  message: z.string().optional().or(z.literal('')),
 })
 
 export type LeadFormInput = z.infer<typeof leadFormInput>
