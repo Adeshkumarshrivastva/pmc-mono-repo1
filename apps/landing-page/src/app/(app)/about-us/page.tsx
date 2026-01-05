@@ -31,9 +31,9 @@ export default async function Page() {
       <WhatWeDoSection data={whatWeDoSection} />
       <MissionVisionSection data={missionVisionStory} />
       <TeamMembersSection data={teamMembersSection} />
-      <ExpertsSection data={expertsSection} />
+      {/* <ExpertsSection data={expertsSection} /> */}
       <OpportunitySection data={opportunitiesSection} />
-      <ContactSection data={contactSection} services={services.docs} />
+      <ContactSection data={contactSection} />
     </div>
   )
 }

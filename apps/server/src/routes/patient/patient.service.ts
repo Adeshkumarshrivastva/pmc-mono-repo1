@@ -18,10 +18,31 @@ const logger = createLogger('trial-session-email')
 export async function getPatients(c: C) {
   const page = Number(c.req.query('page') || '1')
   const pageSize = Number(c.req.query('pageSize') || '10')
+  const filter = c.req.query('filter') as 'day' | 'week' | 'month' | undefined
   const skip = (page - 1) * pageSize
+
+  const whereClause: Prisma.PatientWhereInput = {}
+
+  if (filter) {
+    const now = dayjs()
+    let startDate: Date
+
+    if (filter === 'day') {
+      startDate = now.startOf('day').toDate()
+    } else if (filter === 'week') {
+      startDate = now.subtract(7, 'days').startOf('day').toDate()
+    } else if (filter === 'month') {
+      startDate = now.subtract(30, 'days').startOf('day').toDate()
+    } else {
+      startDate = new Date(0)
+    }
+
+    whereClause.createdAt = { gte: startDate }
+  }
 
   const [patients, total] = await Promise.all([
     prisma.patient.findMany({
+      where: whereClause,
       skip,
       take: pageSize,
       orderBy: { createdAt: 'desc' },
@@ -34,7 +55,7 @@ export async function getPatients(c: C) {
         },
       },
     }),
-    prisma.patient.count(),
+    prisma.patient.count({ where: whereClause }),
   ])
 
   return c.json({ patients, total })

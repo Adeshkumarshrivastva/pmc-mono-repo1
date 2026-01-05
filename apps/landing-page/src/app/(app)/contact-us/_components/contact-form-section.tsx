@@ -21,15 +21,11 @@ export default function ContactFormSection({ data, services }: ContactFormSectio
       fullName: '',
       email: '',
       phone: '',
-      serviceId: '',
-      subServiceId: '',
+      service: '',
       message: '',
     },
     resolver: zodResolver(leadFormInput),
   })
-
-  const serviceId = useWatch({ control: form.control, name: 'serviceId' })
-  const subServices = services.find((service) => service.id === serviceId)?.subservices?.docs ?? []
 
   const contactFormMutation = useMutation({
     mutationFn: createLead,
@@ -100,7 +96,7 @@ export default function ContactFormSection({ data, services }: ContactFormSectio
                     />
                   </div>
 
-                  <div className="col-span-1">
+                  {/* <div className="col-span-full">
                     <label htmlFor="name" className="block text-primary-foreground text-xs font-semibold mb-2">
                       Service
                     </label>
@@ -115,30 +111,7 @@ export default function ContactFormSection({ data, services }: ContactFormSectio
                         </option>
                       ))}
                     </select>
-                  </div>
-
-                  <div className="col-span-1">
-                    <label htmlFor="name" className="block text-primary-foreground text-xs font-semibold mb-2">
-                      Sub Service
-                    </label>
-                    <select
-                      {...form.register('subServiceId')}
-                      className="w-full bg-primary-foreground rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                    >
-                      <option value={''}>Select Sub Service</option>
-                      {subServices.map((service) => {
-                        if (typeof service === 'string') {
-                          return null
-                        }
-
-                        return (
-                          <option key={service.id} value={service.id}>
-                            {service.name}
-                          </option>
-                        )
-                      })}
-                    </select>
-                  </div>
+                  </div> */}
 
                   <div className="col-span-full sm:col-span-2">
                     <label htmlFor="message" className="block text-primary-foreground text-xs font-semibold mb-2">

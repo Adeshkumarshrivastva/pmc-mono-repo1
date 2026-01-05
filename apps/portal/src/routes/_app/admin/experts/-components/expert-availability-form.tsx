@@ -10,8 +10,8 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
-import { localMinutesToUtcMinutes, MINUTES_PER_DAY, minutesToDate, toHHMMA, utcMinutesToLocalMinutes } from '@/lib/date'
-import dayjs from '@/lib/dayjs'
+import { localMinutesToUtcMinutes, utcMinutesToLocalMinutes } from '@/lib/date'
+import { TIME_OPTIONS } from '@/lib/booking'
 
 type AvailabilityData = InferResponseType<
   HonoClient['server']['admin']['experts'][':expertId']['availability']['$get'],
@@ -24,8 +24,6 @@ interface ExpertAvailabilityFormProps {
   onSuccess?: () => void
 }
 
-const SLOT_INTERVAL_MINUTES = 15
-
 type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 const DAY_LABELS: { index: DayIndex; label: string }[] = [
@@ -37,14 +35,6 @@ const DAY_LABELS: { index: DayIndex; label: string }[] = [
   { index: 6, label: 'Saturday' },
   { index: 0, label: 'Sunday' },
 ]
-
-const TIME_OPTIONS: { value: number; label: string }[] = (() => {
-  const options: { value: number; label: string }[] = []
-  for (let m = 0; m < MINUTES_PER_DAY; m += SLOT_INTERVAL_MINUTES) {
-    options.push({ value: m, label: toHHMMA(minutesToDate(m, dayjs().toDate())) })
-  }
-  return options
-})()
 
 const timeRangeSchema = z
   .object({
@@ -137,7 +127,7 @@ export default function ExpertAvailabilityForm({ expertId, initialData, onSucces
           <div className="flex items-center gap-2">
             <Button
               type="submit"
-              disabled={!form.formState.isDirty || saveAvailabilityMutation.isPending}
+              disabled={saveAvailabilityMutation.isPending}
               loading={saveAvailabilityMutation.isPending}
             >
               Save availability

@@ -13,7 +13,7 @@ import { CURRENCY_CONFIG } from '@/lib/booking'
 import { Marquee } from '@/components/ui/marquee'
 import { SERVICE_MODE_CONFIG } from '@/lib/location'
 import { specializationOptions } from '@/lib/expert'
-import { cn } from '@/lib/utils'
+import { cn, getFileUrl } from '@/lib/utils'
 import bgImage from '@/assets/bg-expert.svg'
 
 type FilterState = {
@@ -58,7 +58,11 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
             {expert.image ? (
               <div className="relative flex-shrink-0">
                 <div className="w-36 h-48">
-                  <img src={expert.image} alt={name} className="w-full h-full object-cover rounded-xl" />
+                  <img
+                    src={expert.file ? getFileUrl(expert.file.fileName) : expert.image}
+                    alt={name}
+                    className="w-full h-full object-cover rounded-xl"
+                  />
                 </div>
               </div>
             ) : (

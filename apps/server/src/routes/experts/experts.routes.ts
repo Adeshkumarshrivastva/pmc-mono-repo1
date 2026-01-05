@@ -10,6 +10,7 @@ import {
   updatePaymentStatusInput,
   updatePrescriptionInput,
   updateAvailabilityInput,
+  bulkCreateBlockedDatesInput,
 } from './experts.input'
 import {
   getExpertFromSlug,
@@ -27,10 +28,15 @@ import {
   getAllExperts,
   updateAvailability,
   getAvailability,
+  getExpertDashboard,
+  getPublicExpertsList,
+  deleteBlockedDate,
+  bulkCreateBlockedDates,
 } from './experts.service'
 import { authMiddleware, requirePermission } from '../../middleware/auth.middleware'
 
 export const expertsApp = new Hono<{ Variables: HonoContext }>()
+  .get('/public/list', async (c) => getPublicExpertsList(c))
   .get('/', zValidator('query', expertSearchQuery), async (c) => getExperts(c, c.req.valid('query')))
   .get('/all-experts', authMiddleware, requirePermission(['ADMIN']), async (c) => getAllExperts(c))
   .get('/bookings', authMiddleware, zValidator('query', expertBookingsSearchQuery), async (c) =>
@@ -40,6 +46,7 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .post('/bookings/prescription', authMiddleware, zValidator('json', createPrescriptionInput), async (c) =>
     createPrescription(c, c.req.valid('json')),
   )
+  .get('/dashboard', authMiddleware, async (c) => getExpertDashboard(c))
   .patch('/bookings/prescription', authMiddleware, zValidator('json', updatePrescriptionInput), async (c) =>
     updatePrescription(c, c.req.valid('json')),
   )
@@ -56,6 +63,16 @@ export const expertsApp = new Hono<{ Variables: HonoContext }>()
   .get('/availability', authMiddleware, async (c) => getAvailability(c))
   .post('/availability', authMiddleware, zValidator('json', updateAvailabilityInput), async (c) =>
     updateAvailability(c, c.req.valid('json')),
+  )
+  .post(
+    '/availability/block-dates/bulk-create',
+    authMiddleware,
+    requirePermission(['EXPERT']),
+    zValidator('json', bulkCreateBlockedDatesInput),
+    async (c) => bulkCreateBlockedDates(c, c.req.valid('json')),
+  )
+  .delete('/availability/block-dates/:blockedDateId', authMiddleware, requirePermission(['EXPERT']), async (c) =>
+    deleteBlockedDate(c, c.req.param('blockedDateId')),
   )
   .get('/:expertSlug', async (c) => getExpertFromSlug(c, c.req.param('expertSlug')))
   .get('/:expertSlug/service/:serviceSlug', async (c) =>

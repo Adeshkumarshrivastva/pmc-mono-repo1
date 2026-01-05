@@ -14,6 +14,7 @@ import {
   type UpdatePrescriptionInput,
   type ExpertProfileInput,
   type UpdateAvailabilityInput,
+  type BulkCreateBlockedDatesInput,
 } from './experts.input'
 import dayjs from '../../lib/dayjs'
 import {
@@ -32,7 +33,9 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
     const { page, limit } = query
     const skip = (page - 1) * limit
 
-    const whereClause: Prisma.ExpertWhereInput = {}
+    const whereClause: Prisma.ExpertWhereInput = {
+      isDeleted: false,
+    }
 
     if (query.search) {
       whereClause.OR = [
@@ -91,6 +94,7 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
         servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
         user: { select: { id: true, name: true, image: true } },
         availability: true,
+        file: true,
       },
       skip,
       take: limit,
@@ -138,8 +142,8 @@ function getSortValue(sortBy: SortBy, expert: ExpertSearchResponse): string | nu
 
 export async function getExpertFromSlug(c: C, expertSlug: string) {
   try {
-    const expert = await prisma.expert.findUnique({
-      where: { slug: expertSlug },
+    const expert = await prisma.expert.findFirst({
+      where: { slug: expertSlug, isDeleted: false },
       include: {
         servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
       },
@@ -160,8 +164,8 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
 
 export async function getExpertServiceFromSlug(c: C, expertSlug: string, serviceSlug: string) {
   try {
-    const expert = await prisma.expert.findUnique({
-      where: { slug: expertSlug },
+    const expert = await prisma.expert.findFirst({
+      where: { slug: expertSlug, isDeleted: false },
       select: { id: true },
     })
 
@@ -199,7 +203,7 @@ export async function getExpertMonthlyAvailableSlots(
     const { month, year } = query
 
     const expert = await prisma.expert.findFirst({
-      where: { slug: expertSlug },
+      where: { slug: expertSlug, isDeleted: false },
       select: { id: true },
     })
 
@@ -315,14 +319,23 @@ export async function getExpertMonthlyAvailableSlots(
     })
 
     blockDates.forEach((block) => {
-      const start = dayjs(block.startDate).startOf('day')
-      const end = dayjs(block.endDate).startOf('day')
+      const start = dayjs(block.startDate)
+      const end = dayjs(block.endDate)
 
-      for (let current = start; !current.isAfter(end, 'day'); current = current.add(1, 'day')) {
+      const startDay = start.startOf('day')
+      const endDay = end.endOf('day')
+
+      for (let current = startDay; !current.isAfter(endDay, 'day'); current = current.add(1, 'day')) {
         const dateStr = toDDMMYYYY(current)
 
         if (baseAvailability[dateStr]) {
-          baseAvailability[dateStr] = []
+          baseAvailability[dateStr] = baseAvailability[dateStr].filter((slot) => {
+            const slotStartDateTime = current.add(slot.startTime, 'minute')
+            const slotEndDateTime = current.add(slot.startTime + serviceDuration, 'minute')
+
+            const overlaps = slotStartDateTime.isBefore(end) && slotEndDateTime.isAfter(start)
+            return !overlaps
+          })
         }
       }
     })
@@ -718,7 +731,9 @@ export async function updatePaymentStatus(c: C, input: { status: 'PENDING' | 'CO
 }
 
 export async function getAllExperts(c: C) {
-  const experts = await prisma.expert.findMany()
+  const experts = await prisma.expert.findMany({
+    where: { isDeleted: false },
+  })
   return c.json(experts)
 }
 
@@ -825,5 +840,256 @@ export async function getAvailability(c: C) {
 
   const days = Array.from(daysMap.values())
 
-  return c.json({ days })
+  const blockedDates = await prisma.expertBlockDates.findMany({
+    where: { expertId: expert.id },
+    select: {
+      id: true,
+      startDate: true,
+      endDate: true,
+    },
+  })
+
+  return c.json({ days, blockedDates })
+}
+
+export async function getPublicExpertsList(c: C) {
+  try {
+    const experts = await prisma.expert.findMany({
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        type: true,
+        bio: true,
+        image: true,
+        file: {
+          select: {
+            fileName: true,
+            bucket: true,
+          },
+        },
+      },
+    })
+
+    return c.json(experts)
+  } catch (error) {
+    const errorMessage = getErrorMessage(error)
+    return c.json({ error: `Failed to fetch public experts list - ${errorMessage}` }, 500)
+  }
+}
+
+export async function getExpertDashboard(c: C) {
+  try {
+    const userId = c.var.user?.id
+    if (!userId) {
+      return c.json({ error: 'Missing userId' }, 400)
+    }
+
+    const expert = await prisma.expert.findUnique({
+      where: { userId },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert profile not found' }, 404)
+    }
+
+    const now = dayjs().toDate()
+    const thirtyDaysAgo = dayjs().subtract(30, 'days').toDate()
+
+    const [
+      totalBookings,
+      upcomingBookings,
+      completedBookings,
+      cancelledBookings,
+      totalPatients,
+      totalRevenue,
+      recentBookings,
+      recentPatients,
+    ] = await Promise.all([
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: { not: 'DRAFT' },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: { in: ['BOOKED', 'RESCHEDULED'] },
+          endDateTime: { gt: now },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: 'COMPLETED',
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          expertId: expert.id,
+          status: 'CANCELLED',
+        },
+      }),
+      prisma.booking
+        .findMany({
+          where: {
+            expertId: expert.id,
+            status: { not: 'DRAFT' },
+          },
+          select: {
+            patientId: true,
+          },
+          distinct: ['patientId'],
+        })
+        .then((bookings) => bookings.length),
+      prisma.payment.aggregate({
+        where: {
+          booking: {
+            expertId: expert.id,
+          },
+          status: 'COMPLETED',
+        },
+        _sum: {
+          amountPaid: true,
+        },
+      }),
+      prisma.booking.findMany({
+        where: {
+          expertId: expert.id,
+          createdAt: { gte: thirtyDaysAgo },
+        },
+        include: {
+          patient: {
+            include: {
+              user: true,
+            },
+          },
+          service: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+      }),
+      prisma.booking
+        .findMany({
+          where: {
+            expertId: expert.id,
+            createdAt: { gte: thirtyDaysAgo },
+          },
+          select: {
+            patientId: true,
+          },
+          distinct: ['patientId'],
+          orderBy: { createdAt: 'desc' },
+          take: 5,
+        })
+        .then(async (bookings) => {
+          const patientIds = bookings.map((b) => b.patientId)
+          return prisma.patient.findMany({
+            where: {
+              id: { in: patientIds },
+            },
+            include: {
+              user: true,
+            },
+            orderBy: { createdAt: 'desc' },
+          })
+        }),
+    ])
+
+    return c.json({
+      success: true,
+      stats: {
+        totalBookings,
+        upcomingBookings,
+        completedBookings,
+        cancelledBookings,
+        totalPatients,
+        totalRevenue: totalRevenue._sum.amountPaid || 0,
+      },
+      recentBookings,
+      recentPatients,
+    })
+  } catch {
+    return c.json({ error: `Failed to fetch dashboard data` }, 500)
+  }
+}
+
+export async function deleteBlockedDate(c: C, blockedDateId: string) {
+  const userId = c.var.user?.id
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 401)
+  }
+
+  const expert = await prisma.expert.findUnique({
+    where: { userId },
+    select: { id: true },
+  })
+
+  if (!expert) {
+    return c.json({ error: 'Expert profile not found' }, 404)
+  }
+
+  try {
+    const existing = await prisma.expertBlockDates.findUnique({
+      where: { id: blockedDateId },
+    })
+
+    if (!existing) {
+      return c.json({ error: 'Blocked date not found' }, 404)
+    }
+
+    if (existing.expertId !== expert.id) {
+      return c.json({ error: 'Unauthorized' }, 403)
+    }
+
+    await prisma.expertBlockDates.delete({
+      where: { id: blockedDateId },
+    })
+
+    return c.json({ success: true })
+  } catch {
+    return c.json({ error: `Failed to delete blocked date` }, 500)
+  }
+}
+
+export async function bulkCreateBlockedDates(c: C, input: BulkCreateBlockedDatesInput) {
+  const userId = c.var.user?.id
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 401)
+  }
+
+  const expert = await prisma.expert.findUnique({
+    where: { userId },
+    select: { id: true },
+  })
+
+  if (!expert) {
+    return c.json({ error: 'Expert profile not found' }, 404)
+  }
+
+  for (const date of input.dates) {
+    if (date.startDate >= date.endDate) {
+      return c.json({ error: 'Start date must be before end date for all entries' }, 400)
+    }
+  }
+
+  try {
+    const records = input.dates.map((d) => ({
+      expertId: expert.id,
+      startDate: d.startDate,
+      endDate: d.endDate,
+    }))
+
+    const blockedDates = await prisma.expertBlockDates.createMany({
+      data: records,
+    })
+
+    return c.json({ success: true, count: blockedDates.count })
+  } catch {
+    return c.json({ error: `Failed to create blocked dates` }, 500)
+  }
 }

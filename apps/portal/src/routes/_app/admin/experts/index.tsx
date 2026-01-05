@@ -1,17 +1,27 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
-import React from 'react'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import React, { useState } from 'react'
 import type { InferResponseType } from 'hono'
 import type { ColumnDef } from '@tanstack/react-table'
 import { match } from 'ts-pattern'
-import { Edit } from 'lucide-react'
+import { Edit, Plus, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { Spinner } from '@/components/ui/spinner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
 import { DataTable } from '@/components/ui/data-table'
 import { TableSkeleton } from '@/components/ui/table-skeleton'
+import { queryClient } from '@/lib/query-client'
 
 type ExpertsResponse = InferResponseType<HonoClient['server']['experts']['all-experts']['$get'], 200>
 type ExpertData = ExpertsResponse[number]
@@ -29,6 +39,9 @@ export const Route = createFileRoute('/_app/admin/experts/')({
 })
 
 function AdminExpertsPage() {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [expertToDelete, setExpertToDelete] = useState<{ id: string; name: string } | null>(null)
+
   const getAllExpertsQuery = useQuery({
     queryKey: ['admin-experts'],
     queryFn: async () => {
@@ -41,6 +54,43 @@ function AdminExpertsPage() {
       return (await response.json()) as ExpertsResponse
     },
   })
+
+  const deleteMutation = useMutation({
+    mutationFn: async (expertId: string) => {
+      const response = await honoClient.server.admin.experts[':expertId'].$delete({
+        param: { expertId },
+      })
+
+      if (!response.ok) {
+        const error = (await response.json()) as { error?: string }
+        throw new Error(error.error || 'Failed to delete expert')
+      }
+
+      return response.json()
+    },
+    onSuccess: () => {
+      toast.success('Expert deleted successfully')
+      queryClient.invalidateQueries({ queryKey: ['admin-experts'] })
+      setDeleteDialogOpen(false)
+      setExpertToDelete(null)
+    },
+    onError: (error: Error) => {
+      toast.error('Failed to delete expert', {
+        description: error.message,
+      })
+    },
+  })
+
+  const handleDeleteClick = (expert: ExpertData) => {
+    setExpertToDelete({ id: expert.id, name: expert.name })
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (expertToDelete) {
+      deleteMutation.mutate(expertToDelete.id)
+    }
+  }
 
   const columns: ColumnDef<ExpertData>[] = [
     {
@@ -100,20 +150,35 @@ function AdminExpertsPage() {
       id: 'actions',
       header: 'Actions',
       cell: ({ row }) => (
-        <Link to="/admin/experts/$expertId/edit" params={{ expertId: row.original.id }}>
-          <Button variant="outline" size="sm" icon={<Edit className="h-4 w-4" />}>
-            Edit
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link to="/admin/experts/$expertId/edit" params={{ expertId: row.original.id }}>
+            <Button variant="outline" size="sm" icon={<Edit className="h-4 w-4" />}>
+              Edit
+            </Button>
+          </Link>
+          <Button
+            variant="destructive"
+            size="sm"
+            icon={<Trash2 className="size-4" />}
+            onClick={() => {
+              handleDeleteClick(row.original)
+            }}
+          />
+        </div>
       ),
     },
   ]
 
   return (
     <div className="container mx-auto py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Experts</h1>
-        <p className="text-muted-foreground mt-2">Manage all experts in the system</p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Experts</h1>
+          <p className="text-muted-foreground mt-2">Manage all experts in the system</p>
+        </div>
+        <Link to="/admin/experts/add">
+          <Button icon={<Plus className="h-4 w-4" />}>Add Expert</Button>
+        </Link>
       </div>
 
       {match(getAllExpertsQuery)
@@ -128,6 +193,30 @@ function AdminExpertsPage() {
           <DataTable columns={columns} data={data} emptyMessage="No experts found" />
         ))
         .otherwise(() => null)}
+
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Expert</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{expertToDelete?.name}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)} disabled={deleteMutation.isPending}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={deleteMutation.isPending}
+              loading={deleteMutation.isPending}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

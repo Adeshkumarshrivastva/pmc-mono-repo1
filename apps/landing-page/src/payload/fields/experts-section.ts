@@ -11,13 +11,6 @@ export const expertsSection: Field = {
       type: 'text',
     },
     {
-      name: 'experts',
-      label: 'Experts',
-      type: 'relationship',
-      relationTo: 'experts',
-      hasMany: true,
-    },
-    {
       name: 'action',
       label: 'Expert action',
       type: 'text',

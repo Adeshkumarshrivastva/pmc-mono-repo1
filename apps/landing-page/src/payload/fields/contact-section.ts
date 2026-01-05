@@ -7,7 +7,7 @@ export const contactSection: Field = {
   fields: [
     {
       name: 'contactSection',
-      label: 'Contact Section',
+      label: 'Contact Information',
       type: 'group',
       fields: [
         {
@@ -52,6 +52,25 @@ export const contactSection: Field = {
             {
               name: 'url',
               label: 'URL',
+              type: 'text',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'contactForm',
+      label: 'Contact Form',
+      type: 'group',
+      fields: [
+        {
+          name: 'services',
+          label: 'Services Dropdown',
+          type: 'array',
+          fields: [
+            {
+              name: 'service',
+              label: 'Service Name',
               type: 'text',
             },
           ],

@@ -4,31 +4,15 @@ import { getPayloadClient } from '@/lib/payload'
 import { type LeadFormInput, type QuizLeadFormInput } from './leads.input'
 import { zohoAPI } from '@/lib/zoho'
 
-export async function createLead({ serviceId, subServiceId, ...rest }: LeadFormInput) {
+export async function createLead({ service, ...rest }: LeadFormInput) {
   const payload = await getPayloadClient()
-
-  const serviceQuery = await payload.find({
-    collection: 'services',
-    where: {
-      id: {
-        in: subServiceId ? [serviceId, subServiceId] : [serviceId],
-      },
-    },
-    select: {
-      name: true,
-    },
-  })
-
-  const service = serviceQuery.docs.find((s) => s.id === serviceId)
-  const subService = subServiceId ? serviceQuery.docs.find((s) => s.id === subServiceId) : null
 
   await Promise.allSettled([
     payload.create({
       collection: 'leads',
       data: {
         ...rest,
-        service: serviceId,
-        subService: subServiceId,
+        serviceName: service,
       },
     }),
     zohoAPI.createLead({
@@ -38,8 +22,8 @@ export async function createLead({ serviceId, subServiceId, ...rest }: LeadFormI
       phone: rest.phone,
       leadSource: 'Website',
       description: rest.message,
-      service: service?.name,
-      subService: subService?.name,
+      service,
+      subService: '',
     }),
   ])
 

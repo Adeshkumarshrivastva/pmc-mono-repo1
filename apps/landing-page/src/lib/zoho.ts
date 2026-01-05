@@ -1,6 +1,24 @@
 import { env } from '@/env'
 import * as z from 'zod'
 
+function formatPhoneNumber(phone: string): string {
+  const digitsOnly = phone.replace(/\D/g, '')
+
+  if (digitsOnly.startsWith('91') && digitsOnly.length === 12) {
+    return `+${digitsOnly}`
+  }
+
+  if (digitsOnly.length === 10) {
+    return `+91${digitsOnly}`
+  }
+
+  if (phone.startsWith('+91')) {
+    return phone
+  }
+
+  return phone
+}
+
 class ZohoAPI {
   #clientId: string
   #clientSecret: string
@@ -56,7 +74,7 @@ class ZohoAPI {
             Last_Name: leadData.lastName,
             First_Name: leadData.firstName,
             Email: leadData.email,
-            Phone: leadData.phone,
+            Phone: formatPhoneNumber(leadData.phone),
             Lead_Source: leadData.leadSource,
             Date_And_Time: leadData.dateAndTime,
             Description: leadData.description,

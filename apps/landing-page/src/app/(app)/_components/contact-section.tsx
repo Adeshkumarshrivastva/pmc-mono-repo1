@@ -13,10 +13,9 @@ import { createLead } from '@/payload/actions'
 
 type ContactSectionProps = {
   data: Home['contactSection']
-  services: Service[]
 }
 
-export default function ContactSection({ data, services }: ContactSectionProps) {
+export default function ContactSection({ data }: ContactSectionProps) {
   const contactData = data?.contactSection
 
   const form = useForm<LeadFormInput>({
@@ -24,15 +23,11 @@ export default function ContactSection({ data, services }: ContactSectionProps) 
       fullName: '',
       phone: '',
       email: '',
-      serviceId: '',
-      subServiceId: '',
+      service: '',
       message: '',
     },
     resolver: zodResolver(leadFormInput),
   })
-
-  const serviceId = useWatch({ control: form.control, name: 'serviceId' })
-  const subServices = services.find((service) => service.id === serviceId)?.subservices?.docs ?? []
 
   const contactFormMutation = useMutation({
     mutationFn: createLead,
@@ -145,43 +140,20 @@ export default function ContactSection({ data, services }: ContactSectionProps) 
                     />
                   </div>
 
-                  <div className="col-span-1">
+                  <div className="col-span-full">
                     <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
                       Service <span className="text-error">*</span>
                     </label>
                     <select
-                      {...form.register('serviceId')}
+                      {...form.register('service')}
                       className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     >
                       <option value={''}>Select Service</option>
-                      {services?.map((service) => (
-                        <option key={service.id} value={service.id}>
-                          {service.name}
+                      {data?.contactForm?.services?.map((service) => (
+                        <option key={service.id} value={service.service!}>
+                          {service.service}
                         </option>
                       ))}
-                    </select>
-                  </div>
-
-                  <div className="col-span-1">
-                    <label htmlFor="name" className="block text-muted-foreground uppercase text-xs font-semibold mb-2">
-                      Sub Service
-                    </label>
-                    <select
-                      {...form.register('subServiceId')}
-                      className="text-sm w-full border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    >
-                      <option value={''}>Select Sub Service</option>
-                      {subServices.map((service) => {
-                        if (typeof service === 'string') {
-                          return null
-                        }
-
-                        return (
-                          <option key={service.id} value={service.id}>
-                            {service.name}
-                          </option>
-                        )
-                      })}
                     </select>
                   </div>
 

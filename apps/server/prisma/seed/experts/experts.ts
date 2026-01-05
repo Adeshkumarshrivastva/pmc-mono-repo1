@@ -69,6 +69,7 @@ export async function seedExperts(prisma: PrismaClient) {
           expertise: validatedExpert.expertise,
           gender: validatedExpert.gender,
           experienceInYears: validatedExpert.experienceInYears || null,
+          isDeleted: false,
         },
       })
 
