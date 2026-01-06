@@ -506,7 +506,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                           sortOrder: 'asc',
                         })
                       }}
-                      className="px-6 py-3 bg-muted text-muted-foreground border border-border hover:bg-card-accent rounded-lg font-medium transition-colors"
+                      className="px-6 py-3 bg-grey text-muted-foreground border border-border hover:bg-card-accent rounded-lg font-medium transition-colors"
                     >
                       Clear All Filters
                     </button>
