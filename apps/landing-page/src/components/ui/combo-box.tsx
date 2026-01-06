@@ -96,8 +96,8 @@ export function Combobox({
           icon={<ChevronDownIcon />}
           iconPosition="right"
           variant="outline"
-          size="custom"
-          className={cn('justify-between', className)}
+          size="sm"
+          className={cn('justify-between h-10 rounded-lg', className)}
           style={style}
           loading={loading}
         >

@@ -176,9 +176,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
           </div>
 
           <Button
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-xl transition-colors"
-            variant="custom"
-            size="custom"
+            size="sm"
             onClick={() => router.push(`/portal/experts/${expert.slug}`)}
           >
             BOOK
@@ -407,7 +405,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                         onValueChange={(value) => {
                           updateFilter('type', (value as Expert['type']) || undefined)
                         }}
-                        className="w-full h-12 rounded-lg border-border focus:ring-ring focus:border-ring text-foreground text-sm hover:bg-card-accent"
+                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
                       />
                     </div>
 
@@ -420,7 +418,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                         onValueChange={(value) => {
                           updateFilter('serviceMode', (value as ServiceMode) || undefined)
                         }}
-                        className="w-full h-12 rounded-lg border-border focus:ring-ring focus:border-ring text-foreground text-sm hover:bg-card-accent"
+                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
                       />
                     </div>
 
@@ -434,7 +432,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                           const genderValue = Array.isArray(value) ? value[0] : value
                           updateFilter('gender', genderValue || undefined)
                         }}
-                        className="w-full h-12 rounded-lg border-border focus:ring-ring focus:border-ring text-foreground text-sm hover:bg-card-accent"
+                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
                       />
                     </div>
 
@@ -448,7 +446,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                           onValueChange={(value) => {
                             updateFilter('sortBy', value as SortBy)
                           }}
-                          className="flex-1 h-12 rounded-lg border-border focus:ring-ring focus:border-ring text-foreground text-sm hover:bg-card-accent"
+                          className="flex-1 border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
                         />
                         <Combobox
                           placeholder="asc/desc"
@@ -457,7 +455,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                           onValueChange={(value) => {
                             updateFilter('sortOrder', value as 'asc' | 'desc')
                           }}
-                          className="flex-1 h-12 rounded-lg border-border focus:ring-ring focus:border-ring text-foreground text-sm hover:bg-card-accent"
+                          className="flex-1 border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
                         />
                       </div>
                     </div>
@@ -480,7 +478,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                           const expertiseString = Array.isArray(value) ? value.join(', ') : ''
                           updateFilter('expertise', expertiseString || undefined)
                         }}
-                        className="w-full h-12 rounded-lg border-border focus:ring-ring focus:border-ring text-foreground text-xs hover:bg-card-accent"
+                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
                       />
                     </div>
                     <div>
@@ -493,7 +491,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                           const locationValue = Array.isArray(value) ? value[0] : value
                           updateFilter('location', locationValue || undefined)
                         }}
-                        className="w-full h-12 rounded-lg border-border focus:ring-ring focus:border-ring text-foreground text-xs hover:bg-card-accent"
+                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
                       />
                     </div>
                   </div>
@@ -571,7 +569,7 @@ function getNextAvailableSlot(
 
 function ExpertsGridSkeleton() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <ExpertCardSkeleton key={index} />
       ))}

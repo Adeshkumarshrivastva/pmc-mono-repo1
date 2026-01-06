@@ -12,8 +12,6 @@ export const buttonVariants = cva(
         secondary:
           'bg-accent text-accent-foreground hover:bg-accent/80 disabled:pointer-events-none disabled:opacity-50',
         outline: 'border border-border shadow-xs text-accent hover:border-transparent hover:bg-accent/80 hover:text-primary',
-        custom:
-          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
       },
       size: {
         default: 'h-10 px-3 text-sm sm:h-12 sm:px-4 sm:text-lg',
