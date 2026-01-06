@@ -64,6 +64,23 @@ export const Home: GlobalConfig = {
       ],
     },
     {
+      name: 'bookingSection',
+      label: 'Booking Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'textarea',
+        },
+      ],
+    },
+    {
       name: 'deepTmsSection',
       label: 'Deep Tms Section',
       type: 'group',
