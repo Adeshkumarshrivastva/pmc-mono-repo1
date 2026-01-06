@@ -360,7 +360,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
             {/* Search Bar */}
             <div>
               <div className="bg-white rounded-xl shadow-lg p-2 flex items-center">
-                <Search className={`h-7 w-7 mr-2 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`} />
+                <Search className={`h-7 w-7 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`} />
                 <input
                   type="text"
                   placeholder="Start typing to search experts..."
