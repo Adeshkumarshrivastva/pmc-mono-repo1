@@ -78,7 +78,7 @@ export const Blog: CollectionConfig = {
   hooks: {
     afterChange: [
       async ({ doc, operation }) => {
-        if (operation === 'create') {
+        if (operation === 'update') {
           await sendBlogNotification(doc)
         }
         return doc
