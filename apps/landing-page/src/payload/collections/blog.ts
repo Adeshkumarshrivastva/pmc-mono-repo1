@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { sendBlogNotification } from '../../lib/onesignal'
 
 export const Blog: CollectionConfig = {
   slug: 'blog',
@@ -74,4 +75,14 @@ export const Blog: CollectionConfig = {
       required: true,
     },
   ],
+  hooks: {
+    afterChange: [
+      async ({ doc, operation }) => {
+        if (operation === 'create') {
+          await sendBlogNotification(doc)
+        }
+        return doc
+      },
+    ],
+  },
 }
