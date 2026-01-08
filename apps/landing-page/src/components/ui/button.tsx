@@ -11,7 +11,8 @@ export const buttonVariants = cva(
           'bg-primary text-primary-foreground hover:bg-primary/80 disabled:pointer-events-none disabled:opacity-50',
         secondary:
           'bg-accent text-accent-foreground hover:bg-accent/80 disabled:pointer-events-none disabled:opacity-50',
-        outline: 'border border-border shadow-xs text-accent hover:border-transparent hover:bg-accent/80 hover:text-primary',
+        outline:
+          'border border-border shadow-xs text-accent hover:border-transparent hover:bg-accent/80 hover:text-primary',
       },
       size: {
         default: 'h-10 px-3 text-sm sm:h-12 sm:px-4 sm:text-lg',

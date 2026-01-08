@@ -175,10 +175,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
             </div>
           </div>
 
-          <Button
-            size="sm"
-            onClick={() => router.push(`/portal/experts/${expert.slug}`)}
-          >
+          <Button size="sm" onClick={() => router.push(`/portal/experts/${expert.slug}`)}>
             BOOK
           </Button>
         </div>
@@ -358,7 +355,9 @@ export default function BookingSection({ data }: BookingSectionProps) {
             {/* Search Bar */}
             <div>
               <div className="bg-white rounded-xl shadow-lg p-2 flex items-center">
-                <Search className={`h-7 w-7 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`} />
+                <Search
+                  className={`h-7 w-7 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`}
+                />
                 <input
                   type="text"
                   placeholder="Start typing to search experts..."
