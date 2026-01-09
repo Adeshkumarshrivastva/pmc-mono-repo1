@@ -59,6 +59,7 @@ export default $config({
     const ZohoClientId = new sst.Secret('ZOHO_CLIENT_ID')
     const ZohoClientSecret = new sst.Secret('ZOHO_CLIENT_SECRET')
     const ZohoRefreshToken = new sst.Secret('ZOHO_REFRESH_TOKEN')
+    const OneSignalAppApiKey = new sst.Secret('ONESIGNAL_APP_API_KEY')
 
     const SenderEmail =
       $app.stage === 'production'
@@ -174,6 +175,7 @@ export default $config({
         ZOHO_REFRESH_TOKEN: ZohoRefreshToken.value,
         API_BASE_URL: $interpolate`${router.url}`,
         NEXT_PUBLIC_API_BASE_URL: $interpolate`${router.url}`,
+        ONESIGNAL_APP_API_KEY: OneSignalAppApiKey.value,
       },
     })
   },
