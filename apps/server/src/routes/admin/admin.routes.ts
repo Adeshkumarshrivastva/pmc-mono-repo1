@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
 import type { HonoContext } from '../../lib/context'
 import { authMiddleware, requirePermission } from '../../middleware/auth.middleware'
+
 import {
   getAdminDashboard,
   createExpert,
@@ -10,34 +11,104 @@ import {
   deleteExpert,
   getExpertAvailability,
   updateExpertAvailability,
+  bulkCreateBlockedDates,
+  deleteBlockedDate,
 } from './admin.service'
-import { createExpertInput, updateExpertInfoInput, updateAvailabilityInput } from './admin.input'
+
+import {
+  createExpertInput,
+  updateExpertInfoInput,
+  updateAvailabilityInput,
+  bulkCreateBlockedDatesInput,
+} from './admin.input'
 
 export const adminApp = new Hono<{ Variables: HonoContext }>()
-  .get('/dashboard', authMiddleware, requirePermission(['ADMIN']), (c) => getAdminDashboard(c))
-  .post('/experts', authMiddleware, requirePermission(['ADMIN']), zValidator('json', createExpertInput), (c) =>
-    createExpert(c, c.req.valid('json')),
+  .get(
+    '/dashboard',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    (c) => getAdminDashboard(c),
   )
-  .get('/experts/:expertId', authMiddleware, requirePermission(['ADMIN']), (c) =>
-    getExpertDetails(c, c.req.param('expertId')),
+
+  .post(
+    '/experts',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    zValidator('json', createExpertInput),
+    (c) => createExpert(c, c.req.valid('json')),
   )
+
+  .get(
+    '/experts/:expertId',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    (c) => getExpertDetails(c, c.req.param('expertId')),
+  )
+
   .patch(
     '/experts/:expertId',
     authMiddleware,
     requirePermission(['ADMIN']),
     zValidator('json', updateExpertInfoInput),
-    (c) => updateExpertInfo(c, c.req.param('expertId'), c.req.valid('json')),
+    (c) =>
+      updateExpertInfo(
+        c,
+        c.req.param('expertId'),
+        c.req.valid('json'),
+      ),
   )
-  .delete('/experts/:expertId', authMiddleware, requirePermission(['ADMIN']), (c) =>
-    deleteExpert(c, c.req.param('expertId')),
+
+  .delete(
+    '/experts/:expertId',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    (c) => deleteExpert(c, c.req.param('expertId')),
   )
-  .get('/experts/:expertId/availability', authMiddleware, requirePermission(['ADMIN']), (c) =>
-    getExpertAvailability(c, c.req.param('expertId')),
+
+  .get(
+    '/experts/:expertId/availability',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    (c) =>
+      getExpertAvailability(
+        c,
+        c.req.param('expertId'),
+      ),
   )
+
   .post(
     '/experts/:expertId/availability',
     authMiddleware,
     requirePermission(['ADMIN']),
     zValidator('json', updateAvailabilityInput),
-    (c) => updateExpertAvailability(c, c.req.param('expertId'), c.req.valid('json')),
+    (c) =>
+      updateExpertAvailability(
+        c,
+        c.req.param('expertId'),
+        c.req.valid('json'),
+      ),
+  )
+
+  .post(
+    '/experts/:expertId/availability/block-dates/bulk-create',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    zValidator('json', bulkCreateBlockedDatesInput),
+    (c) =>
+      bulkCreateBlockedDates(
+        c,
+        c.req.param('expertId'),
+        c.req.valid('json'),
+      ),
+  )
+
+  .delete(
+    '/experts/availability/block-dates/:blockedDateId',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    (c) =>
+      deleteBlockedDate(
+        c,
+        c.req.param('blockedDateId'),
+      ),
   )

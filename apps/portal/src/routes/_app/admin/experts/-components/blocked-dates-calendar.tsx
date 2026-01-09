@@ -1,10 +1,13 @@
+'use client'
+
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { TrashIcon } from 'lucide-react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useRouter } from '@tanstack/react-router'
 import { Calendar } from '@/components/ui/calendar'
 import {
   Dialog,
@@ -24,20 +27,28 @@ import { TIME_OPTIONS } from '@/lib/booking'
 import dayjs from '@/lib/dayjs'
 
 interface BlockedDatesCalendarProps {
+  expertId: string
   blockedDates: { id: string; startDate: string; endDate: string }[]
-  availabilityDays: { dayIndex: number; ranges: { startMinutes: number; endMinutes: number }[] }[]
+  availabilityDays: {
+    dayIndex: number
+    ranges: { startMinutes: number; endMinutes: number }[]
+  }[]
 }
 
 interface BlockDateFormProps {
+  expertId: string
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
   blockedDates: { id: string; startDate: string; endDate: string }[]
-  availabilityDays: { dayIndex: number; ranges: { startMinutes: number; endMinutes: number }[] }[]
+  availabilityDays: {
+    dayIndex: number
+    ranges: { startMinutes: number; endMinutes: number }[]
+  }[]
 }
 
-export function BlockedDatesCalendar({ blockedDates, availabilityDays }: BlockedDatesCalendarProps) {
-  const queryClient = useQueryClient()
+export function BlockedDatesCalendar({ expertId, blockedDates, availabilityDays }: BlockedDatesCalendarProps) {
+  const router = useRouter()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const visibleBlockedDates = blockedDates.sort(
@@ -45,16 +56,20 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
   )
 
   const deleteBlockMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await honoClient.server.experts.availability['block-dates'][':blockedDateId'].$delete({
-        param: { blockedDateId: id },
+    mutationFn: async (blockedDateId: string) => {
+      const res = await honoClient.server.admin.experts.availability['block-dates'][':blockedDateId'].$delete({
+        param: { blockedDateId },
       })
+
       if (!res.ok) throw new Error('Failed to delete block')
       return res.json()
     },
     onSuccess: async () => {
       toast.success('Block removed successfully')
-      await queryClient.invalidateQueries({ queryKey: ['expert-availability'] })
+      await router.invalidate()
+      // await queryClient.invalidateQueries({
+      //   queryKey: ['expert-availability', expertId],
+      // })
     },
     onError: () => {
       toast.error('Failed to remove block')
@@ -66,12 +81,11 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
           <h2 className="text-lg font-semibold">Blocked Dates</h2>
-          <p className="text-muted-foreground text-sm">Manage your unavailable dates.</p>
+          <p className="text-muted-foreground text-sm">Manage unavailable dates.</p>
         </div>
-        <div>
-          <Button onClick={() => setIsDialogOpen(true)}>Block Dates</Button>
-        </div>
+        <Button onClick={() => setIsDialogOpen(true)}>Block Dates</Button>
       </div>
+
       <div className="border rounded-md bg-card">
         {visibleBlockedDates.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground text-sm">No blocked dates found.</div>
@@ -85,6 +99,7 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
                     {dayjs(block.startDate).format('hh:mm A')} - {dayjs(block.endDate).format('hh:mm A')}
                   </span>
                 </div>
+
                 <Button
                   variant="ghost"
                   size="icon"
@@ -99,12 +114,12 @@ export function BlockedDatesCalendar({ blockedDates, availabilityDays }: Blocked
           </div>
         )}
       </div>
+
       <BlockDateForm
+        expertId={expertId}
         isOpen={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        onSuccess={() => {
-          setIsDialogOpen(false)
-        }}
+        onSuccess={() => setIsDialogOpen(false)}
         blockedDates={blockedDates}
         availabilityDays={availabilityDays}
       />
@@ -138,33 +153,46 @@ const blockDateFormSchema = z
 
 type BlockDateFormValues = z.infer<typeof blockDateFormSchema>
 
-function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabilityDays }: BlockDateFormProps) {
-  const queryClient = useQueryClient()
+function BlockDateForm({
+  expertId,
+  isOpen,
+  onOpenChange,
+  onSuccess,
+  blockedDates,
+  availabilityDays,
+}: BlockDateFormProps) {
+  const router = useRouter()
 
   const form = useForm<BlockDateFormValues>({
     resolver: zodResolver(blockDateFormSchema),
     defaultValues: {
       selectedDates: [],
       isAllDay: true,
-      startMinutes: 270, // 4:30 AM
-      endMinutes: 690, // 11:30 AM
+      startMinutes: 270,
+      endMinutes: 690,
     },
   })
 
   const bulkCreateMutation = useMutation({
     mutationFn: async (dates: { startDate: string; endDate: string }[]) => {
-      const res = await honoClient.server.experts.availability['block-dates']['bulk-create'].$post({
+      const res = await honoClient.server.admin.experts[':expertId'].availability['block-dates']['bulk-create'].$post({
+        param: { expertId },
         json: { dates },
       })
+
       if (!res.ok) throw new Error('Failed to create blocked dates')
       return res.json()
     },
     onSuccess: async (data) => {
       const count = data.count || 0
       toast.success(`Successfully blocked ${count} date${count !== 1 ? 's' : ''}`)
+      await router.invalidate()
+
       form.reset()
       onSuccess()
-      await queryClient.invalidateQueries({ queryKey: ['blockedDates'] })
+      // await queryClient.invalidateQueries({
+      //   queryKey: ['expert-availability', expertId],
+      // })
     },
     onError: () => {
       toast.error('Failed to block dates')
@@ -180,19 +208,12 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
     if (!workingDayIndices.has(date.getDay())) {
       return true
     }
-
-    const isBlocked = blockedDates.some(
+    return blockedDates.some(
       (block) =>
         dayjs(date).isSame(block.startDate, 'day') ||
         dayjs(date).isSame(block.endDate, 'day') ||
         (dayjs(date).isAfter(block.startDate, 'day') && dayjs(date).isBefore(block.endDate, 'day')),
     )
-
-    if (isBlocked) {
-      return true
-    }
-
-    return false
   }
 
   const handleSubmit = form.handleSubmit((data) => {
@@ -216,9 +237,7 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
   })
 
   const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      form.reset()
-    }
+    if (!open) form.reset()
     onOpenChange(open)
   }
 
@@ -231,6 +250,7 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
           <DialogTitle>Block Dates</DialogTitle>
           <DialogDescription>Select one or more dates to block.</DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
           <form onSubmit={handleSubmit}>
             <div className="flex gap-6 py-4">
@@ -255,6 +275,7 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
                   )}
                 />
               </div>
+
               <div className="space-y-4 px-2 flex-1">
                 <FormField
                   control={form.control}
@@ -283,8 +304,8 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
                           <FormLabel>Start Time</FormLabel>
                           <FormControl>
                             <Select value={String(field.value)} onValueChange={(val) => field.onChange(Number(val))}>
-                              <SelectTrigger id="start-time">
-                                <SelectValue placeholder="Start" />
+                              <SelectTrigger>
+                                <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 {TIME_OPTIONS.map((opt) => (
@@ -299,6 +320,7 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
                         </FormItem>
                       )}
                     />
+
                     <FormField
                       control={form.control}
                       name="endMinutes"
@@ -307,8 +329,8 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
                           <FormLabel>End Time</FormLabel>
                           <FormControl>
                             <Select value={String(field.value)} onValueChange={(val) => field.onChange(Number(val))}>
-                              <SelectTrigger id="end-time">
-                                <SelectValue placeholder="End" />
+                              <SelectTrigger>
+                                <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 {TIME_OPTIONS.map((opt) => (
@@ -327,6 +349,7 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
                 )}
               </div>
             </div>
+
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
                 Cancel
