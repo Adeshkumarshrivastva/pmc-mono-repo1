@@ -2,7 +2,13 @@ import { nanoid } from 'nanoid'
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import dayjs from '../../lib/dayjs'
-import type { UpdateExpertInfoInput, UpdateAvailabilityInput, CreateExpertInput } from './admin.input'
+import type {
+  UpdateExpertInfoInput,
+  UpdateAvailabilityInput,
+  CreateExpertInput,
+  CreateServiceForExpertInput,
+  UpdateServiceForExpertInput,
+} from './admin.input'
 import { DayOfWeek } from '../../generated/prisma'
 import { dateToMinutes } from '../../lib/date'
 import { getErrorMessage } from '../../lib/utils'
@@ -388,4 +394,197 @@ function generateExpertSlug(name: string): string {
   const id = nanoid(4)
 
   return `${formattedName}-${id}`
+}
+
+export async function getExpertServices(c: C, expertId: string) {
+  try {
+    const expert = await prisma.expert.findUnique({
+      where: { id: expertId },
+      select: { id: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert not found' }, 404)
+    }
+
+    const services = await prisma.service.findMany({
+      where: {
+        expertId: expertId,
+        isDeleted: false,
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return c.json({ services })
+  } catch {
+    return c.json({ error: 'Failed to fetch services' }, 500)
+  }
+}
+
+export async function createServiceForExpert(c: C, expertId: string, input: CreateServiceForExpertInput) {
+  try {
+    const expert = await prisma.expert.findUnique({
+      where: { id: expertId },
+      select: { id: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert not found' }, 404)
+    }
+
+    const existingService = await prisma.service.findFirst({
+      where: {
+        expertId: expertId,
+        slug: input.slug,
+      },
+    })
+
+    if (existingService) {
+      return c.json({ error: 'A service with this slug already exists for this expert' }, 400)
+    }
+
+    const service = await prisma.service.create({
+      data: {
+        expertId: expertId,
+        name: input.name,
+        slug: input.slug,
+        availableModes: input.availableModes,
+        paymentMode: input.paymentMode,
+        inPersonLocation: input.inPersonLocation,
+        city: input.city,
+        country: input.country,
+        description: input.description,
+        bufferTimeBeforeInMinutes: input.bufferTimeBeforeInMinutes,
+        bufferTimeAfterInMinutes: input.bufferTimeAfterInMinutes,
+        price: input.price,
+        currency: input.currency,
+        isPartialPaymentAvailable: input.isPartialPaymentAvailable,
+        minPaymentAmount: input.minPaymentAmount,
+        durationInMinutes: input.durationInMinutes,
+        tags: input.tags,
+      },
+    })
+
+    return c.json({ success: true, service })
+  } catch {
+    return c.json({ error: `Failed to create service` }, 500)
+  }
+}
+
+export async function getServiceDetails(c: C, serviceId: string) {
+  try {
+    const service = await prisma.service.findUnique({
+      where: { id: serviceId },
+      include: {
+        expert: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    })
+
+    if (!service) {
+      return c.json({ error: 'Service not found' }, 404)
+    }
+
+    return c.json({ service })
+  } catch {
+    return c.json({ error: 'Failed to fetch service details' }, 500)
+  }
+}
+
+export async function updateServiceForExpert(c: C, serviceId: string, input: UpdateServiceForExpertInput) {
+  try {
+    const service = await prisma.service.findUnique({
+      where: { id: serviceId },
+      select: { id: true, expertId: true, slug: true },
+    })
+
+    if (!service) {
+      return c.json({ error: 'Service not found' }, 404)
+    }
+
+    if (input.slug && input.slug !== service.slug) {
+      const existingService = await prisma.service.findUnique({
+        where: {
+          expertId_slug: {
+            expertId: service.expertId,
+            slug: input.slug,
+          },
+        },
+      })
+
+      if (existingService) {
+        return c.json({ error: 'A service with this slug already exists for this expert' }, 400)
+      }
+    }
+
+    const updatedService = await prisma.service.update({
+      where: { id: serviceId },
+      data: {
+        ...(input.name !== undefined && { name: input.name }),
+        ...(input.slug !== undefined && { slug: input.slug }),
+        ...(input.availableModes !== undefined && { availableModes: input.availableModes }),
+        ...(input.paymentMode !== undefined && { paymentMode: input.paymentMode }),
+        ...(input.inPersonLocation !== undefined && { inPersonLocation: input.inPersonLocation }),
+        ...(input.city !== undefined && { city: input.city }),
+        ...(input.country !== undefined && { country: input.country }),
+        ...(input.description !== undefined && { description: input.description }),
+        ...(input.bufferTimeBeforeInMinutes !== undefined && {
+          bufferTimeBeforeInMinutes: input.bufferTimeBeforeInMinutes,
+        }),
+        ...(input.bufferTimeAfterInMinutes !== undefined && {
+          bufferTimeAfterInMinutes: input.bufferTimeAfterInMinutes,
+        }),
+        ...(input.price !== undefined && { price: input.price }),
+        ...(input.currency !== undefined && { currency: input.currency }),
+        ...(input.isPartialPaymentAvailable !== undefined && {
+          isPartialPaymentAvailable: input.isPartialPaymentAvailable,
+        }),
+        ...(input.minPaymentAmount !== undefined && { minPaymentAmount: input.minPaymentAmount }),
+        ...(input.durationInMinutes !== undefined && { durationInMinutes: input.durationInMinutes }),
+        ...(input.tags !== undefined && { tags: input.tags }),
+      },
+    })
+
+    return c.json({ success: true, service: updatedService })
+  } catch {
+    return c.json({ error: `Failed to update service` }, 500)
+  }
+}
+
+export async function deleteServiceForExpert(c: C, serviceId: string) {
+  try {
+    const service = await prisma.service.findUnique({
+      where: { id: serviceId },
+      select: { id: true },
+    })
+
+    if (!service) {
+      return c.json({ error: 'Service not found' }, 404)
+    }
+
+    const activeBookings = await prisma.booking.findFirst({
+      where: {
+        serviceId: serviceId,
+        status: {
+          in: ['BOOKED', 'DRAFT'],
+        },
+      },
+    })
+
+    if (activeBookings) {
+      return c.json({ error: 'Cannot delete service with active bookings' }, 400)
+    }
+
+    await prisma.service.update({
+      where: { id: serviceId },
+      data: { isDeleted: true },
+    })
+
+    return c.json({ success: true, message: 'Service deleted successfully' })
+  } catch {
+    return c.json({ error: `Failed to delete service` }, 500)
+  }
 }

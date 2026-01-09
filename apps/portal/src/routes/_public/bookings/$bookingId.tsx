@@ -13,7 +13,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { honoClient } from '@/lib/hono-client'
 import { DEFAULT_TIMEZONE, formatDateTimeRange } from '@/lib/date'
 import { CURRENCY_CONFIG } from '@/lib/booking'
-import { inPersonLocationSchema, SERVICE_MODE_CONFIG, virtualLocationSchema } from '@/lib/location'
+import { inPersonLocationSchema, SERVICE_MODE_CONFIG, virtualLocationSchema } from '@/lib/service'
 
 export const Route = createFileRoute('/_public/bookings/$bookingId')({
   component: BookingConfirmationPage,

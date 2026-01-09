@@ -7,7 +7,7 @@ import { CURRENCY_CONFIG, type BookingMode } from '@/lib/booking'
 import { Separator } from '@/components/ui/separator'
 import { DEFAULT_TIMEZONE, formatDateTimeRange } from '@/lib/date'
 import dayjs from '@/lib/dayjs'
-import { SERVICE_MODE_CONFIG } from '@/lib/location'
+import { SERVICE_MODE_CONFIG } from '@/lib/service'
 
 type BookingSummaryProps = {
   mode: BookingMode
