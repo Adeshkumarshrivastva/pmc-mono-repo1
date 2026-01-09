@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/sonner'
 import AppShell from './_components/app-shell'
 import Providers from './_components/providers'
 import FloatingWhatsapp from './_components/floating-whatsapp'
+import OneSignalComponent from './_components/one-signal'
 import '@/app/styles.css'
 
 export const metadata = {
@@ -20,12 +21,12 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
   return (
     <html lang="en">
       <body>
+        <OneSignalComponent />
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>
         <Toaster />
         <FloatingWhatsapp />
-        <Script defer id="razorpay-checkout" src="https://checkout.razorpay.com/v1/checkout.js" />
         {/* Zoho SalesIQ loader */}
         <Script
           id="zoho-salesiq-init"

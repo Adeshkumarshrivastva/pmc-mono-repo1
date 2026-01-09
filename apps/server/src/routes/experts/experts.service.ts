@@ -143,9 +143,15 @@ function getSortValue(sortBy: SortBy, expert: ExpertSearchResponse): string | nu
 export async function getExpertFromSlug(c: C, expertSlug: string) {
   try {
     const expert = await prisma.expert.findFirst({
-      where: { slug: expertSlug, isDeleted: false },
+      where: {
+        slug: expertSlug,
+        isDeleted: false,
+      },
       include: {
-        servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
+        servicesProvided: {
+          where: { isDeleted: false },
+          select: EXPERT_SERVICE_SELECT_FIELDS,
+        },
       },
     })
 

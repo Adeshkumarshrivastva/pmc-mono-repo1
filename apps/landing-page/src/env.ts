@@ -16,6 +16,7 @@ export const env = createEnv({
     ZOHO_CLIENT_SECRET: z.string(),
     ZOHO_REFRESH_TOKEN: z.string(),
     API_BASE_URL: z.string(),
+    ONESIGNAL_APP_API_KEY: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -44,5 +45,6 @@ export const env = createEnv({
     ZOHO_REFRESH_TOKEN: process.env.ZOHO_REFRESH_TOKEN,
     API_BASE_URL: process.env.API_BASE_URL,
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    ONESIGNAL_APP_API_KEY: process.env.ONESIGNAL_APP_API_KEY,
   },
 })

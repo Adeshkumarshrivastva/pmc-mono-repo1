@@ -57,6 +57,31 @@ export const updateAvailabilityInput = z.object({
 
 export type UpdateAvailabilityInput = z.infer<typeof updateAvailabilityInput>
 
+export const createServiceForExpertInput = z.object({
+  name: z.string().min(1, 'Service name is required'),
+  slug: z.string().min(1, 'Slug is required'),
+  availableModes: z.array(z.enum(['IN_PERSON', 'VIRTUAL'])).min(1, 'At least one mode is required'),
+  paymentMode: z.enum(['ONLINE', 'OFFLINE']),
+  inPersonLocation: z.any().optional(),
+  city: z.string().min(1, 'City is required'),
+  country: z.string().min(1, 'Country is required'),
+  description: z.string().default(''),
+  bufferTimeBeforeInMinutes: z.number().min(0).default(30),
+  bufferTimeAfterInMinutes: z.number().min(0).default(30),
+  price: z.number().min(0, 'Price must be positive'),
+  currency: z.string().default('INR'),
+  isPartialPaymentAvailable: z.boolean().default(false),
+  minPaymentAmount: z.number().min(0).optional().default(0),
+  durationInMinutes: z.number().min(15, 'Duration must be at least 15 minutes').default(60),
+  tags: z.array(z.string()).default([]),
+})
+
+export type CreateServiceForExpertInput = z.infer<typeof createServiceForExpertInput>
+
+export const updateServiceForExpertInput = createServiceForExpertInput.partial()
+
+export type UpdateServiceForExpertInput = z.infer<typeof updateServiceForExpertInput>
+
 export const bulkCreateBlockedDatesInput = z.object({
   dates: z.array(
     z.object({

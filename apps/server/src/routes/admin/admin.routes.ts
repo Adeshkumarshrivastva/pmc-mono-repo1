@@ -13,13 +13,19 @@ import {
   updateExpertAvailability,
   bulkCreateBlockedDates,
   deleteBlockedDate,
+  getExpertServices,
+  createServiceForExpert,
+  getServiceDetails,
+  updateServiceForExpert,
+  deleteServiceForExpert,
 } from './admin.service'
-
 import {
   createExpertInput,
   updateExpertInfoInput,
   updateAvailabilityInput,
-  bulkCreateBlockedDatesInput,
+  createServiceForExpertInput,
+  updateServiceForExpertInput,
+    bulkCreateBlockedDatesInput,
 } from './admin.input'
 
 export const adminApp = new Hono<{ Variables: HonoContext }>()
@@ -67,4 +73,27 @@ export const adminApp = new Hono<{ Variables: HonoContext }>()
 
   .delete('/experts/availability/block-dates/:blockedDateId', authMiddleware, requirePermission(['ADMIN']), (c) =>
     deleteBlockedDate(c, c.req.param('blockedDateId')),
+  )
+  .get('/experts/:expertId/services', authMiddleware, requirePermission(['ADMIN']), (c) =>
+    getExpertServices(c, c.req.param('expertId')),
+  )
+  .post(
+    '/experts/:expertId/services',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    zValidator('json', createServiceForExpertInput),
+    (c) => createServiceForExpert(c, c.req.param('expertId'), c.req.valid('json')),
+  )
+  .get('/services/:serviceId', authMiddleware, requirePermission(['ADMIN']), (c) =>
+    getServiceDetails(c, c.req.param('serviceId')),
+  )
+  .patch(
+    '/services/:serviceId',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    zValidator('json', updateServiceForExpertInput),
+    (c) => updateServiceForExpert(c, c.req.param('serviceId'), c.req.valid('json')),
+  )
+  .delete('/services/:serviceId', authMiddleware, requirePermission(['ADMIN']), (c) =>
+    deleteServiceForExpert(c, c.req.param('serviceId')),
   )

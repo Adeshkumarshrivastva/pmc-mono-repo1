@@ -3,7 +3,7 @@ import type { ServiceMode } from '@pmc/server/src/generated/prisma/client'
 import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { CURRENCY_CONFIG } from '@/lib/booking'
-import { SERVICE_MODE_CONFIG } from '@/lib/location'
+import { SERVICE_MODE_CONFIG } from '@/lib/service'
 import { type HonoClient } from '@/lib/hono-client'
 
 type ExpertWithDetails = InferResponseType<HonoClient['server']['experts'][':expertSlug']['$get'], 200>['expert']
