@@ -22,7 +22,6 @@ const DAY_MAP: Record<number, DayOfWeek> = {
   6: 'SATURDAY',
 }
 
-
 export async function getAdminDashboard(c: C) {
   try {
     const now = dayjs().toDate()
@@ -112,15 +111,11 @@ export async function getAdminDashboard(c: C) {
   }
 }
 
-
 export async function createExpert(c: C, input: CreateExpertInput) {
   try {
     let user = await prisma.user.findFirst({
       where: {
-        OR: [
-          { email: input.email },
-          ...(input.phoneNumber ? [{ phoneNumber: input.phoneNumber }] : []),
-        ],
+        OR: [{ email: input.email }, ...(input.phoneNumber ? [{ phoneNumber: input.phoneNumber }] : [])],
       },
     })
 
@@ -164,10 +159,7 @@ export async function createExpert(c: C, input: CreateExpertInput) {
 
     return c.json({ success: true, expert })
   } catch (error) {
-    return c.json(
-      { error: `Failed to create expert - ${getErrorMessage(error)}` },
-      500,
-    )
+    return c.json({ error: `Failed to create expert - ${getErrorMessage(error)}` }, 500)
   }
 }
 
@@ -184,11 +176,7 @@ export async function getExpertDetails(c: C, expertId: string) {
   return c.json(expert)
 }
 
-export async function updateExpertInfo(
-  c: C,
-  expertId: string,
-  input: UpdateExpertInfoInput,
-) {
+export async function updateExpertInfo(c: C, expertId: string, input: UpdateExpertInfoInput) {
   await prisma.expert.update({
     where: { id: expertId },
     data: input,
@@ -229,25 +217,15 @@ export async function getExpertAvailability(c: C, expertId: string) {
   return c.json({ days, blockedDates })
 }
 
-export async function updateExpertAvailability(
-  c: C,
-  expertId: string,
-  input: UpdateAvailabilityInput,
-) {
+export async function updateExpertAvailability(c: C, expertId: string, input: UpdateAvailabilityInput) {
   await prisma.expertAvailability.deleteMany({ where: { expertId } })
 
   const records = input.days.flatMap((day) =>
     day.ranges.map((range) => ({
       expertId,
       dayOfTheWeek: DAY_MAP[day.dayIndex],
-      startTime: dayjs()
-        .startOf('day')
-        .add(range.startMinutes, 'minute')
-        .toDate(),
-      endTime: dayjs()
-        .startOf('day')
-        .add(range.endMinutes, 'minute')
-        .toDate(),
+      startTime: dayjs().startOf('day').add(range.startMinutes, 'minute').toDate(),
+      endTime: dayjs().startOf('day').add(range.endMinutes, 'minute').toDate(),
       isActive: true,
     })),
   )
@@ -259,11 +237,7 @@ export async function updateExpertAvailability(
   return c.json({ success: true })
 }
 
-export async function bulkCreateBlockedDates(
-  c: C,
-  expertId: string,
-  input: BulkCreateBlockedDatesInput,
-) {
+export async function bulkCreateBlockedDates(c: C, expertId: string, input: BulkCreateBlockedDatesInput) {
   const result = await prisma.expertBlockDates.createMany({
     data: input.dates.map((d) => ({
       expertId,
@@ -282,7 +256,6 @@ export async function deleteBlockedDate(c: C, blockedDateId: string) {
 
   return c.json({ success: true })
 }
-
 
 function generateExpertSlug(name: string) {
   return `${name
