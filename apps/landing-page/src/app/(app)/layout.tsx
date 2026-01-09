@@ -27,7 +27,6 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
         </Providers>
         <Toaster />
         <FloatingWhatsapp />
-        <Script defer id="razorpay-checkout" src="https://checkout.razorpay.com/v1/checkout.js" />
         {/* Zoho SalesIQ loader */}
         <Script
           id="zoho-salesiq-init"

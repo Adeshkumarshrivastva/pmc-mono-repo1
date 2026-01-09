@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import type { InferResponseType } from 'hono'
 import { generateServiceSlug, IN_PERSON_LOCATIONS, inPersonLocationSchema } from '@/lib/service'
-import { honoClient } from '@/lib/hono-client'
+import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -29,17 +30,7 @@ type ServiceFormInput = z.infer<typeof serviceFormSchema>
 type ServiceFormProps = {
   mode: 'create' | 'edit'
   serviceId?: string
-  initialData?: {
-    name: string
-    description?: string
-    price: number
-    durationInMinutes: number
-    city: string
-    country: string
-    availableModes: ('IN_PERSON' | 'VIRTUAL')[]
-    paymentMode: 'ONLINE' | 'OFFLINE'
-    inPersonLocation?: z.infer<typeof inPersonLocationSchema>
-  }
+  initialData?: InferResponseType<HonoClient['server']['service'][':serviceId']['$get'], 200>['service']
   onSuccess?: () => void
 }
 
@@ -56,7 +47,9 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
       country: initialData?.country || 'India',
       availableModes: initialData?.availableModes || [],
       paymentMode: initialData?.paymentMode || 'ONLINE',
-      inPersonLocation: initialData?.inPersonLocation || IN_PERSON_LOCATIONS[0],
+      inPersonLocation: initialData?.inPersonLocation
+        ? inPersonLocationSchema.parse(initialData.inPersonLocation)
+        : IN_PERSON_LOCATIONS[0],
     },
     resolver: zodResolver(serviceFormSchema),
   })
