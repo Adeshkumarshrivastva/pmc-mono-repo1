@@ -15,7 +15,7 @@ import { getErrorMessage, invariant } from '@/lib/utils'
 import { useBooking } from '../-hooks/use-booking'
 import { env } from '@/lib/env'
 import { loadRazorpayScript } from '@/lib/razorpay'
-import { SERVICE_MODE_CONFIG } from '@/lib/location'
+import { SERVICE_MODE_CONFIG } from '@/lib/service'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 
 type PrebookingFormProps = {

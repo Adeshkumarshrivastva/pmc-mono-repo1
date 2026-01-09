@@ -8,7 +8,7 @@ import type { Booking } from '@/lib/booking'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import PrescriptionArea from './prescription-area'
-import { inPersonLocationSchema, SERVICE_MODE_CONFIG, virtualLocationSchema } from '@/lib/location'
+import { inPersonLocationSchema, SERVICE_MODE_CONFIG, virtualLocationSchema } from '@/lib/service'
 import PaymentArea from './payment-area'
 
 type BookingInfoProps = {

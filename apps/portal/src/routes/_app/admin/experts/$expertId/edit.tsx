@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { honoClient } from '@/lib/hono-client'
 import ExpertInfoForm from '../-components/expert-info-form'
 import ExpertAvailabilityForm from '../-components/expert-availability-form'
+import { ExpertServicesSection } from './-components/expert-services-section'
 
 export const Route = createFileRoute('/_app/admin/experts/$expertId/edit')({
   component: EditExpertPage,
@@ -62,9 +63,10 @@ function EditExpertPage() {
       </div>
 
       <Tabs defaultValue="information" className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
+        <TabsList className="grid w-full max-w-2xl grid-cols-3">
           <TabsTrigger value="information">Expert Information</TabsTrigger>
           <TabsTrigger value="availability">Availability</TabsTrigger>
+          <TabsTrigger value="services">Services</TabsTrigger>
         </TabsList>
 
         <TabsContent value="information" className="mt-6">
@@ -87,6 +89,14 @@ function EditExpertPage() {
             </CardHeader>
             <CardContent>
               <ExpertAvailabilityForm expertId={expertId} initialData={availability} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="services" className="mt-6">
+          <Card>
+            <CardContent>
+              <ExpertServicesSection expertId={expertId} />
             </CardContent>
           </Card>
         </TabsContent>

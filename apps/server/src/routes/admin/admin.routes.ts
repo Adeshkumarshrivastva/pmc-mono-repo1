@@ -10,8 +10,19 @@ import {
   deleteExpert,
   getExpertAvailability,
   updateExpertAvailability,
+  getExpertServices,
+  createServiceForExpert,
+  getServiceDetails,
+  updateServiceForExpert,
+  deleteServiceForExpert,
 } from './admin.service'
-import { createExpertInput, updateExpertInfoInput, updateAvailabilityInput } from './admin.input'
+import {
+  createExpertInput,
+  updateExpertInfoInput,
+  updateAvailabilityInput,
+  createServiceForExpertInput,
+  updateServiceForExpertInput,
+} from './admin.input'
 
 export const adminApp = new Hono<{ Variables: HonoContext }>()
   .get('/dashboard', authMiddleware, requirePermission(['ADMIN']), (c) => getAdminDashboard(c))
@@ -40,4 +51,27 @@ export const adminApp = new Hono<{ Variables: HonoContext }>()
     requirePermission(['ADMIN']),
     zValidator('json', updateAvailabilityInput),
     (c) => updateExpertAvailability(c, c.req.param('expertId'), c.req.valid('json')),
+  )
+  .get('/experts/:expertId/services', authMiddleware, requirePermission(['ADMIN']), (c) =>
+    getExpertServices(c, c.req.param('expertId')),
+  )
+  .post(
+    '/experts/:expertId/services',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    zValidator('json', createServiceForExpertInput),
+    (c) => createServiceForExpert(c, c.req.param('expertId'), c.req.valid('json')),
+  )
+  .get('/services/:serviceId', authMiddleware, requirePermission(['ADMIN']), (c) =>
+    getServiceDetails(c, c.req.param('serviceId')),
+  )
+  .patch(
+    '/services/:serviceId',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    zValidator('json', updateServiceForExpertInput),
+    (c) => updateServiceForExpert(c, c.req.param('serviceId'), c.req.valid('json')),
+  )
+  .delete('/services/:serviceId', authMiddleware, requirePermission(['ADMIN']), (c) =>
+    deleteServiceForExpert(c, c.req.param('serviceId')),
   )

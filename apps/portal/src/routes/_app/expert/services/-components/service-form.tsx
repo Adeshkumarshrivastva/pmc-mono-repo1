@@ -3,14 +3,14 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { nanoid } from 'nanoid'
+import { generateServiceSlug, IN_PERSON_LOCATIONS, inPersonLocationSchema } from '@/lib/service'
 import { honoClient } from '@/lib/hono-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Checkbox } from '@/components/ui/check-box'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { SERVICE_MODE_CONFIG } from '@/lib/location'
+import { SERVICE_MODE_CONFIG } from '@/lib/service'
 
 const serviceFormSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -21,6 +21,7 @@ const serviceFormSchema = z.object({
   country: z.string().min(2, 'Country is required'),
   availableModes: z.array(z.enum(['IN_PERSON', 'VIRTUAL'])).min(1, 'Select at least one mode'),
   paymentMode: z.enum(['ONLINE', 'OFFLINE']),
+  inPersonLocation: inPersonLocationSchema,
 })
 
 type ServiceFormInput = z.infer<typeof serviceFormSchema>
@@ -37,20 +38,9 @@ type ServiceFormProps = {
     country: string
     availableModes: ('IN_PERSON' | 'VIRTUAL')[]
     paymentMode: 'ONLINE' | 'OFFLINE'
+    inPersonLocation?: z.infer<typeof inPersonLocationSchema>
   }
   onSuccess?: () => void
-}
-
-function generateServiceSlug(name: string): string {
-  const formattedName = name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-
-  const id = nanoid(4)
-
-  return `${formattedName}-${id}`
 }
 
 export function ServiceForm({ mode, serviceId, initialData, onSuccess }: ServiceFormProps) {
@@ -66,6 +56,7 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
       country: initialData?.country || 'India',
       availableModes: initialData?.availableModes || [],
       paymentMode: initialData?.paymentMode || 'ONLINE',
+      inPersonLocation: initialData?.inPersonLocation || IN_PERSON_LOCATIONS[0],
     },
     resolver: zodResolver(serviceFormSchema),
   })
@@ -209,6 +200,36 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
           />
         </div>
 
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-foreground">City</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Gurugram" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-foreground">Country</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., India" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="availableModes"
@@ -264,6 +285,37 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
                 <SelectContent>
                   <SelectItem value="ONLINE">Online</SelectItem>
                   <SelectItem value="OFFLINE">Offline</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="inPersonLocation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-foreground">In-Person Location</FormLabel>
+              <Select
+                onValueChange={(value) => {
+                  const location = IN_PERSON_LOCATIONS.find((loc) => loc.address === value)
+                  field.onChange(location || null)
+                }}
+                value={field.value?.address || ''}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select in-person location" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {IN_PERSON_LOCATIONS.map((location) => (
+                    <SelectItem key={location.address} value={location.address}>
+                      {location.address}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
