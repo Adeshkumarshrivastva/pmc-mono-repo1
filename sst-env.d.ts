@@ -41,6 +41,10 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    ONESIGNAL_APP_API_KEY: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     PAYLOAD_DB_URL: {
       type: 'sst.sst.Secret'
       value: string
