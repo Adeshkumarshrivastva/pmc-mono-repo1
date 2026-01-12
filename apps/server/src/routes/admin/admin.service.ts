@@ -8,7 +8,7 @@ import type {
   CreateExpertInput,
   CreateServiceForExpertInput,
   UpdateServiceForExpertInput,
-    BulkCreateBlockedDatesInput,
+  BulkCreateBlockedDatesInput,
 } from './admin.input'
 import { DayOfWeek } from '../../generated/prisma'
 import { dateToMinutes } from '../../lib/date'

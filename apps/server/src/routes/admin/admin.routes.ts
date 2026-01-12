@@ -25,7 +25,7 @@ import {
   updateAvailabilityInput,
   createServiceForExpertInput,
   updateServiceForExpertInput,
-    bulkCreateBlockedDatesInput,
+  bulkCreateBlockedDatesInput,
 } from './admin.input'
 
 export const adminApp = new Hono<{ Variables: HonoContext }>()

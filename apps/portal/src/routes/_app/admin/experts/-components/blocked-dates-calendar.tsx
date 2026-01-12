@@ -67,9 +67,6 @@ export function BlockedDatesCalendar({ expertId, blockedDates, availabilityDays 
     onSuccess: async () => {
       toast.success('Block removed successfully')
       await router.invalidate()
-      // await queryClient.invalidateQueries({
-      //   queryKey: ['expert-availability', expertId],
-      // })
     },
     onError: () => {
       toast.error('Failed to remove block')
@@ -190,9 +187,6 @@ function BlockDateForm({
 
       form.reset()
       onSuccess()
-      // await queryClient.invalidateQueries({
-      //   queryKey: ['expert-availability', expertId],
-      // })
     },
     onError: () => {
       toast.error('Failed to block dates')
