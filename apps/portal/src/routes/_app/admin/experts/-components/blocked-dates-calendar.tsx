@@ -61,7 +61,9 @@ export function BlockedDatesCalendar({ expertId, blockedDates, availabilityDays 
         param: { blockedDateId },
       })
 
-      if (!res.ok) throw new Error('Failed to delete block')
+      if (!res.ok) {
+        throw new Error('Failed to delete block')
+      }
       return res.json()
     },
     onSuccess: async () => {
@@ -177,7 +179,9 @@ function BlockDateForm({
         json: { dates },
       })
 
-      if (!res.ok) throw new Error('Failed to create blocked dates')
+      if (!res.ok) {
+        throw new Error('Failed to create blocked dates')
+      }
       return res.json()
     },
     onSuccess: async (data) => {
@@ -231,7 +235,9 @@ function BlockDateForm({
   })
 
   const handleOpenChange = (open: boolean) => {
-    if (!open) form.reset()
+    if (!open) {
+      form.reset()
+    }
     onOpenChange(open)
   }
 
