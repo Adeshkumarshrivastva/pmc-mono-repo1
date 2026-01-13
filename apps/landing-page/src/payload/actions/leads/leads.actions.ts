@@ -3,6 +3,7 @@
 import { getPayloadClient } from '@/lib/payload'
 import { type LeadFormInput, type QuizLeadFormInput } from './leads.input'
 import { zohoAPI } from '@/lib/zoho'
+import { sendWhatsappMessageByTemplate } from '@/lib/whatsapp'
 
 export async function createLead({ service, ...rest }: LeadFormInput) {
   const payload = await getPayloadClient()
@@ -24,6 +25,11 @@ export async function createLead({ service, ...rest }: LeadFormInput) {
       description: rest.message,
       service,
       subService: '',
+    }),
+    sendWhatsappMessageByTemplate({
+      to: rest.phone,
+      templateName: 'leads_trigger',
+      templateValues: [rest.fullName],
     }),
   ])
 
