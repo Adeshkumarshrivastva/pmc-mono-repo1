@@ -168,7 +168,7 @@ export async function createExpert(c: C, input: CreateExpertInput) {
 export async function getExpertDetails(c: C, expertId: string) {
   const expert = await prisma.expert.findUnique({
     where: { id: expertId },
-    include: { user: true },
+    include: { user: true, file: true },
   })
 
   if (!expert) {

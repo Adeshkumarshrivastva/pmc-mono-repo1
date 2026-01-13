@@ -122,7 +122,7 @@ export default function ExpertAvailabilityForm({ expertId, initialData, onSucces
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit((values) => saveAvailabilityMutation.mutate(values))} className="space-y-6">
-        <div className="flex max-w-lg items-center justify-between">
+        <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-muted-foreground">Weekly schedule</span>
           <div className="flex items-center gap-2">
             <Button
@@ -145,7 +145,7 @@ export default function ExpertAvailabilityForm({ expertId, initialData, onSucces
           </div>
         </div>
 
-        <div className="rounded-lg border bg-muted/40 p-4 space-y-3 max-w-lg">
+        <div className="rounded-lg border bg-muted/40 p-4 space-y-3 ">
           {daysField.fields.map((dayField, dayFieldIndex) => {
             const label = DAY_LABELS.find((d) => d.index === dayField.dayIndex)?.label
 

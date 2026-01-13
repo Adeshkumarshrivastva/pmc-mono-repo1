@@ -94,7 +94,7 @@ function EditExpertPage() {
             </CardHeader>
 
             <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
                   <ExpertAvailabilityForm expertId={expertId} initialData={availability} />
                 </div>
