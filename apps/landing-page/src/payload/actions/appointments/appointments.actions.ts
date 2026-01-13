@@ -3,6 +3,7 @@
 import { getPayloadClient } from '@/lib/payload'
 import type { AppointmentFormInput, AppointmentFormUpdateInput, DeleteAppointmentInput } from './appointments.input'
 import { zohoAPI } from '@/lib/zoho'
+import { sendWhatsappMessageByTemplate } from '@/lib/whatsapp'
 
 export async function createAppointment({ serviceId, subServiceId, dateTime, ...rest }: AppointmentFormInput) {
   const payload = await getPayloadClient()
@@ -38,6 +39,12 @@ export async function createAppointment({ serviceId, subServiceId, dateTime, ...
       phone: rest.phone,
       email: rest.email,
       leadSource: 'Website',
+    }),
+
+    sendWhatsappMessageByTemplate({
+      to: rest.phone,
+      templateName: 'leads_trigger',
+      templateValues: [rest.fullName],
     }),
   ])
 }

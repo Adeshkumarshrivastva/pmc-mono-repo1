@@ -17,6 +17,9 @@ export const env = createEnv({
     ZOHO_REFRESH_TOKEN: z.string(),
     API_BASE_URL: z.string(),
     ONESIGNAL_APP_API_KEY: z.string(),
+    WHATSAPP_API_KEY_SECRET: z.string(),
+    WHATSAPP_LICENCE_NUMBER_SECRET: z.string(),
+    WHATSAPP_TEST_NUMBER_SECRET: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -46,5 +49,8 @@ export const env = createEnv({
     API_BASE_URL: process.env.API_BASE_URL,
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
     ONESIGNAL_APP_API_KEY: process.env.ONESIGNAL_APP_API_KEY,
+    WHATSAPP_API_KEY_SECRET: process.env.WHATSAPP_API_KEY_SECRET,
+    WHATSAPP_LICENCE_NUMBER_SECRET: process.env.WHATSAPP_LICENCE_NUMBER_SECRET,
+    WHATSAPP_TEST_NUMBER_SECRET: process.env.WHATSAPP_TEST_NUMBER_SECRET,
   },
 })
