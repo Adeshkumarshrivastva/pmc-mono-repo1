@@ -176,6 +176,9 @@ export default $config({
         API_BASE_URL: $interpolate`${router.url}`,
         NEXT_PUBLIC_API_BASE_URL: $interpolate`${router.url}`,
         ONESIGNAL_APP_API_KEY: OneSignalAppApiKey.value,
+        WHATSAPP_API_KEY_SECRET: WhatsappApiKeySecret.value,
+        WHATSAPP_LICENCE_NUMBER_SECRET: WhatsappLicenceNumberSecret.value,
+        WHATSAPP_TEST_NUMBER_SECRET: WhatsappTestNumberSecret.value,
       },
     })
   },
