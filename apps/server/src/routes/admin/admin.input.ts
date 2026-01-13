@@ -81,3 +81,14 @@ export type CreateServiceForExpertInput = z.infer<typeof createServiceForExpertI
 export const updateServiceForExpertInput = createServiceForExpertInput.partial()
 
 export type UpdateServiceForExpertInput = z.infer<typeof updateServiceForExpertInput>
+
+export const bulkCreateBlockedDatesInput = z.object({
+  dates: z.array(
+    z.object({
+      startDate: z.coerce.date(),
+      endDate: z.coerce.date(),
+    }),
+  ),
+})
+
+export type BulkCreateBlockedDatesInput = z.infer<typeof bulkCreateBlockedDatesInput>

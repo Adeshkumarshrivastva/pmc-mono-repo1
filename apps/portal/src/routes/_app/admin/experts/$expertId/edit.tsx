@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { honoClient } from '@/lib/hono-client'
 import ExpertInfoForm from '../-components/expert-info-form'
 import ExpertAvailabilityForm from '../-components/expert-availability-form'
+import { BlockedDatesCalendar } from '../-components/blocked-dates-calendar'
 import { ExpertServicesSection } from './-components/expert-services-section'
 
 export const Route = createFileRoute('/_app/admin/experts/$expertId/edit')({
@@ -14,8 +15,12 @@ export const Route = createFileRoute('/_app/admin/experts/$expertId/edit')({
     const { expertId } = params
 
     const [expertResponse, availabilityResponse] = await Promise.all([
-      honoClient.server.admin.experts[':expertId'].$get({ param: { expertId } }),
-      honoClient.server.admin.experts[':expertId'].availability.$get({ param: { expertId } }),
+      honoClient.server.admin.experts[':expertId'].$get({
+        param: { expertId },
+      }),
+      honoClient.server.admin.experts[':expertId'].availability.$get({
+        param: { expertId },
+      }),
     ])
 
     if (!expertResponse.ok) {
@@ -85,10 +90,23 @@ function EditExpertPage() {
           <Card>
             <CardHeader>
               <CardTitle>Availability Schedule</CardTitle>
-              <CardDescription>Manage expert's weekly availability schedule</CardDescription>
+              <CardDescription>Manage expert&apos;s weekly availability and blocked dates</CardDescription>
             </CardHeader>
+
             <CardContent>
-              <ExpertAvailabilityForm expertId={expertId} initialData={availability} />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <ExpertAvailabilityForm expertId={expertId} initialData={availability} />
+                </div>
+
+                <div className="border rounded-lg p-4 bg-muted/30">
+                  <BlockedDatesCalendar
+                    expertId={expertId}
+                    blockedDates={availability.blockedDates}
+                    availabilityDays={availability.days}
+                  />
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

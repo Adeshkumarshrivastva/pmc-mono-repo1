@@ -362,8 +362,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
               <div className="bg-white rounded-xl shadow-lg p-2 flex items-center">
                 <Search
                   className={cn(
-                    'h-7 w-7 transition-colors duration-300',
-                    searchFocused ? 'text-primary' : 'text-card-accent',
+                    `h-7 w-7 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`,
                   )}
                 />
                 <input
