@@ -1,4 +1,5 @@
 import { env } from '../env'
+import { formatPhoneNumber } from './utils'
 
 type WhatsappTemplatePayload = {
   to: string
@@ -19,7 +20,7 @@ export async function sendWhatsappMessageByTemplate({
     const params = new URLSearchParams({
       LicenseNumber: env.WHATSAPP_LICENCE_NUMBER_SECRET,
       APIKey: env.WHATSAPP_API_KEY_SECRET,
-      Contact: to,
+      Contact: formatPhoneNumber(to),
       Template: templateName,
       Param: templateValues.join(','),
       URLParam: urlParams.join(','),

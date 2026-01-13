@@ -1,23 +1,6 @@
 import { env } from '@/env'
 import * as z from 'zod'
-
-function formatPhoneNumber(phone: string): string {
-  const digitsOnly = phone.replace(/\D/g, '')
-
-  if (digitsOnly.startsWith('91') && digitsOnly.length === 12) {
-    return `+${digitsOnly}`
-  }
-
-  if (digitsOnly.length === 10) {
-    return `+91${digitsOnly}`
-  }
-
-  if (phone.startsWith('+91')) {
-    return phone
-  }
-
-  return phone
-}
+import { formatPhoneNumber } from './utils'
 
 class ZohoAPI {
   #clientId: string

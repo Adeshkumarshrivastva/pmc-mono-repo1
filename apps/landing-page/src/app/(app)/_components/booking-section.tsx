@@ -92,13 +92,6 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
               </div>
             ) : null}
 
-            <div className="text-sm text-slate-500 mb-2">
-              Location:{' '}
-              <span className="font-semibold text-slate-900">
-                {city}, {country}
-              </span>
-            </div>
-
             {expertise ? (
               <div>
                 <div className="text-sm text-slate-500 mb-1">Expertise:</div>
@@ -216,6 +209,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
   const [activeTab, setActiveTab] = useState<'book' | 'quick' | 'advanced'>('book')
   const [showFilters, setShowFilters] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
+  const router = useRouter()
 
   const expertsQuery = useQuery({
     queryKey: ['experts'],
@@ -328,7 +322,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center gap-1 rounded-lg p-1">
+          <div className="flex items-center gap-1 rounded-lg p-1 overflow-x-auto">
             <Tabs
               value={activeTab}
               onValueChange={(v) => {
@@ -338,13 +332,20 @@ export default function BookingSection({ data }: BookingSectionProps) {
               <TabsList className="border border-accent w-full py-6 px-1">
                 <TabsTrigger
                   value="book"
-                  className="cursor-pointer p-5 font-normal text-lg data-[state=active]:bg-accent data-[state=active]:text-primary data-[state=inactive]:text-accent"
+                  className="cursor-pointer p-5 font-normal sm:text-sm lg:text-lg data-[state=active]:bg-accent data-[state=active]:text-primary data-[state=inactive]:text-accent"
                 >
                   Book Session
                 </TabsTrigger>
                 <TabsTrigger
+                  onClick={() => router.push('/quiz')}
+                  value="quick"
+                  className="cursor-pointer p-5 font-normal sm:text-sm lg:text-lg data-[state=active]:bg-accent data-[state=active]:text-primary data-[state=inactive]:text-accent"
+                >
+                  Quick Test
+                </TabsTrigger>
+                <TabsTrigger
                   value="advanced"
-                  className="cursor-pointer p-5 font-normal text-lg data-[state=active]:bg-accent data-[state=active]:text-primary data-[state=inactive]:text-accent"
+                  className="cursor-pointer p-5 font-normal sm:text-sm lg:text-lg data-[state=active]:bg-accent data-[state=active]:text-primary data-[state=inactive]:text-accent"
                 >
                   Advanced Test
                 </TabsTrigger>
@@ -466,7 +467,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-1">
+                  <div className="grid mt-4 mb-6 pb-6 border-b border-border">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Specializations</label>
                       <Combobox
@@ -483,19 +484,6 @@ export default function BookingSection({ data }: BookingSectionProps) {
                         onValueChange={(value) => {
                           const expertiseString = Array.isArray(value) ? value.join(', ') : ''
                           updateFilter('expertise', expertiseString || undefined)
-                        }}
-                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Location</label>
-                      <Combobox
-                        placeholder="Select Location"
-                        options={locationOptions}
-                        value={filters.location || 'GURGAON'}
-                        onValueChange={(value) => {
-                          const locationValue = Array.isArray(value) ? value[0] : value
-                          updateFilter('location', locationValue || undefined)
                         }}
                         className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
                       />
@@ -627,13 +615,13 @@ const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
 
 const SERVICE_MODE_CONFIG: Record<string, { icon: any; label: string }> = {
   VIRTUAL: { icon: UserIcon, label: 'Virtual' },
-  IN_PERSON: { icon: MapPin, label: 'In-Person' },
+  IN_PERSON: { icon: MapPin, label: 'In-Clinic' },
 }
 
 const serviceModeOptions = [
   { value: '', label: 'All Modes' },
   { value: 'VIRTUAL', label: 'Virtual' },
-  { value: 'IN_PERSON', label: 'In-Person' },
+  { value: 'IN_PERSON', label: 'In-Clinic' },
 ]
 
 type ServiceMode = 'VIRTUAL' | 'IN_PERSON'
