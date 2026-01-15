@@ -50,7 +50,7 @@ function AdminDashboard() {
         .with({ status: 'success' }, ({ data }) => (
           <>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Welcome back, {user.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{`Welcome back, ${user.name} (${user.role})`}</h1>
               <p className="text-sm text-muted-foreground mt-1">Overview of platform metrics and activity</p>
             </div>
 
