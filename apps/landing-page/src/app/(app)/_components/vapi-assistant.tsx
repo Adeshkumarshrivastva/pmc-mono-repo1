@@ -25,7 +25,7 @@ export default function VapiAssistant() {
         chat-placeholder="Type your message..."
         voice-show-transcript="true"
         consent-required="false"
-      ></vapi-widget>
+      />
 
       <style jsx global>{`
         vapi-widget {
