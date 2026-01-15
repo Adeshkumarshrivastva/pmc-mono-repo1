@@ -30,7 +30,7 @@ type FilterState = {
 type ExpertWithRelations = InferResponseType<HonoClient['server']['experts']['$get'], 200>['experts'][number]
 
 function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
-  const { servicesProvided, name, slug, city, country, availability, expertise, experienceInYears } = expert
+  const { servicesProvided, name, slug, availability, expertise, experienceInYears } = expert
   const [selectedMode] = useState<ServiceMode | 'ALL'>('ALL')
   const [showAllServices, setShowAllServices] = useState(false)
   const navigate = useNavigate()
@@ -94,13 +94,6 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
                 </span>
               </div>
             ) : null}
-
-            <div className="text-sm text-muted-foreground mb-2">
-              Location:{' '}
-              <span className="font-semibold text-foreground">
-                {city}, {country}
-              </span>
-            </div>
 
             {expertise ? (
               <div className="mb-4">
@@ -231,16 +224,6 @@ export default function OurExperts() {
     queryFn: () => fetchExperts({ ...filters, search: '' }),
   })
 
-  const allExpertsQuery = useQuery({
-    queryKey: ['all-experts'],
-    queryFn: () =>
-      fetchExperts({
-        search: '',
-        sortBy: 'rating',
-        sortOrder: 'asc',
-      }),
-  })
-
   const filteredExperts = useMemo(() => {
     const experts = fetchExpertQuery.data?.experts || []
 
@@ -320,8 +303,6 @@ export default function OurExperts() {
 
     return filtered
   }, [fetchExpertQuery.data?.experts, filters.search])
-
-  const locationOptions = generateLocationOptions(allExpertsQuery.data?.experts)
 
   function updateFilter(
     key: keyof FilterState,
@@ -525,7 +506,7 @@ export default function OurExperts() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div className="grid gap-4 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Specializations</label>
                     <Combobox
@@ -542,19 +523,6 @@ export default function OurExperts() {
                       onValueChange={(value) => {
                         const expertiseString = Array.isArray(value) ? value.join(', ') : ''
                         updateFilter('expertise', expertiseString || undefined)
-                      }}
-                      className="w-full h-12 rounded-lg border-border focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Location</label>
-                    <Combobox
-                      placeholder="Select location..."
-                      options={locationOptions}
-                      value={filters.location || ''}
-                      onValueChange={(value) => {
-                        const locationValue = Array.isArray(value) ? value[0] : value
-                        updateFilter('location', locationValue || undefined)
                       }}
                       className="w-full h-12 rounded-lg border-border focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
                     />
@@ -722,27 +690,6 @@ function ExpertCardSkeleton() {
   )
 }
 
-function generateLocationOptions(experts?: ExpertWithRelations[]) {
-  if (!experts) {
-    return []
-  }
-
-  const locations = new Set<string>()
-
-  experts.forEach((expert) => {
-    if (expert.city) {
-      locations.add(expert.city)
-    }
-  })
-
-  return Array.from(locations)
-    .map((location) => ({
-      value: location,
-      label: location,
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label))
-}
-
 const expertTypeOptions = [
   { value: '', label: 'All Types' },
   { value: 'PSYCHIATRIST', label: 'Psychiatrist' },
@@ -753,7 +700,7 @@ const expertTypeOptions = [
 const serviceModeOptions = [
   { value: '', label: 'All Modes' },
   { value: 'VIRTUAL', label: 'Virtual' },
-  { value: 'IN_PERSON', label: 'In-Person' },
+  { value: 'IN_PERSON', label: 'In-Clinic' },
 ]
 
 const sortByOptions = [
