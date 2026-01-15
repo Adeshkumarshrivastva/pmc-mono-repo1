@@ -330,7 +330,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
 
   return (
     <section className="w-full bg-primary px-4 py-8">
-      <div className="container max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div className="max-w-2xl">
             <h1 className="text-2xl sm:text-3xl lg:text-5xl font-semibold text-accent leading-tight">
