@@ -20,7 +20,7 @@
     "@payloadcms/db-mongodb": "3.43.0",
     "@payloadcms/next": "3.43.0",
     "@payloadcms/payload-cloud": "3.43.0",
-    "@payloadcms/plugin-import-export": "3.64.0",
+    "@payloadcms/plugin-import-export": "3.43.0",
     "@payloadcms/richtext-lexical": "3.43.0",
     "@payloadcms/storage-s3": "3.43.0",
     "@payloadcms/ui": "3.43.0",
