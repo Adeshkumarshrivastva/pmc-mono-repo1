@@ -183,28 +183,27 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
 }
 
 function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
-  const [showAll, setShowAll] = useState(false)
-  const displayedExperts = showAll ? experts : experts.slice(0, 4)
+  const router = useRouter()
 
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6">
-        {displayedExperts.map((expert) => (
+        {experts.map((expert) => (
           <ExpertGrid key={expert.id} expert={expert} />
         ))}
       </div>
 
-      {experts.length > 4 && (
-        <div className="flex justify-center">
-          <Button
-            variant="outline"
-            onClick={() => setShowAll(!showAll)}
-            className="min-w-[200px] bg-white text-muted-foreground"
-          >
-            {showAll ? 'Show Less' : 'Show All'}
-          </Button>
-        </div>
-      )}
+      <div className="flex justify-center">
+        <Button
+          variant="outline"
+          onClick={() => {
+            router.push(`/portal/experts/`)
+          }}
+          className="min-w-[200px] text-lg bg-white text-muted-foreground"
+        >
+          Show All
+        </Button>
+      </div>
     </div>
   )
 }
@@ -372,7 +371,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
         </div>
 
         {/* Main */}
-        <div className="flex flex-col md:flex-row gap-10 items-start mb-6">
+        <div className="flex flex-col md:flex-row gap-10 items-start mb-4">
           {/* Left Column */}
           <div className="w-full md:w-72 lg:w-80 flex flex-col gap-8 flex-shrink-0">
             {/* Search Bar */}
@@ -535,12 +534,13 @@ export default function BookingSection({ data }: BookingSectionProps) {
                 </div>
               ))
               .with({ status: 'success' }, () => {
-                return filteredExperts.length === 0 ? (
+                const limitedExperts = filteredExperts.slice(0, 4)
+                return limitedExperts.length === 0 ? (
                   <div className="h-64 flex items-center justify-center rounded-2xl bg-white text-slate-500">
                     No experts found
                   </div>
                 ) : (
-                  <ExpertsGrid experts={filteredExperts} />
+                  <ExpertsGrid experts={limitedExperts} />
                 )
               })
               .otherwise(() => null)}
