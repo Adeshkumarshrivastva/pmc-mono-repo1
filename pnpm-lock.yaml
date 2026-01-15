@@ -52,8 +52,8 @@ importers:
         specifier: 3.43.0
         version: 3.43.0(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))
       '@payloadcms/plugin-import-export':
-        specifier: 3.43.0
-        version: 3.43.0(@payloadcms/ui@3.43.0(@types/react@19.1.0)(monaco-editor@0.52.2)(next@15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 3.64.0
+        version: 3.64.0(@payloadcms/ui@3.43.0(@types/react@19.1.0)(monaco-editor@0.52.2)(next@15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@payloadcms/richtext-lexical':
         specifier: 3.43.0
         version: 3.43.0(@faceless-ui/modal@3.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@faceless-ui/scroll-info@2.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@payloadcms/next@3.43.0(@types/react@19.1.0)(graphql@16.8.1)(monaco-editor@0.52.2)(next@15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@types/react@19.1.0)(monaco-editor@0.52.2)(next@15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(yjs@13.6.27)
@@ -1829,11 +1829,11 @@ packages:
       react: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
       react-dom: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
 
-  '@payloadcms/plugin-import-export@3.43.0':
-    resolution: {integrity: sha512-yWQs68b/WE0y5uff6tQUnN0kMkdcAb0Hu9/TynzEmxwBZydkPz7n/FEZSwHfocw4XzAB4n1mqSNHFb4ewrIn1g==}
+  '@payloadcms/plugin-import-export@3.64.0':
+    resolution: {integrity: sha512-+6o5d1Rr3XiMljFI7glIaOnSo+L5B+MwEZvcpYDbtYZ4+djYnrcozAkqpJRcMd+QP9Q237Ms51m8XUdxZs9wGg==}
     peerDependencies:
-      '@payloadcms/ui': 3.43.0
-      payload: 3.43.0
+      '@payloadcms/ui': 3.64.0
+      payload: 3.64.0
 
   '@payloadcms/richtext-lexical@3.43.0':
     resolution: {integrity: sha512-U4OhTntV/fycvOLM9QyLtKRfHM45iRUi47cIb1gmM92vdcF5BDe/FSrQZ4UzKEvbV/BmmbAnEUozzoW9rQvYvg==}
@@ -1854,6 +1854,9 @@ packages:
 
   '@payloadcms/translations@3.43.0':
     resolution: {integrity: sha512-0SEw/JdQKSIFQbQ9v3CVyS2dMkOWUEjdCH8785jXrgOIJFph9RLzK5WRS3UUOZ0Sxc/pnUCI51FweYy1WbWcVg==}
+
+  '@payloadcms/translations@3.64.0':
+    resolution: {integrity: sha512-DlNPILu1h+ZTtGUZG28rZtWL/92t5mzK/k7sC4vWk/gPPMOXtZ5fNc6ut2lwzJ13E5lxvtRtVY/+IjNzKrUAFw==}
 
   '@payloadcms/ui@3.43.0':
     resolution: {integrity: sha512-EHkiIhn6f1BuWmT+XMR1cBrmQFkkqZAiKLU7l6pTiaIB9zB8bMzVPUCc/EjutgofuKCPbwRDoYZ6wIiumkwb+g==}
@@ -9187,10 +9190,10 @@ snapshots:
       - supports-color
       - typescript
 
-  '@payloadcms/plugin-import-export@3.43.0(@payloadcms/ui@3.43.0(@types/react@19.1.0)(monaco-editor@0.52.2)(next@15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@payloadcms/plugin-import-export@3.64.0(@payloadcms/ui@3.43.0(@types/react@19.1.0)(monaco-editor@0.52.2)(next@15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@faceless-ui/modal': 3.0.0-beta.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@payloadcms/translations': 3.43.0
+      '@faceless-ui/modal': 3.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@payloadcms/translations': 3.64.0
       '@payloadcms/ui': 3.43.0(@types/react@19.1.0)(monaco-editor@0.52.2)(next@15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.43.0(graphql@16.8.1)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       csv-parse: 5.6.0
       csv-stringify: 6.6.0
@@ -9261,6 +9264,10 @@ snapshots:
       - typescript
 
   '@payloadcms/translations@3.43.0':
+    dependencies:
+      date-fns: 4.1.0
+
+  '@payloadcms/translations@3.64.0':
     dependencies:
       date-fns: 4.1.0
 
