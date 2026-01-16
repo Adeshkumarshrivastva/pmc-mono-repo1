@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import MatchedExperts from './matched-experts'
 
 type ReportData = {
   answers: Record<string, string>
@@ -76,8 +77,8 @@ export default function QuizReportPage() {
 
   return (
     <div className="min-h-screen bg-primary-foreground">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="mb-8">
+      <div className="mx-auto px-4 py-8 max-w-7xl">
+        <div className="mb-6">
           <Button
             onClick={() => {
               router.push('/quiz')
@@ -102,7 +103,7 @@ export default function QuizReportPage() {
               </div>
             </div>
 
-            <Badge variant="secondary" className={cn('text-lg px-4 py-2', currentLevel.color, 'bg-background')}>
+            <Badge variant="secondary" className={cn('text-lg px-4 py-2 mx-auto', currentLevel.color, 'bg-background')}>
               {currentLevel.level}
             </Badge>
 
@@ -209,12 +210,14 @@ export default function QuizReportPage() {
           </Button>
         </div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-6 text-center">
           <p className="text-xs text-muted-foreground leading-relaxed max-w-2xl mx-auto">
             This assessment is intended for screening purposes only. Results should be discussed with a healthcare
             professional for proper interpretation and treatment planning.
           </p>
         </div>
+
+        <MatchedExperts quizTitle={reportData.quizTitle} />
       </div>
     </div>
   )
