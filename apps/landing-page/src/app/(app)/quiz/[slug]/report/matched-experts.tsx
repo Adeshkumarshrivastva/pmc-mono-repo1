@@ -8,6 +8,7 @@ import { Calendar, MapPin, UserIcon, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Marquee } from '@/components/ui/marquee'
 import { getFileUrl, fetchPublicExperts, type Expert } from '@/lib/experts'
+import { OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
 
 const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
   INR: { symbol: '₹' },
@@ -216,6 +217,9 @@ function ExpertsGridSkeleton() {
 
 export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
   const router = useRouter()
+  const [startIdx, setStartIdx] = useState(0)
+  const cardsPerPage = 2
+
   const expertsQuery = useQuery({
     queryKey: ['experts'],
     queryFn: () => fetchPublicExperts(),
@@ -238,6 +242,12 @@ export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
     return false
   })
 
+  const handlePrev = () => setStartIdx((prev) => Math.max(prev - cardsPerPage, 0))
+  const handleNext = () =>
+    setStartIdx((prev) => Math.min(prev + cardsPerPage, Math.max(matchedExperts.length - cardsPerPage, 0)))
+
+  const visibleExperts = matchedExperts.slice(startIdx, startIdx + cardsPerPage)
+
   if (expertsQuery.isLoading) {
     return <ExpertsGridSkeleton />
   }
@@ -247,26 +257,53 @@ export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
   }
 
   return (
-    <div className="mt-12">
-      <h2 className="text-2xl font-bold mb-6 text-center text-foreground">Our recommended experts...</h2>
+    <>
+    {matchedExperts ? (
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-6 text-center text-foreground">Our recommended experts...</h2>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6 mb-6">
-        {matchedExperts.map((expert) => (
-          <ExpertGrid key={expert.id} expert={expert} />
-        ))}
-      </div>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {visibleExperts.map((expert) => (
+              <ExpertGrid key={expert.id} expert={expert} />
+            ))}
+          </div>
 
-      <div className="flex justify-center">
-        <Button
-          variant="outline"
-          onClick={() => {
-            router.push(`/portal/experts/`)
-          }}
-          className="min-w-[200px] text-lg bg-white hover:bg-card-accent text-muted-foreground mb-6"
-        >
-          Show All
-        </Button>
+          {matchedExperts.length > cardsPerPage && (
+            <div className="flex gap-8 justify-center">
+              <Button
+                icon={<OouiArrowPreviousLtr className="h-5 w-5" />}
+                variant="secondary"
+                size="icon"
+                className="border rounded-full h-10 w-10"
+                onClick={handlePrev}
+                disabled={startIdx === 0}
+              />
+              <Button
+                icon={<OouiArrowPreviousRtl className="h-5 w-5" />}
+                variant="secondary"
+                size="icon"
+                className="border rounded-full h-10 w-10"
+                onClick={handleNext}
+                disabled={startIdx + cardsPerPage >= matchedExperts.length}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <Button
+            variant="outline"
+            onClick={() => {
+              router.push(`/portal/experts/`)
+            }}
+            className="min-w-[200px] text-lg bg-white hover:bg-card-accent text-muted-foreground mb-6"
+          >
+            Show All
+          </Button>
+        </div>
       </div>
-    </div>
+    ) : null}
+    </>
   )
 }
