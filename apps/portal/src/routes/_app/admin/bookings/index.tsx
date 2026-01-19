@@ -68,7 +68,7 @@ const columns: ColumnDef<BookingData>[] = [
   {
     accessorKey: 'mode',
     header: 'Mode',
-    cell: ({ row }) => (row.original.mode === 'VIRTUAL' ? 'Virtual' : 'In Person'),
+    cell: ({ row }) => (row.original.mode === 'VIRTUAL' ? 'Virtual' : 'In Clinic'),
   },
   {
     accessorKey: 'status',

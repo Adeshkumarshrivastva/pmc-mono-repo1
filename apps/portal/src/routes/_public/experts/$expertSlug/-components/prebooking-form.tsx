@@ -174,7 +174,7 @@ export default function PrebookingForm({
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Location*</FormLabel>
+                  <FormLabel>Mode</FormLabel>
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
                       {availableModes.map((mode) => {
