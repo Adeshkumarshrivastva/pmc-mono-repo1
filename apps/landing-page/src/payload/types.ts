@@ -517,17 +517,17 @@ export interface Internship {
  * via the `definition` "exports".
  */
 export interface Export {
-  id: string;
-  name?: string | null;
-  format?: ('csv' | 'json') | null;
-  limit?: number | null;
-  page?: number | null;
-  sort?: string | null;
-  sortOrder?: ('asc' | 'desc') | null;
-  drafts?: ('yes' | 'no') | null;
-  selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null;
-  fields?: string[] | null;
-  collectionSlug: string;
+  id: string
+  name?: string | null
+  format?: ('csv' | 'json') | null
+  limit?: number | null
+  page?: number | null
+  sort?: string | null
+  sortOrder?: ('asc' | 'desc') | null
+  drafts?: ('yes' | 'no') | null
+  selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null
+  fields?: string[] | null
+  collectionSlug: string
   where?:
     | {
         [k: string]: unknown;
@@ -979,28 +979,28 @@ export interface InternshipsSelect<T extends boolean = true> {
  * via the `definition` "exports_select".
  */
 export interface ExportsSelect<T extends boolean = true> {
-  name?: T;
-  format?: T;
-  limit?: T;
-  page?: T;
-  sort?: T;
-  sortOrder?: T;
-  drafts?: T;
-  selectionToUse?: T;
-  fields?: T;
-  collectionSlug?: T;
-  where?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+  name?: T
+  format?: T
+  limit?: T
+  page?: T
+  sort?: T
+  sortOrder?: T
+  drafts?: T
+  selectionToUse?: T
+  fields?: T
+  collectionSlug?: T
+  where?: T
+  updatedAt?: T
+  createdAt?: T
+  url?: T
+  thumbnailURL?: T
+  filename?: T
+  mimeType?: T
+  filesize?: T
+  width?: T
+  height?: T
+  focalX?: T
+  focalY?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2446,16 +2446,16 @@ export interface QuizPageSelect<T extends boolean = true> {
  */
 export interface TaskCreateCollectionExport {
   input: {
-    name?: string | null;
-    format?: ('csv' | 'json') | null;
-    limit?: number | null;
-    page?: number | null;
-    sort?: string | null;
-    sortOrder?: ('asc' | 'desc') | null;
-    drafts?: ('yes' | 'no') | null;
-    selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null;
-    fields?: string[] | null;
-    collectionSlug: string;
+    name?: string | null
+    format?: ('csv' | 'json') | null
+    limit?: number | null
+    page?: number | null
+    sort?: string | null
+    sortOrder?: ('asc' | 'desc') | null
+    drafts?: ('yes' | 'no') | null
+    selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null
+    fields?: string[] | null
+    collectionSlug: string
     where?:
       | {
           [k: string]: unknown;

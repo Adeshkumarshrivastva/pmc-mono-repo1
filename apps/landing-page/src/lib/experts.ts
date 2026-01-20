@@ -28,7 +28,7 @@ const expertSchema = z.object({
   id: z.string(),
   slug: z.string(),
   name: z.string(),
-  image: z.string(),
+  image: z.string().nullable().optional(),
   type: z.enum([
     'PSYCHOLOGIST',
     'PSYCHIATRIST',
