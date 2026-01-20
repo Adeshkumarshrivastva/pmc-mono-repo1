@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import { getFileUrl, specializationOptions, fetchPublicExperts, type Expert } from '@/lib/experts'
 import { OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
+import { CURRENCY_CONFIG } from '@/lib/utils'
 
 type FilterState = {
   search: string
@@ -649,13 +650,6 @@ function generateLocationOptions(experts?: ExpertWithRelations[]) {
       label: location,
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
-}
-
-const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
-  INR: { symbol: '₹' },
-  USD: { symbol: '$' },
-  EUR: { symbol: '€' },
-  GBP: { symbol: '£' },
 }
 
 const SERVICE_MODE_CONFIG: Record<string, { icon: any; label: string }> = {
