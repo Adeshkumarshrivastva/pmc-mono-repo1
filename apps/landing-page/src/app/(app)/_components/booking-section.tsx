@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
@@ -12,6 +12,7 @@ import { Marquee } from '@/components/ui/marquee'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import { getFileUrl, specializationOptions, fetchPublicExperts, type Expert } from '@/lib/experts'
+import { OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
 
 type FilterState = {
   search: string
@@ -49,8 +50,8 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
   const nextSlot = getNextAvailableSlot(availability as any)
 
   return (
-    <div className="bg-white rounded-3xl border border-border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group text-left">
-      <div className="p-6 pb-4 text-slate-900">
+    <div className="bg-white rounded-3xl border border-border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden text-left">
+      <div className="p-6 pb-4 text-slate-900 flex flex-col">
         <div className="flex items-start gap-4 mb-4">
           <div className="relative w-36 h-40 shrink-0">
             {expert.image ? (
@@ -157,7 +158,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
           ) : null}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-border">
+        <div className="flex items-center justify-between pt-4 border-t border-border mt-auto">
           <div className="flex items-center gap-4">
             <div>
               <div className="text-xs text-slate-500 mb-1">Next available slot:</div>
@@ -184,14 +185,47 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
 
 function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
   const router = useRouter()
+  const [startIdx, setStartIdx] = useState(0)
+  const cardsPerPage = 2
+
+  useEffect(() => {
+    setStartIdx(0)
+  }, [experts])
+
+  const handlePrev = () => setStartIdx((prev) => Math.max(prev - cardsPerPage, 0))
+  const handleNext = () =>
+    setStartIdx((prev) => Math.min(prev + cardsPerPage, Math.max(experts.length - cardsPerPage, 0)))
+
+  const visibleExperts = experts.slice(startIdx, startIdx + cardsPerPage)
 
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6">
-        {experts.map((expert) => (
+        {visibleExperts.map((expert) => (
           <ExpertGrid key={expert.id} expert={expert} />
         ))}
       </div>
+
+      {experts.length > cardsPerPage && (
+        <div className="flex gap-8 justify-center">
+          <Button
+            icon={<OouiArrowPreviousLtr className="h-5 w-5" />}
+            variant="secondary"
+            size="icon"
+            className="border rounded-full h-10 w-10"
+            onClick={handlePrev}
+            disabled={startIdx === 0}
+          />
+          <Button
+            icon={<OouiArrowPreviousRtl className="h-5 w-5" />}
+            variant="secondary"
+            size="icon"
+            className="border rounded-full h-10 w-10"
+            onClick={handleNext}
+            disabled={startIdx + cardsPerPage >= experts.length}
+          />
+        </div>
+      )}
 
       <div className="flex justify-center">
         <Button
@@ -375,150 +409,145 @@ export default function BookingSection({ data }: BookingSectionProps) {
           {/* Left Column */}
           <div className="w-full md:w-72 lg:w-80 flex flex-col gap-8 flex-shrink-0">
             {/* Search Bar */}
-            <div>
-              <div className="bg-white rounded-xl shadow-lg p-2 flex items-center">
-                <Search
-                  className={cn(
-                    `h-7 w-7 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`,
-                  )}
-                />
-                <input
-                  type="text"
-                  placeholder="Start typing to search experts..."
-                  className="flex-1 h-12 px-4 bg-transparent focus-visible:outline-none placeholder:text-gray-400 text-base"
-                  value={filters.search}
-                  onChange={(e) => updateFilter('search', e.target.value)}
-                  onFocus={() => setSearchFocused(true)}
-                  onBlur={() => setSearchFocused(false)}
-                />
-                {filters.search && (
-                  <button
-                    onClick={() => updateFilter('search', '')}
-                    className="p-1 ml-2 hover:bg-card-accent rounded-lg transition-colors"
-                  >
-                    <X className="w-6 h-6 text-muted-foreground" />
-                  </button>
+            <div className="bg-white rounded-xl shadow-lg p-2 flex items-center">
+              <Search
+                className={cn(
+                  `h-7 w-7 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`,
                 )}
-              </div>
+              />
+              <input
+                type="text"
+                placeholder="Start typing to search experts..."
+                className="flex-1 h-10 px-4 bg-transparent focus-visible:outline-none placeholder:text-gray-400 text-base"
+                value={filters.search}
+                onChange={(e) => updateFilter('search', e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+              />
+              {filters.search && (
+                <button
+                  onClick={() => updateFilter('search', '')}
+                  className="p-1 hover:bg-card-accent rounded-lg transition-colors"
+                >
+                  <X className="w-6 h-6 text-muted-foreground" />
+                </button>
+              )}
             </div>
 
             {/* Filter Sidebar */}
             <div className={cn('w-full', showFilters ? 'block' : 'hidden md:block')}>
-              <div className="bg-white border border-border rounded-2xl shadow-xl overflow-hidden">
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
-                    <h3 className="text-xl font-semibold text-foreground">Filter Experts</h3>
-                    <button
-                      onClick={() => {
-                        setShowFilters(false)
+              <div className="bg-white border border-border rounded-2xl shadow-xl overflow-hidden p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-foreground">Filter Experts</h3>
+                  <button
+                    onClick={() => {
+                      setShowFilters(false)
+                    }}
+                    className="p-2 hover:bg-card-accent rounded-lg transition-colors md:hidden"
+                  >
+                    <X className="w-5 h-5 text-muted-foreground" />
+                  </button>
+                </div>
+
+                <div className="grid gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Professional Type</label>
+                    <Combobox
+                      placeholder="All Types"
+                      options={expertTypeOptions}
+                      value={filters.type || ''}
+                      onValueChange={(value) => {
+                        updateFilter('type', (value as Expert['type']) || undefined)
                       }}
-                      className="p-2 hover:bg-card-accent rounded-lg transition-colors md:hidden"
-                    >
-                      <X className="w-5 h-5 text-muted-foreground" />
-                    </button>
+                      className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
+                    />
                   </div>
 
-                  <div className="grid gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Professional Type</label>
-                      <Combobox
-                        placeholder="All Types"
-                        options={expertTypeOptions}
-                        value={filters.type || ''}
-                        onValueChange={(value) => {
-                          updateFilter('type', (value as Expert['type']) || undefined)
-                        }}
-                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Session Type</label>
-                      <Combobox
-                        placeholder="All Modes"
-                        options={serviceModeOptions}
-                        value={filters.serviceMode || ''}
-                        onValueChange={(value) => {
-                          updateFilter('serviceMode', (value as ServiceMode) || undefined)
-                        }}
-                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Gender</label>
-                      <Combobox
-                        placeholder="All Genders"
-                        options={genderOptions}
-                        value={filters.gender || ''}
-                        onValueChange={(value) => {
-                          const genderValue = Array.isArray(value) ? value[0] : value
-                          updateFilter('gender', genderValue || undefined)
-                        }}
-                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Sort By</label>
-                      <div className="flex gap-1">
-                        <Combobox
-                          placeholder="Rating"
-                          options={sortByOptions}
-                          value={filters.sortBy || 'rating'}
-                          onValueChange={(value) => {
-                            updateFilter('sortBy', value as SortBy)
-                          }}
-                          className="flex-1 border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
-                        />
-                        <Combobox
-                          placeholder="asc/desc"
-                          options={sortOrderOptions}
-                          value={filters.sortOrder || 'asc'}
-                          onValueChange={(value) => {
-                            updateFilter('sortOrder', value as 'asc' | 'desc')
-                          }}
-                          className="flex-1 border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="grid mt-4 mb-6 pb-6 border-b border-border">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Specializations</label>
-                      <Combobox
-                        placeholder="Select"
-                        options={specializationOptions}
-                        multiple={true}
-                        value={
-                          filters.expertise
-                            ? String(filters.expertise)
-                                .split(',')
-                                .map((tag) => tag.trim())
-                            : []
-                        }
-                        onValueChange={(value) => {
-                          const expertiseString = Array.isArray(value) ? value.join(', ') : ''
-                          updateFilter('expertise', expertiseString || undefined)
-                        }}
-                        className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-end mt-6">
-                    <button
-                      onClick={() => {
-                        setFilters({
-                          search: '',
-                          sortBy: 'rating',
-                          sortOrder: 'asc',
-                        })
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Session Type</label>
+                    <Combobox
+                      placeholder="All Modes"
+                      options={serviceModeOptions}
+                      value={filters.serviceMode || ''}
+                      onValueChange={(value) => {
+                        updateFilter('serviceMode', (value as ServiceMode) || undefined)
                       }}
-                      className="px-6 py-3 bg-grey text-muted-foreground border border-border hover:bg-card-accent rounded-lg font-medium transition-colors"
-                    >
-                      Clear All Filters
-                    </button>
+                      className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
+                    />
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Gender</label>
+                    <Combobox
+                      placeholder="All Genders"
+                      options={genderOptions}
+                      value={filters.gender || ''}
+                      onValueChange={(value) => {
+                        const genderValue = Array.isArray(value) ? value[0] : value
+                        updateFilter('gender', genderValue || undefined)
+                      }}
+                      className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Sort By</label>
+                    <div className="flex gap-1">
+                      <Combobox
+                        placeholder="Rating"
+                        options={sortByOptions}
+                        value={filters.sortBy || 'rating'}
+                        onValueChange={(value) => {
+                          updateFilter('sortBy', value as SortBy)
+                        }}
+                        className="flex-1 border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
+                      />
+                      <Combobox
+                        placeholder="asc/desc"
+                        options={sortOrderOptions}
+                        value={filters.sortOrder || 'asc'}
+                        onValueChange={(value) => {
+                          updateFilter('sortOrder', value as 'asc' | 'desc')
+                        }}
+                        className="flex-1 border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Specializations</label>
+                    <Combobox
+                      placeholder="Select"
+                      options={specializationOptions}
+                      multiple={true}
+                      value={
+                        filters.expertise
+                          ? String(filters.expertise)
+                              .split(',')
+                              .map((tag) => tag.trim())
+                          : []
+                      }
+                      onValueChange={(value) => {
+                        const expertiseString = Array.isArray(value) ? value.join(', ') : ''
+                        updateFilter('expertise', expertiseString || undefined)
+                      }}
+                      className="w-full border-border focus:ring-ring focus:border-ring text-foreground hover:bg-card-accent"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end mt-6">
+                  <button
+                    onClick={() => {
+                      setFilters({
+                        search: '',
+                        sortBy: 'rating',
+                        sortOrder: 'asc',
+                      })
+                    }}
+                    className="px-6 py-3 bg-grey text-muted-foreground border border-border hover:bg-card-accent rounded-lg font-medium transition-colors"
+                  >
+                    Clear All Filters
+                  </button>
                 </div>
               </div>
             </div>
@@ -534,13 +563,13 @@ export default function BookingSection({ data }: BookingSectionProps) {
                 </div>
               ))
               .with({ status: 'success' }, () => {
-                const limitedExperts = filteredExperts.slice(0, 4)
-                return limitedExperts.length === 0 ? (
+                const expertList = filteredExperts || []
+                return expertList.length === 0 ? (
                   <div className="h-64 flex items-center justify-center rounded-2xl bg-white text-slate-500">
                     No experts found
                   </div>
                 ) : (
-                  <ExpertsGrid experts={limitedExperts} />
+                  <ExpertsGrid experts={expertList} />
                 )
               })
               .otherwise(() => null)}
