@@ -5,13 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
-  INR: { symbol: '₹' },
-  USD: { symbol: '$' },
-  EUR: { symbol: '€' },
-  GBP: { symbol: '£' },
-}
-
 export function formatPhoneNumber(phone: string): string {
   const digitsOnly = phone.replace(/\D/g, '')
 
