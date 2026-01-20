@@ -9,13 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Marquee } from '@/components/ui/marquee'
 import { getFileUrl, fetchPublicExperts, type Expert } from '@/lib/experts'
 import { OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
-
-const CURRENCY_CONFIG: Record<string, { symbol: string }> = {
-  INR: { symbol: '₹' },
-  USD: { symbol: '$' },
-  EUR: { symbol: '€' },
-  GBP: { symbol: '£' },
-}
+import { CURRENCY_CONFIG } from '@/lib/utils'
 
 function getNextAvailableSlot(
   availability?: {
@@ -190,31 +184,6 @@ function ExpertGrid({ expert }: { expert: Expert }) {
   )
 }
 
-function ExpertsGridSkeleton() {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
-      {Array.from({ length: 4 }).map((_, index) => (
-        <div key={index} className="bg-[#FFFFF5] rounded-3xl border border-border shadow-sm p-6 animate-pulse">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-36 h-40 bg-gray-200 rounded-xl flex-shrink-0"></div>
-            <div className="flex-1">
-              <div className="h-5 bg-gray-200 rounded mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <div className="h-4 bg-gray-200 rounded"></div>
-            <div className="h-4 bg-gray-200 rounded"></div>
-            <div className="h-12 bg-gray-200 rounded-xl"></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
   const router = useRouter()
   const [startIdx, setStartIdx] = useState(0)
@@ -242,9 +211,12 @@ export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
     return false
   })
 
-  const handlePrev = () => setStartIdx((prev) => Math.max(prev - cardsPerPage, 0))
-  const handleNext = () =>
+  const handlePrev = () => {
+    setStartIdx((prev) => Math.max(prev - cardsPerPage, 0))
+  }
+  const handleNext = () => {
     setStartIdx((prev) => Math.min(prev + cardsPerPage, Math.max(matchedExperts.length - cardsPerPage, 0)))
+  }
 
   const visibleExperts = matchedExperts.slice(startIdx, startIdx + cardsPerPage)
 
@@ -305,5 +277,30 @@ export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
       </div>
     ) : null}
     </>
+  )
+}
+
+function ExpertsGridSkeleton() {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <div key={index} className="bg-[#FFFFF5] rounded-3xl border border-border shadow-sm p-6 animate-pulse">
+          <div className="flex items-start gap-4 mb-6">
+            <div className="w-36 h-40 bg-gray-200 rounded-xl flex-shrink-0"></div>
+            <div className="flex-1">
+              <div className="h-5 bg-gray-200 rounded mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-12 bg-gray-200 rounded-xl"></div>
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }

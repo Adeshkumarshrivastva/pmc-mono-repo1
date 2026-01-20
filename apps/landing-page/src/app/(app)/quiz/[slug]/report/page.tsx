@@ -201,11 +201,21 @@ export default function QuizReportPage() {
         )}
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={() => router.push(`/quiz/${params.slug}`)} variant="default" className="px-8 text-lg">
+          <Button onClick={() => {
+              router.push(`/quiz/${params.slug}`)
+            }}
+            variant="default"
+            className="px-8 text-lg"
+          >
             Retake Assessment
           </Button>
 
-          <Button onClick={() => window.print()} variant="default" className="px-8 text-lg">
+          <Button onClick={() => {
+              window.print()
+            }}
+            variant="default"
+            className="px-8 text-lg"
+          >
             Save Report
           </Button>
         </div>
