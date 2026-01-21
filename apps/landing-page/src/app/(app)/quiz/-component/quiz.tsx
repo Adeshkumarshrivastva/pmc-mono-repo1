@@ -127,7 +127,7 @@ export default function QuizRender({ quiz }: QuizProps) {
                   setCurrentPage((prev) => prev - 1)
                 }
               }}
-              disabled={currentPage === 0}
+              hidden={currentPage === 0}
               variant="default"
               className="flex items-center gap-2"
               icon={<ArrowLeft className="size-4" />}
@@ -141,9 +141,9 @@ export default function QuizRender({ quiz }: QuizProps) {
                   setCurrentPage((prev) => prev + 1)
                 }
               }}
-              disabled={currentPage === totalPages - 1}
+              hidden={currentPage === totalPages - 1}
               variant="default"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 ml-auto"
               icon={<ArrowRight className="size-4" />}
             >
               Next
