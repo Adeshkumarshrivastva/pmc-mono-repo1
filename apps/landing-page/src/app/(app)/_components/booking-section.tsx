@@ -4,16 +4,14 @@ import { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { Search, Star, Calendar, MapPin, X, UserIcon, Filter } from 'lucide-react'
+import { Search, Star, Calendar, MapPin, X, UserIcon, ArrowLeft, ArrowRight } from 'lucide-react'
 import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
 import { Combobox } from '@/components/ui/combo-box'
 import { Marquee } from '@/components/ui/marquee'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { cn } from '@/lib/utils'
+import { cn, CURRENCY_CONFIG } from '@/lib/utils'
 import { getFileUrl, specializationOptions, fetchPublicExperts, type Expert } from '@/lib/experts'
-import { OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
-import { CURRENCY_CONFIG } from '@/lib/utils'
 
 type FilterState = {
   search: string
@@ -210,7 +208,7 @@ function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
       {experts.length > cardsPerPage && (
         <div className="flex gap-8 justify-center">
           <Button
-            icon={<OouiArrowPreviousLtr className="h-5 w-5" />}
+            icon={<ArrowLeft className="h-5 w-5" />}
             variant="secondary"
             size="icon"
             className="border rounded-full h-10 w-10"
@@ -218,7 +216,7 @@ function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
             disabled={startIdx === 0}
           />
           <Button
-            icon={<OouiArrowPreviousRtl className="h-5 w-5" />}
+            icon={<ArrowRight className="h-5 w-5" />}
             variant="secondary"
             size="icon"
             className="border rounded-full h-10 w-10"
