@@ -12,6 +12,8 @@ import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import type { Service } from '@/payload/types'
 import { cn } from '@/lib/utils'
+import { useQuery } from '@tanstack/react-query'
+import { userSchema } from '@/lib/user'
 
 type NavbarProps = { services: Service[] }
 
@@ -37,12 +39,43 @@ export default function Navbar({ services }: NavbarProps) {
   const pathname = usePathname()
   const [sheetOpen, setSheetOpen] = useState(false)
 
+  const { data, isPending } = useQuery({
+    queryKey: ['get-user'],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/server/auth/get-session`, {
+        credentials: 'include',
+      })
+
+      if (!res.ok) {
+        return null
+      }
+
+      const data = await res.json()
+      const parsed = userSchema.safeParse(data)
+
+      if (!parsed.success) {
+        return null
+      }
+      return parsed.data
+    },
+  })
+
+  const isUserLoggedIn = data?.user && data.user.id
+
   const handleBooking = () => document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
 
   const SHOW_BOOKING_BUTTON_ON_ROUTES = ['/', '/deep-tms', '/about-us', '/services']
 
   const showBookingButton =
     pathname === '/' || SHOW_BOOKING_BUTTON_ON_ROUTES.some((route) => route !== '/' && pathname.startsWith(route))
+
+  const dashboard = () => {
+    const getUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+    if (!getUrl) {
+      return
+    }
+    window.location.href = `${getUrl}/portal`
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>
@@ -78,10 +111,21 @@ export default function Navbar({ services }: NavbarProps) {
             }
           })}
         </div>
-
         {showBookingButton && (
-          <Button variant="secondary" icon={<CallIcon />} className="hidden xl:flex" onClick={handleBooking}>
-            Contact Us
+          <Button
+            variant="secondary"
+            icon={isUserLoggedIn ? undefined : <CallIcon />}
+            className="hidden xl:flex"
+            disabled={isPending}
+            onClick={() => {
+              if (isUserLoggedIn) {
+                dashboard()
+              } else {
+                handleBooking()
+              }
+            }}
+          >
+            {isUserLoggedIn ? 'DASHBOARD' : 'Contact Us'}
           </Button>
         )}
 
@@ -117,16 +161,17 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
   const activeService = services.find((service) => service.id === activeServiceId)
 
   return (
-    <HoverCard
-      open={isHovered}
-      openDelay={HOVER_DELAY}
-      onOpenChange={(value) => {
-        if (!value) {
-          setActiveServiceId(services[0].id)
-          setIsHovered(false)
-        }
-      }}
-    >
+    <HoverCard open={isHovered} openDelay={HOVER_DELAY} onOpenChange={setIsHovered}>
+      <HoverCard
+        open={isHovered}
+        openDelay={HOVER_DELAY}
+        onOpenChange={(value) => {
+          if (!value) {
+            setActiveServiceId(services[0].id)
+            setIsHovered(false)
+          }
+        }}
+      ></HoverCard>
       <HoverCardTrigger asChild>
         <Link
           href={'/services'}
@@ -148,6 +193,7 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
           </button>
         </Link>
       </HoverCardTrigger>
+
       <HoverCardContent align="center" className="p-0 flex w-lg">
         <div className="cursor-pointer w-full flex flex-col bg-primary-foreground">
           {services.map((service) => {
