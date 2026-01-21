@@ -4,11 +4,10 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { Calendar, MapPin, UserIcon, Star } from 'lucide-react'
+import { Calendar, MapPin, UserIcon, Star, ArrowLeft, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Marquee } from '@/components/ui/marquee'
 import { getFileUrl, fetchPublicExperts, type Expert } from '@/lib/experts'
-import { OouiArrowPreviousLtr, OouiArrowPreviousRtl } from '@/components/ui/icons'
 import { CURRENCY_CONFIG } from '@/lib/utils'
 
 function getNextAvailableSlot(
@@ -244,7 +243,7 @@ export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
           {matchedExperts.length > cardsPerPage && (
             <div className="flex gap-8 justify-center">
               <Button
-                icon={<OouiArrowPreviousLtr className="h-5 w-5" />}
+                icon={<ArrowLeft className="h-5 w-5" />}
                 variant="secondary"
                 size="icon"
                 className="border rounded-full h-10 w-10"
@@ -252,7 +251,7 @@ export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
                 disabled={startIdx === 0}
               />
               <Button
-                icon={<OouiArrowPreviousRtl className="h-5 w-5" />}
+                icon={<ArrowRight className="h-5 w-5" />}
                 variant="secondary"
                 size="icon"
                 className="border rounded-full h-10 w-10"
