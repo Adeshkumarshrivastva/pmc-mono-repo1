@@ -201,7 +201,8 @@ export default function QuizReportPage() {
         )}
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={() => {
+          <Button
+            onClick={() => {
               router.push(`/quiz/${params.slug}`)
             }}
             variant="default"
@@ -210,7 +211,8 @@ export default function QuizReportPage() {
             Retake Assessment
           </Button>
 
-          <Button onClick={() => {
+          <Button
+            onClick={() => {
               window.print()
             }}
             variant="default"

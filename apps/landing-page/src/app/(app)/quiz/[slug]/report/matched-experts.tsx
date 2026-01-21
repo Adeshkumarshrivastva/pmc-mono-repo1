@@ -229,52 +229,52 @@ export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
 
   return (
     <>
-    {matchedExperts ? (
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-6 text-center text-foreground">Our recommended experts...</h2>
+      {matchedExperts ? (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-6 text-center text-foreground">Our recommended experts...</h2>
 
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {visibleExperts.map((expert) => (
-              <ExpertGrid key={expert.id} expert={expert} />
-            ))}
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {visibleExperts.map((expert) => (
+                <ExpertGrid key={expert.id} expert={expert} />
+              ))}
+            </div>
+
+            {matchedExperts.length > cardsPerPage && (
+              <div className="flex gap-8 justify-center">
+                <Button
+                  icon={<ArrowLeft className="h-5 w-5" />}
+                  variant="secondary"
+                  size="icon"
+                  className="border rounded-full h-10 w-10"
+                  onClick={handlePrev}
+                  disabled={startIdx === 0}
+                />
+                <Button
+                  icon={<ArrowRight className="h-5 w-5" />}
+                  variant="secondary"
+                  size="icon"
+                  className="border rounded-full h-10 w-10"
+                  onClick={handleNext}
+                  disabled={startIdx + cardsPerPage >= matchedExperts.length}
+                />
+              </div>
+            )}
           </div>
 
-          {matchedExperts.length > cardsPerPage && (
-            <div className="flex gap-8 justify-center">
-              <Button
-                icon={<ArrowLeft className="h-5 w-5" />}
-                variant="secondary"
-                size="icon"
-                className="border rounded-full h-10 w-10"
-                onClick={handlePrev}
-                disabled={startIdx === 0}
-              />
-              <Button
-                icon={<ArrowRight className="h-5 w-5" />}
-                variant="secondary"
-                size="icon"
-                className="border rounded-full h-10 w-10"
-                onClick={handleNext}
-                disabled={startIdx + cardsPerPage >= matchedExperts.length}
-              />
-            </div>
-          )}
+          <div className="flex justify-center mt-6">
+            <Button
+              variant="outline"
+              onClick={() => {
+                router.push(`/portal/experts/`)
+              }}
+              className="min-w-[200px] text-lg bg-white hover:bg-card-accent text-muted-foreground mb-6"
+            >
+              Show All
+            </Button>
+          </div>
         </div>
-
-        <div className="flex justify-center mt-6">
-          <Button
-            variant="outline"
-            onClick={() => {
-              router.push(`/portal/experts/`)
-            }}
-            className="min-w-[200px] text-lg bg-white hover:bg-card-accent text-muted-foreground mb-6"
-          >
-            Show All
-          </Button>
-        </div>
-      </div>
-    ) : null}
+      ) : null}
     </>
   )
 }
