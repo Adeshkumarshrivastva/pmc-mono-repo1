@@ -13,7 +13,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import type { Service } from '@/payload/types'
 import { cn } from '@/lib/utils'
 import { useQuery } from '@tanstack/react-query'
-import { userSchema } from '@/lib/user'
+import { userSchema } from '@/lib/navbar'
 
 type NavbarProps = { services: Service[] }
 
@@ -161,17 +161,16 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
   const activeService = services.find((service) => service.id === activeServiceId)
 
   return (
-    <HoverCard open={isHovered} openDelay={HOVER_DELAY} onOpenChange={setIsHovered}>
-      <HoverCard
-        open={isHovered}
-        openDelay={HOVER_DELAY}
-        onOpenChange={(value) => {
-          if (!value) {
-            setActiveServiceId(services[0].id)
-            setIsHovered(false)
-          }
-        }}
-      ></HoverCard>
+    <HoverCard
+      open={isHovered}
+      openDelay={HOVER_DELAY}
+      onOpenChange={(value) => {
+        if (!value) {
+          setActiveServiceId(services[0].id)
+          setIsHovered(false)
+        }
+      }}
+    >
       <HoverCardTrigger asChild>
         <Link
           href={'/services'}
