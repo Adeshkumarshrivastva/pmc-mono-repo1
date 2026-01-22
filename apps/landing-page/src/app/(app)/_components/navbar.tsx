@@ -13,7 +13,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import type { Service } from '@/payload/types'
 import { cn } from '@/lib/utils'
 import { useQuery } from '@tanstack/react-query'
-import { userSchema } from '@/lib/navbar'
+import * as z from 'zod'
 
 type NavbarProps = { services: Service[] }
 
@@ -42,16 +42,18 @@ export default function Navbar({ services }: NavbarProps) {
   const { data, isPending } = useQuery({
     queryKey: ['get-user'],
     queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/server/auth/get-session`, {
+      const res = await fetch(`/server/auth/get-session`, {
         credentials: 'include',
       })
 
-      if (!res.ok) {
-        return null
-      }
-
       const data = await res.json()
-      const parsed = userSchema.safeParse(data)
+      const parsed = z
+        .object({
+          user: z.object({
+            id: z.string(),
+          }),
+        })
+        .safeParse(data)
 
       if (!parsed.success) {
         return null
@@ -61,8 +63,6 @@ export default function Navbar({ services }: NavbarProps) {
   })
 
   const isUserLoggedIn = data?.user && data.user.id
-
-  const handleBooking = () => document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
 
   const SHOW_BOOKING_BUTTON_ON_ROUTES = ['/', '/deep-tms', '/about-us', '/services']
 
@@ -74,7 +74,6 @@ export default function Navbar({ services }: NavbarProps) {
     if (!getUrl) {
       return
     }
-    window.location.href = `${getUrl}/portal`
   }
 
   return (
@@ -119,9 +118,9 @@ export default function Navbar({ services }: NavbarProps) {
             disabled={isPending}
             onClick={() => {
               if (isUserLoggedIn) {
-                dashboard()
+                window.location.href = `/portal`
               } else {
-                handleBooking()
+                document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
               }
             }}
           >
