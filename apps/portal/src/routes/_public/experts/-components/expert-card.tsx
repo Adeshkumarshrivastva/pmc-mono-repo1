@@ -9,7 +9,7 @@ import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { Combobox } from '@/components/ui/combo-box'
-import { CURRENCY_CONFIG, DAY_INDEX_TO_ENUM } from '@/lib/booking'
+import { CURRENCY_CONFIG, DAY_MAP } from '@/lib/booking'
 import { Marquee } from '@/components/ui/marquee'
 import { SERVICE_MODE_CONFIG } from '@/lib/service'
 import { specializationOptions } from '@/lib/expert'
@@ -669,14 +669,20 @@ function isExpertOnline(
     isActive: boolean
   }[],
 ): boolean {
-  if (!availability || availability.length === 0) return false
+  if (!availability || availability.length === 0) {
+    return false
+  }
 
-  const currentDayOfWeek = DAY_INDEX_TO_ENUM[new Date().getDay()]
+  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
 
   const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
   return availability.some((slot) => {
-    if (!slot.isActive) return false
-    if (slot.dayOfTheWeek !== currentDayOfWeek) return false
+    if (!slot.isActive) {
+      return false
+    }
+    if (slot.dayOfTheWeek !== currentDayOfWeek) {
+      return false
+    }
 
     const endTime = new Date(slot.endTime)
     const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()

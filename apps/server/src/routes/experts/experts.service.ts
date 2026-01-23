@@ -764,7 +764,7 @@ export async function updateAvailability(c: C, input: UpdateAvailabilityInput) {
     return c.json({ error: 'Expert profile not found' }, 404)
   }
 
-  const DAY_INDEX_TO_ENUM: Record<number, DayOfWeek> = {
+  const DAY_INDEX_MAP: Record<number, DayOfWeek> = {
     0: DayOfWeek.SUNDAY,
     1: DayOfWeek.MONDAY,
     2: DayOfWeek.TUESDAY,
@@ -783,7 +783,7 @@ export async function updateAvailability(c: C, input: UpdateAvailabilityInput) {
       })
 
       const newRecords = input.days.flatMap((day) => {
-        const dayEnum = DAY_INDEX_TO_ENUM[day.dayIndex]
+        const dayEnum = DAY_INDEX_MAP[day.dayIndex]
         if (!dayEnum) return []
 
         return day.ranges.map((range) => ({
@@ -822,7 +822,7 @@ export async function getAvailability(c: C) {
     return c.json({ error: 'Expert profile not found' }, 404)
   }
 
-  const DAY_ENUM_TO_INDEX: Record<DayOfWeek, number> = {
+  const DAY_ENUM_MAP: Record<DayOfWeek, number> = {
     [DayOfWeek.SUNDAY]: 0,
     [DayOfWeek.MONDAY]: 1,
     [DayOfWeek.TUESDAY]: 2,
@@ -843,7 +843,7 @@ export async function getAvailability(c: C) {
   }
 
   availability.forEach((record) => {
-    const dayIndex = DAY_ENUM_TO_INDEX[record.dayOfTheWeek]
+    const dayIndex = DAY_ENUM_MAP[record.dayOfTheWeek]
     const startMinutes = dayjs(record.startTime).hour() * 60 + dayjs(record.startTime).minute()
     const endMinutes = dayjs(record.endTime).hour() * 60 + dayjs(record.endTime).minute()
 

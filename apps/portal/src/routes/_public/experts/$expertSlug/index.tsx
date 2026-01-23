@@ -101,11 +101,11 @@ function ExpertPage() {
                 <div className="relative bg-card/90 backdrop-blur-sm rounded-2xl border border-border  p-6 lg:p-8">
                   <div className="flex flex-col lg:flex-row gap-6 items-start">
                     <div className="relative flex-shrink-0">
-                      {image ? (
+                      {image || file ? (
                         <div className="relative flex-shrink-0">
                           <div className="w-36 h-48">
                             <img
-                              src={file ? getFileUrl(file.fileName) : image}
+                              src={file ? getFileUrl(file.fileName) : image!}
                               alt={name}
                               className="w-full h-full object-cover rounded-xl"
                             />

@@ -41,7 +41,7 @@ export const TIME_OPTIONS: { value: number; label: string }[] = (() => {
   return options
 })()
 
-export const DAY_INDEX_TO_ENUM: Record<number, string> = {
+export const DAY_MAP: Record<number, string> = {
   0: 'SUNDAY',
   1: 'MONDAY',
   2: 'TUESDAY',
