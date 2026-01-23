@@ -9,7 +9,7 @@ import type { InferResponseType } from 'hono'
 import { Button } from '@/components/ui/button'
 import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { Combobox } from '@/components/ui/combo-box'
-import { CURRENCY_CONFIG } from '@/lib/booking'
+import { CURRENCY_CONFIG, DAY_MAP } from '@/lib/booking'
 import { Marquee } from '@/components/ui/marquee'
 import { SERVICE_MODE_CONFIG } from '@/lib/service'
 import { specializationOptions } from '@/lib/expert'
@@ -80,9 +80,17 @@ function ExpertPage({ expert }: { expert: ExpertWithRelations }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
               <h3 className="text-xl font-bold text-foreground truncate">{name}</h3>
-              <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                <span className="text-sm font-medium text-yellow-700">{expert.avgRating || '—'}</span>
+              <div className="flex items-center gap-2">
+                {isExpertOnline(expert.availability) && (
+                  <div className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded-full">
+                    <div className="size-2 bg-primary rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium text-primary">Online</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+                  <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
+                  <span className="text-sm font-medium text-yellow-700">{expert.avgRating || '—'}</span>
+                </div>
               </div>
             </div>
 
@@ -652,6 +660,35 @@ function getNextAvailableSlot(
   })
 
   return `Available ${timeStr}`
+}
+
+function isExpertOnline(
+  availability?: {
+    dayOfTheWeek: string
+    endTime: string
+    isActive: boolean
+  }[],
+): boolean {
+  if (!availability || availability.length === 0) {
+    return false
+  }
+
+  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
+
+  const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
+  return availability.some((slot) => {
+    if (!slot.isActive) {
+      return false
+    }
+    if (slot.dayOfTheWeek !== currentDayOfWeek) {
+      return false
+    }
+
+    const endTime = new Date(slot.endTime)
+    const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()
+
+    return endMinutes > currentMinutes
+  })
 }
 
 function ExpertsGridSkeleton() {
