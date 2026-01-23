@@ -152,6 +152,12 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
           where: { isDeleted: false },
           select: EXPERT_SERVICE_SELECT_FIELDS,
         },
+        file: {
+          select: {
+            fileName: true,
+            bucket: true,
+          },
+        },
       },
     })
 
