@@ -6,7 +6,7 @@ import type { BookingLocation } from './booking'
 export const SERVICE_MODE_CONFIG: Record<BookingLocation, { label: string; value: BookingLocation; icon: LucideIcon }> =
   {
     IN_PERSON: {
-      label: 'In Person',
+      label: 'In Clinic',
       value: 'IN_PERSON',
       icon: MapPinIcon,
     },
