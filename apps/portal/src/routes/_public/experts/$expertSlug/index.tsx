@@ -6,7 +6,7 @@ import type { ExpertType } from '@pmc/server/src/generated/prisma/client'
 import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
 import { honoClient } from '@/lib/hono-client'
-import { cn } from '@/lib/utils'
+import { cn, getFileUrl } from '@/lib/utils'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 import Navbar from '../-components/navbar'
 import { Marquee } from '@/components/ui/marquee'
@@ -67,6 +67,7 @@ function ExpertPage() {
         expertise,
         gender,
         experienceInYears,
+        file,
       } = data.expert
 
       const prices =
@@ -100,10 +101,14 @@ function ExpertPage() {
                 <div className="relative bg-card/90 backdrop-blur-sm rounded-2xl border border-border  p-6 lg:p-8">
                   <div className="flex flex-col lg:flex-row gap-6 items-start">
                     <div className="relative flex-shrink-0">
-                      {image ? (
+                      {image || file ? (
                         <div className="relative flex-shrink-0">
                           <div className="w-36 h-48">
-                            <img src={image} alt={name} className="w-full h-full object-cover rounded-xl" />
+                            <img
+                              src={file ? getFileUrl(file.fileName) : image!}
+                              alt={name}
+                              className="w-full h-full object-cover rounded-xl"
+                            />
                           </div>
                         </div>
                       ) : (

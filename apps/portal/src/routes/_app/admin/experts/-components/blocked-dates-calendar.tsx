@@ -165,8 +165,8 @@ function BlockDateForm({
     defaultValues: {
       selectedDates: [],
       isAllDay: true,
-      startMinutes: 270,
-      endMinutes: 690,
+      startMinutes: 720, // 12:00 PM
+      endMinutes: 960, // 4:00 PM
     },
   })
 

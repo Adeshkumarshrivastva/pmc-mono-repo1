@@ -146,8 +146,8 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
     defaultValues: {
       selectedDates: [],
       isAllDay: true,
-      startMinutes: 270, // 4:30 AM
-      endMinutes: 690, // 11:30 AM
+      startMinutes: 720, // 12:00 PM
+      endMinutes: 960, // 4:00 PM
     },
   })
 
@@ -164,7 +164,7 @@ function BlockDateForm({ isOpen, onOpenChange, onSuccess, blockedDates, availabi
       toast.success(`Successfully blocked ${count} date${count !== 1 ? 's' : ''}`)
       form.reset()
       onSuccess()
-      await queryClient.invalidateQueries({ queryKey: ['blockedDates'] })
+      await queryClient.invalidateQueries({ queryKey: ['expert-availability'] })
     },
     onError: () => {
       toast.error('Failed to block dates')
