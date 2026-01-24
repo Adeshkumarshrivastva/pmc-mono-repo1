@@ -8,33 +8,7 @@ import { Calendar, MapPin, UserIcon, Star, ArrowLeft, ArrowRight } from 'lucide-
 import { Button } from '@/components/ui/button'
 import { Marquee } from '@/components/ui/marquee'
 import { getFileUrl, fetchPublicExperts, type Expert } from '@/lib/experts'
-import { CURRENCY_CONFIG } from '@/lib/utils'
-
-function getNextAvailableSlot(
-  availability?: {
-    isActive: boolean
-    startTime: string
-    endTime: string
-    dayOfTheWeek: string
-  }[],
-): string {
-  if (!availability || availability.length === 0) {
-    return 'Schedule upon request'
-  }
-
-  const activeSlots = availability.filter((slot) => slot.isActive)
-  if (activeSlots.length === 0) {
-    return 'No available slots'
-  }
-
-  const nextSlot = activeSlots[0]
-  const timeStr = new Date(nextSlot.startTime).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-
-  return `Available ${timeStr}`
-}
+import { CURRENCY_CONFIG, DAY_MAP } from '@/lib/utils'
 
 function ExpertGrid({ expert }: { expert: Expert }) {
   const { servicesProvided, name, slug, availability, expertise, experienceInYears } = expert
@@ -78,9 +52,17 @@ function ExpertGrid({ expert }: { expert: Expert }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
               <h3 className="text-xl font-bold text-slate-900 truncate">{name}</h3>
-              <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                <span className="text-sm font-medium text-yellow-700">{expert.avgRating || '—'}</span>
+              <div className="flex items-center gap-2">
+                {isExpertOnline(expert.availability) && (
+                  <div className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded-full">
+                    <div className="size-2 bg-primary rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium text-primary">Online</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+                  <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
+                  <span className="text-sm font-medium text-yellow-700">{expert.avgRating || '—'}</span>
+                </div>
               </div>
             </div>
 
@@ -277,6 +259,61 @@ export default function MatchedExperts({ quizTitle }: { quizTitle: string }) {
       ) : null}
     </>
   )
+}
+
+function getNextAvailableSlot(
+  availability?: {
+    isActive: boolean
+    startTime: string
+    endTime: string
+    dayOfTheWeek: string
+  }[],
+): string {
+  if (!availability || availability.length === 0) {
+    return 'Schedule upon request'
+  }
+
+  const activeSlots = availability.filter((slot) => slot.isActive)
+  if (activeSlots.length === 0) {
+    return 'No available slots'
+  }
+
+  const nextSlot = activeSlots[0]
+  const timeStr = new Date(nextSlot.startTime).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
+  return `Available ${timeStr}`
+}
+
+function isExpertOnline(
+  availability?: {
+    dayOfTheWeek: string
+    endTime: string
+    isActive: boolean
+  }[],
+): boolean {
+  if (!availability || availability.length === 0) {
+    return false
+  }
+
+  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
+
+  const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
+  return availability.some((slot) => {
+    if (!slot.isActive) {
+      return false
+    }
+    if (slot.dayOfTheWeek !== currentDayOfWeek) {
+      return false
+    }
+
+    const endTime = new Date(slot.endTime)
+    const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()
+
+    return endMinutes > currentMinutes
+  })
 }
 
 function ExpertsGridSkeleton() {

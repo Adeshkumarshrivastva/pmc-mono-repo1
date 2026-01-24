@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Combobox } from '@/components/ui/combo-box'
 import { Marquee } from '@/components/ui/marquee'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { cn, CURRENCY_CONFIG } from '@/lib/utils'
+import { cn, CURRENCY_CONFIG, DAY_MAP } from '@/lib/utils'
 import { getFileUrl, specializationOptions, fetchPublicExperts, type Expert } from '@/lib/experts'
 
 type FilterState = {
@@ -75,13 +75,20 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-2">
+            <div className="flex items-start justify-between">
               <h3 className="text-xl font-bold text-slate-900 truncate">{name}</h3>
               <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
                 <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
                 <span className="text-sm font-medium text-yellow-700">{expert.avgRating || '—'}</span>
               </div>
             </div>
+
+            {isExpertOnline(expert.availability) && (
+              <div className="flex w-fit items-center gap-1 bg-primary/10 px-2 py-1 rounded-full mb-1 mt-1">
+                <div className="size-2 bg-primary rounded-full animate-pulse"></div>
+                <div className="text-xs font-medium text-primary">Online</div>
+              </div>
+            )}
 
             {experienceInYears ? (
               <div className="text-sm text-slate-500 mb-2">
@@ -603,6 +610,35 @@ function getNextAvailableSlot(
   })
 
   return `Available ${timeStr}`
+}
+
+function isExpertOnline(
+  availability?: {
+    dayOfTheWeek: string
+    endTime: string
+    isActive: boolean
+  }[],
+): boolean {
+  if (!availability || availability.length === 0) {
+    return false
+  }
+
+  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
+
+  const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
+  return availability.some((slot) => {
+    if (!slot.isActive) {
+      return false
+    }
+    if (slot.dayOfTheWeek !== currentDayOfWeek) {
+      return false
+    }
+
+    const endTime = new Date(slot.endTime)
+    const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()
+
+    return endMinutes > currentMinutes
+  })
 }
 
 function ExpertsGridSkeleton() {

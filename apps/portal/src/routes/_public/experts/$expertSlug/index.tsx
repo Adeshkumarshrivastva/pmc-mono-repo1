@@ -7,7 +7,7 @@ import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
 import { honoClient } from '@/lib/hono-client'
 import { cn, getFileUrl } from '@/lib/utils'
-import { CURRENCY_CONFIG } from '@/lib/booking'
+import { CURRENCY_CONFIG, DAY_MAP } from '@/lib/booking'
 import Navbar from '../-components/navbar'
 import { Marquee } from '@/components/ui/marquee'
 import { ServiceCard } from './-components/service-card'
@@ -68,6 +68,7 @@ function ExpertPage() {
         gender,
         experienceInYears,
         file,
+        availability,
       } = data.expert
 
       const prices =
@@ -119,9 +120,17 @@ function ExpertPage() {
                     <div className="flex-1">
                       <div className="mb-4 ">
                         <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1 ">{name}</h1>
-                        <p className="text-lg text-primary font-semibold mb-2">{EXPERT_TYPE_CONFIG[type]?.label}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-lg text-primary font-semibold">{EXPERT_TYPE_CONFIG[type]?.label}</p>
+                          {isExpertOnline(availability) && (
+                            <div className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded-full">
+                              <div className="size-2 bg-primary rounded-full animate-pulse"></div>
+                              <span className="text-xs font-medium text-primary">Online</span>
+                            </div>
+                          )}
+                        </div>
                         {avgRating && avgRating > 0 ? (
-                          <div className="flex items-center gap-2 mb-3">
+                          <div className="flex items-center gap-2 mt-2 mb-3">
                             <div className="flex items-center">
                               {[...Array(5)].map((_, i) => (
                                 <Star
@@ -266,6 +275,35 @@ function ExpertPage() {
       )
     })
     .otherwise(() => null)
+}
+
+function isExpertOnline(
+  availability?: {
+    dayOfTheWeek: string
+    endTime: string
+    isActive: boolean
+  }[],
+): boolean {
+  if (!availability || availability.length === 0) {
+    return false
+  }
+
+  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
+
+  const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
+  return availability.some((slot) => {
+    if (!slot.isActive) {
+      return false
+    }
+    if (slot.dayOfTheWeek !== currentDayOfWeek) {
+      return false
+    }
+
+    const endTime = new Date(slot.endTime)
+    const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()
+
+    return endMinutes > currentMinutes
+  })
 }
 
 function ExpertDetailSkeleton() {

@@ -158,6 +158,7 @@ export async function getExpertFromSlug(c: C, expertSlug: string) {
             bucket: true,
           },
         },
+        availability: true,
       },
     })
 
