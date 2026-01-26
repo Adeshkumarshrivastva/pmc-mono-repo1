@@ -167,7 +167,7 @@ export default function QuizRender({ quiz }: QuizProps) {
 
         {currentPage === totalPages - 1 && (
           <div className="mt-6 text-center">
-            <Button disabled={getAnsweredCount() < questions.length} onClick={handleSubmit} className="px-8 size-lg">
+            <Button onClick={handleSubmit} className="px-8 size-lg">
               Generate Report
             </Button>
             {getAnsweredCount() < questions.length && (
