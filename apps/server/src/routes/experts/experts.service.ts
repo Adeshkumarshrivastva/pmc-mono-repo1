@@ -91,7 +91,12 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
     const experts = await prisma.expert.findMany({
       where: whereClause,
       include: {
-        servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
+        servicesProvided: {
+          where: {
+            isDeleted: false,
+          },
+          select: EXPERT_SERVICE_SELECT_FIELDS,
+        },
         user: { select: { id: true, name: true, image: true } },
         availability: true,
         file: true,
@@ -883,7 +888,12 @@ export async function getPublicExpertsList(c: C) {
         experienceInYears: true,
         gender: true,
         user: { select: { id: true, name: true, image: true } },
-        servicesProvided: { select: EXPERT_SERVICE_SELECT_FIELDS },
+        servicesProvided: {
+          where: {
+            isDeleted: false,
+          },
+          select: EXPERT_SERVICE_SELECT_FIELDS,
+        },
         availability: true,
         file: {
           select: {
