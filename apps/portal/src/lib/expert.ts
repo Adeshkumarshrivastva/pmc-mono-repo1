@@ -1,3 +1,5 @@
+import { DAY_MAP } from './booking'
+
 export const genderOptions = [
   { value: 'MALE', label: 'Male' },
   { value: 'FEMALE', label: 'Female' },
@@ -33,3 +35,32 @@ export const specializationOptions = [
   { value: 'Trauma Therapy', label: 'Trauma Therapy' },
   { value: "Women's Mental Health", label: "Women's Mental Health" },
 ]
+
+export function isExpertOnline(
+  availability?: {
+    dayOfTheWeek: string
+    endTime: string
+    isActive: boolean
+  }[],
+): boolean {
+  if (!availability || availability.length === 0) {
+    return false
+  }
+
+  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
+
+  const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
+  return availability.some((slot) => {
+    if (!slot.isActive) {
+      return false
+    }
+    if (slot.dayOfTheWeek !== currentDayOfWeek) {
+      return false
+    }
+
+    const endTime = new Date(slot.endTime)
+    const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()
+
+    return endMinutes > currentMinutes
+  })
+}

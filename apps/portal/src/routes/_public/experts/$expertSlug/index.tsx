@@ -7,10 +7,11 @@ import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
 import { honoClient } from '@/lib/hono-client'
 import { cn, getFileUrl } from '@/lib/utils'
-import { CURRENCY_CONFIG, DAY_MAP } from '@/lib/booking'
+import { CURRENCY_CONFIG } from '@/lib/booking'
 import Navbar from '../-components/navbar'
 import { Marquee } from '@/components/ui/marquee'
 import { ServiceCard } from './-components/service-card'
+import { isExpertOnline } from '@/lib/expert'
 
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
@@ -275,35 +276,6 @@ function ExpertPage() {
       )
     })
     .otherwise(() => null)
-}
-
-function isExpertOnline(
-  availability?: {
-    dayOfTheWeek: string
-    endTime: string
-    isActive: boolean
-  }[],
-): boolean {
-  if (!availability || availability.length === 0) {
-    return false
-  }
-
-  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
-
-  const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
-  return availability.some((slot) => {
-    if (!slot.isActive) {
-      return false
-    }
-    if (slot.dayOfTheWeek !== currentDayOfWeek) {
-      return false
-    }
-
-    const endTime = new Date(slot.endTime)
-    const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()
-
-    return endMinutes > currentMinutes
-  })
 }
 
 function ExpertDetailSkeleton() {

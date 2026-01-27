@@ -10,8 +10,8 @@ import { Button } from '@/components/ui/button'
 import { Combobox } from '@/components/ui/combo-box'
 import { Marquee } from '@/components/ui/marquee'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { cn, CURRENCY_CONFIG, DAY_MAP } from '@/lib/utils'
-import { getFileUrl, specializationOptions, fetchPublicExperts, type Expert } from '@/lib/experts'
+import { cn, CURRENCY_CONFIG } from '@/lib/utils'
+import { getFileUrl, specializationOptions, fetchPublicExperts, isExpertOnline, type Expert } from '@/lib/experts'
 
 type FilterState = {
   search: string
@@ -83,12 +83,12 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
               </div>
             </div>
 
-            {isExpertOnline(expert.availability) && (
+            {isExpertOnline(expert.availability) ? (
               <div className="flex w-fit items-center gap-1 bg-primary/10 px-2 py-1 rounded-full mb-1 mt-1">
                 <div className="size-2 bg-primary rounded-full animate-pulse"></div>
                 <div className="text-xs font-medium text-primary">Online</div>
               </div>
-            )}
+            ) : null}
 
             {experienceInYears ? (
               <div className="text-sm text-slate-500 mb-2">
@@ -198,9 +198,12 @@ function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
     setStartIdx(0)
   }, [experts])
 
-  const handlePrev = () => setStartIdx((prev) => Math.max(prev - cardsPerPage, 0))
-  const handleNext = () =>
+  const handlePrev = () => {
+    setStartIdx((prev) => Math.max(prev - cardsPerPage, 0))
+  }
+  const handleNext = () => {
     setStartIdx((prev) => Math.min(prev + cardsPerPage, Math.max(experts.length - cardsPerPage, 0)))
+  }
 
   const visibleExperts = experts.slice(startIdx, startIdx + cardsPerPage)
 
@@ -212,7 +215,7 @@ function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
         ))}
       </div>
 
-      {experts.length > cardsPerPage && (
+      {experts.length > cardsPerPage ? (
         <div className="flex gap-8 justify-center">
           <Button
             icon={<ArrowLeft className="h-5 w-5" />}
@@ -231,7 +234,7 @@ function ExpertsGrid({ experts }: { experts: ExpertWithRelations[] }) {
             disabled={startIdx + cardsPerPage >= experts.length}
           />
         </div>
-      )}
+      ) : null}
 
       <div className="flex justify-center">
         <Button
@@ -418,7 +421,8 @@ export default function BookingSection({ data }: BookingSectionProps) {
             <div className="bg-white rounded-xl shadow-lg p-2 flex items-center">
               <Search
                 className={cn(
-                  `h-7 w-7 transition-colors duration-300 ${searchFocused ? 'text-primary' : 'text-card-accent'}`,
+                  'h-7 w-7 transition-colors duration-300',
+                  searchFocused ? 'text-primary' : 'text-card-accent',
                 )}
               />
               <input
@@ -610,35 +614,6 @@ function getNextAvailableSlot(
   })
 
   return `Available ${timeStr}`
-}
-
-function isExpertOnline(
-  availability?: {
-    dayOfTheWeek: string
-    endTime: string
-    isActive: boolean
-  }[],
-): boolean {
-  if (!availability || availability.length === 0) {
-    return false
-  }
-
-  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
-
-  const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
-  return availability.some((slot) => {
-    if (!slot.isActive) {
-      return false
-    }
-    if (slot.dayOfTheWeek !== currentDayOfWeek) {
-      return false
-    }
-
-    const endTime = new Date(slot.endTime)
-    const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()
-
-    return endMinutes > currentMinutes
-  })
 }
 
 function ExpertsGridSkeleton() {

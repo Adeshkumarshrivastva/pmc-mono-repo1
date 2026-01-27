@@ -1,5 +1,6 @@
 import { env } from '@/env'
 import * as z from 'zod'
+import { DAY_MAP } from './utils'
 
 export function getFileUrl(fileName: string) {
   return `${env.NEXT_PUBLIC_API_BASE_URL}/server/file/${fileName}`
@@ -97,4 +98,33 @@ export async function fetchPublicExperts() {
     console.error('Error fetching experts:', err)
     return []
   }
+}
+
+export function isExpertOnline(
+  availability?: {
+    dayOfTheWeek: string
+    endTime: string
+    isActive: boolean
+  }[],
+): boolean {
+  if (!availability || availability.length === 0) {
+    return false
+  }
+
+  const currentDayOfWeek = DAY_MAP[new Date().getDay()]
+
+  const currentMinutes = new Date().getUTCHours() * 60 + new Date().getUTCMinutes()
+  return availability.some((slot) => {
+    if (!slot.isActive) {
+      return false
+    }
+    if (slot.dayOfTheWeek !== currentDayOfWeek) {
+      return false
+    }
+
+    const endTime = new Date(slot.endTime)
+    const endMinutes = endTime.getUTCHours() * 60 + endTime.getUTCMinutes()
+
+    return endMinutes > currentMinutes
+  })
 }
