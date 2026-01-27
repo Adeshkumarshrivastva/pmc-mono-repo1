@@ -11,6 +11,7 @@ import { CURRENCY_CONFIG } from '@/lib/booking'
 import Navbar from '../-components/navbar'
 import { Marquee } from '@/components/ui/marquee'
 import { ServiceCard } from './-components/service-card'
+import { isExpertOnline } from '@/lib/expert'
 
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
@@ -68,6 +69,7 @@ function ExpertPage() {
         gender,
         experienceInYears,
         file,
+        availability,
       } = data.expert
 
       const prices =
@@ -119,9 +121,17 @@ function ExpertPage() {
                     <div className="flex-1">
                       <div className="mb-4 ">
                         <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1 ">{name}</h1>
-                        <p className="text-lg text-primary font-semibold mb-2">{EXPERT_TYPE_CONFIG[type]?.label}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-lg text-primary font-semibold">{EXPERT_TYPE_CONFIG[type]?.label}</p>
+                          {isExpertOnline(availability) && (
+                            <div className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded-full">
+                              <div className="size-2 bg-primary rounded-full animate-pulse"></div>
+                              <span className="text-xs font-medium text-primary">Online</span>
+                            </div>
+                          )}
+                        </div>
                         {avgRating && avgRating > 0 ? (
-                          <div className="flex items-center gap-2 mb-3">
+                          <div className="flex items-center gap-2 mt-2 mb-3">
                             <div className="flex items-center">
                               {[...Array(5)].map((_, i) => (
                                 <Star
