@@ -1328,6 +1328,32 @@ export interface Home {
     description?: string | null
     action?: string | null
   }
+  academySection: {
+    subTitle?: string | null
+    title: string
+    description?: string | null
+    leftImage?: (string | null) | Media
+    rightImage?: (string | null) | Media
+    featuresCards?:
+      | {
+          featureTitle?: string | null
+          featureIcon?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
+    button1?: string | null
+    button2?: string | null
+    stats?: {
+      stats?:
+        | {
+            number?: string | null
+            label?: string | null
+            icon?: (string | null) | Media
+            id?: string | null
+          }[]
+        | null
+    }
+  }
   updatedAt?: string | null
   createdAt?: string | null
 }
@@ -2062,6 +2088,36 @@ export interface HomeSelect<T extends boolean = true> {
         title?: T
         description?: T
         action?: T
+      }
+  academySection?:
+    | T
+    | {
+        subTitle?: T
+        title?: T
+        description?: T
+        leftImage?: T
+        rightImage?: T
+        featuresCards?:
+          | T
+          | {
+              featureTitle?: T
+              featureIcon?: T
+              id?: T
+            }
+        button1?: T
+        button2?: T
+        stats?:
+          | T
+          | {
+              stats?:
+                | T
+                | {
+                    number?: T
+                    label?: T
+                    icon?: T
+                    id?: T
+                  }
+            }
       }
   updatedAt?: T
   createdAt?: T

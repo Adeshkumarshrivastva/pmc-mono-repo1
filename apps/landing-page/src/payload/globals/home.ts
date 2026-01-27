@@ -8,6 +8,7 @@ import { achievementSection } from '../fields/achievement-section'
 import { quizSection } from '../fields/quiz-section'
 import { mapSection } from '../fields/map-section'
 import { webinarsSection } from '../fields/webinars-section'
+import AcademySection from '@/app/(app)/academy/page'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -270,7 +271,6 @@ export const Home: GlobalConfig = {
               type: 'text',
             },
             {
-              // TODO: Rename it to pricing
               name: 'price',
               label: 'Package Pricing',
               type: 'group',
@@ -328,7 +328,6 @@ export const Home: GlobalConfig = {
           type: 'text',
           required: true,
         },
-
         {
           name: 'universityPartners',
           label: 'University Partners',
@@ -343,7 +342,6 @@ export const Home: GlobalConfig = {
             },
           ],
         },
-
         {
           name: 'hospitalPartners',
           label: 'Hospital Partners',
@@ -387,5 +385,105 @@ export const Home: GlobalConfig = {
       ],
     },
     webinarsSection,
+    {
+      name: 'academySection',
+      label: 'Academy Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'subTitle',
+          label: 'Sub Title',
+          type: 'text',
+          defaultValue: 'BEST PLACE FOR LEARNING',
+        },
+        {
+          name: 'title',
+          label: 'Main Title',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'textarea',
+        },
+        {
+          name: 'leftImage',
+          label: 'Left Image',
+          type: 'upload',
+          relationTo: 'media',
+        },
+        {
+          name: 'rightImage',
+          label: 'Right Image',
+          type: 'upload',
+          relationTo: 'media',
+        },
+        {
+          name: 'featuresCards',
+          label: 'Features Cards',
+          type: 'array',
+          fields: [
+            {
+              name: 'featureTitle',
+              label: 'Feature Title',
+              type: 'text',
+            },
+            {
+              name: 'featureIcon',
+              label: 'Feature Icon',
+              type: 'upload',
+              relationTo: 'media',
+            },
+          ],
+        },
+        {
+          name: 'button1',
+          label: 'botton1 text',
+          type: 'text',
+        },
+        {
+          name: 'button2',
+          label: 'botton2 text',
+          type: 'text',
+        },
+        {
+          name: 'stats',
+          label: 'Stats Section',
+          type: 'group',
+          fields: [
+            // {
+            //   name: 'title',
+            //   label: 'Title',
+            //   type: 'text',
+            // },
+            {
+              name: 'stats',
+              label: 'stats',
+              type: 'array',
+              maxRows: 2,
+              fields: [
+                {
+                  name: 'number',
+                  label: 'Number',
+                  type: 'text',
+                },
+                {
+                  name: 'label',
+                  label: 'Label',
+                  type: 'text',
+                },
+                {
+                  name: 'icon',
+                  label: 'Icon',
+                  type: 'upload',
+                  relationTo: 'media',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }
