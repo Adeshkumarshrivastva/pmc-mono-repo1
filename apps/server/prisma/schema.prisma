@@ -124,7 +124,7 @@ model Expert {
   file              File?                @relation(fields: [photoId], references: [id])
   photoId           String?              @db.ObjectId
   isDeleted         Boolean              @default(false)
-  order             String?
+  order             String
 }
 
 enum DayOfWeek {

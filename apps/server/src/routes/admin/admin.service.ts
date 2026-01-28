@@ -197,7 +197,7 @@ export async function createExpert(c: C, input: CreateExpertInput) {
       select: { order: true },
     })
 
-    const newOrder = lastExpert ? generateKeyBetween(lastExpert.order, null) : generateKeyBetween(null, null)
+    const newOrder = generateKeyBetween(lastExpert ? lastExpert.order : null, null)
 
     const expert = await prisma.expert.create({
       data: {
@@ -665,17 +665,8 @@ export async function reorderExpert(c: C, input: ReorderExpertsInput) {
   try {
     const { activeId, prevId, nextId } = input
 
-    const expert = await prisma.expert.findUnique({
-      where: { id: activeId },
-      select: { id: true },
-    })
-
-    if (!expert) {
-      return c.json({ error: 'Expert not found' }, 404)
-    }
-
     const prevExpert = prevId
-      ? await prisma.expert.findUnique({
+      ? await prisma.expert.findFirst({
           where: { id: prevId },
           select: { order: true },
         })
@@ -686,7 +677,7 @@ export async function reorderExpert(c: C, input: ReorderExpertsInput) {
     }
 
     const nextExpert = nextId
-      ? await prisma.expert.findUnique({
+      ? await prisma.expert.findFirst({
           where: { id: nextId },
           select: { order: true },
         })
