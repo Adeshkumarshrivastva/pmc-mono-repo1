@@ -19,6 +19,8 @@ import { getWebinars } from '@/payload/actions'
 import WebinarsSection from './_components/webinars-section'
 import PartnersSection from './_components/partners-section'
 import { fetchPublicExperts } from '@/lib/experts'
+import academyPage from './academy/page'
+import AcademySection from './academy/page'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -39,6 +41,7 @@ export default async function HomePage() {
     quizSection,
     blogsSection,
     webinarsSection,
+    academySection,
   } = await payload.findGlobal({
     slug: 'home',
   })
@@ -70,6 +73,7 @@ export default async function HomePage() {
       <TestimonialSection data={testimonialSection} />
       <AchievementSection data={achievementSection} />
       <PartnersSection data={partnersSection} />
+      <AcademySection data={academySection} />
       <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
       <BlogsSection data={blogsSection} blogs={topBlogs.docs} />
     </div>
