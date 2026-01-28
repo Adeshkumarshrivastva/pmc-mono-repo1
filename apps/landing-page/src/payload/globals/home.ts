@@ -443,8 +443,18 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
+          name: 'href1',
+          label: 'Button1 Link',
+          type: 'text',
+        },
+        {
           name: 'button2',
           label: 'botton2 text',
+          type: 'text',
+        },
+        {
+          name: 'href2',
+          label: 'Button2 Link',
           type: 'text',
         },
         {
@@ -452,11 +462,6 @@ export const Home: GlobalConfig = {
           label: 'Stats Section',
           type: 'group',
           fields: [
-            // {
-            //   name: 'title',
-            //   label: 'Title',
-            //   type: 'text',
-            // },
             {
               name: 'stats',
               label: 'stats',

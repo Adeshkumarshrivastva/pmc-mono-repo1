@@ -1342,7 +1342,9 @@ export interface Home {
         }[]
       | null
     button1?: string | null
+    href1?: string | null
     button2?: string | null
+    href2?: string | null
     stats?: {
       stats?:
         | {
@@ -2105,7 +2107,9 @@ export interface HomeSelect<T extends boolean = true> {
               id?: T
             }
         button1?: T
+        href1?: T
         button2?: T
+        href2?: T
         stats?:
           | T
           | {

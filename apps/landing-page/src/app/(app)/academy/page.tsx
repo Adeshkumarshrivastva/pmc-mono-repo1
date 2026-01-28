@@ -53,13 +53,27 @@ export default function AcademySection({ data }: AcademySectionProps) {
             </div>
 
             <div className="flex flex-wrap gap-4 mt-10">
-              <Button variant="outline" icon={<ArrowRightIcon />} iconPosition="right" className="w-60 hover:bg-accent">
-                <Link href="https://academy.positivemindcare.com/">{data?.button1 || ''}</Link>
-              </Button>
+              <Link href={data?.href1 || ''}>
+                <Button
+                  variant="outline"
+                  icon={<ArrowRightIcon />}
+                  iconPosition="right"
+                  className="w-60 hover:bg-accent"
+                >
+                  {data?.button1 || ''}
+                </Button>
+              </Link>
 
-              <Button variant="outline" icon={<ArrowRightIcon />} iconPosition="right" className="w-62 hover:bg-accent">
-                <Link href="https://academy.positivemindcare.com/">{data?.button2 || ''}</Link>
-              </Button>
+              <Link href={data?.href2 || ''}>
+                <Button
+                  variant="outline"
+                  icon={<ArrowRightIcon />}
+                  iconPosition="right"
+                  className="w-62 hover:bg-accent"
+                >
+                  {data?.button2 || ''}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

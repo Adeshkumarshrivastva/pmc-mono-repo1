@@ -10,18 +10,18 @@ export const METADATA_FIELD: Field = {
 
 export function getURLFromMedia(media: Media | string) {
   if (typeof media === 'string') {
-    return `http://localhost:3001${media}`
+    return `https://positivemindcare.com${media}`
   } else if (media && typeof media.url === 'string') {
-    return `http://localhost:3001${media.url}`
+    return `https://positivemindcare.com${media.url}`
   }
   return ''
 }
 
 export function getAltFromFromMedia(media: Media | string) {
   if (typeof media === 'string') {
-    return `http://localhost:3001${media}`
+    return `https://positivemindcare.com${media}`
   } else if (media && typeof media.alt === 'string') {
-    return `http://localhost:3001${media.alt}`
+    return `https://positivemindcare.com${media.alt}`
   }
   return ''
 }
