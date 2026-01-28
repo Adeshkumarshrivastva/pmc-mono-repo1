@@ -31,7 +31,7 @@ export default function AcademySection({ data }: AcademySectionProps) {
           <div className="flex flex-col">
             {data.subTitle && <p className="text-sm uppercase tracking-widest text-black-200">{data.subTitle}</p>}
 
-            {data.title && <h1 className="text-2xl font-sm mt-4 leading-tight">{data.title}</h1>}
+            {data.title && <h1 className="text-4xl font-sm mt-4 leading-tight">{data.title}</h1>}
 
             {data.description && <p className="text-gray-200 mt-6 max-w-xl">{data.description}</p>}
 
@@ -54,11 +54,11 @@ export default function AcademySection({ data }: AcademySectionProps) {
 
             <div className="flex flex-wrap gap-4 mt-10">
               <Button variant="outline" icon={<ArrowRightIcon />} iconPosition="right" className="w-60 hover:bg-accent">
-                <Link href="">{data?.button1 || ''}</Link>
+                <Link href="https://academy.positivemindcare.com/">{data?.button1 || ''}</Link>
               </Button>
 
               <Button variant="outline" icon={<ArrowRightIcon />} iconPosition="right" className="w-62 hover:bg-accent">
-                <Link href="">{data?.button2 || ''}</Link>
+                <Link href="https://academy.positivemindcare.com/">{data?.button2 || ''}</Link>
               </Button>
             </div>
           </div>
