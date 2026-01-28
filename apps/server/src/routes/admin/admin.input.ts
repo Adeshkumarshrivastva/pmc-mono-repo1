@@ -92,3 +92,11 @@ export const bulkCreateBlockedDatesInput = z.object({
 })
 
 export type BulkCreateBlockedDatesInput = z.infer<typeof bulkCreateBlockedDatesInput>
+
+export const reorderExpertsInput = z.object({
+  activeId: z.string(),
+  prevId: z.string().nullable(),
+  nextId: z.string().nullable(),
+})
+
+export type ReorderExpertsInput = z.infer<typeof reorderExpertsInput>

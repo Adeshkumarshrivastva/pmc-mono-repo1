@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import { generateKeyBetween } from 'fractional-indexing'
 import type { C } from '../../lib/context'
 import { prisma } from '../../lib/db'
 import dayjs from '../../lib/dayjs'
@@ -9,6 +10,7 @@ import type {
   CreateServiceForExpertInput,
   UpdateServiceForExpertInput,
   BulkCreateBlockedDatesInput,
+  ReorderExpertsInput,
 } from './admin.input'
 import { DayOfWeek } from '../../generated/prisma'
 import { dateToMinutes } from '../../lib/date'
@@ -189,6 +191,14 @@ export async function createExpert(c: C, input: CreateExpertInput) {
 
     const slug = generateExpertSlug(input.name)
 
+    const lastExpert = await prisma.expert.findFirst({
+      where: { isDeleted: false },
+      orderBy: { order: 'desc' },
+      select: { order: true },
+    })
+
+    const newOrder = lastExpert ? generateKeyBetween(lastExpert.order, null) : generateKeyBetween(null, null)
+
     const expert = await prisma.expert.create({
       data: {
         userId,
@@ -204,6 +214,7 @@ export async function createExpert(c: C, input: CreateExpertInput) {
         expertise: input.expertise,
         experienceInYears: input.experienceInYears,
         photoId: input.photoId,
+        order: newOrder,
       },
       include: {
         user: true,
@@ -647,5 +658,53 @@ export async function deleteServiceForExpert(c: C, serviceId: string) {
     return c.json({ success: true, message: 'Service deleted successfully' })
   } catch {
     return c.json({ error: `Failed to delete service` }, 500)
+  }
+}
+
+export async function reorderExpert(c: C, input: ReorderExpertsInput) {
+  try {
+    const { activeId, prevId, nextId } = input
+
+    const expert = await prisma.expert.findUnique({
+      where: { id: activeId },
+      select: { id: true },
+    })
+
+    if (!expert) {
+      return c.json({ error: 'Expert not found' }, 404)
+    }
+
+    const prevExpert = prevId
+      ? await prisma.expert.findUnique({
+          where: { id: prevId },
+          select: { order: true },
+        })
+      : null
+
+    if (prevId && !prevExpert) {
+      return c.json({ error: 'Previous expert not found' }, 404)
+    }
+
+    const nextExpert = nextId
+      ? await prisma.expert.findUnique({
+          where: { id: nextId },
+          select: { order: true },
+        })
+      : null
+
+    if (nextId && !nextExpert) {
+      return c.json({ error: 'Next expert not found' }, 404)
+    }
+
+    const newOrder = generateKeyBetween(prevExpert?.order, nextExpert?.order)
+
+    await prisma.expert.update({
+      where: { id: activeId },
+      data: { order: newOrder },
+    })
+
+    return c.json({ success: true, message: 'Expert reordered successfully' })
+  } catch {
+    return c.json({ error: `Failed to reorder expert` }, 500)
   }
 }
