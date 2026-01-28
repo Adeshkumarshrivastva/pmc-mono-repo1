@@ -103,6 +103,7 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
       },
       skip,
       take: limit,
+      orderBy: { order: 'asc' },
     })
 
     if (query.sortBy) {
@@ -903,6 +904,7 @@ export async function getPublicExpertsList(c: C) {
           },
         },
       },
+      orderBy: { order: 'asc' },
     })
 
     return c.json(experts)
