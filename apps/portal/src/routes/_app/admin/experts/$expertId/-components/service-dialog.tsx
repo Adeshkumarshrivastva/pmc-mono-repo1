@@ -512,7 +512,7 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
                         <FormItem className="min-w-32 flex-1">
                           <FormLabel className="text-xs">Charge Description</FormLabel>
                           <FormControl>
-                            <Input placeholder="Description required" {...field} className="h-9" />
+                            <Input placeholder="Description" {...field} className="h-9" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

@@ -30,6 +30,7 @@ type PrebookingFormProps = {
   currency: string
   patientName?: string
   patientEmail?: string
+  additionalCharges?: { startTime: Date; endTime: Date; price: number; description: string }[]
 }
 
 const prebookingFormSchema = z.object({
@@ -48,6 +49,7 @@ export default function PrebookingForm({
   currency,
   patientName,
   patientEmail,
+  additionalCharges,
 }: PrebookingFormProps) {
   invariant(serviceId, 'service id must be present')
   invariant(expertId, 'expert Id must be present')
@@ -203,13 +205,57 @@ export default function PrebookingForm({
 
         <div className="p-4 bg-accent border rounded-md text-sm text-primary">
           <p className="font-medium">Payment Information:</p>
-          <p className="mt-1">
-            Amount:{' '}
-            <span className="font-semibold">
-              {CURRENCY_CONFIG[currency].symbol}
-              {price}
-            </span>
-          </p>
+          <div className="mt-2 space-y-1">
+            <div className="flex justify-between">
+              <span>Service Price:</span>
+              <span className="font-semibold">
+                {CURRENCY_CONFIG[currency].symbol}
+                {price}
+              </span>
+            </div>
+            {(() => {
+              if (!additionalCharges?.length) return null
+
+              const selectedDate = new Date(selectedSlot)
+              const selectedMinutes = selectedDate.getUTCHours() * 60 + selectedDate.getUTCMinutes()
+
+              const applicableCharges = additionalCharges.filter((ac) => {
+                const chargeStart = new Date(ac.startTime)
+                const chargeEnd = new Date(ac.endTime)
+
+                const chargeStartMinutes = chargeStart.getUTCHours() * 60 + chargeStart.getUTCMinutes()
+                const chargeEndMinutes = chargeEnd.getUTCHours() * 60 + chargeEnd.getUTCMinutes()
+
+                return selectedMinutes >= chargeStartMinutes && selectedMinutes < chargeEndMinutes
+              })
+
+              if (applicableCharges.length === 0) return null
+
+              const additionalAmount = applicableCharges.reduce((sum, charge) => sum + charge.price, 0)
+              const totalAmount = price + additionalAmount
+
+              return (
+                <>
+                  {applicableCharges.map((charge, idx) => (
+                    <div key={idx} className="flex justify-between text-muted-foreground">
+                      <span>{charge.description}:</span>
+                      <span>
+                        +{CURRENCY_CONFIG[currency].symbol}
+                        {charge.price}
+                      </span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between font-semibold pt-1 border-t mt-1">
+                    <span>Total Amount:</span>
+                    <span>
+                      {CURRENCY_CONFIG[currency].symbol}
+                      {totalAmount}
+                    </span>
+                  </div>
+                </>
+              )
+            })()} 
+          </div>
           {paymentMode === 'OFFLINE' ? (
             <p className="mt-1">The payment will be made on-site at the appointment location.</p>
           ) : (

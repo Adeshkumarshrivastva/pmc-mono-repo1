@@ -164,6 +164,12 @@ function ExpertServiceBookingPage() {
                         currency={service.currency}
                         patientName={patient?.name}
                         patientEmail={patient?.email || undefined}
+                        additionalCharges={service.additionalCharges?.map((ac) => ({
+                          startTime: new Date(ac.startTime),
+                          endTime: new Date(ac.endTime),
+                          price: ac.price,
+                          description: ac.description,
+                        }))}
                       />
                     </div>
                   </div>
