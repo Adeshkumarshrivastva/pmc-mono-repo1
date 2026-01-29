@@ -27,17 +27,21 @@ const serviceFormSchema = z.object({
   availableModes: z.array(z.enum(['IN_PERSON', 'VIRTUAL'])).min(1, 'Select at least one mode'),
   paymentMode: z.enum(['ONLINE', 'OFFLINE']),
   inPersonLocation: inPersonLocationSchema,
-  customPricing: z.array(
-    z.object({
-      startMinutes: z.number(),
-      endMinutes: z.number(),
-      price: z.string().min(1, 'Price is required'),
-    })
-    .refine((data) => data.endMinutes > data.startMinutes, {
-      message: 'End time must be after start time',
-      path: ['endMinutes'],
-    }),
-  ).optional(),
+  additionalCharges: z
+    .array(
+      z
+        .object({
+          startMinutes: z.number(),
+          endMinutes: z.number(),
+          price: z.string().min(1, 'Price is required'),
+          description: z.string().min(1, 'Charge description is required'),
+        })
+        .refine((data) => data.endMinutes > data.startMinutes, {
+          message: 'End time must be after start time',
+          path: ['endMinutes'],
+        }),
+    )
+    .optional(),
 })
 
 type ServiceFormInput = z.infer<typeof serviceFormSchema>
@@ -65,11 +69,12 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
       inPersonLocation: initialData?.inPersonLocation
         ? inPersonLocationSchema.parse(initialData.inPersonLocation)
         : IN_PERSON_LOCATIONS[0],
-      customPricing:
-        initialData?.customPricing?.map((cp) => ({
-          startMinutes: dayjs(cp.startTime).utc().hour() * 60 + dayjs(cp.startTime).utc().minute(),
-          endMinutes: dayjs(cp.endTime).utc().hour() * 60 + dayjs(cp.endTime).utc().minute(),
-          price: String(cp.price),
+      additionalCharges:
+        initialData?.additionalCharges?.map((ac) => ({
+          startMinutes: dayjs(ac.startTime).utc().hour() * 60 + dayjs(ac.startTime).utc().minute(),
+          endMinutes: dayjs(ac.endTime).utc().hour() * 60 + dayjs(ac.endTime).utc().minute(),
+          price: String(ac.price),
+          description: ac.description,
         })) || [],
     },
     resolver: zodResolver(serviceFormSchema),
@@ -77,11 +82,11 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
 
   const createMutation = useMutation({
     mutationFn: async (
-      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes' | 'customPricing'> & {
+      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes' | 'additionalCharges'> & {
         slug: string
         price: number
         durationInMinutes: number
-        customPricing?: { startTime: Date; endTime: Date; price: number }[]
+        additionalCharges?: { startTime: Date; endTime: Date; price: number; description: string }[]
       },
     ) => {
       const response = await honoClient.server.service.$post({ json: data })
@@ -106,10 +111,10 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
 
   const updateMutation = useMutation({
     mutationFn: async (
-      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes' | 'customPricing'> & {
+      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes' | 'additionalCharges'> & {
         price: number
         durationInMinutes: number
-        customPricing?: { startTime: Date; endTime: Date; price: number }[]
+        additionalCharges?: { startTime: Date; endTime: Date; price: number; description: string }[]
       },
     ) => {
       if (!serviceId) {
@@ -139,7 +144,7 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: 'customPricing',
+    name: 'additionalCharges',
   })
 
   return (
@@ -164,13 +169,14 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
               price,
               durationInMinutes,
               slug: generateServiceSlug(data.name),
-              customPricing: data.customPricing?.map((cp) => {
-                const startTime = dayjs.utc('2025-01-01').startOf('day').add(cp.startMinutes, 'minute').toDate()
-                const endTime = dayjs.utc('2025-01-01').startOf('day').add(cp.endMinutes, 'minute').toDate()
+              additionalCharges: data.additionalCharges?.map((ac) => {
+                const startTime = dayjs.utc('2025-01-01').startOf('day').add(ac.startMinutes, 'minute').toDate()
+                const endTime = dayjs.utc('2025-01-01').startOf('day').add(ac.endMinutes, 'minute').toDate()
                 return {
                   startTime,
                   endTime,
-                  price: Number(cp.price),
+                  price: Number(ac.price),
+                  description: ac.description,
                 }
               }),
             }
@@ -180,13 +186,14 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
               ...data,
               price,
               durationInMinutes,
-              customPricing: data.customPricing?.map((cp) => {
-                const startTime = dayjs.utc('2025-01-01').startOf('day').add(cp.startMinutes, 'minute').toDate()
-                const endTime = dayjs.utc('2025-01-01').startOf('day').add(cp.endMinutes, 'minute').toDate()
+              additionalCharges: data.additionalCharges?.map((ac) => {
+                const startTime = dayjs.utc('2025-01-01').startOf('day').add(ac.startMinutes, 'minute').toDate()
+                const endTime = dayjs.utc('2025-01-01').startOf('day').add(ac.endMinutes, 'minute').toDate()
                 return {
                   startTime,
                   endTime,
-                  price: Number(cp.price),
+                  price: Number(ac.price),
+                  description: ac.description,
                 }
               }),
             }
@@ -364,13 +371,13 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
 
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <FormLabel className="text-foreground">Custom Pricing (₹)</FormLabel>
+            <FormLabel className="text-foreground">Additional Charges (₹)</FormLabel>
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => {
-                append({ startMinutes: 630, endMinutes: 750, price: '' })
+                append({ startMinutes: 630, endMinutes: 750, price: '', description: '' })
               }}
             >
               <CirclePlusIcon className="size-4" />
@@ -382,7 +389,7 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
               <div key={field.id} className="flex flex-wrap items-start gap-2 rounded-md border p-4">
                 <FormField
                   control={form.control}
-                  name={`customPricing.${index}.startMinutes`}
+                  name={`additionalCharges.${index}.startMinutes`}
                   render={({ field }) => (
                     <FormItem className="w-32">
                       <FormLabel className="text-xs">From</FormLabel>
@@ -412,7 +419,7 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
 
                 <FormField
                   control={form.control}
-                  name={`customPricing.${index}.endMinutes`}
+                  name={`additionalCharges.${index}.endMinutes`}
                   render={({ field }) => (
                     <FormItem className="w-32">
                       <FormLabel className="text-xs">To</FormLabel>
@@ -442,17 +449,26 @@ export function ServiceForm({ mode, serviceId, initialData, onSuccess }: Service
 
                 <FormField
                   control={form.control}
-                  name={`customPricing.${index}.price`}
+                  name={`additionalCharges.${index}.price`}
                   render={({ field }) => (
-                    <FormItem className="w-32">
+                    <FormItem className="w-32 pr-4">
                       <FormLabel className="text-xs">Price (₹)</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          placeholder={form.watch('price') || 'Price'}
-                          {...field}
-                          className="h-9"
-                        />
+                        <Input type="number" placeholder={form.watch('price') || 'Price'} {...field} className="h-9" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`additionalCharges.${index}.description`}
+                  render={({ field }) => (
+                    <FormItem className="min-w-32 flex-1">
+                      <FormLabel className="text-xs">Charge Description</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Description required*" {...field} className="h-9" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -523,7 +523,7 @@ export async function createServiceForExpert(c: C, expertId: string, input: Crea
         minPaymentAmount: input.minPaymentAmount,
         durationInMinutes: input.durationInMinutes,
         tags: input.tags,
-        customPricing: input.customPricing,
+        additionalCharges: input.additionalCharges,
       },
     })
 
@@ -607,7 +607,7 @@ export async function updateServiceForExpert(c: C, serviceId: string, input: Upd
         ...(input.minPaymentAmount !== undefined && { minPaymentAmount: input.minPaymentAmount }),
         ...(input.durationInMinutes !== undefined && { durationInMinutes: input.durationInMinutes }),
         ...(input.tags !== undefined && { tags: input.tags }),
-        ...(input.customPricing !== undefined && { customPricing: input.customPricing }),
+        ...(input.additionalCharges !== undefined && { additionalCharges: input.additionalCharges }),
       },
     })
 
