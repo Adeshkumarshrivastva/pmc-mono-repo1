@@ -14,7 +14,7 @@ type AcademySectionProps = {
 export default function AcademySection({ data }: AcademySectionProps) {
   return (
     <section className="w-full bg-primary text-accent">
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 sm:py-12 md:px-8 lg:px-12 lg:py-20">
+      <div className="max-w-7xl mx-auto pt-14 pb-14">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="rounded-2xl overflow-hidden shadow-lg">
             {data.leftImage && (
@@ -52,7 +52,7 @@ export default function AcademySection({ data }: AcademySectionProps) {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-4 mt-10">
+            <div className="flex flex-wrap gap-4 mt-6">
               <Link href={data?.href1 || ''}>
                 <Button
                   variant="outline"
@@ -99,7 +99,7 @@ export default function AcademySection({ data }: AcademySectionProps) {
               ))}
             </div>
           </div>
-          <div className="rounded-2xl overflow-hidden shadow-lg -mt-24 lg:-mt-40">
+          <div className="rounded-2xl overflow-hidden shadow-lg -mt-24 lg:-mt-48">
             {data.rightImage && (
               <Image
                 src={getURLFromMedia(data.rightImage)}
