@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import { TrashIcon, CirclePlusIcon } from 'lucide-react'
 import { honoClient } from '@/lib/hono-client'
 import { queryClient } from '@/lib/query-client'
 import { Button } from '@/components/ui/button'
@@ -14,6 +15,9 @@ import { IN_PERSON_LOCATIONS, inPersonLocationSchema, SERVICE_MODE_CONFIG } from
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { generateServiceSlug } from '@/lib/service'
+import { TIME_OPTIONS } from '@/lib/booking'
+import { localMinutesToUtcMinutes, utcMinutesToLocalMinutes } from '@/lib/date'
+import dayjs from '@/lib/dayjs'
 
 const serviceFormSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -25,6 +29,21 @@ const serviceFormSchema = z.object({
   availableModes: z.array(z.enum(['IN_PERSON', 'VIRTUAL'])).min(1, 'Select at least one mode'),
   paymentMode: z.enum(['ONLINE', 'OFFLINE']),
   inPersonLocation: inPersonLocationSchema,
+  additionalCharges: z
+    .array(
+      z
+        .object({
+          startMinutes: z.number(),
+          endMinutes: z.number(),
+          price: z.string().min(1, 'Price is required'),
+          description: z.string().min(1, 'Charge description is required'),
+        })
+        .refine((data) => data.endMinutes > data.startMinutes, {
+          message: 'End minutes must be after start minutes',
+          path: ['endMinutes'],
+        }),
+    )
+    .optional(),
 })
 
 type ServiceFormInput = z.infer<typeof serviceFormSchema>
@@ -45,6 +64,7 @@ type ServiceDialogProps = {
     availableModes: ('IN_PERSON' | 'VIRTUAL')[]
     paymentMode: 'ONLINE' | 'OFFLINE'
     inPersonLocation: z.infer<typeof inPersonLocationSchema>
+    additionalCharges?: { startTime: Date; endTime: Date; price: number; description: string }[]
   }
 }
 
@@ -60,16 +80,24 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
       availableModes: serviceData?.availableModes || [],
       paymentMode: serviceData?.paymentMode || 'ONLINE',
       inPersonLocation: serviceData?.inPersonLocation || IN_PERSON_LOCATIONS[0],
+      additionalCharges:
+        serviceData?.additionalCharges?.map((ac) => ({
+          startMinutes: dayjs(ac.startTime).utc().hour() * 60 + dayjs(ac.startTime).utc().minute(),
+          endMinutes: dayjs(ac.endTime).utc().hour() * 60 + dayjs(ac.endTime).utc().minute(),
+          price: String(ac.price),
+          description: ac.description,
+        })) || [],
     },
     resolver: zodResolver(serviceFormSchema),
   })
 
   const createMutation = useMutation({
     mutationFn: async (
-      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes'> & {
+      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes' | 'additionalCharges'> & {
         slug: string
         price: number
         durationInMinutes: number
+        additionalCharges?: { startTime: Date; endTime: Date; price: number; description: string }[]
       },
     ) => {
       const response = await honoClient.server.admin.experts[':expertId'].services.$post({
@@ -97,9 +125,10 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
 
   const updateMutation = useMutation({
     mutationFn: async (
-      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes'> & {
+      data: Omit<ServiceFormInput, 'price' | 'durationInMinutes' | 'additionalCharges'> & {
         price: number
         durationInMinutes: number
+        additionalCharges?: { startTime: Date; endTime: Date; price: number; description: string }[]
       },
     ) => {
       if (!serviceData?.id) {
@@ -142,6 +171,16 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
         price,
         durationInMinutes,
         slug: generateServiceSlug(data.name),
+        additionalCharges: data.additionalCharges?.map((ac) => {
+          const startTime = dayjs.utc('2025-01-01').startOf('day').add(ac.startMinutes, 'minute').toDate()
+          const endTime = dayjs.utc('2025-01-01').startOf('day').add(ac.endMinutes, 'minute').toDate()
+          return {
+            startTime,
+            endTime,
+            price: Number(ac.price),
+            description: ac.description,
+          }
+        }),
       }
       createMutation.mutate(dataWithSlug)
     } else {
@@ -149,10 +188,25 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
         ...data,
         price,
         durationInMinutes,
+        additionalCharges: data.additionalCharges?.map((ac) => {
+          const startTime = dayjs.utc('2025-01-01').startOf('day').add(ac.startMinutes, 'minute').toDate()
+          const endTime = dayjs.utc('2025-01-01').startOf('day').add(ac.endMinutes, 'minute').toDate()
+          return {
+            startTime,
+            endTime,
+            price: Number(ac.price),
+            description: ac.description,
+          }
+        }),
       }
       updateMutation.mutate(updateData)
     }
   }
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'additionalCharges',
+  })
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -354,8 +408,137 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
               </>
             )}
 
+            <div className="space-y-2">
+              <div className="flex items-center gap-4">
+                <FormLabel className="text-foreground">Additional Charges (₹)</FormLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    append({ startMinutes: 630, endMinutes: 750, price: '', description: '' })
+                  }}
+                >
+                  <CirclePlusIcon className="size-4" />
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex flex-wrap items-start gap-2 rounded-md border p-4">
+                    <FormField
+                      control={form.control}
+                      name={`additionalCharges.${index}.startMinutes`}
+                      render={({ field }) => (
+                        <FormItem className="w-32">
+                          <FormLabel className="text-xs">From</FormLabel>
+                          <FormControl>
+                            <Select
+                              value={field.value !== undefined ? String(utcMinutesToLocalMinutes(field.value)) : ''}
+                              onValueChange={(val) => {
+                                field.onChange(localMinutesToUtcMinutes(Number(val)))
+                              }}
+                            >
+                              <SelectTrigger className="h-9">
+                                <SelectValue placeholder="Start" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {TIME_OPTIONS.map((opt) => (
+                                  <SelectItem key={opt.value} value={String(opt.value)}>
+                                    {opt.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`additionalCharges.${index}.endMinutes`}
+                      render={({ field }) => (
+                        <FormItem className="w-32">
+                          <FormLabel className="text-xs">To</FormLabel>
+                          <FormControl>
+                            <Select
+                              value={field.value !== undefined ? String(utcMinutesToLocalMinutes(field.value)) : ''}
+                              onValueChange={(val) => {
+                                field.onChange(localMinutesToUtcMinutes(Number(val)))
+                              }}
+                            >
+                              <SelectTrigger className="h-9">
+                                <SelectValue placeholder="End" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {TIME_OPTIONS.map((opt) => (
+                                  <SelectItem key={opt.value} value={String(opt.value)}>
+                                    {opt.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`additionalCharges.${index}.price`}
+                      render={({ field }) => (
+                        <FormItem className="w-32 pr-4">
+                          <FormLabel className="text-xs">Price (₹)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder={form.watch('price') || 'Price'}
+                              {...field}
+                              className="h-9"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`additionalCharges.${index}.description`}
+                      render={({ field }) => (
+                        <FormItem className="min-w-32 flex-1">
+                          <FormLabel className="text-xs">Charge Description</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Description" {...field} className="h-9" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="mt-6 text-destructive"
+                        onClick={() => remove(index)}
+                      >
+                        <TrashIcon className="size-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <div className="flex gap-4 justify-end pt-4">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              <Button type="button" variant="outline" onClick={() => {
+                onOpenChange(false)
+              }}>
                 Cancel
               </Button>
               <Button

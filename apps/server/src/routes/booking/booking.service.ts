@@ -94,6 +94,25 @@ export async function createBooking(c: C, input: CreateBookingInput) {
     return c.json({ error: slotCheck.reason || 'Slot not available' }, 404)
   }
 
+  let servicePrice = service.price
+  
+  if (service.additionalCharges && service.additionalCharges.length > 0) {
+    const startMinutes = startDateTime.getUTCHours() * 60 + startDateTime.getUTCMinutes()
+    
+    const applicableCharges = service.additionalCharges.filter((ac) => {
+      const chargeStart = new Date(ac.startTime)
+      const chargeEnd = new Date(ac.endTime)
+      
+      const chargeStartMinutes = chargeStart.getUTCHours() * 60 + chargeStart.getUTCMinutes()
+      const chargeEndMinutes = chargeEnd.getUTCHours() * 60 + chargeEnd.getUTCMinutes()
+
+      return startMinutes >= chargeStartMinutes && startMinutes < chargeEndMinutes
+    })
+
+    const additionalAmount = applicableCharges.reduce((sum, charge) => sum + charge.price, 0)
+    servicePrice += additionalAmount
+  }
+
   try {
     const result = await prisma.$transaction(async (tx) => {
       const draftBooking = await tx.booking.create({
@@ -107,7 +126,7 @@ export async function createBooking(c: C, input: CreateBookingInput) {
           patientEmail: input.patientEmail,
           serviceId: service.id,
           serviceName: service.name,
-          servicePrice: service.price,
+          servicePrice: servicePrice,
           serviceDurationInMinutes: service.durationInMinutes,
           serviceBufferTimeAfterInMinutes: service.bufferTimeAfterInMinutes,
           serviceBufferTimeBeforeInMinutes: service.bufferTimeBeforeInMinutes,
@@ -126,11 +145,11 @@ export async function createBooking(c: C, input: CreateBookingInput) {
           serviceId: service.id,
           serviceName: service.name,
           serviceCurrency: service.currency,
-          servicePrice: service.price,
+          servicePrice: servicePrice,
           bookingId: draftBooking.id,
           paymentMode: service.paymentMode,
           // TODO: Later, we will take the partial payment amount as input from the patient
-          amountPaid: service.price,
+          amountPaid: servicePrice,
           isPartialPayment: false,
           amountCurrency: 'INR',
         },

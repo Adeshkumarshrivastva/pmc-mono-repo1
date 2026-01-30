@@ -179,36 +179,44 @@ enum PaymentMode {
 }
 
 model Service {
-  id                        String        @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt                 DateTime      @default(now())
-  updatedAt                 DateTime      @updatedAt
+  id                        String              @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                 DateTime            @default(now())
+  updatedAt                 DateTime            @updatedAt
   name                      String
   slug                      String
-  expert                    Expert        @relation(fields: [expertId], references: [id])
-  expertId                  String        @db.ObjectId
-  availableModes            ServiceMode[] @default([IN_PERSON, VIRTUAL])
+  expert                    Expert              @relation(fields: [expertId], references: [id])
+  expertId                  String              @db.ObjectId
+  availableModes            ServiceMode[]       @default([IN_PERSON, VIRTUAL])
   inPersonLocation          Json?
   city                      String
   country                   String
-  description               String        @default("")
-  bufferTimeBeforeInMinutes Int           @default(30)
-  bufferTimeAfterInMinutes  Int           @default(30)
+  description               String              @default("")
+  bufferTimeBeforeInMinutes Int                 @default(30)
+  bufferTimeAfterInMinutes  Int                 @default(30)
   price                     Float
-  currency                  String        @default("INR")
-  isPartialPaymentAvailable Boolean       @default(false)
-  minPaymentAmount          Float?        @default(0)
-  durationInMinutes         Int           @default(60)
+  additionalCharges         AdditionalCharges[]
+  currency                  String              @default("INR")
+  isPartialPaymentAvailable Boolean             @default(false)
+  minPaymentAmount          Float?              @default(0)
+  durationInMinutes         Int                 @default(60)
   booking                   Booking[]
   payments                  Payment[]
-  paymentMode               PaymentMode   @default(ONLINE)
+  paymentMode               PaymentMode         @default(ONLINE)
   tags                      String[]
   prebookingQuestions       Json?
-  isDeleted                 Boolean       @default(false)
+  isDeleted                 Boolean             @default(false)
 
   @@unique([expertId, slug])
   @@index([expertId])
   @@index([tags])
   @@index([availableModes])
+}
+
+type AdditionalCharges {
+  startTime   DateTime
+  endTime     DateTime
+  price       Float
+  description String
 }
 
 model Patient {

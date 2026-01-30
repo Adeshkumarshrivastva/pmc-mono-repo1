@@ -153,15 +153,8 @@ function ExpertServiceBookingPage() {
                     <h2 className="text-2xl font-semibold text-foreground">Enter Details</h2>
                     <div className="w-full max-w-sm">
                       <PrebookingForm
+                        service={service}
                         phoneNumber={mode.phoneNumber}
-                        serviceId={service.id}
-                        expertId={service.expertId}
-                        expertSlug={expertSlug}
-                        serviceSlug={serviceSlug}
-                        availableModes={service.availableModes}
-                        paymentMode={service.paymentMode}
-                        price={service.price}
-                        currency={service.currency}
                         patientName={patient?.name}
                         patientEmail={patient?.email || undefined}
                       />

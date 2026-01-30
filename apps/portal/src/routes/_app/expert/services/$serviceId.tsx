@@ -56,12 +56,6 @@ function EditServicePage() {
       })
       if (!response.ok) {
         const error = (await response.json()) as { error?: string }
-        console.error('Delete service failed:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: error.error,
-          serviceId,
-        })
         throw new Error(error.error || 'Failed to delete service')
       }
       return response.json()
@@ -72,7 +66,6 @@ function EditServicePage() {
       navigate({ to: '/expert/services' })
     },
     onError: (error: Error) => {
-      console.error('Delete mutation error:', error)
       toast.error('Failed to delete service', {
         description: error.message,
       })

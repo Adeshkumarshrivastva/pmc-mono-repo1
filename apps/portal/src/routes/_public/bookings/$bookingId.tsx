@@ -14,6 +14,7 @@ import { honoClient } from '@/lib/hono-client'
 import { DEFAULT_TIMEZONE, formatDateTimeRange } from '@/lib/date'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 import { inPersonLocationSchema, SERVICE_MODE_CONFIG, virtualLocationSchema } from '@/lib/service'
+import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_public/bookings/$bookingId')({
   component: BookingConfirmationPage,
@@ -143,6 +144,11 @@ function BookingConfirmationPage() {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="flex items-center justify-center mt-4">
+              <Link to={`/patient/dashboard`}>
+                <Button>Go to dashboard</Button>
+              </Link>
             </div>
           </div>
         </div>

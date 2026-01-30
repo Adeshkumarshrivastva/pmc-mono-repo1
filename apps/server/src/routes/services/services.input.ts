@@ -18,6 +18,16 @@ export const createServiceInput = z.object({
   minPaymentAmount: z.number().min(0).optional().default(0),
   durationInMinutes: z.number().min(15, 'Duration must be at least 15 minutes').default(60),
   tags: z.array(z.string()).default([]),
+  additionalCharges: z
+    .array(
+      z.object({
+        startTime: z.coerce.date(),
+        endTime: z.coerce.date(),
+        price: z.number().min(1, 'Price is required'),
+        description: z.string().min(1, 'Charge description is required'),
+      }),
+    )
+    .optional(),
 })
 
 export const updateServiceInput = createServiceInput.partial().extend({

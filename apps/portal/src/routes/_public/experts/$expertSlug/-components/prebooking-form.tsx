@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
-import type { PaymentMode } from '@pmc/server/src/generated/prisma/client'
+import type { InferResponseType } from 'hono'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { BOOKING_LOCATION, type BookingLocation } from '@/lib/booking'
+import { BOOKING_LOCATION } from '@/lib/booking'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { honoClient } from '@/lib/hono-client'
+import { honoClient, type HonoClient } from '@/lib/hono-client'
 import { getErrorMessage, invariant } from '@/lib/utils'
 import { useBooking } from '../-hooks/use-booking'
 import { env } from '@/lib/env'
@@ -19,15 +19,8 @@ import { SERVICE_MODE_CONFIG } from '@/lib/service'
 import { CURRENCY_CONFIG } from '@/lib/booking'
 
 type PrebookingFormProps = {
-  serviceId?: string
-  expertId?: string
-  expertSlug: string
-  serviceSlug: string
+  service: InferResponseType<HonoClient['server']['experts'][':expertSlug']['service'][':serviceSlug']['$get'], 200>
   phoneNumber: string
-  availableModes: BookingLocation[]
-  paymentMode: PaymentMode
-  price: number
-  currency: string
   patientName?: string
   patientEmail?: string
 }
@@ -39,18 +32,13 @@ const prebookingFormSchema = z.object({
 })
 
 export default function PrebookingForm({
-  serviceId,
-  expertId,
+  service,
   phoneNumber,
-  availableModes,
-  paymentMode,
-  price,
-  currency,
   patientName,
   patientEmail,
 }: PrebookingFormProps) {
-  invariant(serviceId, 'service id must be present')
-  invariant(expertId, 'expert Id must be present')
+  invariant(service.id, 'service id must be present')
+  invariant(service.expertId, 'expert Id must be present')
 
   const navigate = useNavigate()
   const { getSelectedSlot } = useBooking()
@@ -60,7 +48,7 @@ export default function PrebookingForm({
 
   const form = useForm({
     defaultValues: {
-      serviceMode: availableModes[0],
+      serviceMode: service.availableModes[0],
       patientName: patientName || '',
       patientEmail: patientEmail || '',
     },
@@ -128,6 +116,23 @@ export default function PrebookingForm({
     },
   })
 
+  const selectedDate = new Date(selectedSlot)
+  const selectedMinutes = selectedDate.getUTCHours() * 60 + selectedDate.getUTCMinutes()
+
+  const applicableCharges =
+    service.additionalCharges?.filter((charge) => {
+      const chargeStart = new Date(charge.startTime)
+      const chargeEnd = new Date(charge.endTime)
+
+      const chargeStartMinutes = chargeStart.getUTCHours() * 60 + chargeStart.getUTCMinutes()
+      const chargeEndMinutes = chargeEnd.getUTCHours() * 60 + chargeEnd.getUTCMinutes()
+
+      return selectedMinutes >= chargeStartMinutes && selectedMinutes < chargeEndMinutes
+    }) || []
+
+  const additionalAmount = applicableCharges.reduce((sum, charge) => sum + charge.price, 0)
+  const totalAmount = service.price + additionalAmount
+
   return (
     <Form {...form}>
       <form
@@ -135,8 +140,8 @@ export default function PrebookingForm({
         onSubmit={form.handleSubmit((values: z.infer<typeof prebookingFormSchema>) => {
           createBookingMutation.mutate({
             formInput: values,
-            serviceId: serviceId,
-            expertId: expertId,
+            serviceId: service.id,
+            expertId: service.expertId,
             startDateTime: `${selectedSlot.toJSON()}`,
           })
         })}
@@ -168,7 +173,7 @@ export default function PrebookingForm({
             )
           }}
         />
-        {availableModes.length > 1 && (
+        {service.availableModes.length > 1 && (
           <FormField
             name="serviceMode"
             render={({ field }) => {
@@ -177,7 +182,7 @@ export default function PrebookingForm({
                   <FormLabel>Mode</FormLabel>
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col">
-                      {availableModes.map((mode) => {
+                      {service.availableModes.map((mode) => {
                         const Icon = SERVICE_MODE_CONFIG[mode].icon
                         return (
                           <FormItem key={SERVICE_MODE_CONFIG[mode].value} className="flex items-center gap-3">
@@ -203,14 +208,36 @@ export default function PrebookingForm({
 
         <div className="p-4 bg-accent border rounded-md text-sm text-primary">
           <p className="font-medium">Payment Information:</p>
-          <p className="mt-1">
-            Amount:{' '}
-            <span className="font-semibold">
-              {CURRENCY_CONFIG[currency].symbol}
-              {price}
-            </span>
-          </p>
-          {paymentMode === 'OFFLINE' ? (
+          <div className="mt-2 space-y-1">
+            <div className="flex justify-between">
+              <span>Service Price:</span>
+              <span>
+                {CURRENCY_CONFIG[service.currency].symbol}
+                {service.price}
+              </span>
+            </div>
+            {applicableCharges.length > 0 && (
+              <>
+                {applicableCharges.map((charge, idx) => (
+                  <div key={idx} className="flex justify-between text-muted-foreground">
+                    <span>{charge.description}:</span>
+                    <span>
+                      +{CURRENCY_CONFIG[service.currency].symbol}
+                      {charge.price}
+                    </span>
+                  </div>
+                ))}
+              </>
+            )}
+            <div className="flex justify-between font-semibold border-t pt-1.5">
+              <span>Total Amount:</span>
+              <span>
+                {CURRENCY_CONFIG[service.currency].symbol}
+                {totalAmount}
+              </span>
+            </div>
+          </div>
+          {service.paymentMode === 'OFFLINE' ? (
             <p className="mt-1">The payment will be made on-site at the appointment location.</p>
           ) : (
             <p className="mt-1">You will be redirected to a secure payment gateway to complete your booking.</p>
@@ -223,7 +250,7 @@ export default function PrebookingForm({
           type="submit"
           className="mt-4"
         >
-          {paymentMode === 'ONLINE' ? 'Pay & Schedule' : 'Book Now'}
+          {service.paymentMode === 'ONLINE' ? 'Pay & Schedule' : 'Book Now'}
         </Button>
       </form>
     </Form>
