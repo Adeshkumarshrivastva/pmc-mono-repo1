@@ -268,7 +268,7 @@ async function createBooking({ formInput, expertId, serviceId, startDateTime }: 
   const res = await honoClient.server.booking.create.$post({
     json: {
       patientName: formInput.patientName,
-      patientEmail: formInput?.patientEmail,
+      patientEmail: formInput.patientEmail || undefined,
       mode: formInput.serviceMode,
       expertId,
       serviceId,
