@@ -130,6 +130,23 @@ export default function PrebookingForm({
     },
   })
 
+  const selectedDate = new Date(selectedSlot)
+  const selectedMinutes = selectedDate.getUTCHours() * 60 + selectedDate.getUTCMinutes()
+
+  const applicableCharges =
+    additionalCharges?.filter((charge) => {
+      const chargeStart = new Date(charge.startTime)
+      const chargeEnd = new Date(charge.endTime)
+
+      const chargeStartMinutes = chargeStart.getUTCHours() * 60 + chargeStart.getUTCMinutes()
+      const chargeEndMinutes = chargeEnd.getUTCHours() * 60 + chargeEnd.getUTCMinutes()
+
+      return selectedMinutes >= chargeStartMinutes && selectedMinutes < chargeEndMinutes
+    }) || []
+
+  const additionalAmount = applicableCharges.reduce((sum, charge) => sum + charge.price, 0)
+  const totalAmount = price + additionalAmount
+
   return (
     <Form {...form}>
       <form
@@ -208,53 +225,31 @@ export default function PrebookingForm({
           <div className="mt-2 space-y-1">
             <div className="flex justify-between">
               <span>Service Price:</span>
-              <span className="font-semibold">
+              <span>
                 {CURRENCY_CONFIG[currency].symbol}
                 {price}
               </span>
             </div>
-            {(() => {
-              if (!additionalCharges?.length) return null
-
-              const selectedDate = new Date(selectedSlot)
-              const selectedMinutes = selectedDate.getUTCHours() * 60 + selectedDate.getUTCMinutes()
-
-              const applicableCharges = additionalCharges.filter((ac) => {
-                const chargeStart = new Date(ac.startTime)
-                const chargeEnd = new Date(ac.endTime)
-
-                const chargeStartMinutes = chargeStart.getUTCHours() * 60 + chargeStart.getUTCMinutes()
-                const chargeEndMinutes = chargeEnd.getUTCHours() * 60 + chargeEnd.getUTCMinutes()
-
-                return selectedMinutes >= chargeStartMinutes && selectedMinutes < chargeEndMinutes
-              })
-
-              if (applicableCharges.length === 0) return null
-
-              const additionalAmount = applicableCharges.reduce((sum, charge) => sum + charge.price, 0)
-              const totalAmount = price + additionalAmount
-
-              return (
-                <>
-                  {applicableCharges.map((charge, idx) => (
-                    <div key={idx} className="flex justify-between text-muted-foreground">
-                      <span>{charge.description}:</span>
-                      <span>
-                        +{CURRENCY_CONFIG[currency].symbol}
-                        {charge.price}
-                      </span>
-                    </div>
-                  ))}
-                  <div className="flex justify-between font-semibold pt-1 border-t mt-1">
-                    <span>Total Amount:</span>
+            {applicableCharges.length > 0 && (
+              <>
+                {applicableCharges.map((charge, idx) => (
+                  <div key={idx} className="flex justify-between text-muted-foreground">
+                    <span>{charge.description}:</span>
                     <span>
-                      {CURRENCY_CONFIG[currency].symbol}
-                      {totalAmount}
+                      +{CURRENCY_CONFIG[currency].symbol}
+                      {charge.price}
                     </span>
                   </div>
-                </>
-              )
-            })()} 
+                ))}
+              </>
+            )}
+            <div className="flex justify-between font-semibold border-t pt-1.5">
+              <span>Total Amount:</span>
+              <span>
+                {CURRENCY_CONFIG[currency].symbol}
+                {totalAmount}
+              </span>
+            </div>
           </div>
           {paymentMode === 'OFFLINE' ? (
             <p className="mt-1">The payment will be made on-site at the appointment location.</p>
