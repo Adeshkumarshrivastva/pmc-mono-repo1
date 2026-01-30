@@ -17,6 +17,7 @@ import {
   getServiceDetails,
   updateServiceForExpert,
   deleteServiceForExpert,
+  reorderExpert,
 } from './admin.service'
 import {
   createExpertInput,
@@ -25,6 +26,7 @@ import {
   createServiceForExpertInput,
   updateServiceForExpertInput,
   bulkCreateBlockedDatesInput,
+  reorderExpertsInput,
 } from './admin.input'
 
 export const adminApp = new Hono<{ Variables: HonoContext }>()
@@ -95,4 +97,11 @@ export const adminApp = new Hono<{ Variables: HonoContext }>()
   )
   .delete('/services/:serviceId', authMiddleware, requirePermission(['ADMIN']), (c) =>
     deleteServiceForExpert(c, c.req.param('serviceId')),
+  )
+  .post(
+    '/experts/reorder',
+    authMiddleware,
+    requirePermission(['ADMIN']),
+    zValidator('json', reorderExpertsInput),
+    (c) => reorderExpert(c, c.req.valid('json')),
   )

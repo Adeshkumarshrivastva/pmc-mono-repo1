@@ -103,6 +103,7 @@ export async function getExperts(c: C, query: ExpertSearchQuery) {
       },
       skip,
       take: limit,
+      orderBy: { order: 'asc' },
     })
 
     if (query.sortBy) {
@@ -751,6 +752,7 @@ export async function updatePaymentStatus(c: C, input: { status: 'PENDING' | 'CO
 export async function getAllExperts(c: C) {
   const experts = await prisma.expert.findMany({
     where: { isDeleted: false },
+    orderBy: { order: 'asc' },
   })
   return c.json(experts)
 }
@@ -902,6 +904,7 @@ export async function getPublicExpertsList(c: C) {
           },
         },
       },
+      orderBy: { order: 'asc' },
     })
 
     return c.json(experts)
