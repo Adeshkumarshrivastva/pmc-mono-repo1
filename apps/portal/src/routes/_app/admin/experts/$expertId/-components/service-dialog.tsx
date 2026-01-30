@@ -536,7 +536,9 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
             </div>
 
             <div className="flex gap-4 justify-end pt-4">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              <Button type="button" variant="outline" onClick={() => {
+                onOpenChange(false)
+              }}>
                 Cancel
               </Button>
               <Button
