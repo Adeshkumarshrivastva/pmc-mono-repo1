@@ -210,7 +210,7 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{mode === 'create' ? 'Create Service' : 'Edit Service'}</DialogTitle>
           <DialogDescription>
@@ -536,9 +536,13 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
             </div>
 
             <div className="flex gap-4 justify-end pt-4">
-              <Button type="button" variant="outline" onClick={() => {
-                onOpenChange(false)
-              }}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  onOpenChange(false)
+                }}
+              >
                 Cancel
               </Button>
               <Button
