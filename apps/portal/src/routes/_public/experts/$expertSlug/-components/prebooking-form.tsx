@@ -31,12 +31,7 @@ const prebookingFormSchema = z.object({
   serviceMode: z.enum(BOOKING_LOCATION),
 })
 
-export default function PrebookingForm({
-  service,
-  phoneNumber,
-  patientName,
-  patientEmail,
-}: PrebookingFormProps) {
+export default function PrebookingForm({ service, phoneNumber, patientName, patientEmail }: PrebookingFormProps) {
   invariant(service.id, 'service id must be present')
   invariant(service.expertId, 'expert Id must be present')
 

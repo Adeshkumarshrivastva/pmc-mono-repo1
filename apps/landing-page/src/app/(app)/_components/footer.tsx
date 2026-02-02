@@ -19,7 +19,7 @@ export default function Footer() {
             <div>
               <div className="font-medium">Address:</div>
               <div className="text-primary-foreground/50">
-                804, Arcadia, South City II, Sector 49, <br /> Gurugram, Fatehpur, Haryana 122018
+                804(A), Arcadia, South City II, Sector 49, <br /> Gurugram, Fatehpur, Haryana 122018
               </div>
             </div>
             <div>

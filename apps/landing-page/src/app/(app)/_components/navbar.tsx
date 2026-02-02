@@ -7,7 +7,6 @@ import { ChevronDown, ChevronRight, MenuIcon } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import { CallIcon } from '@/components/ui/icons'
 import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import type { Service } from '@/payload/types'
@@ -113,18 +112,17 @@ export default function Navbar({ services }: NavbarProps) {
         {showBookingButton && (
           <Button
             variant="secondary"
-            icon={isUserLoggedIn ? undefined : <CallIcon />}
             className="hidden xl:flex"
             disabled={isPending}
             onClick={() => {
               if (isUserLoggedIn) {
                 window.location.href = `/portal`
               } else {
-                document.getElementById('appointement-section')?.scrollIntoView({ behavior: 'smooth' })
+                window.location.href = `/portal/login`
               }
             }}
           >
-            {isUserLoggedIn ? 'DASHBOARD' : 'Contact Us'}
+            {isUserLoggedIn ? 'DASHBOARD' : 'SIGN IN'}
           </Button>
         )}
 
