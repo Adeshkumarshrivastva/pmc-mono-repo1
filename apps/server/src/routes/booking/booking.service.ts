@@ -95,14 +95,14 @@ export async function createBooking(c: C, input: CreateBookingInput) {
   }
 
   let servicePrice = service.price
-  
+
   if (service.additionalCharges && service.additionalCharges.length > 0) {
     const startMinutes = startDateTime.getUTCHours() * 60 + startDateTime.getUTCMinutes()
-    
+
     const applicableCharges = service.additionalCharges.filter((ac) => {
       const chargeStart = new Date(ac.startTime)
       const chargeEnd = new Date(ac.endTime)
-      
+
       const chargeStartMinutes = chargeStart.getUTCHours() * 60 + chargeStart.getUTCMinutes()
       const chargeEndMinutes = chargeEnd.getUTCHours() * 60 + chargeEnd.getUTCMinutes()
 
