@@ -67,7 +67,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
               <UserIcon className="size-6 text-gray-400" />
             )}
             <Link
-              href={`/experts/${slug}`}
+              href={`/portal/experts/${slug}`}
               className="absolute bottom-0 left-0 right-0 bg-black text-white text-xs font-medium py-1.5 text-center rounded-b-xl hover:opacity-90 transition"
             >
               VIEW PROFILE
