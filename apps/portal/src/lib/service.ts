@@ -19,7 +19,7 @@ export const SERVICE_MODE_CONFIG: Record<BookingLocation, { label: string; value
 
 export const IN_PERSON_LOCATIONS = [
   {
-    address: '804, Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018',
+    address: '804 (A), Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018',
     googleMapLink: 'https://maps.app.goo.gl/K3FgwML8LxX6ZyEm6',
   },
 ] as const

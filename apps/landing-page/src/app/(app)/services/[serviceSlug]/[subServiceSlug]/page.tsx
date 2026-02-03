@@ -46,7 +46,7 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
                     {/* TODO: Remove hardcoded contact details, handle via CMS */}
                     <div className="flex items-center space-x-2 min-w-0">
                       <LocationIcon className="w-5 h-5 text-primary shrink-0" />
-                      <span>804, Arcadia, South City II, Sector-49, Gurugram, HR 122018</span>
+                      <span>804 (A), Arcadia, South City II, Sector-49, Gurugram, HR 122018</span>
                     </div>
 
                     <div className="flex items-center space-x-2">

@@ -190,7 +190,7 @@ th {
       <div class="clinic-logo">${logoBase64 ? `<img src="${logoBase64}" alt="Clinic Logo"/>` : ''}</div>
       <div class="clinic-details">
         <div><strong>Positive Mind Care</strong></div>
-        <div>804, Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018</div>
+        <div>804 (A), Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018</div>
         <div>+91-8920530832</div>
       </div>
     </div>

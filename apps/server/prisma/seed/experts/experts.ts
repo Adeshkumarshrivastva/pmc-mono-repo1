@@ -102,7 +102,7 @@ export async function seedExperts(prisma: PrismaClient) {
           paymentMode: validatedExpert.availableModes.includes('IN_PERSON') ? 'OFFLINE' : 'ONLINE',
           inPersonLocation: validatedExpert.availableModes.includes('IN_PERSON')
             ? {
-                address: '804, Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018',
+                address: '804(A), Arcadia, South City II, Sector 49, Gurugram, Fatehpur, Haryana 122018',
                 googleMapLink: 'https://maps.app.goo.gl/K3FgwML8LxX6ZyEm6',
               }
             : null,
