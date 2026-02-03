@@ -12,7 +12,7 @@ type AcademySectionProps = {
 export default function AcademySection({ data }: AcademySectionProps) {
   return (
     <section className="w-full bg-primary text-accent">
-      <div className="max-w-7xl mx-auto py-14">
+      <div className="max-w-7xl mx-auto py-10 sm:px-4 px-8 lg:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="flex flex-col gap-6">
             <div className="rounded-xl overflow-hidden shadow-lg">
