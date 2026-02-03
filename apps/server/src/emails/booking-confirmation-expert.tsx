@@ -63,15 +63,13 @@ export default function BookingConfirmationForExpert({ booking, orderId }: Booki
                 </Column>
               </Row>
 
-              {(booking.patientEmail || booking.patient.user.email) && (
+              {booking.patient.user.phoneNumber && (
                 <Row className="mb-3">
                   <Column className="w-1/3">
-                    <Text className="text-sm text-gray-600 font-semibold m-0">Email:</Text>
+                    <Text className="text-sm text-gray-600 font-semibold m-0">Phone Number:</Text>
                   </Column>
                   <Column className="w-2/3">
-                    <Text className="text-sm text-gray-900 m-0">
-                      {booking.patientEmail || booking.patient.user.email}
-                    </Text>
+                    <Text className="text-sm text-gray-900 m-0">+{booking.patient.user.phoneNumber}</Text>
                   </Column>
                 </Row>
               )}
