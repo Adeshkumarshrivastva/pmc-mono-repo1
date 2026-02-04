@@ -1,4 +1,5 @@
 import Script from 'next/script'
+import { GoogleTagManager } from '@next/third-parties/google'
 import { Toaster } from '@/components/ui/sonner'
 import AppShell from './_components/app-shell'
 import Providers from './_components/providers'
@@ -21,6 +22,7 @@ export const metadata = {
 export default async function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
+      <GoogleTagManager gtmId="AW-11360558230" />
       <body>
         <OneSignalComponent />
         <Providers>
