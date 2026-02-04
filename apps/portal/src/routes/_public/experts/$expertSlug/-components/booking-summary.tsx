@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator'
 import { DEFAULT_TIMEZONE, formatDateTimeRange } from '@/lib/date'
 import dayjs from '@/lib/dayjs'
 import { SERVICE_MODE_CONFIG } from '@/lib/service'
+import { getFileUrl } from '@/lib/utils'
 
 type BookingSummaryProps = {
   mode: BookingMode
@@ -35,8 +36,12 @@ export default function BookingSummary({ mode, onBack, service }: BookingSummary
         <div className="space-y-2 px-6">
           <div className="text-xl font-semibold">{service.name}</div>
           <div className="flex items-center gap-3">
-            {service.expert.image ? (
-              <img src={service.expert.image} alt={service.expert.name} className="size-12 rounded-full" />
+            {service.expert.image || service.expert.file ? (
+              <img
+                src={service.expert.file ? getFileUrl(service.expert.file.fileName) : service.expert.image!}
+                alt={service.expert.name}
+                className="size-12 rounded-full"
+              />
             ) : (
               <div className="flex items-center justify-center w-12 h-12 bg-gray-200 rounded-full">
                 <UserIcon className="size-6 text-gray-400" />{' '}
