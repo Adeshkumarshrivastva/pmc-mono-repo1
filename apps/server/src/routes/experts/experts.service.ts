@@ -185,7 +185,7 @@ export async function getExpertServiceFromSlug(c: C, expertSlug: string, service
   try {
     const expert = await prisma.expert.findFirst({
       where: { slug: expertSlug, isDeleted: false },
-      select: { id: true },
+      select: { id: true, file: true },
     })
 
     if (!expert) {
@@ -198,7 +198,7 @@ export async function getExpertServiceFromSlug(c: C, expertSlug: string, service
         expertId: expert.id,
         isDeleted: { not: true },
       },
-      include: { expert: true },
+      include: { expert: { include: { file: true } } },
     })
 
     if (!service) {
