@@ -454,7 +454,7 @@ export default function OurExperts() {
                     <Combobox
                       placeholder="All Types"
                       options={expertTypeOptions}
-                      value={filters.type || ''}
+                      value={filters.type || 'PSYCHIATRIST'}
                       onValueChange={(value) => {
                         updateFilter('type', (value as ExpertType) || undefined)
                       }}
@@ -728,10 +728,10 @@ function ExpertCardSkeleton() {
 }
 
 const expertTypeOptions = [
-  { value: '', label: 'All Types' },
   { value: 'PSYCHIATRIST', label: 'Psychiatrist' },
   { value: 'PSYCHOLOGIST', label: 'Counseling Psychologist' },
   { value: 'CLINICAL_PSYCHOLOGIST', label: 'Clinical Psychologist' },
+  { value: '', label: 'All Types' },
 ]
 
 const serviceModeOptions = [
