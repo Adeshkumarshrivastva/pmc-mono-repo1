@@ -59,22 +59,22 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
-      <HeroSection data={heroSetion} />
       <BookingSection data={bookingSection} />
+      <HeroSection data={heroSetion} />
       <DeepTmsSection data={deepTmsSection} />
-      <MapSection data={mapSection} />
-      <QuizSection data={quizSection} />
-      <ServicesSection data={servicesSection} services={services.docs} />
       <TreatmentSection data={treatmentSection} />
+      {/* <QuizSection data={quizSection} /> */}
+      <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
+      <AcademySection data={academySection} />
+      <ServicesSection data={servicesSection} services={services.docs} />
       <WhyChooseSection data={whyChooseSection} />
+      <MapSection data={mapSection} />
       {/* <ExpertsSection data={expertsSection} experts={experts} /> */}
       {/* <PackagesSection data={packagesSection} /> */}
       <ContactSection data={contactSection} />
       <TestimonialSection data={testimonialSection} />
       <AchievementSection data={achievementSection} />
       <PartnersSection data={partnersSection} />
-      <AcademySection data={academySection} />
-      <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
       <BlogsSection data={blogsSection} blogs={topBlogs.docs} />
     </div>
   )

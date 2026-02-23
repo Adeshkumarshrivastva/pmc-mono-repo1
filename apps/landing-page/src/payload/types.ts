@@ -1102,6 +1102,7 @@ export interface Home {
   bookingSection?: {
     title?: string | null
     description?: string | null
+    bookingSectionImage?: (string | null) | Media
   }
   deepTmsSection?: {
     title?: string | null
@@ -1885,6 +1886,7 @@ export interface HomeSelect<T extends boolean = true> {
     | {
         title?: T
         description?: T
+        bookingSectionImage?: T
       }
   deepTmsSection?:
     | T

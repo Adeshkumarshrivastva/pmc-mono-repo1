@@ -79,6 +79,12 @@ export const Home: GlobalConfig = {
           label: 'Description',
           type: 'textarea',
         },
+        {
+          name: 'bookingSectionImage',
+          label: 'Booking Section Image',
+          type: 'relationship',
+          relationTo: 'media',
+        },
       ],
     },
     {
