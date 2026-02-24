@@ -21,6 +21,7 @@ import PartnersSection from './_components/partners-section'
 import { fetchPublicExperts } from '@/lib/experts'
 import academyPage from './academy/page'
 import AcademySection from './academy/page'
+import MeterSection from './_components/meter-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -42,6 +43,7 @@ export default async function HomePage() {
     blogsSection,
     webinarsSection,
     academySection,
+    meterSection,
   } = await payload.findGlobal({
     slug: 'home',
   })
@@ -60,12 +62,14 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
       <BookingSection data={bookingSection} />
+      <MeterSection data={meterSection} />
       <HeroSection data={heroSetion} />
       <DeepTmsSection data={deepTmsSection} />
       <TreatmentSection data={treatmentSection} />
       {/* <QuizSection data={quizSection} /> */}
+      {/* Two new sections ffs */}
       <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
-      <AcademySection data={academySection} />
+      <AcademySection data={academySection} />  {/* changes in this section */}
       <ServicesSection data={servicesSection} services={services.docs} />
       <WhyChooseSection data={whyChooseSection} />
       <MapSection data={mapSection} />

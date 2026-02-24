@@ -1090,6 +1090,7 @@ export interface Home {
     heroSectionDescription?: string | null
     heroSectionImage?: (string | null) | Media
     heroSectionAction?: string | null
+    heroSectionHeadline1?: string | null
     heroSectionHeadline?: string | null
     heroSectionDetails?:
       | {
@@ -1103,6 +1104,32 @@ export interface Home {
     title?: string | null
     description?: string | null
     bookingSectionImage?: (string | null) | Media
+  }
+  meterSection?: {
+    title?: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    description?: string | null
+    meters?:
+      | {
+          title?: string | null
+          href?: string | null
+          meterImage?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
   }
   deepTmsSection?: {
     title?: string | null
@@ -1186,6 +1213,7 @@ export interface Home {
     title?: string | null
     action?: string | null
     image?: (string | null) | Media
+    imageCaption?: string | null
     featuresCards?:
       | {
           featureTitle?: string | null
@@ -1872,6 +1900,7 @@ export interface HomeSelect<T extends boolean = true> {
         heroSectionDescription?: T
         heroSectionImage?: T
         heroSectionAction?: T
+        heroSectionHeadline1?: T
         heroSectionHeadline?: T
         heroSectionDetails?:
           | T
@@ -1887,6 +1916,20 @@ export interface HomeSelect<T extends boolean = true> {
         title?: T
         description?: T
         bookingSectionImage?: T
+      }
+  meterSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        meters?:
+          | T
+          | {
+              title?: T
+              href?: T
+              meterImage?: T
+              id?: T
+            }
       }
   deepTmsSection?:
     | T
@@ -1936,6 +1979,7 @@ export interface HomeSelect<T extends boolean = true> {
         title?: T
         action?: T
         image?: T
+        imageCaption?: T
         featuresCards?:
           | T
           | {

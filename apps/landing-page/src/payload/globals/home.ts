@@ -41,6 +41,11 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
+          name: 'heroSectionHeadline1',
+          label: 'Hero Section Headline 1',
+          type: 'textarea',
+        },
+        {
           name: 'heroSectionHeadline',
           label: 'Hero Section Headline',
           type: 'textarea',
@@ -84,6 +89,46 @@ export const Home: GlobalConfig = {
           label: 'Booking Section Image',
           type: 'relationship',
           relationTo: 'media',
+        },
+      ],
+    },
+    {
+      name: 'meterSection',
+      label: 'Meter Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'richText',
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'textarea',
+        },
+        {
+          name: 'meters',
+          label: 'Meters',
+          type: 'array',
+          fields: [
+            {
+              name: 'title',
+              label: 'Title',
+              type: 'text',
+            },
+            {
+              name: 'href',
+              label: 'Link',
+              type: 'text',
+            },
+            {
+              name: 'meterImage',
+              label: 'Meter Image',
+              type: 'relationship',
+              relationTo: 'media',
+            },
+          ],
         },
       ],
     },
@@ -230,6 +275,11 @@ export const Home: GlobalConfig = {
           label: 'Image',
           type: 'upload',
           relationTo: 'media',
+        },
+        {
+          name: 'imageCaption',
+          label: 'Image Caption',
+          type: 'text',
         },
         {
           name: 'featuresCards',
