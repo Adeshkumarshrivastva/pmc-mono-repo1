@@ -28,7 +28,7 @@ export default function MapSection({ data }: MapSectionProps) {
                   </div>
                 ) : null}
 
-                <div>
+                {/* <div>
                   <AppointmentForm
                     trigger={
                       <Button variant="default" icon={<CallIcon />} className="w-full sm:w-auto">
@@ -36,7 +36,7 @@ export default function MapSection({ data }: MapSectionProps) {
                       </Button>
                     }
                   />
-                </div>
+                </div> */}
               </div>
             </div>
 

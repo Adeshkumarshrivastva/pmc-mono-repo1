@@ -51,8 +51,8 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
   const nextSlot = getNextAvailableSlot(availability as any)
 
   return (
-    <div className="bg-white rounded-3xl border border-border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-      <div className="p-4 pb-4 text-slate-900 flex flex-col">
+    <div className="bg-white rounded-3xl border border-border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col">
+      <div className="p-4 pb-4 text-slate-900 flex flex-col flex-1">
         <div className="flex items-start gap-4 mb-3">
           <div className="relative w-28 h-28 shrink-0">
             {expert.image ? (
@@ -68,12 +68,6 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
             ) : (
               <UserIcon className="size-6 text-gray-400" />
             )}
-            <div className="absolute border text-xs text-muted-foreground bg-white/50 backdrop-blur-sm top-0 right-0 px-1 mt-1 mr-1 rounded-md">
-              {[...new Set(expert.servicesProvided?.flatMap((service) => service.availableModes || []))].map((mode) => {
-                const option = serviceModeOptions.find((o) => o.value === mode)
-                return option ? <div key={mode}>{option.label}</div> : null
-              })}
-            </div>
             <Link
               href={`/portal/experts/${slug}`}
               className="absolute bottom-0 left-0 right-0 bg-black text-white text-xs font-medium py-1 text-center rounded-b-xl hover:opacity-90 transition"
@@ -92,7 +86,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
             </div>
 
             {isExpertOnline(expert.availability) ? (
-              <div className="flex w-fit items-center gap-1 bg-primary/10 px-2 py-1 rounded-full mb-1 mt-1">
+              <div className="flex w-fit items-center gap-1 bg-primary/10 px-2 py-1 rounded-full mb-1">
                 <div className="size-2 bg-primary rounded-full animate-pulse"></div>
                 <div className="text-xs font-medium text-primary">Online</div>
               </div>
@@ -112,7 +106,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
                 <div className="text-xs text-slate-500 mb-1">Expertise:</div>
 
                 <div className="group/marquee">
-                  <Marquee pauseOnHover className="[--duration:30s] [--gap:0.5rem]" repeat={2}>
+                  <Marquee pauseOnHover className="[--duration:30s] [--gap:0.5rem] p-1" repeat={2}>
                     {(typeof expertise === 'string'
                       ? (expertise as string).split(',').map((q: string) => q.trim())
                       : Array.isArray(expertise)
@@ -133,7 +127,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
           </div>
         </div>
 
-        <div className="mb-3">
+        <div className="mb-3 mt-auto">
           <div className="flex items-center justify-between">
             {filteredServices.length > 2 ? (
               <button
@@ -172,7 +166,7 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
           ) : null}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-border mt-auto">
+        <div className="flex items-center justify-between pt-4 border-t border-border">
           <div className="flex items-center gap-4">
             <div>
               <div className="text-xs text-slate-500 mb-1">Next available slot:</div>
@@ -384,14 +378,13 @@ export default function BookingSection({ data }: BookingSectionProps) {
         alt="Hero background"
         fill
         sizes="33vw"
-        className="object-cover xl:object-contain xl:object-bottom
-        rotate-[5.83deg] -translate-y-[141.7px] -translate-x-[33.69px] !w-[1847.88px] !h-[1104.44px]"
+        className="hidden sm:block object-cover"
         priority
       />
 
-      <div className="relative 2xl:container w-full mx-auto xl:px-8 2xl:px-24 z-10">
+      <div className="relative 2xl:container w-full mx-auto xl:px-10 z-10">
         <div className="flex flex-col md:flex-row justify-center items-center mb-8 gap-4">
-          <div className="max-w-3xl mt-8 mb-8">
+          <div className="max-w-3xl mt-10 mb-8">
             <h1 className="text-2xl md:text-4xl lg:text-6xl font-semibold text-accent text-center">
               {data?.title || ''}
             </h1>
@@ -400,7 +393,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
 
         {/* Bar */}
         <div className="w-full flex justify-center mb-8">
-          <div className="bg-white rounded-2xl shadow-lg flex items-center flex-wrap md:flex-nowrap px-4 py-2 gap-0 max-w-5xl w-full">
+          <div className="bg-white rounded-2xl shadow-lg flex items-center flex-wrap md:flex-nowrap px-4 py-3 gap-0 max-w-5xl w-full">
             {/* Search Input */}
             <div className="flex items-center flex-1 min-w-[200px]">
               {/* <Search
@@ -412,7 +405,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
               <input
                 type="text"
                 placeholder="Start typing to search experts..."
-                className="flex-1 h-10 px-3 bg-transparent focus-visible:outline-none placeholder:text-gray-400 text-sm"
+                className="flex-1 h-10 px-3 bg-transparent focus-visible:outline-none placeholder:text-gray-400 text-lg"
                 value={filters.search}
                 onChange={(e) => updateFilter('search', e.target.value)}
                 onFocus={() => setSearchFocused(true)}
@@ -428,8 +421,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
               )}
             </div>
 
-            {/* Divider */}
-            <div className="hidden lg:block w-px h-8 bg-gray-200 mx-1 shrink-0" />
+            <div className="hidden lg:block w-px h-8 bg-black mx-1 shrink-0" />
 
             {/* Filter Dropdowns */}
             <div className="hidden lg:flex items-center gap-0 flex-wrap">
@@ -440,8 +432,9 @@ export default function BookingSection({ data }: BookingSectionProps) {
                 onValueChange={(value) => {
                   updateFilter('type', (value as Expert['type']) || undefined)
                 }}
-                className="border-0 shadow-none bg-transparent text-xs text-muted-foreground rounded-full h-9 px-3"
+                className="border-0 shadow-none bg-transparent text-xs text-foreground rounded-full h-9 px-3"
               />
+              <div className="hidden lg:block w-px h-8 bg-black mx-1 shrink-0" />
               <Combobox
                 placeholder="Session Type"
                 options={serviceModeOptions}
@@ -449,8 +442,9 @@ export default function BookingSection({ data }: BookingSectionProps) {
                 onValueChange={(value) => {
                   updateFilter('serviceMode', (value as ServiceMode) || undefined)
                 }}
-                className="border-0 shadow-none bg-transparent text-xs text-muted-foreground rounded-full h-9 px-3"
+                className="border-0 shadow-none bg-transparent text-xs text-foreground rounded-full h-9 px-3"
               />
+              <div className="hidden lg:block w-px h-8 bg-black mx-1 shrink-0" />
               <Combobox
                 placeholder="Select Gender"
                 options={genderOptions}
@@ -459,8 +453,9 @@ export default function BookingSection({ data }: BookingSectionProps) {
                   const genderValue = Array.isArray(value) ? value[0] : value
                   updateFilter('gender', genderValue || undefined)
                 }}
-                className="border-0 shadow-none bg-transparent text-xs text-muted-foreground rounded-full h-9 px-3"
+                className="border-0 shadow-none bg-transparent text-xs text-foreground rounded-full h-9 px-3"
               />
+              <div className="hidden lg:block w-px h-8 bg-black mx-1 shrink-0" />
               <Combobox
                 placeholder="Select Rating"
                 options={sortByOptions}
@@ -468,8 +463,9 @@ export default function BookingSection({ data }: BookingSectionProps) {
                 onValueChange={(value) => {
                   updateFilter('sortBy', value as SortBy)
                 }}
-                className="border-0 shadow-none bg-transparent text-xs text-muted-foreground rounded-full h-9 px-3"
+                className="border-0 shadow-none bg-transparent text-xs text-foreground rounded-full h-9 px-3"
               />
+              <div className="hidden lg:block w-px h-8 bg-black mx-1 shrink-0" />
               <Combobox
                 placeholder="Select Ascending"
                 options={sortOrderOptions}
@@ -477,7 +473,7 @@ export default function BookingSection({ data }: BookingSectionProps) {
                 onValueChange={(value) => {
                   updateFilter('sortOrder', value as 'asc' | 'desc')
                 }}
-                className="border-0 shadow-none bg-transparent text-xs text-muted-foreground rounded-full h-9 px-3"
+                className="border-0 shadow-none bg-transparent text-xs text-foreground rounded-full h-9 px-3"
               />
             </div>
           </div>
