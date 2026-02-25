@@ -328,6 +328,44 @@ export const Home: GlobalConfig = {
         },
       ],
     },
+    {
+      name: 'cardSection',
+      label: 'Card Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'subTitle',
+          label: 'Sub Title',
+          type: 'text',
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'textarea',
+        },
+        {
+          name: 'cardHeading',
+          label: 'Card Heading',
+          type: 'text',
+        },
+        {
+          name: 'cardSubHeading',
+          label: 'Card Sub Heading',
+          type: 'text',
+        },
+        {
+          name: 'cardImage',
+          label: 'Card Image',
+          type: 'relationship',
+          relationTo: 'media',
+        },
+      ],
+    },
     webinarsSection,
     {
       name: 'academySection',

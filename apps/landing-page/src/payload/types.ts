@@ -1212,6 +1212,14 @@ export interface Home {
         }[]
       | null
   }
+  cardSection?: {
+    title?: string | null
+    subTitle?: string | null
+    description?: string | null
+    cardHeading?: string | null
+    cardSubHeading?: string | null
+    cardImage?: (string | null) | Media
+  }
   webinarsSection?: {
     title?: string | null
     description?: string | null
@@ -2011,6 +2019,16 @@ export interface HomeSelect<T extends boolean = true> {
               description?: T
               id?: T
             }
+      }
+  cardSection?:
+    | T
+    | {
+        title?: T
+        subTitle?: T
+        description?: T
+        cardHeading?: T
+        cardSubHeading?: T
+        cardImage?: T
       }
   webinarsSection?:
     | T

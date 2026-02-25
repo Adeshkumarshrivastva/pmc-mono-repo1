@@ -7,6 +7,7 @@ import HeroSection from './_components/hero-section'
 import DeepTmsSection from './_components/deep-tms-section'
 import TreatmentSection from './_components/treatment-section'
 import WellnessSection from './_components/wellness-section'
+import CardSection from './_components/card-section'
 import WebinarsSection from './_components/webinars-section'
 import AcademySection from './academy/page'
 import ServicesSection from './_components/services-section'
@@ -31,6 +32,7 @@ export default async function HomePage() {
     deepTmsSection,
     treatmentSection,
     wellnessSection,
+    cardSection,
     webinarsSection,
     academySection,
     servicesSection,
@@ -66,6 +68,7 @@ export default async function HomePage() {
       <DeepTmsSection data={deepTmsSection} />
       <TreatmentSection data={treatmentSection} />
       <WellnessSection data={wellnessSection} />
+      <CardSection data={cardSection} />
       {/* <PackagesSection data={packagesSection} /> */}
       <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
       <AcademySection data={academySection} />
