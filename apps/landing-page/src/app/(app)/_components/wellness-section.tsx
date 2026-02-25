@@ -24,7 +24,7 @@ export default function WellnessSection({ data }: WellnessSectionProps) {
             <div className="flex flex-wrap justify-center gap-6 mt-12 w-full">
               {data?.topRow?.map((card) => {
                 return (
-                  <div key={card.id} className="bg-accent px-6 py-8 rounded-lg w-full md:w-[calc(33.333%-1rem)]">
+                  <div key={card.id} className="bg-accent px-6 py-8 rounded-lg w-full lg:w-[calc(33.333%-1rem)]">
                     {card.icon && (
                       <Image
                         src={getURLFromMedia(card.icon)}
@@ -45,7 +45,7 @@ export default function WellnessSection({ data }: WellnessSectionProps) {
             <div className="flex flex-wrap justify-center gap-6 mt-6 w-full">
               {data?.bottomRow?.map((card) => {
                 return (
-                  <div key={card.id} className="bg-accent px-6 py-8 rounded-lg w-full md:w-[calc(33.333%-1rem)]">
+                  <div key={card.id} className="bg-accent px-6 py-8 rounded-lg w-full lg:w-[calc(33.333%-1rem)]">
                     {card.icon && (
                       <Image
                         src={getURLFromMedia(card.icon)}

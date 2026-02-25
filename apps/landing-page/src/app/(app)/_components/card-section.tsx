@@ -37,8 +37,8 @@ export default function CardSection({ data }: CardSectionProps) {
                 <Image
                   src={getURLFromMedia(data.cardImage ?? '')}
                   alt="Card Image"
-                  width={500}
-                  height={500}
+                  width={900}
+                  height={305}
                   className="w-full h-full object-contain"
                 />
               </div>
