@@ -366,6 +366,57 @@ export const Home: GlobalConfig = {
         },
       ],
     },
+    {
+      name: 'packagesSection',
+      label: 'Packages Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Section Title',
+          type: 'text',
+        },
+        {
+          name: 'subTitle',
+          label: 'Sub Title',
+          type: 'text',
+        },
+        {
+          name: 'availablePackages',
+          label: 'Available Packages',
+          type: 'array',
+          fields: [
+            {
+              name: 'name',
+              label: 'Package Name',
+              type: 'text',
+            },
+            {
+              name: 'price',
+              label: 'Package Pricing',
+              type: 'text',
+            },
+            {
+              name: 'features',
+              label: 'Package Features',
+              type: 'array',
+              fields: [
+                {
+                  name: 'title',
+                  label: 'Feature Title',
+                  type: 'text',
+                },
+              ],
+            },
+            {
+              name: 'action',
+              label: 'Package Action Button Text',
+              type: 'text',
+            },
+          ],
+        },
+      ],
+    },
     webinarsSection,
     {
       name: 'academySection',
@@ -590,66 +641,6 @@ export const Home: GlobalConfig = {
           type: 'relationship',
           hasMany: true,
           maxRows: 3,
-        },
-      ],
-    },
-    {
-      name: 'packagesSection',
-      label: 'Packages Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Section Title',
-          type: 'text',
-        },
-        {
-          name: 'availablePackages',
-          label: 'Available Packages',
-          type: 'array',
-          fields: [
-            {
-              name: 'name',
-              label: 'Package Name',
-              type: 'text',
-            },
-            {
-              name: 'price',
-              label: 'Package Pricing',
-              type: 'group',
-              fields: [
-                { name: 'price', label: 'Price', type: 'text' },
-                { name: 'unitText', label: 'Unit Text', type: 'text' },
-              ],
-            },
-            {
-              name: 'description',
-              label: 'Package Description',
-              type: 'textarea',
-            },
-            {
-              name: 'featureHeadline',
-              label: 'Package Features Headline',
-              type: 'text',
-            },
-            {
-              name: 'features',
-              label: 'Package Features',
-              type: 'array',
-              fields: [
-                {
-                  name: 'title',
-                  label: 'Feature Title',
-                  type: 'text',
-                },
-              ],
-            },
-            {
-              name: 'action',
-              label: 'Package Action Button Text',
-              type: 'text',
-            },
-          ],
         },
       ],
     },

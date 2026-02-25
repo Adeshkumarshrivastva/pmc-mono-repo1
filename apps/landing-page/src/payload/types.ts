@@ -1220,6 +1220,24 @@ export interface Home {
     cardSubHeading?: string | null
     cardImage?: (string | null) | Media
   }
+  packagesSection?: {
+    title?: string | null
+    subTitle?: string | null
+    availablePackages?:
+      | {
+          name?: string | null
+          price?: string | null
+          features?:
+            | {
+                title?: string | null
+                id?: string | null
+              }[]
+            | null
+          action?: string | null
+          id?: string | null
+        }[]
+      | null
+  }
   webinarsSection?: {
     title?: string | null
     description?: string | null
@@ -1352,28 +1370,6 @@ export interface Home {
     title?: string | null
     action?: string | null
     featuredBlogs?: (string | Blog)[] | null
-  }
-  packagesSection?: {
-    title?: string | null
-    availablePackages?:
-      | {
-          name?: string | null
-          price?: {
-            price?: string | null
-            unitText?: string | null
-          }
-          description?: string | null
-          featureHeadline?: string | null
-          features?:
-            | {
-                title?: string | null
-                id?: string | null
-              }[]
-            | null
-          action?: string | null
-          id?: string | null
-        }[]
-      | null
   }
   expertsSection?: {
     title?: string | null
@@ -2030,6 +2026,26 @@ export interface HomeSelect<T extends boolean = true> {
         cardSubHeading?: T
         cardImage?: T
       }
+  packagesSection?:
+    | T
+    | {
+        title?: T
+        subTitle?: T
+        availablePackages?:
+          | T
+          | {
+              name?: T
+              price?: T
+              features?:
+                | T
+                | {
+                    title?: T
+                    id?: T
+                  }
+              action?: T
+              id?: T
+            }
+      }
   webinarsSection?:
     | T
     | {
@@ -2174,32 +2190,6 @@ export interface HomeSelect<T extends boolean = true> {
         title?: T
         action?: T
         featuredBlogs?: T
-      }
-  packagesSection?:
-    | T
-    | {
-        title?: T
-        availablePackages?:
-          | T
-          | {
-              name?: T
-              price?:
-                | T
-                | {
-                    price?: T
-                    unitText?: T
-                  }
-              description?: T
-              featureHeadline?: T
-              features?:
-                | T
-                | {
-                    title?: T
-                    id?: T
-                  }
-              action?: T
-              id?: T
-            }
       }
   expertsSection?:
     | T

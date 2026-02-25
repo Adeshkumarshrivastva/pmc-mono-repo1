@@ -8,6 +8,7 @@ import DeepTmsSection from './_components/deep-tms-section'
 import TreatmentSection from './_components/treatment-section'
 import WellnessSection from './_components/wellness-section'
 import CardSection from './_components/card-section'
+import PackagesSection from './_components/packages-section'
 import WebinarsSection from './_components/webinars-section'
 import AcademySection from './academy/page'
 import ServicesSection from './_components/services-section'
@@ -21,7 +22,6 @@ import BlogsSection from './_components/blogs-section'
 import ExpertsSection from './_components/experts-section'
 import QuizSection from './_components/quiz-section'
 import FAQSection from './_components/faq-section'
-import PackagesSection from './_components/packages-section'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -33,6 +33,7 @@ export default async function HomePage() {
     treatmentSection,
     wellnessSection,
     cardSection,
+    packagesSection,
     webinarsSection,
     academySection,
     servicesSection,
@@ -43,7 +44,6 @@ export default async function HomePage() {
     achievementSection,
     partnersSection,
     blogsSection,
-    packagesSection,
     expertsSection,
     quizSection,
     faqSection,
@@ -69,7 +69,7 @@ export default async function HomePage() {
       <TreatmentSection data={treatmentSection} />
       <WellnessSection data={wellnessSection} />
       <CardSection data={cardSection} />
-      {/* <PackagesSection data={packagesSection} /> */}
+      <PackagesSection data={packagesSection} />
       <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
       <AcademySection data={academySection} />
       <ServicesSection data={servicesSection} services={services.docs} />
