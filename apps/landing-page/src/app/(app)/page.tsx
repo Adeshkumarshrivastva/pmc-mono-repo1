@@ -69,7 +69,7 @@ export default async function HomePage() {
       {/* <QuizSection data={quizSection} /> */}
       {/* Two new sections ffs */}
       <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
-      <AcademySection data={academySection} />  {/* changes in this section */}
+      <AcademySection data={academySection} />
       <ServicesSection data={servicesSection} services={services.docs} />
       <WhyChooseSection data={whyChooseSection} />
       <MapSection data={mapSection} />

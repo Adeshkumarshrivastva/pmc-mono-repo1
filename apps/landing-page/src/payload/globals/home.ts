@@ -522,7 +522,6 @@ export const Home: GlobalConfig = {
               name: 'stats',
               label: 'stats',
               type: 'array',
-              maxRows: 2,
               fields: [
                 {
                   name: 'number',

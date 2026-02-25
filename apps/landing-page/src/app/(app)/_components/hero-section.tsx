@@ -45,10 +45,10 @@ export default function HeroSection({ data }: HeroSectionProps) {
 
             <div className="flex-shrink-0 w-full xl:w-72 hidden xl:block ">
               <div className="space-y-4 p-6 bg-accent rounded-xl">
-                <p className="hidden xl:block sm:text-lg text-primary">
+                <div className="hidden xl:block sm:text-lg text-primary">
                   <p className="font-semibold">{data?.heroSectionHeadline1}</p>
                   {data?.heroSectionHeadline}
-                </p>
+                </div>
 
                 {data?.heroSectionDetails && data.heroSectionDetails.length > 0 ? (
                   <div className="space-y-4">
