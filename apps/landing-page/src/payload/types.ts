@@ -1223,6 +1223,13 @@ export interface Home {
   packagesSection?: {
     title?: string | null
     subTitle?: string | null
+    button?:
+      | {
+          title?: string | null
+          icon?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
     availablePackages?:
       | {
           name?: string | null
@@ -2031,6 +2038,13 @@ export interface HomeSelect<T extends boolean = true> {
     | {
         title?: T
         subTitle?: T
+        button?:
+          | T
+          | {
+              title?: T
+              icon?: T
+              id?: T
+            }
         availablePackages?:
           | T
           | {

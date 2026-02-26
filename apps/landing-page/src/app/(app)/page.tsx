@@ -44,9 +44,9 @@ export default async function HomePage() {
     achievementSection,
     partnersSection,
     blogsSection,
-    expertsSection,
-    quizSection,
-    faqSection,
+    // expertsSection,
+    // quizSection,
+    // faqSection,
   } = await payload.findGlobal({
     slug: 'home',
   })

@@ -382,6 +382,25 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
+          name: 'button',
+          label: 'Button',
+          maxRows: 2,
+          type: 'array',
+          fields: [
+            {
+              name: 'title',
+              label: 'Button Title',
+              type: 'text',
+            },
+            {
+              name: 'icon',
+              label: 'Icon',
+              type: 'upload',
+              relationTo: 'media',
+            },
+          ],
+        },
+        {
           name: 'availablePackages',
           label: 'Available Packages',
           type: 'array',

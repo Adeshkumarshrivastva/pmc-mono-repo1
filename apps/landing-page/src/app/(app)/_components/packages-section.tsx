@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button'
-import { HeartPulse, HandCoins } from 'lucide-react'
 import { ChatIcon, CheckIcon } from '@/components/ui/icons'
 import { cn } from '@/lib/utils'
 import type { Home } from '@/payload/types'
+import Image from 'next/image'
+import { getURLFromMedia } from '@/payload/utils'
 
 type PackagesSectionProps = {
   data: Home['packagesSection']
@@ -20,20 +21,18 @@ export default function PackagesSection({ data }: PackagesSectionProps) {
             </div>
 
             <div className="gap-5 flex lg:flex-row flex-col">
-              <Button
-                variant="outline"
-                className="gap-1 truncate text-primary border-primary hover:bg-card hover:text-accent"
-                icon={<HeartPulse className="size-5" />}
-              >
-                CGHS / AYUSHMAN BHARAT
-              </Button>
-              <Button
-                variant="outline"
-                className="gap-1 truncate text-primary border-primary hover:bg-card hover:text-accent"
-                icon={<HandCoins className="size-5" />}
-              >
-                APPLY THROUGH CSR
-              </Button>
+              {data?.button?.map((btn, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  className="truncate text-primary border-primary hover:bg-card hover:text-accent"
+                >
+                  <span className="flex items-center gap-3">
+                    {btn?.icon && <Image src={getURLFromMedia(btn?.icon)} alt="" width={21} height={21} />}
+                    {btn?.title?.toUpperCase()}
+                  </span>
+                </Button>
+              ))}
             </div>
           </div>
 
