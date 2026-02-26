@@ -8,12 +8,74 @@ import { achievementSection } from '../fields/achievement-section'
 import { quizSection } from '../fields/quiz-section'
 import { mapSection } from '../fields/map-section'
 import { webinarsSection } from '../fields/webinars-section'
-import AcademySection from '@/app/(app)/academy/page'
 
 export const Home: GlobalConfig = {
   slug: 'home',
   label: 'Home',
   fields: [
+    {
+      name: 'bookingSection',
+      label: 'Booking Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'textarea',
+        },
+        {
+          name: 'bookingSectionImage',
+          label: 'Booking Section Image',
+          type: 'relationship',
+          relationTo: 'media',
+        },
+      ],
+    },
+    {
+      name: 'meterSection',
+      label: 'Meter Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'richText',
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'textarea',
+        },
+        {
+          name: 'meters',
+          label: 'Meters',
+          type: 'array',
+          fields: [
+            {
+              name: 'title',
+              label: 'Title',
+              type: 'text',
+            },
+            {
+              name: 'href',
+              label: 'Link',
+              type: 'text',
+            },
+            {
+              name: 'meterImage',
+              label: 'Meter Image',
+              type: 'relationship',
+              relationTo: 'media',
+            },
+          ],
+        },
+      ],
+    },
     {
       name: 'heroSetion',
       label: 'Hero Setion',
@@ -41,6 +103,11 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
+          name: 'heroSectionHeadline1',
+          label: 'Hero Section Headline 1',
+          type: 'textarea',
+        },
+        {
           name: 'heroSectionHeadline',
           label: 'Hero Section Headline',
           type: 'textarea',
@@ -61,23 +128,6 @@ export const Home: GlobalConfig = {
               type: 'text',
             },
           ],
-        },
-      ],
-    },
-    {
-      name: 'bookingSection',
-      label: 'Booking Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-        },
-        {
-          name: 'description',
-          label: 'Description',
-          type: 'textarea',
         },
       ],
     },
@@ -142,7 +192,6 @@ export const Home: GlobalConfig = {
         },
       ],
     },
-    mapSection,
     {
       name: 'treatmentSection',
       label: 'Treatment Section',
@@ -205,8 +254,8 @@ export const Home: GlobalConfig = {
       ],
     },
     {
-      name: 'whyChooseSection',
-      label: 'Why Choose Section',
+      name: 'wellnessSection',
+      label: 'Wellness Services Section',
       type: 'group',
       fields: [
         {
@@ -215,38 +264,105 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'action',
-          label: 'Action',
+          name: 'subTitle',
+          label: 'Sub Title',
           type: 'text',
         },
         {
-          name: 'image',
-          label: 'Image',
-          type: 'upload',
-          relationTo: 'media',
-        },
-        {
-          name: 'featuresCards',
-          label: 'Features Cards',
+          name: 'topRow',
+          label: 'Top Row Cards',
           type: 'array',
+          maxRows: 3,
           fields: [
             {
-              name: 'featureTitle',
-              label: 'Feature Title',
-              type: 'text',
-            },
-            {
-              name: 'featureDescription',
-              label: 'Feature Description',
-              type: 'textarea',
-            },
-            {
-              name: 'featureIcon',
-              label: 'Feature Icon',
+              name: 'icon',
+              label: 'Icon',
               type: 'upload',
               relationTo: 'media',
             },
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'subHeading',
+              label: 'Sub Heading',
+              type: 'text',
+            },
+            {
+              name: 'description',
+              label: 'Description',
+              type: 'text',
+            },
           ],
+        },
+        {
+          name: 'bottomRow',
+          label: 'Bottom Row Cards',
+          type: 'array',
+          maxRows: 3,
+          fields: [
+            {
+              name: 'icon',
+              label: 'Icon',
+              type: 'upload',
+              relationTo: 'media',
+            },
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'subHeading',
+              label: 'Sub Heading',
+              type: 'text',
+            },
+            {
+              name: 'description',
+              label: 'Description',
+              type: 'text',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'cardSection',
+      label: 'Card Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'subTitle',
+          label: 'Sub Title',
+          type: 'text',
+        },
+        {
+          name: 'description',
+          label: 'Description',
+          type: 'textarea',
+        },
+        {
+          name: 'cardHeading',
+          label: 'Card Heading',
+          type: 'text',
+        },
+        {
+          name: 'cardSubHeading',
+          label: 'Card Sub Heading',
+          type: 'text',
+        },
+        {
+          name: 'cardImage',
+          label: 'Card Image',
+          type: 'relationship',
+          relationTo: 'media',
         },
       ],
     },
@@ -261,6 +377,35 @@ export const Home: GlobalConfig = {
           type: 'text',
         },
         {
+          name: 'subTitle',
+          label: 'Sub Title',
+          type: 'text',
+        },
+        {
+          name: 'button',
+          label: 'Button',
+          maxRows: 2,
+          type: 'array',
+          fields: [
+            {
+              name: 'title',
+              label: 'Button Title',
+              type: 'text',
+            },
+            {
+              name: 'icon',
+              label: 'Icon',
+              type: 'upload',
+              relationTo: 'media',
+            },
+            {
+              name: 'action',
+              label: 'Action',
+              type: 'text',
+            },
+          ],
+        },
+        {
           name: 'availablePackages',
           label: 'Available Packages',
           type: 'array',
@@ -273,20 +418,6 @@ export const Home: GlobalConfig = {
             {
               name: 'price',
               label: 'Package Pricing',
-              type: 'group',
-              fields: [
-                { name: 'price', label: 'Price', type: 'text' },
-                { name: 'unitText', label: 'Unit Text', type: 'text' },
-              ],
-            },
-            {
-              name: 'description',
-              label: 'Package Description',
-              type: 'textarea',
-            },
-            {
-              name: 'featureHeadline',
-              label: 'Package Features Headline',
               type: 'text',
             },
             {
@@ -307,80 +438,6 @@ export const Home: GlobalConfig = {
               type: 'text',
             },
           ],
-        },
-      ],
-    },
-    serivicesSection,
-    expertsSection,
-    contactSection,
-    quizSection,
-    testimonialSection,
-    faqSection,
-    achievementSection,
-    {
-      name: 'partnersSection',
-      label: 'Partners Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Section Title',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'universityPartners',
-          label: 'University Partners',
-          type: 'array',
-          fields: [
-            {
-              name: 'logo',
-              label: 'University Logo',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
-            },
-          ],
-        },
-        {
-          name: 'hospitalPartners',
-          label: 'Hospital Partners',
-          type: 'array',
-          fields: [
-            {
-              name: 'logo',
-              label: 'Hospital Logo',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
-            },
-          ],
-        },
-      ],
-    },
-
-    {
-      name: 'blogsSection',
-      label: 'Blogs Section',
-      type: 'group',
-      fields: [
-        {
-          name: 'title',
-          label: 'Section Title',
-          type: 'text',
-        },
-        {
-          name: 'action',
-          label: 'Action Button Text',
-          type: 'text',
-        },
-        {
-          name: 'featuredBlogs',
-          label: 'Featured Blog Posts',
-          relationTo: 'blog',
-          type: 'relationship',
-          hasMany: true,
-          maxRows: 3,
         },
       ],
     },
@@ -466,7 +523,6 @@ export const Home: GlobalConfig = {
               name: 'stats',
               label: 'stats',
               type: 'array',
-              maxRows: 2,
               fields: [
                 {
                   name: 'number',
@@ -490,5 +546,130 @@ export const Home: GlobalConfig = {
         },
       ],
     },
+    serivicesSection,
+    {
+      name: 'whyChooseSection',
+      label: 'Why Choose Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'action',
+          label: 'Action',
+          type: 'text',
+        },
+        {
+          name: 'image',
+          label: 'Image',
+          type: 'upload',
+          relationTo: 'media',
+        },
+        {
+          name: 'imageCaption',
+          label: 'Image Caption',
+          type: 'text',
+        },
+        {
+          name: 'featuresCards',
+          label: 'Features Cards',
+          type: 'array',
+          fields: [
+            {
+              name: 'featureTitle',
+              label: 'Feature Title',
+              type: 'text',
+            },
+            {
+              name: 'featureDescription',
+              label: 'Feature Description',
+              type: 'textarea',
+            },
+            {
+              name: 'featureIcon',
+              label: 'Feature Icon',
+              type: 'upload',
+              relationTo: 'media',
+            },
+          ],
+        },
+      ],
+    },
+    mapSection,
+    contactSection,
+    testimonialSection,
+    achievementSection,
+    {
+      name: 'partnersSection',
+      label: 'Partners Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Section Title',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'universityPartners',
+          label: 'University Partners',
+          type: 'array',
+          fields: [
+            {
+              name: 'logo',
+              label: 'University Logo',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+            },
+          ],
+        },
+        {
+          name: 'hospitalPartners',
+          label: 'Hospital Partners',
+          type: 'array',
+          fields: [
+            {
+              name: 'logo',
+              label: 'Hospital Logo',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'blogsSection',
+      label: 'Blogs Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Section Title',
+          type: 'text',
+        },
+        {
+          name: 'action',
+          label: 'Action Button Text',
+          type: 'text',
+        },
+        {
+          name: 'featuredBlogs',
+          label: 'Featured Blog Posts',
+          relationTo: 'blog',
+          type: 'relationship',
+          hasMany: true,
+          maxRows: 3,
+        },
+      ],
+    },
+    expertsSection,
+    quizSection,
+    faqSection,
   ],
 }

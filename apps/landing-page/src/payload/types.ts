@@ -1071,6 +1071,37 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Home {
   id: string
+  bookingSection?: {
+    title?: string | null
+    description?: string | null
+    bookingSectionImage?: (string | null) | Media
+  }
+  meterSection?: {
+    title?: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    description?: string | null
+    meters?:
+      | {
+          title?: string | null
+          href?: string | null
+          meterImage?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
+  }
   heroSetion?: {
     heroSectionTitle?: {
       root: {
@@ -1090,6 +1121,7 @@ export interface Home {
     heroSectionDescription?: string | null
     heroSectionImage?: (string | null) | Media
     heroSectionAction?: string | null
+    heroSectionHeadline1?: string | null
     heroSectionHeadline?: string | null
     heroSectionDetails?:
       | {
@@ -1098,10 +1130,6 @@ export interface Home {
           id?: string | null
         }[]
       | null
-  }
-  bookingSection?: {
-    title?: string | null
-    description?: string | null
   }
   deepTmsSection?: {
     title?: string | null
@@ -1131,25 +1159,6 @@ export interface Home {
           id?: string | null
         }[]
       | null
-  }
-  mapSection?: {
-    title?: string | null
-    description?: {
-      root: {
-        type: string
-        children: {
-          type: string
-          version: number
-          [k: string]: unknown
-        }[]
-        direction: ('ltr' | 'rtl') | null
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-        indent: number
-        version: number
-      }
-      [k: string]: unknown
-    } | null
-    image?: (string | null) | Media
   }
   treatmentSection?: {
     title?: string | null
@@ -1181,30 +1190,51 @@ export interface Home {
       | null
     videoUrl?: string | null
   }
-  whyChooseSection?: {
+  wellnessSection?: {
     title?: string | null
-    action?: string | null
-    image?: (string | null) | Media
-    featuresCards?:
+    subTitle?: string | null
+    topRow?:
       | {
-          featureTitle?: string | null
-          featureDescription?: string | null
-          featureIcon?: (string | null) | Media
+          icon?: (string | null) | Media
+          heading?: string | null
+          subHeading?: string | null
+          description?: string | null
+          id?: string | null
+        }[]
+      | null
+    bottomRow?:
+      | {
+          icon?: (string | null) | Media
+          heading?: string | null
+          subHeading?: string | null
+          description?: string | null
           id?: string | null
         }[]
       | null
   }
+  cardSection?: {
+    title?: string | null
+    subTitle?: string | null
+    description?: string | null
+    cardHeading?: string | null
+    cardSubHeading?: string | null
+    cardImage?: (string | null) | Media
+  }
   packagesSection?: {
     title?: string | null
+    subTitle?: string | null
+    button?:
+      | {
+          title?: string | null
+          icon?: (string | null) | Media
+          action?: string | null
+          id?: string | null
+        }[]
+      | null
     availablePackages?:
       | {
           name?: string | null
-          price?: {
-            price?: string | null
-            unitText?: string | null
-          }
-          description?: string | null
-          featureHeadline?: string | null
+          price?: string | null
           features?:
             | {
                 title?: string | null
@@ -1215,113 +1245,6 @@ export interface Home {
           id?: string | null
         }[]
       | null
-  }
-  servicesSection?: {
-    title?: string | null
-    action?: string | null
-    cardAction?: string | null
-  }
-  expertsSection?: {
-    title?: string | null
-    action?: string | null
-  }
-  contactSection?: {
-    contactSection?: {
-      title?: string | null
-      contacts?:
-        | {
-            phone?: string | null
-            id?: string | null
-          }[]
-        | null
-      location?: string | null
-      socialMediaLinks?:
-        | {
-            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null
-            url?: string | null
-            id?: string | null
-          }[]
-        | null
-    }
-    contactForm?: {
-      services?:
-        | {
-            service?: string | null
-            id?: string | null
-          }[]
-        | null
-    }
-  }
-  quizSection: {
-    quizTitle: {
-      root: {
-        type: string
-        children: {
-          type: string
-          version: number
-          [k: string]: unknown
-        }[]
-        direction: ('ltr' | 'rtl') | null
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
-        indent: number
-        version: number
-      }
-      [k: string]: unknown
-    }
-    quizDescription: string
-    quizFeatures?:
-      | {
-          text: string
-          id?: string | null
-        }[]
-      | null
-    quizButtonText?: string | null
-    quizImage?: (string | null) | Media
-  }
-  testimonialSection?: {
-    title?: string | null
-    testimonialSlides?: (string | Testimonial)[] | null
-  }
-  faqSection?: {
-    title?: string | null
-    faqQuestionsAndAnswer?:
-      | {
-          question?: string | null
-          answer?: string | null
-          id?: string | null
-        }[]
-      | null
-  }
-  achievementSection?: {
-    title?: string | null
-    achievements?:
-      | {
-          number?: string | null
-          label?: string | null
-          icon?: (string | null) | Media
-          id?: string | null
-        }[]
-      | null
-  }
-  partnersSection: {
-    title: string
-    universityPartners?:
-      | {
-          logo: string | Media
-          id?: string | null
-        }[]
-      | null
-    hospitalPartners?:
-      | {
-          logo: string | Media
-          id?: string | null
-        }[]
-      | null
-  }
-  blogsSection?: {
-    title?: string | null
-    action?: string | null
-    featuredBlogs?: (string | Blog)[] | null
   }
   webinarsSection?: {
     title?: string | null
@@ -1355,6 +1278,146 @@ export interface Home {
           }[]
         | null
     }
+  }
+  servicesSection?: {
+    title?: string | null
+    action?: string | null
+    cardAction?: string | null
+  }
+  whyChooseSection?: {
+    title?: string | null
+    action?: string | null
+    image?: (string | null) | Media
+    imageCaption?: string | null
+    featuresCards?:
+      | {
+          featureTitle?: string | null
+          featureDescription?: string | null
+          featureIcon?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
+  }
+  mapSection?: {
+    title?: string | null
+    description?: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+    image?: (string | null) | Media
+  }
+  contactSection?: {
+    contactSection?: {
+      title?: string | null
+      contacts?:
+        | {
+            phone?: string | null
+            id?: string | null
+          }[]
+        | null
+      location?: string | null
+      socialMediaLinks?:
+        | {
+            socialMediaPlatform?: ('facebook' | 'x' | 'linkedin' | 'instagram') | null
+            url?: string | null
+            id?: string | null
+          }[]
+        | null
+    }
+    contactForm?: {
+      services?:
+        | {
+            service?: string | null
+            id?: string | null
+          }[]
+        | null
+    }
+  }
+  testimonialSection?: {
+    title?: string | null
+    testimonialSlides?: (string | Testimonial)[] | null
+  }
+  achievementSection?: {
+    title?: string | null
+    achievements?:
+      | {
+          number?: string | null
+          label?: string | null
+          icon?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
+  }
+  partnersSection: {
+    title: string
+    universityPartners?:
+      | {
+          logo: string | Media
+          id?: string | null
+        }[]
+      | null
+    hospitalPartners?:
+      | {
+          logo: string | Media
+          id?: string | null
+        }[]
+      | null
+  }
+  blogsSection?: {
+    title?: string | null
+    action?: string | null
+    featuredBlogs?: (string | Blog)[] | null
+  }
+  expertsSection?: {
+    title?: string | null
+    action?: string | null
+  }
+  quizSection: {
+    quizTitle: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    }
+    quizDescription: string
+    quizFeatures?:
+      | {
+          text: string
+          id?: string | null
+        }[]
+      | null
+    quizButtonText?: string | null
+    quizImage?: (string | null) | Media
+  }
+  faqSection?: {
+    title?: string | null
+    faqQuestionsAndAnswer?:
+      | {
+          question?: string | null
+          answer?: string | null
+          id?: string | null
+        }[]
+      | null
   }
   updatedAt?: string | null
   createdAt?: string | null
@@ -1864,6 +1927,27 @@ export interface QuizPage {
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
+  bookingSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        bookingSectionImage?: T
+      }
+  meterSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        meters?:
+          | T
+          | {
+              title?: T
+              href?: T
+              meterImage?: T
+              id?: T
+            }
+      }
   heroSetion?:
     | T
     | {
@@ -1871,6 +1955,7 @@ export interface HomeSelect<T extends boolean = true> {
         heroSectionDescription?: T
         heroSectionImage?: T
         heroSectionAction?: T
+        heroSectionHeadline1?: T
         heroSectionHeadline?: T
         heroSectionDetails?:
           | T
@@ -1879,12 +1964,6 @@ export interface HomeSelect<T extends boolean = true> {
               value?: T
               id?: T
             }
-      }
-  bookingSection?:
-    | T
-    | {
-        title?: T
-        description?: T
       }
   deepTmsSection?:
     | T
@@ -1902,13 +1981,6 @@ export interface HomeSelect<T extends boolean = true> {
               stampImage?: T
               id?: T
             }
-      }
-  mapSection?:
-    | T
-    | {
-        title?: T
-        description?: T
-        image?: T
       }
   treatmentSection?:
     | T
@@ -1928,37 +2000,58 @@ export interface HomeSelect<T extends boolean = true> {
             }
         videoUrl?: T
       }
-  whyChooseSection?:
+  wellnessSection?:
     | T
     | {
         title?: T
-        action?: T
-        image?: T
-        featuresCards?:
+        subTitle?: T
+        topRow?:
           | T
           | {
-              featureTitle?: T
-              featureDescription?: T
-              featureIcon?: T
+              icon?: T
+              heading?: T
+              subHeading?: T
+              description?: T
               id?: T
             }
+        bottomRow?:
+          | T
+          | {
+              icon?: T
+              heading?: T
+              subHeading?: T
+              description?: T
+              id?: T
+            }
+      }
+  cardSection?:
+    | T
+    | {
+        title?: T
+        subTitle?: T
+        description?: T
+        cardHeading?: T
+        cardSubHeading?: T
+        cardImage?: T
       }
   packagesSection?:
     | T
     | {
         title?: T
+        subTitle?: T
+        button?:
+          | T
+          | {
+              title?: T
+              icon?: T
+              action?: T
+              id?: T
+            }
         availablePackages?:
           | T
           | {
               name?: T
-              price?:
-                | T
-                | {
-                    price?: T
-                    unitText?: T
-                  }
-              description?: T
-              featureHeadline?: T
+              price?: T
               features?:
                 | T
                 | {
@@ -1968,121 +2061,6 @@ export interface HomeSelect<T extends boolean = true> {
               action?: T
               id?: T
             }
-      }
-  servicesSection?:
-    | T
-    | {
-        title?: T
-        action?: T
-        cardAction?: T
-      }
-  expertsSection?:
-    | T
-    | {
-        title?: T
-        action?: T
-      }
-  contactSection?:
-    | T
-    | {
-        contactSection?:
-          | T
-          | {
-              title?: T
-              contacts?:
-                | T
-                | {
-                    phone?: T
-                    id?: T
-                  }
-              location?: T
-              socialMediaLinks?:
-                | T
-                | {
-                    socialMediaPlatform?: T
-                    url?: T
-                    id?: T
-                  }
-            }
-        contactForm?:
-          | T
-          | {
-              services?:
-                | T
-                | {
-                    service?: T
-                    id?: T
-                  }
-            }
-      }
-  quizSection?:
-    | T
-    | {
-        quizTitle?: T
-        quizDescription?: T
-        quizFeatures?:
-          | T
-          | {
-              text?: T
-              id?: T
-            }
-        quizButtonText?: T
-        quizImage?: T
-      }
-  testimonialSection?:
-    | T
-    | {
-        title?: T
-        testimonialSlides?: T
-      }
-  faqSection?:
-    | T
-    | {
-        title?: T
-        faqQuestionsAndAnswer?:
-          | T
-          | {
-              question?: T
-              answer?: T
-              id?: T
-            }
-      }
-  achievementSection?:
-    | T
-    | {
-        title?: T
-        achievements?:
-          | T
-          | {
-              number?: T
-              label?: T
-              icon?: T
-              id?: T
-            }
-      }
-  partnersSection?:
-    | T
-    | {
-        title?: T
-        universityPartners?:
-          | T
-          | {
-              logo?: T
-              id?: T
-            }
-        hospitalPartners?:
-          | T
-          | {
-              logo?: T
-              id?: T
-            }
-      }
-  blogsSection?:
-    | T
-    | {
-        title?: T
-        action?: T
-        featuredBlogs?: T
       }
   webinarsSection?:
     | T
@@ -2121,6 +2099,144 @@ export interface HomeSelect<T extends boolean = true> {
                     icon?: T
                     id?: T
                   }
+            }
+      }
+  servicesSection?:
+    | T
+    | {
+        title?: T
+        action?: T
+        cardAction?: T
+      }
+  whyChooseSection?:
+    | T
+    | {
+        title?: T
+        action?: T
+        image?: T
+        imageCaption?: T
+        featuresCards?:
+          | T
+          | {
+              featureTitle?: T
+              featureDescription?: T
+              featureIcon?: T
+              id?: T
+            }
+      }
+  mapSection?:
+    | T
+    | {
+        title?: T
+        description?: T
+        image?: T
+      }
+  contactSection?:
+    | T
+    | {
+        contactSection?:
+          | T
+          | {
+              title?: T
+              contacts?:
+                | T
+                | {
+                    phone?: T
+                    id?: T
+                  }
+              location?: T
+              socialMediaLinks?:
+                | T
+                | {
+                    socialMediaPlatform?: T
+                    url?: T
+                    id?: T
+                  }
+            }
+        contactForm?:
+          | T
+          | {
+              services?:
+                | T
+                | {
+                    service?: T
+                    id?: T
+                  }
+            }
+      }
+  testimonialSection?:
+    | T
+    | {
+        title?: T
+        testimonialSlides?: T
+      }
+  achievementSection?:
+    | T
+    | {
+        title?: T
+        achievements?:
+          | T
+          | {
+              number?: T
+              label?: T
+              icon?: T
+              id?: T
+            }
+      }
+  partnersSection?:
+    | T
+    | {
+        title?: T
+        universityPartners?:
+          | T
+          | {
+              logo?: T
+              id?: T
+            }
+        hospitalPartners?:
+          | T
+          | {
+              logo?: T
+              id?: T
+            }
+      }
+  blogsSection?:
+    | T
+    | {
+        title?: T
+        action?: T
+        featuredBlogs?: T
+      }
+  expertsSection?:
+    | T
+    | {
+        title?: T
+        action?: T
+      }
+  quizSection?:
+    | T
+    | {
+        quizTitle?: T
+        quizDescription?: T
+        quizFeatures?:
+          | T
+          | {
+              text?: T
+              id?: T
+            }
+        quizButtonText?: T
+        quizImage?: T
+      }
+  faqSection?:
+    | T
+    | {
+        title?: T
+        faqQuestionsAndAnswer?:
+          | T
+          | {
+              question?: T
+              answer?: T
+              id?: T
             }
       }
   updatedAt?: T
