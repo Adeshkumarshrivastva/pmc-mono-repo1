@@ -398,6 +398,11 @@ export const Home: GlobalConfig = {
               type: 'upload',
               relationTo: 'media',
             },
+            {
+              name: 'action',
+              label: 'Action',
+              type: 'text',
+            },
           ],
         },
         {

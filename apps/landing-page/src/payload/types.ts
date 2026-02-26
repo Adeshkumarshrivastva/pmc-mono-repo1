@@ -1227,6 +1227,7 @@ export interface Home {
       | {
           title?: string | null
           icon?: (string | null) | Media
+          action?: string | null
           id?: string | null
         }[]
       | null
@@ -2043,6 +2044,7 @@ export interface HomeSelect<T extends boolean = true> {
           | {
               title?: T
               icon?: T
+              action?: T
               id?: T
             }
         availablePackages?:
