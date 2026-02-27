@@ -28,6 +28,7 @@ import { Webinars } from './collections/webinars'
 import { Quiz } from './collections/quiz'
 import { QuizPage } from './globals/quiz'
 import { Internships } from './collections/internships'
+import { Footer } from './globals/footer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -53,7 +54,18 @@ export default buildConfig({
     Quiz,
     Internships,
   ],
-  globals: [Home, DeepTms, OurServices, ContactUs, AboutUs, PrivacyPolicy, TermsAndConditions, OurBlogs, QuizPage],
+  globals: [
+    Home,
+    DeepTms,
+    OurServices,
+    ContactUs,
+    AboutUs,
+    PrivacyPolicy,
+    TermsAndConditions,
+    OurBlogs,
+    QuizPage,
+    Footer,
+  ],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
   typescript: {
