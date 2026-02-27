@@ -1,6 +1,8 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import type { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import { ChevronRight } from 'lucide-react'
 
 type WellnessSectionProps = {
   data: Home['wellnessSection']
@@ -24,15 +26,22 @@ export default function WellnessSection({ data }: WellnessSectionProps) {
             <div className="flex flex-wrap justify-center gap-6 mt-12 w-full">
               {data?.topRow?.map((card) => {
                 return (
-                  <div key={card.id} className="bg-accent px-6 py-8 rounded-lg w-full lg:w-[calc(33.333%-1rem)]">
+                  <div key={card.id} className="bg-accent px-6 py-6 rounded-lg w-full lg:w-[calc(33.333%-1rem)]">
                     {card.icon && (
-                      <Image
-                        src={getURLFromMedia(card.icon)}
-                        alt=""
-                        width={36}
-                        height={36}
-                        className="object-contain text-primary"
-                      />
+                      <div className="flex justify-between">
+                        <Image
+                          src={getURLFromMedia(card.icon)}
+                          alt=""
+                          width={40}
+                          height={40}
+                          className="object-contain text-primary"
+                        />
+                        <Link href={'/contact-us'} className="text-primary items-center justify-center">
+                          <p className="px-1 py-2 underline underline-offset-1">
+                            KNOW MORE <ChevronRight className="inline size-4" />
+                          </p>
+                        </Link>
+                      </div>
                     )}
                     <p className="text-2xl font-semibold text-primary mt-4">{card.heading?.toUpperCase()}</p>
                     <p className="text-lg font-medium text-primary mt-2">{card.subHeading}</p>
@@ -45,15 +54,22 @@ export default function WellnessSection({ data }: WellnessSectionProps) {
             <div className="flex flex-wrap justify-center gap-6 mt-6 w-full">
               {data?.bottomRow?.map((card) => {
                 return (
-                  <div key={card.id} className="bg-accent px-6 py-8 rounded-lg w-full lg:w-[calc(33.333%-1rem)]">
+                  <div key={card.id} className="bg-accent px-6 py-6 rounded-lg w-full lg:w-[calc(33.333%-1rem)]">
                     {card.icon && (
-                      <Image
-                        src={getURLFromMedia(card.icon)}
-                        alt=""
-                        width={36}
-                        height={36}
-                        className="object-contain text-primary"
-                      />
+                      <div className="flex justify-between">
+                        <Image
+                          src={getURLFromMedia(card.icon)}
+                          alt=""
+                          width={40}
+                          height={40}
+                          className="object-contain text-primary"
+                        />
+                        <Link href={'/contact-us'} className="text-primary items-center justify-center">
+                          <p className="px-1 py-2 underline underline-offset-1">
+                            KNOW MORE <ChevronRight className="inline size-4" />
+                          </p>
+                        </Link>
+                      </div>
                     )}
                     <p className="text-2xl font-semibold text-primary mt-4">{card.heading?.toUpperCase()}</p>
                     <p className="text-lg font-medium text-primary mt-2">{card.subHeading}</p>
