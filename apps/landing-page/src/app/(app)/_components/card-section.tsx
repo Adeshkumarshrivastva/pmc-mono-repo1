@@ -32,15 +32,43 @@ export default function CardSection({ data }: CardSectionProps) {
             <div className="text-2xl sm:text-3xl font-bold text-primary">{data?.cardHeading?.toUpperCase()}</div>
             <div className="text-xl font-semibold text-primary mt-2">{data?.cardSubHeading}</div>
 
-            {data?.cardImage ? (
-              <div className="relative max-w-4xl w-full mt-4 sm:mt-8">
-                <Image
-                  src={getURLFromMedia(data.cardImage ?? '')}
-                  alt="Card Image"
-                  width={900}
-                  height={305}
-                  className="w-full h-full object-contain"
-                />
+            {data?.cards ? (
+              <div className="relative flex justify-center items-center w-full max-w-[1005px] mt-4 sm:mt-8 group px-1 sm:px-0 mx-auto">
+                {(() => {
+                  const cardsObj = data.cards[0]
+                  const cardList = cardsObj ? [cardsObj.card1, cardsObj.card2, cardsObj.card3].filter(Boolean) : []
+
+                  if (cardList.length === 0) {
+                    data.cards.forEach((c) => {
+                      if (c.card1) cardList.push(c.card1)
+                    })
+                  }
+
+                  return cardList.map((card, index) => {
+                    const isFirst = index === 0
+                    const zClass = index === 0 ? 'z-30' : index === 1 ? 'z-20' : 'z-10'
+
+                    return (
+                      <div
+                        key={index}
+                        className={`relative flex-shrink-0 transition-all duration-300 ease-in-out hover:-translate-y-2 hover:scale-105 hover:!z-50 group-hover:brightness-[0.8] hover:!brightness-110 cursor-pointer drop-shadow-2xl ${zClass}`}
+                        style={{
+                          width: '50.25%',
+                          marginLeft: isFirst ? '0' : '-25.37%',
+                        }}
+                      >
+                        <div className="relative w-full" style={{ paddingBottom: '60.59%' }}>
+                          <Image
+                            src={getURLFromMedia(card ?? '')}
+                            alt={`Card ${index + 1}`}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
+                    )
+                  })
+                })()}
               </div>
             ) : null}
           </div>

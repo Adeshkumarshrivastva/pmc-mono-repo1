@@ -1220,7 +1220,14 @@ export interface Home {
     description?: string | null
     cardHeading?: string | null
     cardSubHeading?: string | null
-    cardImage?: (string | null) | Media
+    cards?:
+      | {
+          card1?: (string | null) | Media
+          card2?: (string | null) | Media
+          card3?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
   }
   packagesSection?: {
     title?: string | null
@@ -2058,7 +2065,14 @@ export interface HomeSelect<T extends boolean = true> {
         description?: T
         cardHeading?: T
         cardSubHeading?: T
-        cardImage?: T
+        cards?:
+          | T
+          | {
+              card1?: T
+              card2?: T
+              card3?: T
+              id?: T
+            }
       }
   packagesSection?:
     | T
