@@ -7,6 +7,17 @@ type CardSectionProps = {
 }
 
 export default function CardSection({ data }: CardSectionProps) {
+  const cardsObj = data?.cards?.[0]
+  const cardList = cardsObj ? [cardsObj.card1, cardsObj.card2, cardsObj.card3].filter(Boolean) : []
+
+  if (cardList.length === 0) {
+    data?.cards?.forEach((c) => {
+      if (c.card1) cardList.push(c.card1)
+    })
+  }
+
+  const zClasses = ['z-30', 'z-20', 'z-10']
+
   return (
     <section className="w-full bg-accent">
       <div className="px-4 py-8 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-12 lg:py-14 xl:px-16 xl:py-18">
@@ -29,46 +40,30 @@ export default function CardSection({ data }: CardSectionProps) {
           </div>
 
           <div className="sm:pt-4 flex flex-col items-center justify-center">
-            <div className="text-2xl sm:text-3xl font-bold text-primary">{data?.cardHeading?.toUpperCase()}</div>
+            <div className="text-2xl sm:text-3xl font-bold text-primary uppercase">{data?.cardHeading}</div>
             <div className="text-xl font-semibold text-primary mt-2">{data?.cardSubHeading}</div>
 
-            {data?.cards ? (
+            {cardList.length > 0 ? (
               <div className="relative flex justify-center items-center w-full max-w-[1005px] mt-4 sm:mt-8 group px-1 sm:px-0 mx-auto">
-                {(() => {
-                  const cardsObj = data.cards[0]
-                  const cardList = cardsObj ? [cardsObj.card1, cardsObj.card2, cardsObj.card3].filter(Boolean) : []
-
-                  if (cardList.length === 0) {
-                    data.cards.forEach((c) => {
-                      if (c.card1) cardList.push(c.card1)
-                    })
-                  }
-
-                  return cardList.map((card, index) => {
-                    const isFirst = index === 0
-                    const zClass = index === 0 ? 'z-30' : index === 1 ? 'z-20' : 'z-10'
-
-                    return (
-                      <div
-                        key={index}
-                        className={`relative flex-shrink-0 transition-all duration-300 ease-in-out hover:-translate-y-2 hover:scale-105 hover:!z-50 group-hover:brightness-[0.8] hover:!brightness-110 cursor-pointer drop-shadow-2xl ${zClass}`}
-                        style={{
-                          width: '50.25%',
-                          marginLeft: isFirst ? '0' : '-25.37%',
-                        }}
-                      >
-                        <div className="relative w-full" style={{ paddingBottom: '60.59%' }}>
-                          <Image
-                            src={getURLFromMedia(card ?? '')}
-                            alt={`Card ${index + 1}`}
-                            fill
-                            className="object-contain"
-                          />
-                        </div>
-                      </div>
-                    )
-                  })
-                })()}
+                {cardList.map((card, index) => (
+                  <div
+                    key={index}
+                    className={`relative flex-shrink-0 transition-all duration-200 ease-in-out hover:-translate-y-2 hover:scale-105 hover:!z-50 group-hover:brightness-[0.8] hover:!brightness-110 cursor-pointer drop-shadow-2xl ${zClasses[index]}`}
+                    style={{
+                      width: '50.25%',
+                      marginLeft: index === 0 ? '0' : '-25.37%',
+                    }}
+                  >
+                    <div className="relative w-full" style={{ paddingBottom: '60.59%' }}>
+                      <Image
+                        src={getURLFromMedia(card ?? '')}
+                        alt=""
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : null}
           </div>

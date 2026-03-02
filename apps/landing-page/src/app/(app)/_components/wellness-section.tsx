@@ -43,7 +43,7 @@ export default function WellnessSection({ data }: WellnessSectionProps) {
                         </Link>
                       </div>
                     )}
-                    <p className="text-2xl font-semibold text-primary mt-4">{card.heading?.toUpperCase()}</p>
+                    <p className="text-2xl font-semibold text-primary mt-4 uppercase">{card.heading}</p>
                     <p className="text-lg font-medium text-primary mt-2">{card.subHeading}</p>
                     <p className="text-primary mt-2">{card.description}</p>
                   </div>
@@ -71,7 +71,7 @@ export default function WellnessSection({ data }: WellnessSectionProps) {
                         </Link>
                       </div>
                     )}
-                    <p className="text-2xl font-semibold text-primary mt-4">{card.heading?.toUpperCase()}</p>
+                    <p className="text-2xl font-semibold text-primary mt-4 uppercase">{card.heading}</p>
                     <p className="text-lg font-medium text-primary mt-2">{card.subHeading}</p>
                     <p className="text-primary mt-2">{card.description}</p>
                   </div>
