@@ -1,12 +1,15 @@
 import Link from 'next/link'
+import Image from 'next/image'
+import type { Footer } from '@/payload/types'
 import { Logo } from '@/components/ui/logo'
+import { getURLFromMedia } from '@/payload/utils'
 
-export default function Footer() {
+export default function Footer({ data }: { data: Footer }) {
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
-          <div className="md:col-span-6 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-15 gap-6">
+          <div className="md:col-span-3 space-y-4">
             <div className="flex">
               <Link href="/" className="flex items-center gap-2">
                 <Logo className="size-16" />
@@ -19,13 +22,22 @@ export default function Footer() {
             <div>
               <div className="font-medium">Address:</div>
               <div className="text-primary-foreground/50">
-                804 (A), Arcadia, South City II, Sector 49, <br /> Gurugram, Fatehpur, Haryana 122018
+                804 (A), Arcadia, South City II,
+                <br />
+                Sector 49, Gurugram,
+                <br />
+                Fatehpur, Haryana 122018
               </div>
             </div>
             <div>
               <div className="font-medium">Contact:</div>
               <div className="text-primary-foreground/50">089205 30832</div>
             </div>
+          </div>
+          <div className="md:col-span-4 space-y-4">
+            <Image src={getURLFromMedia(data.footer?.info?.image || '')} alt="" width={94} height={69} />
+            <div className="font-medium">{data.footer?.info?.title}</div>
+            <div className="text-primary-foreground/50">{data.footer?.info?.info}</div>
           </div>
           <div className="md:col-span-2 space-y-4">
             <h3 className="mb-4 text-lg font-medium uppercase">SITE MAP</h3>
@@ -69,9 +81,25 @@ export default function Footer() {
             </ul>
           </div>
           <div className="md:col-span-2 space-y-4">
-            <h3 className="mb-4 text-lg font-medium uppercase">FOLLOW US</h3>
+            <h3 className="mb-4 text-lg font-medium uppercase">OUR SERVICES</h3>
             <ul className="space-y-2">
-              {FOLLOW_ITEMS.map((item) => (
+              {LINKS_1.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="md:col-span-2">
+            <ul className="space-y-2 md:mt-11">
+              {LINKS_2.map((item) => (
                 <li key={item.id}>
                   <a
                     href={item.href}
@@ -88,12 +116,19 @@ export default function Footer() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
           {/* left column */}
-          <div className="text-primary-foreground/50 text-sm sm:justify-self-start text-center sm:text-left">
-            Copyright © {new Date().getFullYear()}
+          <div className="flex text-center items-center gap-5">
+            {data.footer?.social?.map((item) => (
+              <a key={item.id} href={item.url || ''} target="_blank" rel="noopener noreferrer">
+                <Image src={getURLFromMedia(item.icon || '')} alt="" width={30} height={30} />
+              </a>
+            ))}
           </div>
 
           {/* right column */}
           <div className="flex text-sm sm:justify-self-end justify-center space-x-6">
+            <p className="transition-colors text-primary-foreground/50 hover:text-primary-foreground">
+              Copyright © {new Date().getFullYear()}
+            </p>
             <a
               href="/terms-and-conditions"
               rel="noopener noreferrer"
@@ -134,10 +169,24 @@ const AWARENESS_ITEMS = [
   { id: 'internship', href: '/internship', label: 'Internship' },
 ]
 
-const FOLLOW_ITEMS = [
-  { id: 'facebook', href: 'https://www.facebook.com/positivemindcaree', label: 'Facebook' },
-  { id: 'youtube', href: 'https://www.youtube.com/@PositiveMindCare', label: 'Youtube' },
-  { id: 'instagram', href: 'https://www.instagram.com/positivemindcare', label: 'Instagram' },
-  { id: 'linkedin', href: 'https://www.linkedin.com/company/positive-mind-care', label: 'Linkedin' },
-  { id: 'twitter', href: 'https://twitter.com/PositivMindCare', label: 'Twitter' },
+const LINKS_1 = [
+  {
+    id: 'ocd',
+    href: '/services/brainsway-tms-system/obsessive-compulsive-and-related-disorders',
+    label: 'Obsessive Compulsive & Related Disorders',
+  },
+  { id: 'addiction', href: '/services/brainsway-tms-system/addiction', label: 'Addiction' },
+  { id: 'tinnitus', href: '/services/brainsway-tms-system/deep-tms-tinnitus', label: 'Tinnitus' },
+  { id: 'schizophrenia', href: '/services/brainsway-tms-system/deep-tms-schizophrenia', label: 'Schizophrenia' },
+]
+
+const LINKS_2 = [
+  {
+    id: 'anxiety',
+    href: '/services/brainsway-tms-system/anxiety-and-related-disorders',
+    label: 'Anxiety & Related Disorders',
+  },
+  { id: 'bipolar', href: '/services/brainsway-tms-system/bipolar-depression', label: 'Bipolar Depression' },
+  { id: 'smoking', href: '/services/brainsway-tms-system/dtms-smoking-cessation', label: 'Smoking Cessation' },
+  { id: 'mdd', href: '/services/brainsway-tms-system/major-depressive-disorder', label: 'Major depressive Disorder' },
 ]

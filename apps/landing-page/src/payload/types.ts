@@ -122,6 +122,7 @@ export interface Config {
     'terms-and-conditions': TermsAndCondition
     'our-blogs': OurBlog
     'quiz-page': QuizPage
+    footer: Footer
   }
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>
@@ -133,6 +134,7 @@ export interface Config {
     'terms-and-conditions': TermsAndConditionsSelect<false> | TermsAndConditionsSelect<true>
     'our-blogs': OurBlogsSelect<false> | OurBlogsSelect<true>
     'quiz-page': QuizPageSelect<false> | QuizPageSelect<true>
+    footer: FooterSelect<false> | FooterSelect<true>
   }
   locale: null
   user: User & {
@@ -1218,7 +1220,14 @@ export interface Home {
     description?: string | null
     cardHeading?: string | null
     cardSubHeading?: string | null
-    cardImage?: (string | null) | Media
+    cards?:
+      | {
+          card1?: (string | null) | Media
+          card2?: (string | null) | Media
+          card3?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
   }
   packagesSection?: {
     title?: string | null
@@ -1924,6 +1933,30 @@ export interface QuizPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: string
+  footer?: {
+    social?:
+      | {
+          name?: string | null
+          url?: string | null
+          icon?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
+    info?: {
+      image?: (string | null) | Media
+      title?: string | null
+      info?: string | null
+    }
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -2032,7 +2065,14 @@ export interface HomeSelect<T extends boolean = true> {
         description?: T
         cardHeading?: T
         cardSubHeading?: T
-        cardImage?: T
+        cards?:
+          | T
+          | {
+              card1?: T
+              card2?: T
+              card3?: T
+              id?: T
+            }
       }
   packagesSection?:
     | T
@@ -2612,6 +2652,34 @@ export interface QuizPageSelect<T extends boolean = true> {
   heading?: T
   subtitle1?: T
   subtitle2?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  footer?:
+    | T
+    | {
+        social?:
+          | T
+          | {
+              name?: T
+              url?: T
+              icon?: T
+              id?: T
+            }
+        info?:
+          | T
+          | {
+              image?: T
+              title?: T
+              info?: T
+            }
+      }
   updatedAt?: T
   createdAt?: T
   globalType?: T
