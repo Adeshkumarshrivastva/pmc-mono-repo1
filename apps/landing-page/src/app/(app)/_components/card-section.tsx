@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import type { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import { cn } from '@/lib/utils'
 
 type CardSectionProps = {
   data: Home['cardSection']
@@ -48,7 +49,7 @@ export default function CardSection({ data }: CardSectionProps) {
                 {cardList.map((card, index) => (
                   <div
                     key={index}
-                    className={`relative flex-shrink-0 transition-all duration-200 ease-in-out hover:-translate-y-2 hover:scale-105 hover:!z-50 group-hover:brightness-[0.8] hover:!brightness-110 cursor-pointer drop-shadow-2xl ${zClasses[index]}`}
+                    className={cn(`relative flex-shrink-0 transition-all duration-200 ease-in-out hover:-translate-y-2 hover:scale-105 hover:!z-50 group-hover:brightness-[0.8] hover:!brightness-110 cursor-pointer drop-shadow-lg`, zClasses[index])}
                     style={{
                       width: '50.25%',
                       marginLeft: index === 0 ? '0' : '-25.37%',
