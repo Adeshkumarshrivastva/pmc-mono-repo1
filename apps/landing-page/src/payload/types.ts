@@ -123,6 +123,7 @@ export interface Config {
     'our-blogs': OurBlog
     'quiz-page': QuizPage
     footer: Footer
+    academy: Academy
   }
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>
@@ -135,6 +136,7 @@ export interface Config {
     'our-blogs': OurBlogsSelect<false> | OurBlogsSelect<true>
     'quiz-page': QuizPageSelect<false> | QuizPageSelect<true>
     footer: FooterSelect<false> | FooterSelect<true>
+    academy: AcademySelect<false> | AcademySelect<true>
   }
   locale: null
   user: User & {
@@ -1957,6 +1959,30 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "academy".
+ */
+export interface Academy {
+  id: string
+  heroSection?: {
+    title?: string | null
+    subTitle?: string | null
+    description?: string | null
+    sectionImage?: (string | null) | Media
+    cards?:
+      | {
+          icon?: (string | null) | Media
+          text?: string | null
+          id?: string | null
+        }[]
+      | null
+    button?: string | null
+    buttonLink?: string | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -2679,6 +2705,32 @@ export interface FooterSelect<T extends boolean = true> {
               title?: T
               info?: T
             }
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "academy_select".
+ */
+export interface AcademySelect<T extends boolean = true> {
+  heroSection?:
+    | T
+    | {
+        title?: T
+        subTitle?: T
+        description?: T
+        sectionImage?: T
+        cards?:
+          | T
+          | {
+              icon?: T
+              text?: T
+              id?: T
+            }
+        button?: T
+        buttonLink?: T
       }
   updatedAt?: T
   createdAt?: T
