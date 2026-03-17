@@ -1965,7 +1965,7 @@ export interface Academy {
   id: string
   heroSection?: {
     title?: string | null
-    subTitle?: string | null
+    subtitle?: string | null
     description?: string | null
     sectionImage?: (string | null) | Media
     cards?:
@@ -1977,6 +1977,20 @@ export interface Academy {
       | null
     button?: string | null
     buttonLink?: string | null
+  }
+  whyChoose?: {
+    title?: string | null
+    subtitle?: string | null
+    subtitleAlt?: string | null
+    features?:
+      | {
+          title?: string | null
+          background?: ('primary' | 'accent') | null
+          description?: string | null
+          stampImage?: (string | null) | Media
+          id?: string | null
+        }[]
+      | null
   }
   updatedAt?: string | null
   createdAt?: string | null
@@ -2719,7 +2733,7 @@ export interface AcademySelect<T extends boolean = true> {
     | T
     | {
         title?: T
-        subTitle?: T
+        subtitle?: T
         description?: T
         sectionImage?: T
         cards?:
@@ -2731,6 +2745,22 @@ export interface AcademySelect<T extends boolean = true> {
             }
         button?: T
         buttonLink?: T
+      }
+  whyChoose?:
+    | T
+    | {
+        title?: T
+        subtitle?: T
+        subtitleAlt?: T
+        features?:
+          | T
+          | {
+              title?: T
+              background?: T
+              description?: T
+              stampImage?: T
+              id?: T
+            }
       }
   updatedAt?: T
   createdAt?: T

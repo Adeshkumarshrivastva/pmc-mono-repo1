@@ -15,7 +15,7 @@ export const Academy: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'subTitle',
+          name: 'subtitle',
           label: 'Sub Title',
           type: 'text',
         },
@@ -57,6 +57,61 @@ export const Academy: GlobalConfig = {
           name: 'buttonLink',
           label: 'Button Link',
           type: 'text',
+        },
+      ],
+    },
+    {
+      name: 'whyChoose',
+      label: 'Why Choose Us Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'subtitle',
+          label: 'Sub Title',
+          type: 'text',
+        },
+        {
+          name: 'subtitleAlt',
+          label: 'Sub Title Alt',
+          type: 'text',
+        },
+        {
+          name: 'features',
+          label: 'Features',
+          type: 'array',
+          fields: [
+            {
+              name: 'title',
+              label: 'Title',
+              type: 'text',
+            },
+            {
+              name: 'background',
+              label: 'Background',
+              type: 'select',
+              options: [
+                { label: 'Primary', value: 'primary' },
+                { label: 'Accent', value: 'accent' },
+              ],
+              defaultValue: 'primary',
+            },
+            {
+              name: 'description',
+              label: 'Description',
+              type: 'text',
+            },
+            {
+              name: 'stampImage',
+              label: 'Stamp Image',
+              type: 'relationship',
+              relationTo: 'media',
+            },
+          ],
         },
       ],
     },

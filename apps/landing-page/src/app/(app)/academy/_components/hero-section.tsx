@@ -29,7 +29,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
             <h1 className="text-center text-2xl font-semibold text-accent md:text-4xl lg:text-6xl">
               {data?.title || ''}
             </h1>
-            <h2 className="text-center text-lg text-accent md:text-xl lg:text-2xl">{data?.subTitle || ''}</h2>
+            <h2 className="text-center text-lg text-accent md:text-xl lg:text-2xl">{data?.subtitle || ''}</h2>
             <div className="text-center max-w-2xl lg:max-w-4xl mx-auto text-base text-accent lg:text-xl">
               {data?.description || ''}
             </div>
