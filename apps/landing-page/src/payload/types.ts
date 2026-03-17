@@ -1992,6 +1992,33 @@ export interface Academy {
         }[]
       | null
   }
+  servicesSection?: {
+    title?: string | null
+    subtitle?: string | null
+    cards?:
+      | {
+          icon?: (string | null) | Media
+          heading?: string | null
+          subHeading?: string | null
+          about?: {
+            root: {
+              type: string
+              children: {
+                type: string
+                version: number
+                [k: string]: unknown
+              }[]
+              direction: ('ltr' | 'rtl') | null
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+              indent: number
+              version: number
+            }
+            [k: string]: unknown
+          } | null
+          id?: string | null
+        }[]
+      | null
+  }
   updatedAt?: string | null
   createdAt?: string | null
 }
@@ -2759,6 +2786,21 @@ export interface AcademySelect<T extends boolean = true> {
               background?: T
               description?: T
               stampImage?: T
+              id?: T
+            }
+      }
+  servicesSection?:
+    | T
+    | {
+        title?: T
+        subtitle?: T
+        cards?:
+          | T
+          | {
+              icon?: T
+              heading?: T
+              subHeading?: T
+              about?: T
               id?: T
             }
       }

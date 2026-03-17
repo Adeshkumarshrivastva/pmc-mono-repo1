@@ -115,5 +115,50 @@ export const Academy: GlobalConfig = {
         },
       ],
     },
+    {
+      name: 'servicesSection',
+      label: 'Services Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'subtitle',
+          label: 'Sub Title',
+          type: 'text',
+        },
+        {
+          name: 'cards',
+          label: 'Cards',
+          type: 'array',
+          fields: [
+            {
+              name: 'icon',
+              label: 'Icon',
+              type: 'upload',
+              relationTo: 'media',
+            },
+            {
+              name: 'heading',
+              label: 'Heading',
+              type: 'text',
+            },
+            {
+              name: 'subHeading',
+              label: 'Sub Heading',
+              type: 'text',
+            },
+            {
+              name: 'about',
+              label: 'Description',
+              type: 'richText',
+            },
+          ],
+        },
+      ],
+    },
   ],
 }
