@@ -160,5 +160,39 @@ export const Academy: GlobalConfig = {
         },
       ],
     },
+    {
+      name: 'faqSection',
+      label: 'FAQ Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Title',
+          type: 'text',
+        },
+        {
+          name: 'subtitle',
+          label: 'Subtitle',
+          type: 'text',
+        },
+        {
+          name: 'qna',
+          label: 'FAQ Questions And Answer',
+          type: 'array',
+          fields: [
+            {
+              name: 'question',
+              label: 'Question',
+              type: 'text',
+            },
+            {
+              name: 'answer',
+              label: 'Answer',
+              type: 'text',
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

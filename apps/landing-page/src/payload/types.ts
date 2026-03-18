@@ -2019,6 +2019,17 @@ export interface Academy {
         }[]
       | null
   }
+  faqSection?: {
+    title?: string | null
+    subtitle?: string | null
+    qna?:
+      | {
+          question?: string | null
+          answer?: string | null
+          id?: string | null
+        }[]
+      | null
+  }
   updatedAt?: string | null
   createdAt?: string | null
 }
@@ -2801,6 +2812,19 @@ export interface AcademySelect<T extends boolean = true> {
               heading?: T
               subHeading?: T
               about?: T
+              id?: T
+            }
+      }
+  faqSection?:
+    | T
+    | {
+        title?: T
+        subtitle?: T
+        qna?:
+          | T
+          | {
+              question?: T
+              answer?: T
               id?: T
             }
       }

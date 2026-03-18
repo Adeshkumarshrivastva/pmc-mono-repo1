@@ -3,10 +3,11 @@ import { getPayloadClient } from '@/lib/payload'
 import HeroSection from './_components/hero-section'
 import WhyChooseSection from './_components/why-choose'
 import ServicesSection from './_components/services-section'
+import FAQSection from './_components/faq-section'
 
 export default async function Page() {
   const payload = await getPayloadClient()
-  const { heroSection, whyChoose, servicesSection } = await payload.findGlobal({
+  const { heroSection, whyChoose, servicesSection, faqSection } = await payload.findGlobal({
     slug: 'academy',
   })
 
@@ -15,6 +16,7 @@ export default async function Page() {
       <HeroSection data={heroSection} />
       <WhyChooseSection data={whyChoose} />
       <ServicesSection data={servicesSection} />
+      <FAQSection data={faqSection} />
     </div>
   )
 }
