@@ -2021,7 +2021,6 @@ export interface Academy {
   }
   faqSection?: {
     title?: string | null
-    subtitle?: string | null
     qna?:
       | {
           question?: string | null
@@ -2819,7 +2818,6 @@ export interface AcademySelect<T extends boolean = true> {
     | T
     | {
         title?: T
-        subtitle?: T
         qna?:
           | T
           | {

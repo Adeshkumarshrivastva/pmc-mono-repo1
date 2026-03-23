@@ -171,11 +171,6 @@ export const Academy: GlobalConfig = {
           type: 'text',
         },
         {
-          name: 'subtitle',
-          label: 'Subtitle',
-          type: 'text',
-        },
-        {
           name: 'qna',
           label: 'FAQ Questions And Answer',
           type: 'array',
