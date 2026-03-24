@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import { queryClient } from '@/lib/query-client'
+import { expertTypeOptions } from '@/lib/expert'
 import { getFileUrl } from '@/lib/utils'
 import PhoneInput from '@/components/ui/phone-input'
 
@@ -31,6 +32,10 @@ const createExpertSchema = z.object({
     'CLINICAL_PSYCHOLOGIST',
     'CONSULTANT_PHYSICIAN',
     'REHABILITATION_PSYCHOLOGIST',
+    'COUNSELLING_PSYCHOLOGIST',
+    'NEUROLOGIST',
+    'GENERAL_PHYSICIAN',
+    'OTHER',
   ]),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
@@ -227,11 +232,11 @@ function AddExpertPage() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="PSYCHOLOGIST">Psychologist</SelectItem>
-                            <SelectItem value="PSYCHIATRIST">Psychiatrist</SelectItem>
-                            <SelectItem value="CLINICAL_PSYCHOLOGIST">Clinical Psychologist</SelectItem>
-                            <SelectItem value="CONSULTANT_PHYSICIAN">Consultant Physician</SelectItem>
-                            <SelectItem value="REHABILITATION_PSYCHOLOGIST">Rehabilitation Psychologist</SelectItem>
+                            {expertTypeOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </FormControl>

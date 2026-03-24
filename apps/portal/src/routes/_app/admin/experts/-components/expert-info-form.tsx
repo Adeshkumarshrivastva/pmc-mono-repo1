@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
+import { expertTypeOptions } from '@/lib/expert'
 import { getFileUrl } from '@/lib/utils'
 import PhoneInput from '@/components/ui/phone-input'
 
@@ -19,6 +20,17 @@ const expertInfoSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   email: z.email('Valid email is required'),
   phoneNumber: z.string(),
+  type: z.enum([
+    'PSYCHOLOGIST',
+    'PSYCHIATRIST',
+    'CLINICAL_PSYCHOLOGIST',
+    'CONSULTANT_PHYSICIAN',
+    'REHABILITATION_PSYCHOLOGIST',
+    'COUNSELLING_PSYCHOLOGIST',
+    'NEUROLOGIST',
+    'GENERAL_PHYSICIAN',
+    'OTHER',
+  ]),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),
@@ -48,6 +60,7 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
       name: initialData?.name || '',
       email: initialData?.user?.email || '',
       phoneNumber: initialData?.user?.phoneNumber || '',
+      type: initialData?.type || 'PSYCHOLOGIST',
       qualifications: initialData?.qualifications || '',
       bio: initialData?.bio || '',
       gender: initialData?.gender || 'MALE',
@@ -95,6 +108,7 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
           name: values.name,
           email: values.email,
           phoneNumber: values.phoneNumber,
+          type: values.type,
           qualifications: values.qualifications,
           bio: values.bio,
           gender: values.gender,
@@ -191,27 +205,54 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
           />
         </div>
 
-        <FormField
-          name="gender"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Gender</FormLabel>
-              <FormControl>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="MALE">Male</SelectItem>
-                    <SelectItem value="FEMALE">Female</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            name="type"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Expert Type</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Expert Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {expertTypeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="gender"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gender</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MALE">Male</SelectItem>
+                      <SelectItem value="FEMALE">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           name="qualifications"

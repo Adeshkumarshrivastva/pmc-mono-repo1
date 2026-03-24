@@ -12,11 +12,22 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Combobox } from '@/components/ui/combo-box'
 import { honoClient } from '@/lib/hono-client'
-import { genderOptions, specializationOptions } from '@/lib/expert'
+import { genderOptions, expertTypeOptions, specializationOptions } from '@/lib/expert'
 import { getFileUrl } from '@/lib/utils'
 
 const profileFormSchema = z.object({
   name: z.string().min(3),
+  type: z.enum([
+    'PSYCHOLOGIST',
+    'PSYCHIATRIST',
+    'CLINICAL_PSYCHOLOGIST',
+    'CONSULTANT_PHYSICIAN',
+    'REHABILITATION_PSYCHOLOGIST',
+    'COUNSELLING_PSYCHOLOGIST',
+    'NEUROLOGIST',
+    'GENERAL_PHYSICIAN',
+    'OTHER',
+  ]),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),
@@ -52,6 +63,7 @@ function ExpertProfile() {
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       name: expert.name,
+      type: expert.type,
       qualifications: expert.qualifications ?? '',
       bio: expert.bio ?? '',
       gender: expert.gender,
@@ -144,6 +156,31 @@ function ExpertProfile() {
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Dr. John Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="type"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Profession</FormLabel>
+              <FormControl>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Expert Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {expertTypeOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>

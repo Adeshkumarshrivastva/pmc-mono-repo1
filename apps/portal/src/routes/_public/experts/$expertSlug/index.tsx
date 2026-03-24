@@ -317,7 +317,7 @@ async function fetchExpertDetails(expertId: string) {
 
 const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType }> = {
   PSYCHOLOGIST: {
-    label: 'Counseling Psychologist',
+    label: 'Psychologist',
     value: 'PSYCHOLOGIST',
   },
   PSYCHIATRIST: {
@@ -329,15 +329,27 @@ const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType 
     value: 'CLINICAL_PSYCHOLOGIST',
   },
   CONSULTANT_PHYSICIAN: {
-    label: '',
-    value: 'PSYCHOLOGIST',
+    label: 'Consultant Physician',
+    value: 'CONSULTANT_PHYSICIAN',
   },
   REHABILITATION_PSYCHOLOGIST: {
-    label: '',
-    value: 'PSYCHOLOGIST',
+    label: 'Rehabilitation Psychologist',
+    value: 'REHABILITATION_PSYCHOLOGIST',
   },
   COUNSELLING_PSYCHOLOGIST: {
-    label: '',
-    value: 'PSYCHOLOGIST',
+    label: 'Counselling Psychologist',
+    value: 'COUNSELLING_PSYCHOLOGIST',
+  },
+  NEUROLOGIST: {
+    label: 'Neurologist',
+    value: 'NEUROLOGIST',
+  },
+  GENERAL_PHYSICIAN: {
+    label: 'General Physician',
+    value: 'GENERAL_PHYSICIAN',
+  },
+  OTHER: {
+    label: 'Other',
+    value: 'OTHER',
   },
 }
