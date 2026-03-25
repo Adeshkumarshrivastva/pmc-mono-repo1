@@ -31,6 +31,7 @@ import { Internships } from './collections/internships'
 import { Footer } from './globals/footer'
 import { Academy } from './globals/academy'
 import { Franchise } from './globals/franchise'
+import { FranchiseRequest } from './collections/franchise'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -55,6 +56,7 @@ export default buildConfig({
     Webinars,
     Quiz,
     Internships,
+    FranchiseRequest,
   ],
   globals: [
     Home,

@@ -79,6 +79,7 @@ export interface Config {
     webinars: Webinar
     quiz: Quiz
     internships: Internship
+    franchiseRequest: FranchiseRequest
     exports: Export
     'payload-jobs': PayloadJob
     'payload-locked-documents': PayloadLockedDocument
@@ -103,6 +104,7 @@ export interface Config {
     webinars: WebinarsSelect<false> | WebinarsSelect<true>
     quiz: QuizSelect<false> | QuizSelect<true>
     internships: InternshipsSelect<false> | InternshipsSelect<true>
+    franchiseRequest: FranchiseRequestSelect<false> | FranchiseRequestSelect<true>
     exports: ExportsSelect<false> | ExportsSelect<true>
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
@@ -520,6 +522,22 @@ export interface Internship {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "franchiseRequest".
+ */
+export interface FranchiseRequest {
+  id: string
+  fullName: string
+  email?: string | null
+  phone: string
+  message?: string | null
+  source?: ('facebook' | 'instagram' | 'linkedin' | 'website' | 'clinic' | 'referral' | 'ads' | 'other')[] | null
+  status?: ('new' | 'contacted' | 'followUp' | 'interested' | 'converted' | 'lost') | null
+  leadLevel?: ('hot' | 'warm' | 'cold') | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports".
  */
 export interface Export {
@@ -701,6 +719,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'internships'
         value: string | Internship
+      } | null)
+    | ({
+        relationTo: 'franchiseRequest'
+        value: string | FranchiseRequest
       } | null)
     | ({
         relationTo: 'exports'
@@ -977,6 +999,21 @@ export interface InternshipsSelect<T extends boolean = true> {
   degreeOrProgram?: T
   interestedIn?: T
   message?: T
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "franchiseRequest_select".
+ */
+export interface FranchiseRequestSelect<T extends boolean = true> {
+  fullName?: T
+  email?: T
+  phone?: T
+  message?: T
+  source?: T
+  status?: T
+  leadLevel?: T
   updatedAt?: T
   createdAt?: T
 }

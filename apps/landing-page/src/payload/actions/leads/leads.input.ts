@@ -29,3 +29,12 @@ export const quizLeadInput = z.object({
 })
 
 export type QuizLeadFormInput = z.infer<typeof quizLeadInput>
+
+export const franchiseFormInput = z.object({
+  fullName: z.string().min(1),
+  email: z.email('Invalid email address').optional().or(z.literal('')),
+  phone: z.string().min(1),
+  message: z.string().optional().or(z.literal('')),
+})
+
+export type FranchiseFormInput = z.infer<typeof franchiseFormInput>

@@ -7,26 +7,26 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import { useMutation } from '@tanstack/react-query'
 import type { Franchise } from '@/payload/types'
 import { Button } from '@/components/ui/button'
-import { leadFormInput, type LeadFormInput } from '@/payload/actions/leads/leads.input'
-import { createLead } from '@/payload/actions'
+import { franchiseFormInput, type FranchiseFormInput } from '@/payload/actions/leads/leads.input'
+import { createFranchiseRequest } from '@/payload/actions'
 
 type FranchiseFormSectionProps = {
   data: Franchise['franchise']
 }
 
 export default function FranchiseFormSection({ data }: FranchiseFormSectionProps) {
-  const form = useForm<LeadFormInput>({
+  const form = useForm<FranchiseFormInput>({
     defaultValues: {
       fullName: '',
       email: '',
       phone: '',
       message: '',
     },
-    resolver: zodResolver(leadFormInput),
+    resolver: zodResolver(franchiseFormInput),
   })
 
   const franchiseFormMutation = useMutation({
-    mutationFn: createLead,
+    mutationFn: createFranchiseRequest,
     onSuccess: () => {
       toast('Thank you for your interest!', {
         description: 'We will get back to you as soon as possible.',
