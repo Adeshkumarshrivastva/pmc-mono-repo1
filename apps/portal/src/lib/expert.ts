@@ -1,7 +1,6 @@
-import { z } from 'zod'
 import { DAY_MAP } from './booking'
 
-export const expertTypeSchema = z.enum([
+export const EXPERT_TYPES = [
   'PSYCHOLOGIST',
   'PSYCHIATRIST',
   'CLINICAL_PSYCHOLOGIST',
@@ -11,25 +10,25 @@ export const expertTypeSchema = z.enum([
   'NEUROLOGIST',
   'GENERAL_PHYSICIAN',
   'OTHER',
-])
-export type ExpertType = z.infer<typeof expertTypeSchema>
+] as const
+export type ExpertType = (typeof EXPERT_TYPES)[number]
 
 export const genderOptions = [
   { value: 'MALE', label: 'Male' },
   { value: 'FEMALE', label: 'Female' },
 ]
 
-export const expertTypeOptions = [
-  { value: 'PSYCHOLOGIST', label: 'Psychologist' },
-  { value: 'PSYCHIATRIST', label: 'Psychiatrist' },
-  { value: 'CLINICAL_PSYCHOLOGIST', label: 'Clinical Psychologist' },
-  { value: 'CONSULTANT_PHYSICIAN', label: 'Consultant Physician' },
-  { value: 'REHABILITATION_PSYCHOLOGIST', label: 'Rehabilitation Psychologist' },
-  { value: 'COUNSELLING_PSYCHOLOGIST', label: 'Counselling Psychologist' },
-  { value: 'NEUROLOGIST', label: 'Neurologist' },
-  { value: 'GENERAL_PHYSICIAN', label: 'General Physician' },
-  { value: 'OTHER', label: 'Other' },
-]
+export const EXPERT_TYPES_CONFIG: Record<ExpertType, { value: ExpertType; label: string }> = {
+  PSYCHIATRIST: { value: 'PSYCHIATRIST', label: 'Psychiatrist' },
+  PSYCHOLOGIST: { value: 'PSYCHOLOGIST', label: 'Psychologist' },
+  CLINICAL_PSYCHOLOGIST: { value: 'CLINICAL_PSYCHOLOGIST', label: 'Clinical Psychologist' },
+  CONSULTANT_PHYSICIAN: { value: 'CONSULTANT_PHYSICIAN', label: 'Consultant Physician' },
+  REHABILITATION_PSYCHOLOGIST: { value: 'REHABILITATION_PSYCHOLOGIST', label: 'Rehabilitation Psychologist' },
+  COUNSELLING_PSYCHOLOGIST: { value: 'COUNSELLING_PSYCHOLOGIST', label: 'Counselling Psychologist' },
+  NEUROLOGIST: { value: 'NEUROLOGIST', label: 'Neurologist' },
+  GENERAL_PHYSICIAN: { value: 'GENERAL_PHYSICIAN', label: 'General Physician' },
+  OTHER: { value: 'OTHER', label: 'Other' },
+}
 
 export const specializationOptions = [
   { value: 'Academic Stress', label: 'Academic Stress' },

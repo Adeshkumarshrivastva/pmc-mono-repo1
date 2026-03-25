@@ -12,12 +12,12 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Combobox } from '@/components/ui/combo-box'
 import { honoClient } from '@/lib/hono-client'
-import { genderOptions, expertTypeOptions, expertTypeSchema, specializationOptions } from '@/lib/expert'
+import { genderOptions, EXPERT_TYPES, EXPERT_TYPES_CONFIG, specializationOptions, type ExpertType } from '@/lib/expert'
 import { getFileUrl } from '@/lib/utils'
 
 const profileFormSchema = z.object({
   name: z.string().min(3),
-  type: expertTypeSchema,
+  type: z.custom<ExpertType>(),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),
@@ -164,9 +164,9 @@ function ExpertProfile() {
                     <SelectValue placeholder="Select Expert Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {expertTypeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                    {EXPERT_TYPES.map((option) => (
+                      <SelectItem key={EXPERT_TYPES_CONFIG[option].value} value={EXPERT_TYPES_CONFIG[option].value}>
+                        {EXPERT_TYPES_CONFIG[option].label}
                       </SelectItem>
                     ))}
                   </SelectContent>
