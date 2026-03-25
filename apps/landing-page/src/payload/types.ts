@@ -124,6 +124,7 @@ export interface Config {
     'quiz-page': QuizPage
     footer: Footer
     academy: Academy
+    franchise: Franchise
   }
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>
@@ -137,6 +138,7 @@ export interface Config {
     'quiz-page': QuizPageSelect<false> | QuizPageSelect<true>
     footer: FooterSelect<false> | FooterSelect<true>
     academy: AcademySelect<false> | AcademySelect<true>
+    franchise: FranchiseSelect<false> | FranchiseSelect<true>
   }
   locale: null
   user: User & {
@@ -2034,6 +2036,34 @@ export interface Academy {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "franchise".
+ */
+export interface Franchise {
+  id: string
+  franchise?: {
+    title?: string | null
+    subtitle?: string | null
+    description?: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -2825,6 +2855,22 @@ export interface AcademySelect<T extends boolean = true> {
               answer?: T
               id?: T
             }
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "franchise_select".
+ */
+export interface FranchiseSelect<T extends boolean = true> {
+  franchise?:
+    | T
+    | {
+        title?: T
+        subtitle?: T
+        description?: T
       }
   updatedAt?: T
   createdAt?: T

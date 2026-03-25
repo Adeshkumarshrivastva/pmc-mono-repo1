@@ -30,6 +30,7 @@ import { QuizPage } from './globals/quiz'
 import { Internships } from './collections/internships'
 import { Footer } from './globals/footer'
 import { Academy } from './globals/academy'
+import { Franchise } from './globals/franchise'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -67,6 +68,7 @@ export default buildConfig({
     QuizPage,
     Footer,
     Academy,
+    Franchise,
   ],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,
