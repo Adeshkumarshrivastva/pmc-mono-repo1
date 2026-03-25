@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import { queryClient } from '@/lib/query-client'
-import { expertTypeOptions } from '@/lib/expert'
+import { expertTypeOptions, expertTypeSchema } from '@/lib/expert'
 import { getFileUrl } from '@/lib/utils'
 import PhoneInput from '@/components/ui/phone-input'
 
@@ -26,17 +26,7 @@ const createExpertSchema = z.object({
   email: z.email('Valid email is required'),
   phoneNumber: z.string(),
   name: z.string().min(3, 'Name must be at least 3 characters'),
-  type: z.enum([
-    'PSYCHOLOGIST',
-    'PSYCHIATRIST',
-    'CLINICAL_PSYCHOLOGIST',
-    'CONSULTANT_PHYSICIAN',
-    'REHABILITATION_PSYCHOLOGIST',
-    'COUNSELLING_PSYCHOLOGIST',
-    'NEUROLOGIST',
-    'GENERAL_PHYSICIAN',
-    'OTHER',
-  ]),
+  type: expertTypeSchema,
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),

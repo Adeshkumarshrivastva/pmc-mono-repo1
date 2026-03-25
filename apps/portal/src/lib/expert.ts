@@ -1,4 +1,18 @@
+import { z } from 'zod'
 import { DAY_MAP } from './booking'
+
+export const expertTypeSchema = z.enum([
+  'PSYCHOLOGIST',
+  'PSYCHIATRIST',
+  'CLINICAL_PSYCHOLOGIST',
+  'CONSULTANT_PHYSICIAN',
+  'REHABILITATION_PSYCHOLOGIST',
+  'COUNSELLING_PSYCHOLOGIST',
+  'NEUROLOGIST',
+  'GENERAL_PHYSICIAN',
+  'OTHER',
+])
+export type ExpertType = z.infer<typeof expertTypeSchema>
 
 export const genderOptions = [
   { value: 'MALE', label: 'Male' },
