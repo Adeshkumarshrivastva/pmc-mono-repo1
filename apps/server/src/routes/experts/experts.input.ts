@@ -154,6 +154,17 @@ export type Medicine = z.infer<typeof medicineSchema>
 
 export const expertProfileInput = z.object({
   name: z.string().min(3),
+  type: z.enum([
+    'PSYCHOLOGIST',
+    'PSYCHIATRIST',
+    'CLINICAL_PSYCHOLOGIST',
+    'CONSULTANT_PHYSICIAN',
+    'REHABILITATION_PSYCHOLOGIST',
+    'COUNSELLING_PSYCHOLOGIST',
+    'NEUROLOGIST',
+    'GENERAL_PHYSICIAN',
+    'OTHER',
+  ]),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),

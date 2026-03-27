@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { MapPin, Star, ArrowLeft, UserIcon, Award, User, BookOpenIcon, ClockIcon } from 'lucide-react'
-import type { ExpertType } from '@pmc/server/src/generated/prisma/client'
 import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
 import { honoClient } from '@/lib/hono-client'
@@ -11,7 +10,7 @@ import { CURRENCY_CONFIG } from '@/lib/booking'
 import Navbar from '../-components/navbar'
 import { Marquee } from '@/components/ui/marquee'
 import { ServiceCard } from './-components/service-card'
-import { isExpertOnline } from '@/lib/expert'
+import { isExpertOnline, EXPERT_TYPES_CONFIG } from '@/lib/expert'
 
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
@@ -122,7 +121,7 @@ function ExpertPage() {
                       <div className="mb-4 ">
                         <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1 ">{name}</h1>
                         <div className="flex items-center gap-2">
-                          <p className="text-lg text-primary font-semibold">{EXPERT_TYPE_CONFIG[type]?.label}</p>
+                          <p className="text-lg text-primary font-semibold">{EXPERT_TYPES_CONFIG[type]?.label}</p>
                           {isExpertOnline(availability) && (
                             <div className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded-full">
                               <div className="size-2 bg-primary rounded-full animate-pulse"></div>
@@ -313,31 +312,4 @@ async function fetchExpertDetails(expertId: string) {
     throw new Error('Failed to fetch expert details')
   }
   return response.json()
-}
-
-const EXPERT_TYPE_CONFIG: Record<ExpertType, { label: string; value: ExpertType }> = {
-  PSYCHOLOGIST: {
-    label: 'Counseling Psychologist',
-    value: 'PSYCHOLOGIST',
-  },
-  PSYCHIATRIST: {
-    label: 'Psychiatrist',
-    value: 'PSYCHIATRIST',
-  },
-  CLINICAL_PSYCHOLOGIST: {
-    label: 'Clinical Psychologist',
-    value: 'CLINICAL_PSYCHOLOGIST',
-  },
-  CONSULTANT_PHYSICIAN: {
-    label: '',
-    value: 'PSYCHOLOGIST',
-  },
-  REHABILITATION_PSYCHOLOGIST: {
-    label: '',
-    value: 'PSYCHOLOGIST',
-  },
-  COUNSELLING_PSYCHOLOGIST: {
-    label: '',
-    value: 'PSYCHOLOGIST',
-  },
 }

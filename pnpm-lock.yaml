@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       sst:
-        specifier: 4.5.8
-        version: 4.5.8
+        specifier: 4.5.11
+        version: 4.5.11
     devDependencies:
       '@pmc/config':
         specifier: workspace:*
@@ -4683,6 +4683,7 @@ packages:
   glob@11.0.3:
     resolution: {integrity: sha512-2Nim7dha1KVkaiF4q6Dj+ngPPMdfvLJEOpZk/jKiUAkqKebpGAWQXAq9z1xu9HKu5lWfqw/FASuccEjyznjPaA==}
     engines: {node: 20 || >=22}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   global-modules@1.0.0:
@@ -6283,48 +6284,48 @@ packages:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
 
-  sst-darwin-arm64@4.5.8:
-    resolution: {integrity: sha512-ZwQJBLXxNXswXbALsUGPplZ3kk/qGEqw6QVgzCWA9EdET/SbGl1sMGagqYkaZSo+/95fkzbOLtvLudVl710cyw==}
+  sst-darwin-arm64@4.5.11:
+    resolution: {integrity: sha512-kXZ2X4+CwIMUtb/FIAl5FkNhk5S7bHX+lN6yjLQWSsgZKqzx/9/TwSyhxWz00S2JTZeO73rrAjVMtkiZQNIp+w==}
     cpu: [arm64]
     os: [darwin]
 
-  sst-darwin-x64@4.5.8:
-    resolution: {integrity: sha512-DwwTxq4j1gceZx7RiaAAej4Ew23qXKVd8TCHu/VovLkX3QMF9GyLpCmk8UtAt1Z5mjP9H2PX7a4ABEhnL1np/Q==}
+  sst-darwin-x64@4.5.11:
+    resolution: {integrity: sha512-OgoLnuSdsEqoPVP51nHIKBBFNxDkv/CNw7Gy5z3J24+9kCRYi72AU1A1JOdPvIRoJMnDjg+v3mgs6h2wxrlPnQ==}
     cpu: [x64]
     os: [darwin]
 
-  sst-linux-arm64@4.5.8:
-    resolution: {integrity: sha512-VoXXT1C/uZN/mpqvborUjbIM1ZubOA3eV2uCjuC0y2in/zdmKkANX8CW75z6au4qFasorySSlV7SL2MIe/gyXA==}
+  sst-linux-arm64@4.5.11:
+    resolution: {integrity: sha512-Ba8CeriK9vRr4au2EzqVoj2yxhtvm2/qkHTDSk/FzB2Pa3uQopCPgulNpyAwAmFiNKuYb+b48SRg09b9G2fwbg==}
     cpu: [arm64]
     os: [linux]
 
-  sst-linux-x64@4.5.8:
-    resolution: {integrity: sha512-BEp28HOkt4WonumLbi1dZ8XiSxCV73xfyCL3K7wfGYHe46uQAZqO4fQ+k7sWkTjlkDGdfCTNzTPncihFTmtlYg==}
+  sst-linux-x64@4.5.11:
+    resolution: {integrity: sha512-SbDpEe2yS1AT5XLp9V/SnFURkOHJqpEvpdsJx8r7cj1WMLUyNM4au6vN1XHw1fvS/4zrLRs4u68oFbkLtTqpFQ==}
     cpu: [x64]
     os: [linux]
 
-  sst-linux-x86@4.5.8:
-    resolution: {integrity: sha512-hfvM6647u9AsHKARz+61mNgkrLj+LORLQR1WVrNl0s27BGKnqMEuoadsqkqYcUOcpzEy6oUgxbNSm+gLPJ1yUg==}
+  sst-linux-x86@4.5.11:
+    resolution: {integrity: sha512-YH8CmFtltxL9H1QOdv8gfLsXt/bL3xxhPb2nEaoocwcH0/i592UdXNEUZeAvAK228zXOJb47wvquoTxR3kF0ZA==}
     cpu: [x86]
     os: [linux]
 
-  sst-win32-arm64@4.5.8:
-    resolution: {integrity: sha512-UslCx2WVpZccasZiy9r4xfB9TwLxs4cPXBCTdqhL+ILleamS0alPhAbalj7wKYHcKZTNA+VEIZZ2bXph4Xrk+g==}
+  sst-win32-arm64@4.5.11:
+    resolution: {integrity: sha512-a/u5bzU9b+Bm/AVAZ/nYAsXMi6tMJN5xYTIa7eAPCcy+N8syDMR3gh9FzTDMOZ2j//7Xj4KJKWsClAY4V6rmuA==}
     cpu: [arm64]
     os: [win32]
 
-  sst-win32-x64@4.5.8:
-    resolution: {integrity: sha512-bZrPQbs60ucUDMoagenq93PSZowvKMDDqsI18CkSc6wpV4HsLoPCwtPkAnV/lfW0Paxx8aBFmqA3xY3BzJRUQw==}
+  sst-win32-x64@4.5.11:
+    resolution: {integrity: sha512-mddNFY01bTobdP/j+9aazIdw+0Oy9a1WbxxwOtNX5+SbhhqanhzNTggjAVU1ZYHuSpalGWNOO0LV50dOLJuG9g==}
     cpu: [x64]
     os: [win32]
 
-  sst-win32-x86@4.5.8:
-    resolution: {integrity: sha512-gDPMTh26dHmj/dEB0tMUixanqwvBHHIkFNoOuG9d/IV3YtkWq8iytCH2pcaEcpcd7S/0P2RhNNBtx07ojeZf7g==}
+  sst-win32-x86@4.5.11:
+    resolution: {integrity: sha512-ka4+WicxGawYv+BpVTYJIjNyu0EvYiO5Frolqv7Z+E5t2XBEOQBY81Stx+nCj6HtCn7ZlDVktyuZbs+4T2wEOg==}
     cpu: [x86]
     os: [win32]
 
-  sst@4.5.8:
-    resolution: {integrity: sha512-yJt63pWo7muN+ca9US1Dg9YdKSYCS9d5X4WLUF12VX12g7QJPsFlCeGLR0vtLv9b4VZy62gwSlpUlHmjNoq9fA==}
+  sst@4.5.11:
+    resolution: {integrity: sha512-hirPmYIAe7QX/xN7chhOP/nzJJbvHbVGNv0SA8Wk2iROwEMzg9bKKf6t/pqUwJEr7K0NbWlYFBPDnj8cTI3RoA==}
     hasBin: true
 
   stable-hash@0.0.5:
@@ -6488,6 +6489,7 @@ packages:
   tar@7.4.3:
     resolution: {integrity: sha512-5S7Va8hKfV7W5U6g3aYxXmlPoZVAwUMy9AOKyF2fVuZa2UD3qZjg578OrLRt8PcNN1PleVaL/5/yYATNL0ICUw==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   text-decoder@1.2.3:
     resolution: {integrity: sha512-3/o9z3X0X0fTupwsYvR03pJ/DjWuqqrfwBgTQzdWDiQSm9KitAyz/9WqsT2JQW7KV2m+bC2ol/zqpW37NHxLaA==}
@@ -11883,7 +11885,7 @@ snapshots:
       '@typescript-eslint/parser': 8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.29.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.29.0(jiti@2.4.2))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.29.0(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.29.0(jiti@2.4.2))
       eslint-plugin-react: 7.37.5(eslint@9.29.0(jiti@2.4.2))
@@ -11903,7 +11905,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.29.0(jiti@2.4.2)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.1
@@ -11918,14 +11920,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.29.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.29.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.29.0(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -11940,7 +11942,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.29.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2)))(eslint@9.29.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.29.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -14203,44 +14205,44 @@ snapshots:
 
   split2@4.2.0: {}
 
-  sst-darwin-arm64@4.5.8:
+  sst-darwin-arm64@4.5.11:
     optional: true
 
-  sst-darwin-x64@4.5.8:
+  sst-darwin-x64@4.5.11:
     optional: true
 
-  sst-linux-arm64@4.5.8:
+  sst-linux-arm64@4.5.11:
     optional: true
 
-  sst-linux-x64@4.5.8:
+  sst-linux-x64@4.5.11:
     optional: true
 
-  sst-linux-x86@4.5.8:
+  sst-linux-x86@4.5.11:
     optional: true
 
-  sst-win32-arm64@4.5.8:
+  sst-win32-arm64@4.5.11:
     optional: true
 
-  sst-win32-x64@4.5.8:
+  sst-win32-x64@4.5.11:
     optional: true
 
-  sst-win32-x86@4.5.8:
+  sst-win32-x86@4.5.11:
     optional: true
 
-  sst@4.5.8:
+  sst@4.5.11:
     dependencies:
       aws4fetch: 1.0.18
       jose: 5.2.3
       openid-client: 5.6.4
     optionalDependencies:
-      sst-darwin-arm64: 4.5.8
-      sst-darwin-x64: 4.5.8
-      sst-linux-arm64: 4.5.8
-      sst-linux-x64: 4.5.8
-      sst-linux-x86: 4.5.8
-      sst-win32-arm64: 4.5.8
-      sst-win32-x64: 4.5.8
-      sst-win32-x86: 4.5.8
+      sst-darwin-arm64: 4.5.11
+      sst-darwin-x64: 4.5.11
+      sst-linux-arm64: 4.5.11
+      sst-linux-x64: 4.5.11
+      sst-linux-x86: 4.5.11
+      sst-win32-arm64: 4.5.11
+      sst-win32-x64: 4.5.11
+      sst-win32-x86: 4.5.11
 
   stable-hash@0.0.5: {}
 
