@@ -33,7 +33,10 @@ export type QuizLeadFormInput = z.infer<typeof quizLeadInput>
 export const franchiseFormInput = z.object({
   fullName: z.string().min(1),
   email: z.email('Invalid email address').optional().or(z.literal('')),
-  phone: z.string().min(1),
+  phone: z
+    .string()
+    .min(10, 'Phone must be at least 10 characters')
+    .regex(/^(?:\+91|91|0)?\s?(?:\d{10}|\d{5}\s\d{5})$/, 'Invalid phone number format'),
   message: z.string().optional().or(z.literal('')),
 })
 
