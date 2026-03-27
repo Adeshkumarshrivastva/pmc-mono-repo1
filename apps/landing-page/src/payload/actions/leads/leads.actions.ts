@@ -72,7 +72,6 @@ export async function createFranchiseRequest({ fullName, email, phone, message }
         email,
         phone,
         message,
-        source: ['website'],
       },
     }),
   ])
