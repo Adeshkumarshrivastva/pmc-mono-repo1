@@ -79,6 +79,7 @@ export interface Config {
     webinars: Webinar
     quiz: Quiz
     internships: Internship
+    franchiseRequest: FranchiseRequest
     exports: Export
     'payload-jobs': PayloadJob
     'payload-locked-documents': PayloadLockedDocument
@@ -103,6 +104,7 @@ export interface Config {
     webinars: WebinarsSelect<false> | WebinarsSelect<true>
     quiz: QuizSelect<false> | QuizSelect<true>
     internships: InternshipsSelect<false> | InternshipsSelect<true>
+    franchiseRequest: FranchiseRequestSelect<false> | FranchiseRequestSelect<true>
     exports: ExportsSelect<false> | ExportsSelect<true>
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
@@ -124,6 +126,7 @@ export interface Config {
     'quiz-page': QuizPage
     footer: Footer
     academy: Academy
+    franchise: Franchise
   }
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>
@@ -137,6 +140,7 @@ export interface Config {
     'quiz-page': QuizPageSelect<false> | QuizPageSelect<true>
     footer: FooterSelect<false> | FooterSelect<true>
     academy: AcademySelect<false> | AcademySelect<true>
+    franchise: FranchiseSelect<false> | FranchiseSelect<true>
   }
   locale: null
   user: User & {
@@ -518,6 +522,19 @@ export interface Internship {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "franchiseRequest".
+ */
+export interface FranchiseRequest {
+  id: string
+  fullName: string
+  email?: string | null
+  phone: string
+  message?: string | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports".
  */
 export interface Export {
@@ -699,6 +716,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'internships'
         value: string | Internship
+      } | null)
+    | ({
+        relationTo: 'franchiseRequest'
+        value: string | FranchiseRequest
       } | null)
     | ({
         relationTo: 'exports'
@@ -974,6 +995,18 @@ export interface InternshipsSelect<T extends boolean = true> {
   schoolOrUniversity?: T
   degreeOrProgram?: T
   interestedIn?: T
+  message?: T
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "franchiseRequest_select".
+ */
+export interface FranchiseRequestSelect<T extends boolean = true> {
+  fullName?: T
+  email?: T
+  phone?: T
   message?: T
   updatedAt?: T
   createdAt?: T
@@ -2034,6 +2067,34 @@ export interface Academy {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "franchise".
+ */
+export interface Franchise {
+  id: string
+  franchise?: {
+    title?: string | null
+    subtitle?: string | null
+    description?: {
+      root: {
+        type: string
+        children: {
+          type: string
+          version: number
+          [k: string]: unknown
+        }[]
+        direction: ('ltr' | 'rtl') | null
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+        indent: number
+        version: number
+      }
+      [k: string]: unknown
+    } | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
@@ -2825,6 +2886,22 @@ export interface AcademySelect<T extends boolean = true> {
               answer?: T
               id?: T
             }
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "franchise_select".
+ */
+export interface FranchiseSelect<T extends boolean = true> {
+  franchise?:
+    | T
+    | {
+        title?: T
+        subtitle?: T
+        description?: T
       }
   updatedAt?: T
   createdAt?: T

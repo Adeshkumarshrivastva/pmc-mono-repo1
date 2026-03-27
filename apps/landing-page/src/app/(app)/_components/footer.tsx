@@ -167,6 +167,7 @@ const AWARENESS_ITEMS = [
   // { id: 'campaigns', href: '/campaigns', label: 'Campaigns' },
   // { id: 'ambassador-program', href: '/ambassador-program', label: 'Ambassador Program' },
   { id: 'internship', href: '/internship', label: 'Internship' },
+  { id: 'franchise', href: '/franchise', label: 'Franchise' },
 ]
 
 const LINKS_1 = [
