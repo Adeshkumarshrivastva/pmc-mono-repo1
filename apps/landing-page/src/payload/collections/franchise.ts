@@ -4,7 +4,7 @@ export const FranchiseRequest: CollectionConfig = {
   slug: 'franchiseRequest',
   admin: {
     useAsTitle: 'fullName',
-    defaultColumns: ['fullName', 'email', 'phone', 'status', 'leadLevel', 'source'],
+    defaultColumns: ['fullName', 'email', 'phone'],
   },
   access: {
     read: () => true,

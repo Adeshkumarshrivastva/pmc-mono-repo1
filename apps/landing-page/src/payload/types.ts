@@ -530,9 +530,6 @@ export interface FranchiseRequest {
   email?: string | null
   phone: string
   message?: string | null
-  source?: ('facebook' | 'instagram' | 'linkedin' | 'website' | 'clinic' | 'referral' | 'ads' | 'other')[] | null
-  status?: ('new' | 'contacted' | 'followUp' | 'interested' | 'converted' | 'lost') | null
-  leadLevel?: ('hot' | 'warm' | 'cold') | null
   updatedAt: string
   createdAt: string
 }
@@ -1011,9 +1008,6 @@ export interface FranchiseRequestSelect<T extends boolean = true> {
   email?: T
   phone?: T
   message?: T
-  source?: T
-  status?: T
-  leadLevel?: T
   updatedAt?: T
   createdAt?: T
 }
