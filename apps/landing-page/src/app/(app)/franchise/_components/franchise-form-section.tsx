@@ -78,8 +78,13 @@ export default function FranchiseFormSection({ data }: FranchiseFormSectionProps
                       {...form.register('phone')}
                       type="tel"
                       className="w-full bg-primary-foreground rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                      placeholder="Ex. +91 9012 8934 78"
+                      placeholder="Ex. +91 9012345678"
                     />
+                    {form.formState.errors.phone && (
+                      <p className="text-red-500 bg-accent rounded-md pl-3 text-xs mt-1">
+                        {form.formState.errors.phone.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-full">
