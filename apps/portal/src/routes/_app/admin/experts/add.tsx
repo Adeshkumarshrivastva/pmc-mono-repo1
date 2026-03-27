@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import { queryClient } from '@/lib/query-client'
+import { EXPERT_TYPES, EXPERT_TYPES_CONFIG, type ExpertType } from '@/lib/expert'
 import { getFileUrl } from '@/lib/utils'
 import PhoneInput from '@/components/ui/phone-input'
 
@@ -25,13 +26,7 @@ const createExpertSchema = z.object({
   email: z.email('Valid email is required'),
   phoneNumber: z.string(),
   name: z.string().min(3, 'Name must be at least 3 characters'),
-  type: z.enum([
-    'PSYCHOLOGIST',
-    'PSYCHIATRIST',
-    'CLINICAL_PSYCHOLOGIST',
-    'CONSULTANT_PHYSICIAN',
-    'REHABILITATION_PSYCHOLOGIST',
-  ]),
+  type: z.custom<ExpertType>(),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),
@@ -227,11 +222,14 @@ function AddExpertPage() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="PSYCHOLOGIST">Psychologist</SelectItem>
-                            <SelectItem value="PSYCHIATRIST">Psychiatrist</SelectItem>
-                            <SelectItem value="CLINICAL_PSYCHOLOGIST">Clinical Psychologist</SelectItem>
-                            <SelectItem value="CONSULTANT_PHYSICIAN">Consultant Physician</SelectItem>
-                            <SelectItem value="REHABILITATION_PSYCHOLOGIST">Rehabilitation Psychologist</SelectItem>
+                            {EXPERT_TYPES.map((option) => (
+                              <SelectItem
+                                key={EXPERT_TYPES_CONFIG[option].value}
+                                value={EXPERT_TYPES_CONFIG[option].value}
+                              >
+                                {EXPERT_TYPES_CONFIG[option].label}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </FormControl>

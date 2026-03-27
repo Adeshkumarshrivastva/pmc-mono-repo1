@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
+import { EXPERT_TYPES, EXPERT_TYPES_CONFIG, type ExpertType } from '@/lib/expert'
 import { getFileUrl } from '@/lib/utils'
 import PhoneInput from '@/components/ui/phone-input'
 
@@ -19,6 +20,7 @@ const expertInfoSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   email: z.email('Valid email is required'),
   phoneNumber: z.string(),
+  type: z.custom<ExpertType>(),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
   gender: z.enum(['MALE', 'FEMALE']),
@@ -48,6 +50,7 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
       name: initialData?.name || '',
       email: initialData?.user?.email || '',
       phoneNumber: initialData?.user?.phoneNumber || '',
+      type: initialData?.type || 'PSYCHOLOGIST',
       qualifications: initialData?.qualifications || '',
       bio: initialData?.bio || '',
       gender: initialData?.gender || 'MALE',
@@ -95,6 +98,7 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
           name: values.name,
           email: values.email,
           phoneNumber: values.phoneNumber,
+          type: values.type,
           qualifications: values.qualifications,
           bio: values.bio,
           gender: values.gender,
@@ -191,27 +195,54 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
           />
         </div>
 
-        <FormField
-          name="gender"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Gender</FormLabel>
-              <FormControl>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="MALE">Male</SelectItem>
-                    <SelectItem value="FEMALE">Female</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            name="type"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Expert Type</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Expert Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {EXPERT_TYPES.map((option) => (
+                        <SelectItem key={EXPERT_TYPES_CONFIG[option].value} value={EXPERT_TYPES_CONFIG[option].value}>
+                          {EXPERT_TYPES_CONFIG[option].label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            name="gender"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gender</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MALE">Male</SelectItem>
+                      <SelectItem value="FEMALE">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           name="qualifications"

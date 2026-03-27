@@ -274,6 +274,7 @@ export async function updateExpertInfo(c: C, expertId: string, input: UpdateExpe
       where: { id: expertId },
       data: {
         name: input.name,
+        type: input.type,
         qualifications: input.qualifications,
         bio: input.bio,
         gender: input.gender,

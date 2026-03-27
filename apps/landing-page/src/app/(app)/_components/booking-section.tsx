@@ -591,12 +591,15 @@ type ServiceMode = 'VIRTUAL' | 'IN_PERSON'
 
 const expertTypeOptions = [
   { value: '', label: 'All Types' },
-  { value: 'PSYCHIATRIST', label: 'Psychiatrist' },
   { value: 'PSYCHOLOGIST', label: 'Psychologist' },
+  { value: 'PSYCHIATRIST', label: 'Psychiatrist' },
   { value: 'CLINICAL_PSYCHOLOGIST', label: 'Clinical Psychologist' },
   { value: 'CONSULTANT_PHYSICIAN', label: 'Consultant Physician' },
   { value: 'REHABILITATION_PSYCHOLOGIST', label: 'Rehabilitation Psychologist' },
   { value: 'COUNSELLING_PSYCHOLOGIST', label: 'Counselling Psychologist' },
+  { value: 'NEUROLOGIST', label: 'Neurologist' },
+  { value: 'GENERAL_PHYSICIAN', label: 'General Physician' },
+  { value: 'OTHER', label: 'Other' },
 ]
 
 const sortByOptions = [
