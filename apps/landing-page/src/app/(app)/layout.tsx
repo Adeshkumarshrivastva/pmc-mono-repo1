@@ -7,6 +7,7 @@ import FloatingWhatsapp from './_components/floating-whatsapp'
 import OneSignalComponent from './_components/one-signal'
 import VapiAssistant from './_components/vapi-assistant'
 import '@/app/styles.css'
+import Popup from './_components/popup'
 
 export const metadata = {
   description:
@@ -26,6 +27,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
       <body>
         <OneSignalComponent />
         <Providers>
+          <Popup />
           <AppShell>{children}</AppShell>
         </Providers>
         <Toaster />
