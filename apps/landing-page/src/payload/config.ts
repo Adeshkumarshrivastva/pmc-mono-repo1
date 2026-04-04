@@ -32,6 +32,7 @@ import { Footer } from './globals/footer'
 import { Academy } from './globals/academy'
 import { Franchise } from './globals/franchise'
 import { FranchiseRequest } from './collections/franchise'
+import { PopupNotifications } from './collections/popup-notifications'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -57,6 +58,7 @@ export default buildConfig({
     Quiz,
     Internships,
     FranchiseRequest,
+    PopupNotifications,
   ],
   globals: [
     Home,
