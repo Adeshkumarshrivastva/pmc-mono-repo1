@@ -11,7 +11,7 @@
   "keywords": [],
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
-    "sst": "4.6.9"
+    "sst": "4.6.11"
   },
   "devDependencies": {
     "@pmc/config": "workspace:*",
