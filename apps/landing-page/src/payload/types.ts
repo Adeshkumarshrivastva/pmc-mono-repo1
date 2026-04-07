@@ -80,6 +80,7 @@ export interface Config {
     quiz: Quiz
     internships: Internship
     franchiseRequest: FranchiseRequest
+    'popup-notifications': PopupNotification
     exports: Export
     'payload-jobs': PayloadJob
     'payload-locked-documents': PayloadLockedDocument
@@ -105,6 +106,7 @@ export interface Config {
     quiz: QuizSelect<false> | QuizSelect<true>
     internships: InternshipsSelect<false> | InternshipsSelect<true>
     franchiseRequest: FranchiseRequestSelect<false> | FranchiseRequestSelect<true>
+    'popup-notifications': PopupNotificationsSelect<false> | PopupNotificationsSelect<true>
     exports: ExportsSelect<false> | ExportsSelect<true>
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
@@ -535,6 +537,24 @@ export interface FranchiseRequest {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "popup-notifications".
+ */
+export interface PopupNotification {
+  id: string
+  popupName: string
+  heading: string
+  description?: string | null
+  image?: (string | null) | Media
+  link?: string | null
+  isActive?: boolean | null
+  startDate: string
+  endDate: string
+  ctaText?: string | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports".
  */
 export interface Export {
@@ -720,6 +740,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'franchiseRequest'
         value: string | FranchiseRequest
+      } | null)
+    | ({
+        relationTo: 'popup-notifications'
+        value: string | PopupNotification
       } | null)
     | ({
         relationTo: 'exports'
@@ -1008,6 +1032,23 @@ export interface FranchiseRequestSelect<T extends boolean = true> {
   email?: T
   phone?: T
   message?: T
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "popup-notifications_select".
+ */
+export interface PopupNotificationsSelect<T extends boolean = true> {
+  popupName?: T
+  heading?: T
+  description?: T
+  image?: T
+  link?: T
+  isActive?: T
+  startDate?: T
+  endDate?: T
+  ctaText?: T
   updatedAt?: T
   createdAt?: T
 }
