@@ -18,6 +18,21 @@ export async function getServices({ parentServiceSlug }: GetServicesInput) {
       pagination: false,
     })
 
+    if (!service.docs.length) {
+      return {
+        docs: [],
+        totalDocs: 0,
+        limit: 0,
+        totalPages: 1,
+        page: 1,
+        pagingCounter: 1,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: null,
+        nextPage: null,
+      } as any
+    }
+
     parentServiceId = service.docs[0].id
   }
 
