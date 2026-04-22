@@ -4,3 +4,7 @@ node_modules
 .eslintcache
 
 /src/generated/*
+
+# build
+dist
+build
