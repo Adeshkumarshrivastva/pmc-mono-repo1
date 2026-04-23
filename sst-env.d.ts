@@ -107,6 +107,10 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
+    SST_ENV: {
+      type: 'sst.sst.Secret'
+      value: string
+    }
     SenderEmail: {
       configSet: string
       sender: string
@@ -138,7 +142,6 @@ declare module 'sst' {
     }
   }
 }
-/// <reference path="sst-env.d.ts" />
 
 import 'sst'
 export {}

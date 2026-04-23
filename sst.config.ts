@@ -60,6 +60,7 @@ export default $config({
     const ZohoClientSecret = new sst.Secret('ZOHO_CLIENT_SECRET')
     const ZohoRefreshToken = new sst.Secret('ZOHO_REFRESH_TOKEN')
     const OneSignalAppApiKey = new sst.Secret('ONESIGNAL_APP_API_KEY')
+    const SstEnv = new sst.Secret('SST_ENV')
 
     const SenderEmail =
       $app.stage === 'production'
@@ -90,6 +91,7 @@ export default $config({
       S3_ACCESS_KEY: S3AccessKey.value,
       S3_SECRET_KEY: S3SecretKey.value,
       S3_REGION: S3Region.value,
+      SST_ENV: SstEnv.value,
     })
 
     new sst.aws.Function('PmcHonoServer', {
