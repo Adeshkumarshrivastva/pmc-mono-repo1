@@ -1,4 +1,3 @@
-import { Resource } from 'sst'
 import { config } from '../config'
 
 type WhatsappTemplatePayload = {
@@ -9,7 +8,7 @@ type WhatsappTemplatePayload = {
   buttonParams?: (string | number)[]
 }
 
-const isDevelopment = Resource.App.stage !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 export async function sendWhatsappMessageByTemplate({
   to,

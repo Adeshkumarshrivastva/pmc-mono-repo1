@@ -1,6 +1,5 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { Resource } from 'sst'
 import { phoneNumber } from 'better-auth/plugins'
 import { prisma } from './db'
 import { config } from '../config'
@@ -11,7 +10,7 @@ import { sendOTPMessage } from './sms'
 
 invariant(config, 'config should be present')
 
-const isDevelopment = Resource.App.stage !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 export const auth = betterAuth({
   basePath: '/server/auth',
