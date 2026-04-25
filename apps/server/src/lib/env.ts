@@ -29,5 +29,6 @@ export const env = z
     S3_SECRET_KEY: z.string(),
     S3_REGION: z.string(),
     S3_BUCKET: z.string(),
+    CORS_ORIGIN: z.string().optional(),
   })
   .parse(process.env)

@@ -15,7 +15,7 @@ export const configSchema = z.object({
     })
     .optional()
     .default({
-      origin: 'http://localhost:5173',
+      origin: env.CORS_ORIGIN ?? 'http://localhost:5173',
     }),
   auth: z.object({
     secret: z.string(),
