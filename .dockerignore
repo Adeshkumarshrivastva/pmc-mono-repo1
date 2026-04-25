@@ -1,11 +1,15 @@
-*
-!package.json
-!pnpm-lock.yaml
-!pnpm-workspace.yaml
-!apps/server/package.json
-!apps/server/tsconfig.json
-!apps/server/scripts/**
-!apps/server/src/**
-!apps/server/prisma/**
-!packages/config/package.json
-!apps/server/docker/Dockerfile
+# Git files history
+**/.git
+
+# Dependencies
+**/node_modules
+
+# Environment variables
+**/.env
+
+# Docker files
+.dockerignore
+Dockerfile
+
+# Turbo cache
+**/.turbo
