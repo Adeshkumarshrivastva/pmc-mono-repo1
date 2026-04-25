@@ -28,8 +28,13 @@ COPY . .
 # Set build environment variables
 ENV VITE_PUBLIC_BASE_PATH=/portal
 
+ENV NODE_ENV=production
+
 ARG VITE_PUBLIC_API_BASE_URL
 ENV VITE_PUBLIC_API_BASE_URL=${VITE_PUBLIC_API_BASE_URL}
+
+ARG VITE_PUBLIC_RAZORPAY_KEY_ID
+ENV VITE_PUBLIC_RAZORPAY_KEY_ID=${VITE_PUBLIC_RAZORPAY_KEY_ID}
 
 RUN pnpm run build --filter @pmc/portal
 
@@ -45,7 +50,7 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /app
 
-COPY --from=build /app/apps/portal/dist/ ./dist
+COPY --from=build /app/apps/portal/dist/ ./dist/portal
 
 # Change the ownership of the /app directory to the non-root user
 RUN chown -R appuser:appgroup /app
@@ -58,4 +63,4 @@ EXPOSE 80
 HEALTHCHECK --interval=5s --timeout=5s --retries=3 \
   CMD curl -f http://127.0.0.1/health || exit 1
 
-CMD [ "static-web-server", "--health", "--port", "80", "--page-fallback", "index.html", "--page404", "index.html", "--root", "dist", "--log-level", "info" ]
+CMD [ "static-web-server", "--health", "--port", "80", "--page-fallback", "dist/portal/index.html", "--page404", "dist/portal/index.html", "--root", "dist", "--log-level", "info"]

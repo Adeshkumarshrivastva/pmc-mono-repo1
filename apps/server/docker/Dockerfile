@@ -40,4 +40,4 @@ ENV PORT=4000
 
 EXPOSE 4000
 
-CMD ["bun","run" "dist/index.js"]
+CMD ["bun","run", "dist/index.js"]
