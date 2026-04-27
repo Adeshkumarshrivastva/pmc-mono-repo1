@@ -11,11 +11,11 @@ export const configSchema = z.object({
     ),
   cors: z
     .object({
-      origin: z.url(),
+      origin: z.array(z.url()),
     })
     .optional()
     .default({
-      origin: env.CORS_ORIGIN ?? 'http://localhost:5173',
+      origin: env.CORS_ORIGIN ? env.CORS_ORIGIN.split(',').map((o) => o.trim()) : ['http://localhost:5173'],
     }),
   auth: z.object({
     secret: z.string(),

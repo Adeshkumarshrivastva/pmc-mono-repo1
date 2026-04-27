@@ -1,6 +1,7 @@
 {
   "name": "@pmc/server",
   "scripts": {
+    "dev": "bun --watch src/index.ts",
     "prebuild": "prisma generate",
     "build:server": "bun run scripts/build.ts",
     "start:server": "bun run dist/index.js",
