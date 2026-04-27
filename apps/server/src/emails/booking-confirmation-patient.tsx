@@ -182,7 +182,7 @@ export default function BookingConfirmationForPatient({ booking, orderId }: Book
 
             <Section className="text-center mb-8">
               <Button
-                href={`https://positivemindcare.com/portal/bookings/${booking.id}`}
+                href={`/portal/bookings/${booking.id}`}
                 className="bg-blue-600 text-white py-3.5 px-8 rounded-lg text-base font-semibold no-underline mr-4 mb-2 inline-block"
               >
                 View Booking Details

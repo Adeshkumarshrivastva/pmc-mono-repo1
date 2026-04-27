@@ -1,0 +1,88 @@
+name: pmc-dev
+
+services:
+  traefik:
+    image: traefik:v3.6.2
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --log.level=INFO
+      - --accesslog=true
+    ports:
+      - '80:80'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'traefik', 'healthcheck', '--ping']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.traefik.rule=Host(`traefik.localhost`)'
+      - 'traefik.http.routers.traefik.service=api@internal'
+
+  landing-page:
+    image: pmc-landing:local
+    build:
+      context: ..
+      dockerfile: apps/landing-page/docker/Dockerfile
+    env_file:
+      - ../.env
+    deploy:
+      replicas: 1
+    ports:
+      - '3000:3000'
+    restart: on-failure
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.landing-page.rule=Host(`landing-page.localhost`)'
+      - 'traefik.http.routers.landing-page.entrypoints=web'
+      - 'traefik.http.routers.landing-page.service=landing-page'
+      - 'traefik.http.services.landing-page.loadbalancer.server.port=3000'
+  
+  portal:
+    image: pmc-portal:local
+    build:
+      context: ..
+      dockerfile: apps/portal/docker/Dockerfile
+      args:
+        VITE_PUBLIC_API_BASE_URL: ${VITE_PUBLIC_API_BASE_URL}
+        VITE_PUBLIC_RAZORPAY_KEY_ID: ${VITE_PUBLIC_RAZORPAY_KEY_ID}
+    env_file:
+      - ../.env
+    deploy:
+      replicas: 1
+    ports:
+      - '3001:80'
+    restart: on-failure
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.portal.rule=Host(`portal.localhost`) && PathPrefix(`/portal`)'
+      - 'traefik.http.routers.portal.entrypoints=web'
+      - 'traefik.http.routers.portal.service=portal'
+      - 'traefik.http.services.portal.loadbalancer.server.port=80'
+
+  server:
+    image: pmc-server:local
+    build:
+      context: ..
+      dockerfile: apps/server/docker/Dockerfile
+    env_file:
+      - ../.env
+    deploy:
+      replicas: 1
+    ports:
+      - '4000:4000'
+    restart: on-failure
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.server.rule=Host(`server.localhost`) && PathPrefix(`/server`)'
+      - 'traefik.http.routers.server.entrypoints=web'
+      - 'traefik.http.routers.server.service=server'
+      - 'traefik.http.services.server.loadbalancer.server.port=4000'
+    

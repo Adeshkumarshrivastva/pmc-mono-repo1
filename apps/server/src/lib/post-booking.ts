@@ -1,6 +1,5 @@
 import { render } from '@react-email/render'
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
-import { Resource } from 'sst'
 import { createLogger } from './logger'
 import { config } from '../config'
 import { createGoogleCalendarEvent } from './google-calendar'
@@ -12,7 +11,7 @@ import BookingConfirmationForPatient from '../emails/booking-confirmation-patien
 import type { Booking, Expert, Patient, Service, User } from '../generated/prisma'
 
 const sesClient = new SESv2Client()
-const isDevelopment = Resource.App.stage !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production'
 const logger = createLogger('post-booking')
 
 type BookingWithRelations = Booking & {

@@ -21,7 +21,7 @@ const app = new Hono<{ Variables: HonoContext }>()
   .basePath('/server')
   .use(
     cors({
-      origin: [config.cors.origin],
+      origin: config.cors.origin,
       credentials: true,
       exposeHeaders: ['Content-Length'],
       allowMethods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],

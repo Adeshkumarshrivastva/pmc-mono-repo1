@@ -1,9 +1,8 @@
 import { calendar, type calendar_v3 } from '@googleapis/calendar'
 import { JWT } from 'google-auth-library'
-import { Resource } from 'sst'
 import { config } from '../config'
 
-const isDevelopment = Resource.App.stage !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 export function getGoogleCalendarClient() {
   const clientEmail = config.google.serviceAccountEmail

@@ -89,7 +89,13 @@ export default buildConfig({
         media: true,
       },
       bucket: env.PAYLOAD_BUCKET,
-      config: {},
+      config: {
+        region: env.PAYLOAD_BUCKET_REGION,
+        credentials: {
+          accessKeyId: env.PAYLOAD_BUCKET_ACCESS_KEY,
+          secretAccessKey: env.PAYLOAD_BUCKET_SECRET_KEY,
+        },
+      },
     }),
     importExportPlugin({
       collections: ['leads'],
