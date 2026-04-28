@@ -10,9 +10,9 @@ export const METADATA_FIELD: Field = {
 
 export function getURLFromMedia(media: Media | string) {
   if (typeof media === 'string') {
-    return `${media}`
+    return media.startsWith('http') ? media : `https://positivemindcare.com${media}`
   } else if (media && typeof media.url === 'string') {
-    return `${media.url}`
+    return media.url.startsWith('http') ? media.url : `https://positivemindcare.com${media.url}`
   }
   return ''
 }
