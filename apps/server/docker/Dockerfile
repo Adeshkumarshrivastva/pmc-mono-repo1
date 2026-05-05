@@ -37,6 +37,7 @@ WORKDIR /app
 COPY --from=build /app/apps/server/dist ./dist
 COPY --from=build /app/apps/server/src/generated/prisma ./src/generated/prisma
 
+ENV NODE_ENV=production
 ENV PORT=4000
 
 EXPOSE 4000
