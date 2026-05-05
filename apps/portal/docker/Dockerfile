@@ -63,4 +63,4 @@ EXPOSE 80
 HEALTHCHECK --interval=5s --timeout=5s --retries=3 \
   CMD curl -f http://127.0.0.1/health || exit 1
 
-CMD [ "static-web-server", "--health", "--port", "80", "--page-fallback", "dist/portal/index.html", "--page404", "dist/portal/index.html", "--root", "dist", "--log-level", "info"]
+CMD [ "static-web-server", "--health", "--port", "80", "--page-fallback", "/app/dist/portal/index.html", "--page404", "portal/index.html", "--root", "dist", "--log-level", "info"]

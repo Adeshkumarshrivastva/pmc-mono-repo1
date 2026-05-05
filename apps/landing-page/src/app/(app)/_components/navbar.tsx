@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { ChevronDown, ChevronRight, MenuIcon } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import * as z from 'zod'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
@@ -11,8 +13,7 @@ import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import type { Service } from '@/payload/types'
 import { cn } from '@/lib/utils'
-import { useQuery } from '@tanstack/react-query'
-import * as z from 'zod'
+import { env } from '@/env'
 
 type NavbarProps = { services: Service[] }
 
@@ -41,7 +42,7 @@ export default function Navbar({ services }: NavbarProps) {
   const { data, isPending } = useQuery({
     queryKey: ['get-user'],
     queryFn: async () => {
-      const res = await fetch(`/server/auth/get-session`, {
+      const res = await fetch(`${env.NEXT_PUBLIC_API_BASE_URL}/server/auth/get-session`, {
         credentials: 'include',
       })
 
@@ -67,13 +68,6 @@ export default function Navbar({ services }: NavbarProps) {
 
   const showBookingButton =
     pathname === '/' || SHOW_BOOKING_BUTTON_ON_ROUTES.some((route) => route !== '/' && pathname.startsWith(route))
-
-  const dashboard = () => {
-    const getUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-    if (!getUrl) {
-      return
-    }
-  }
 
   return (
     <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow" style={{ height: NAVBAR_HEIGHT }}>

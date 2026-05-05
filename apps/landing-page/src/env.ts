@@ -20,6 +20,9 @@ export const env = createEnv({
     WHATSAPP_API_KEY_SECRET: z.string(),
     WHATSAPP_LICENCE_NUMBER_SECRET: z.string(),
     WHATSAPP_TEST_NUMBER_SECRET: z.string(),
+    PAYLOAD_BUCKET_REGION: z.string(),
+    PAYLOAD_BUCKET_ACCESS_KEY: z.string(),
+    PAYLOAD_BUCKET_SECRET_KEY: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -52,5 +55,8 @@ export const env = createEnv({
     WHATSAPP_API_KEY_SECRET: process.env.WHATSAPP_API_KEY_SECRET,
     WHATSAPP_LICENCE_NUMBER_SECRET: process.env.WHATSAPP_LICENCE_NUMBER_SECRET,
     WHATSAPP_TEST_NUMBER_SECRET: process.env.WHATSAPP_TEST_NUMBER_SECRET,
+    PAYLOAD_BUCKET_REGION: process.env.PAYLOAD_BUCKET_REGION,
+    PAYLOAD_BUCKET_ACCESS_KEY: process.env.PAYLOAD_BUCKET_ACCESS_KEY,
+    PAYLOAD_BUCKET_SECRET_KEY: process.env.PAYLOAD_BUCKET_SECRET_KEY,
   },
 })

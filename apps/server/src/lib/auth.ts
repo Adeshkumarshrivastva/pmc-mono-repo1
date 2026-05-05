@@ -18,7 +18,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'mongodb',
   }),
-  trustedOrigins: [config.cors.origin],
+  trustedOrigins: config.cors.origin,
   socialProviders: {
     google: {
       clientId: config.auth.google.clientId,
