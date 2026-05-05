@@ -36,6 +36,7 @@ WORKDIR /app
 
 COPY --from=build /app/apps/server/dist ./dist
 
+ENV NODE_ENV=production
 ENV PORT=4000
 
 EXPOSE 4000
