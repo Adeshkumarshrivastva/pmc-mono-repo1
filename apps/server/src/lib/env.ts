@@ -15,7 +15,7 @@ export const env = z
     GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: z.string(),
     GOOGLE_CALENDAR_EMAIL: z.string(),
     JWT_SECRET: z.string(),
-    NODE_ENV: z.enum([NodeEnv.development, NodeEnv.production]).default(NodeEnv.development),
+    NODE_ENV: z.enum([NodeEnv.development, NodeEnv.production]),
     RAZORPAY_KEY_ID: z.string(),
     RAZORPAY_KEY_SECRET: z.string(),
     WHATSAPP_API_KEY_SECRET: z.string(),
