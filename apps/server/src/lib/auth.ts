@@ -28,6 +28,7 @@ export const auth = betterAuth({
   plugins: [
     phoneNumber({
       sendOTP: async ({ phoneNumber, code }) => {
+        rootLogger.info(`node env: ${process.env.NODE_ENV}`)
         if (!isDevelopment) {
           await sendOTPMessage({ to: phoneNumber, otp: code })
 
