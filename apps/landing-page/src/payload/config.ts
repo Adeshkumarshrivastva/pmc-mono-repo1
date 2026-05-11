@@ -83,7 +83,9 @@ export default buildConfig({
     url: env.PAYLOAD_DB_URL,
   }),
   plugins: [
-    payloadCloudPlugin(),
+    payloadCloudPlugin({
+      storage: false,
+    }),
     s3Storage({
       collections: {
         media: true,
