@@ -55,11 +55,11 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
       <div className="p-4 pb-4 text-slate-900 flex flex-col flex-1">
         <div className="flex items-start gap-4 mb-3">
           <div className="relative w-28 h-28 shrink-0">
-            {expert.image ? (
+            {expert.file ? (
               <div className="relative flex-shrink-0">
                 <div className="w-28 h-28">
                   <img
-                    src={expert.file ? getFileUrl(expert.file.fileName) : expert.image}
+                    src={getFileUrl(expert.file.fileName)}
                     alt={name}
                     className="w-full h-full object-cover rounded-xl"
                   />
