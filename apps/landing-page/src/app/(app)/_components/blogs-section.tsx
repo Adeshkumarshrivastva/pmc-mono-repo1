@@ -32,44 +32,56 @@ export default function BlogsSection({ data, blogs }: BlogsSectionProps) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {blogs.map((blog) => (
-              <article key={blog.id} className="flex flex-col w-full max-w-sm mx-auto sm:max-w-none sm:mx-0">
-                <div className="relative aspect-[16/9] w-full mb-4">
-                  <Image
-                    fill
-                    src={getURLFromMedia(blog?.image ?? '')}
-                    alt={blog?.title ?? ''}
-                    className="object-cover rounded-2xl"
-                  />
-                </div>
-
-                <Link href={`/blogs/${blog.slug}`} className="flex flex-1">
-                  <div className="bg-card flex flex-col justify-between flex-1 rounded-3xl shadow-lg p-5 sm:p-6">
-                    <h3 className="text-base sm:text-lg font-semibold text-primary-foreground mb-4 line-clamp-2">
-                      {blog.title}
-                    </h3>
-
-                    <div className="flex items-center justify-between gap-3 mt-auto">
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm text-primary-foreground">{blog.author}</div>
-                        <div className="text-xs text-primary-foreground/80">
-                          {new Date(blog.publishedAt).toLocaleDateString('en-IN', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </div>
-                      </div>
-
-                      <Button
-                        icon={<CircleArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />}
-                        className="bg-transparent hover:bg-transparent p-2 shrink-0"
-                      />
-                    </div>
+            {blogs.map((blog) => {
+              // Get image URL and validate it's a proper URL
+              let imageUrl = '/placeholder-blog.jpg'
+              if (blog?.image) {
+                const url = getURLFromMedia(blog.image)
+                // Check if it's a valid URL (starts with http/https or /)
+                if (url && (url.startsWith('http') || url.startsWith('/'))) {
+                  imageUrl = url
+                }
+              }
+              
+              return (
+                <article key={blog.id} className="flex flex-col w-full max-w-sm mx-auto sm:max-w-none sm:mx-0">
+                  <div className="relative aspect-[16/9] w-full mb-4">
+                    <Image
+                      fill
+                      src={imageUrl}
+                      alt={blog?.title ?? ''}
+                      className="object-cover rounded-2xl"
+                    />
                   </div>
-                </Link>
-              </article>
-            ))}
+
+                  <Link href={`/blogs/${blog.slug}`} className="flex flex-1">
+                    <div className="bg-card flex flex-col justify-between flex-1 rounded-3xl shadow-lg p-5 sm:p-6">
+                      <h3 className="text-base sm:text-lg font-semibold text-primary-foreground mb-4 line-clamp-2">
+                        {blog.title}
+                      </h3>
+
+                      <div className="flex items-center justify-between gap-3 mt-auto">
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm text-primary-foreground">{blog.author}</div>
+                          <div className="text-xs text-primary-foreground/80">
+                            {new Date(blog.publishedAt).toLocaleDateString('en-IN', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            })}
+                          </div>
+                        </div>
+
+                        <Button
+                          icon={<CircleArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />}
+                          className="bg-transparent hover:bg-transparent p-2 shrink-0"
+                        />
+                      </div>
+                    </div>
+                  </Link>
+                </article>
+              )
+            })}
           </div>
         </div>
       </div>

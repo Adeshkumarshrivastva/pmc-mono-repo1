@@ -57,10 +57,10 @@ export default function AcademySection({ data }: AcademySectionProps) {
                 <div className="flex flex-wrap gap-4 mt-6">
                   <Link href={data?.href1 || ''}>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       icon={<ArrowRightIcon />}
                       iconPosition="right"
-                      className="w-65 hover:bg-accent tracking-tight"
+                      className="font-bold text-base shadow-lg hover:shadow-xl transition-all hover:scale-105 whitespace-nowrap"
                     >
                       {data?.button1 || ''}
                     </Button>
@@ -68,10 +68,10 @@ export default function AcademySection({ data }: AcademySectionProps) {
 
                   <Link href={data?.href2 || ''}>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       icon={<ArrowRightIcon />}
                       iconPosition="right"
-                      className="w-60 hover:bg-accent"
+                      className="font-bold text-base shadow-lg hover:shadow-xl transition-all hover:scale-105 whitespace-nowrap"
                     >
                       {data?.button2 || ''}
                     </Button>

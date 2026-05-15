@@ -5,30 +5,36 @@ import type { PopupNotification } from '@/payload/types'
 export default async function PopupNotification() {
   const payload = await getPayloadClient()
 
+  // Get all active popups
   const popupsData = await payload.find({
     collection: 'popup-notifications',
     where: {
       isActive: {
         equals: true,
       },
-      startDate: {
-        less_than_equal: new Date().toISOString(),
-      },
-      endDate: {
-        greater_than_equal: new Date().toISOString(),
-      },
     },
+    limit: 2, // Maximum 2 popups side by side
   })
 
+  console.log('=== POPUP DEBUG ===')
+  console.log('Total popups found:', popupsData.docs.length)
+  console.log('Current date:', new Date().toISOString())
+  
+  if (popupsData.docs.length > 0) {
+    console.log('First popup:', {
+      id: popupsData.docs[0].id,
+      name: popupsData.docs[0].popupName,
+      isActive: popupsData.docs[0].isActive,
+    })
+  }
+  
+  console.log('===================')
+
   if (popupsData.docs.length === 0) {
+    console.log('No active popups found!')
     return null
   }
 
-  return (
-    <>
-      {popupsData.docs.map((popup: PopupNotification) => (
-        <PopupNotificationDialog key={popup.id} {...popup} />
-      ))}
-    </>
-  )
+  // Pass all popups to the dialog component
+  return <PopupNotificationDialog popups={popupsData.docs as PopupNotification[]} />
 }

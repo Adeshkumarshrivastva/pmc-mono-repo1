@@ -371,16 +371,91 @@ export const Home: GlobalConfig = {
               relationTo: 'media',
             },
             {
+              name: 'card1Button',
+              label: 'Card 1 Button Text',
+              type: 'text',
+              defaultValue: 'Explore',
+            },
+            {
+              name: 'card1Link',
+              label: 'Card 1 Button Link',
+              type: 'text',
+              defaultValue: '#',
+            },
+            {
+              name: 'card1Features',
+              label: 'Card 1 Features',
+              type: 'array',
+              maxRows: 10,
+              fields: [
+                {
+                  name: 'title',
+                  label: 'Feature Title',
+                  type: 'text',
+                },
+              ],
+            },
+            {
               name: 'card2',
               label: 'Card 2',
               type: 'relationship',
               relationTo: 'media',
             },
             {
+              name: 'card2Button',
+              label: 'Card 2 Button Text',
+              type: 'text',
+              defaultValue: 'Explore',
+            },
+            {
+              name: 'card2Link',
+              label: 'Card 2 Button Link',
+              type: 'text',
+              defaultValue: '#',
+            },
+            {
+              name: 'card2Features',
+              label: 'Card 2 Features',
+              type: 'array',
+              maxRows: 10,
+              fields: [
+                {
+                  name: 'title',
+                  label: 'Feature Title',
+                  type: 'text',
+                },
+              ],
+            },
+            {
               name: 'card3',
               label: 'Card 3',
               type: 'relationship',
               relationTo: 'media',
+            },
+            {
+              name: 'card3Button',
+              label: 'Card 3 Button Text',
+              type: 'text',
+              defaultValue: 'Explore',
+            },
+            {
+              name: 'card3Link',
+              label: 'Card 3 Button Link',
+              type: 'text',
+              defaultValue: '#',
+            },
+            {
+              name: 'card3Features',
+              label: 'Card 3 Features',
+              type: 'array',
+              maxRows: 10,
+              fields: [
+                {
+                  name: 'title',
+                  label: 'Feature Title',
+                  type: 'text',
+                },
+              ],
             },
           ],
         },
@@ -434,6 +509,15 @@ export const Home: GlobalConfig = {
               name: 'name',
               label: 'Package Name',
               type: 'text',
+            },
+            {
+              name: 'slug',
+              label: 'Package Slug (URL)',
+              type: 'text',
+              required: true,
+              admin: {
+                description: 'URL-friendly name (e.g., growth-package, starter-package)',
+              },
             },
             {
               name: 'price',

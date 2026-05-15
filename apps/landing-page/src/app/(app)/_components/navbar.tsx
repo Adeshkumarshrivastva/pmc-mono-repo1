@@ -31,6 +31,8 @@ const AWARENESS_ITEMS = [
   { id: 'blogs', href: '/blogs', label: 'Blogs' },
   { id: 'webinars', href: '/webinars', label: 'Webinar & Workshops' },
   { id: 'internship', href: '/internship', label: 'Internship' },
+  { id: 'events', href: '/events', label: 'Events&Camp' },
+  // { id: 'camps', href: '/camps', label: 'Camps' },
 ] as const
 
 const HOVER_DELAY = 400
@@ -148,18 +150,22 @@ export default function Navbar({ services }: NavbarProps) {
 
 function ServicesMenu({ services, isActive }: { services: Service[]; isActive: boolean }) {
   const [isHovered, setIsHovered] = useState(false)
-  const [activeServiceId, setActiveServiceId] = useState<string | undefined>(services[0].id)
-  const activeService = services.find((service) => service.id === activeServiceId)
+
+  // Filter main services (those without parent)
+  const mainServices = services.filter(service => !service.parent)
+  
+  console.log('=== SERVICES DEBUG ===')
+  console.log('Total services:', services.length)
+  console.log('Main services:', mainServices.length)
+  console.log('Main services list:', mainServices.map(s => s.name))
+  console.log('=====================')
 
   return (
     <HoverCard
       open={isHovered}
       openDelay={HOVER_DELAY}
       onOpenChange={(value) => {
-        if (!value) {
-          setActiveServiceId(services[0].id)
-          setIsHovered(false)
-        }
+        setIsHovered(value)
       }}
     >
       <HoverCardTrigger asChild>
@@ -184,53 +190,48 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
         </Link>
       </HoverCardTrigger>
 
-      <HoverCardContent align="center" className="p-0 flex w-lg">
-        <div className="cursor-pointer w-full flex flex-col bg-primary-foreground">
-          {services.map((service) => {
-            const isActiveService = service.id === activeServiceId
-            return (
-              <div
-                className={cn('flex w-full justify-between', isActiveService ? 'bg-accent' : null)}
-                key={service.id}
-                onMouseEnter={() => {
-                  setActiveServiceId(service.id)
-                }}
-              >
-                <Link href={`/services/${service.slug}`} className="group flex w-full">
-                  <button
-                    className={cn(
-                      'flex w-full justify-between text-left items-center py-2 px-4 space-x-2 cursor-pointer',
-                      isActiveService ? 'font-medium' : null,
-                    )}
-                  >
-                    <span>{service.name}</span>
-                    <ChevronRight
-                      className={cn('size-4 flex-shrink-0 text-primary', isActiveService ? 'opacity-100' : 'opacity-0')}
-                    />
-                  </button>
-                </Link>
-              </div>
-            )
-          })}
-        </div>
-        <div className="cursor-pointer w-full flex flex-col bg-primary-foreground shadow-xl">
-          {activeService
-            ? activeService.subservices?.docs?.map((subService) => {
-                const typedSubService = subService as Service
-
-                return (
-                  <Link
-                    key={typedSubService.id}
-                    href={`/services/${activeService.slug}/${typedSubService.slug}`}
-                    className="flex w-full"
-                  >
-                    <button className="flex w-full text-left items-center py-2 px-4 hover:font-medium space-x-2 cursor-pointer">
-                      <span>{typedSubService.name}</span>
-                    </button>
+      <HoverCardContent align="center" className="p-0 w-[900px] max-h-[500px] overflow-y-auto">
+        <div className="grid grid-cols-3 gap-0 bg-primary-foreground">
+          {mainServices.length === 0 ? (
+            <div className="col-span-3 p-4 text-center text-muted-foreground">
+              No main services found. Please add services in CMS.
+            </div>
+          ) : (
+            mainServices.map((mainService) => (
+              <div key={mainService.id} className="border-r last:border-r-0 border-border">
+                {/* Main Category Header */}
+                <div className="bg-accent p-3 border-b border-border sticky top-0 z-10">
+                  <Link href={`/services/${mainService.slug}`}>
+                    <h3 className="font-bold text-xs uppercase text-primary hover:text-primary/80">
+                      {mainService.name}
+                    </h3>
                   </Link>
-                )
-              })
-            : null}
+                </div>
+                
+                {/* Sub-services */}
+                <div className="flex flex-col">
+                  {mainService.subservices?.docs && mainService.subservices.docs.length > 0 ? (
+                    mainService.subservices.docs.map((subService) => {
+                      const typedSubService = subService as Service
+                      return (
+                        <Link
+                          key={typedSubService.id}
+                          href={`/services/${mainService.slug}/${typedSubService.slug}`}
+                          className="px-3 py-2 hover:bg-accent text-xs text-foreground hover:text-primary transition-colors border-b border-border/50 last:border-b-0"
+                        >
+                          {typedSubService.name}
+                        </Link>
+                      )
+                    })
+                  ) : (
+                    <div className="px-3 py-2 text-xs text-muted-foreground italic">
+                      No sub-services
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </HoverCardContent>
     </HoverCard>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import type { Quiz } from '@/payload/types'
 import { QuestionCard } from './question-card'
 import QuizContactForm from './contact-form'
+import LoadingAnimation from './loading-animation'
 
 type QuizProps = {
   quiz: Quiz
@@ -17,6 +18,7 @@ export default function QuizRender({ quiz }: QuizProps) {
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [currentPage, setCurrentPage] = useState(0)
   const [showContactDialog, setShowContactDialog] = useState(false)
+  const [showLoading, setShowLoading] = useState(false)
 
   const questions = quiz.questionnaire
   const questionsPerPage = 1
@@ -47,21 +49,27 @@ export default function QuizRender({ quiz }: QuizProps) {
   }
 
   function navigateToResults() {
-    const score = calculateScore()
-    const resultsData = {
-      answers,
-      totalScore: score,
-      timestamp: new Date().toISOString(),
-      quizTitle: quiz.title,
-      riskLevels: quiz.riskLevels,
-    }
+    // Show loading animation
+    setShowLoading(true)
 
-    const searchParams = new URLSearchParams({
-      score: score.toString(),
-      data: btoa(JSON.stringify(resultsData)),
-    })
+    // Wait 3-4 seconds before navigating
+    setTimeout(() => {
+      const score = calculateScore()
+      const resultsData = {
+        answers,
+        totalScore: score,
+        timestamp: new Date().toISOString(),
+        quizTitle: quiz.title,
+        riskLevels: quiz.riskLevels,
+      }
 
-    router.push(`${quiz.slug}/report?${searchParams.toString()}`)
+      const searchParams = new URLSearchParams({
+        score: score.toString(),
+        data: btoa(JSON.stringify(resultsData)),
+      })
+
+      router.push(`${quiz.slug}/report?${searchParams.toString()}`)
+    }, 3500) 
   }
 
   function handleSubmit() {
@@ -98,94 +106,99 @@ export default function QuizRender({ quiz }: QuizProps) {
   }
 
   return (
-    <div className="min-h-screen bg-primary-foreground">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">{quiz.title}</h1>
-          {quiz.description && <p className="text-muted-foreground">{quiz.description}</p>}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
-          {currentQuestions.map((questionData, index) => (
-            <QuestionCard
-              key={startIndex + index}
-              questionNumber={startIndex + index + 1}
-              question={questionData.question}
-              value={answers[startIndex + index]}
-              onChange={(value) => handleAnswerChange(index, value)}
-              isAnswered={isQuestionAnswered(index)}
-              options={questionData.options}
-            />
-          ))}
-        </div>
-
-        <div className="space-y-6">
-          <div className="flex items-center justify-between gap-4">
-            <Button
-              onClick={() => {
-                if (currentPage > 0) {
-                  setCurrentPage((prev) => prev - 1)
-                }
-              }}
-              hidden={currentPage === 0}
-              variant="default"
-              className="flex items-center gap-2"
-              icon={<ArrowLeft className="size-4" />}
-            >
-              Previous
-            </Button>
-
-            <Button
-              onClick={() => {
-                if (currentPage < totalPages - 1) {
-                  setCurrentPage((prev) => prev + 1)
-                }
-              }}
-              hidden={currentPage === totalPages - 1}
-              variant="default"
-              className="flex items-center gap-2 ml-auto"
-              icon={<ArrowRight className="size-4" />}
-            >
-              Next
-            </Button>
+    <>
+      {/* Loading Animation - Outside main content */}
+      {showLoading && <LoadingAnimation />}
+      
+      <div className="min-h-screen bg-primary-foreground">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-foreground mb-2">{quiz.title}</h1>
+            {quiz.description && <p className="text-muted-foreground">{quiz.description}</p>}
           </div>
 
-          <div className="relative">
-            <div className="border border-border rounded-full bg-accent/20 h-4 relative">
-              <div
-                className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
-                style={{
-                  width: `${(getAnsweredCount() / questions.length) * 100}%`,
-                }}
+          <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
+            {currentQuestions.map((questionData, index) => (
+              <QuestionCard
+                key={startIndex + index}
+                questionNumber={startIndex + index + 1}
+                question={questionData.question}
+                value={answers[startIndex + index]}
+                onChange={(value) => handleAnswerChange(index, value)}
+                isAnswered={isQuestionAnswered(index)}
+                options={questionData.options}
               />
+            ))}
+          </div>
+
+          <div className="space-y-6">
+            <div className="flex items-center justify-between gap-4">
+              <Button
+                onClick={() => {
+                  if (currentPage > 0) {
+                    setCurrentPage((prev) => prev - 1)
+                  }
+                }}
+                hidden={currentPage === 0}
+                variant="default"
+                className="flex items-center gap-2"
+                icon={<ArrowLeft className="size-4" />}
+              >
+                Previous
+              </Button>
+
+              <Button
+                onClick={() => {
+                  if (currentPage < totalPages - 1) {
+                    setCurrentPage((prev) => prev + 1)
+                  }
+                }}
+                hidden={currentPage === totalPages - 1}
+                variant="default"
+                className="flex items-center gap-2 ml-auto"
+                icon={<ArrowRight className="size-4" />}
+              >
+                Next
+              </Button>
             </div>
-            <div className="text-sm text-center text-muted-foreground mt-2">
-              {getAnsweredCount()} of {questions.length} questions answered
+
+            <div className="relative">
+              <div className="border border-border rounded-full bg-accent/20 h-4 relative">
+                <div
+                  className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
+                  style={{
+                    width: `${(getAnsweredCount() / questions.length) * 100}%`,
+                  }}
+                />
+              </div>
+              <div className="text-sm text-center text-muted-foreground mt-2">
+                {getAnsweredCount()} of {questions.length} questions answered
+              </div>
             </div>
           </div>
+
+          {currentPage === totalPages - 1 && (
+            <div className="mt-6 text-center">
+              <Button onClick={handleSubmit} className="px-8 size-lg">
+                Generate Report
+              </Button>
+              {getAnsweredCount() < questions.length && (
+                <p className="text-sm text-muted-foreground mt-2">Please answer all questions before submitting</p>
+              )}
+            </div>
+          )}
         </div>
 
-        {currentPage === totalPages - 1 && (
-          <div className="mt-6 text-center">
-            <Button onClick={handleSubmit} className="px-8 size-lg">
-              Generate Report
-            </Button>
-            {getAnsweredCount() < questions.length && (
-              <p className="text-sm text-muted-foreground mt-2">Please answer all questions before submitting</p>
-            )}
-          </div>
-        )}
+        <QuizContactForm
+          open={showContactDialog}
+          onOpenChange={setShowContactDialog}
+          onSuccess={navigateToResults}
+          title={'Get Your Assessment Results'}
+          description={'Enter your details to view your personalized assessment report'}
+          quizAnswers={formatQuizAnswers()}
+          quiz={quiz}
+        />
       </div>
-
-      <QuizContactForm
-        open={showContactDialog}
-        onOpenChange={setShowContactDialog}
-        onSuccess={navigateToResults}
-        title={'Get Your Assessment Results'}
-        description={'Enter your details to view your personalized assessment report'}
-        quizAnswers={formatQuizAnswers()}
-        quiz={quiz}
-      />
-    </div>
+    </>
   )
 }

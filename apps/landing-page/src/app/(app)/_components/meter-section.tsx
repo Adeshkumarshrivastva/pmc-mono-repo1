@@ -32,15 +32,17 @@ export default function MeterSection({ data }: MeterSectionProps) {
           <div className="grid gap-4 xl:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
             {data?.meters?.map((meter) => (
               <Link href={meter.href ?? ''} key={meter.id}>
-                <div className="space-y-2 bg-card p-4 rounded-xl flex flex-col items-center justify-center">
-                  <Image
-                    src={getURLFromMedia(meter.meterImage ?? '')}
-                    alt={meter.title ?? ''}
-                    width={256}
-                    height={161}
-                    className="pt-6 pb-6"
-                  />
-                  <h3 className="text-2xl font-semibold text-accent pb-4">{meter.title}</h3>
+                <div className="bg-card p-4 rounded-xl flex flex-col items-center justify-between h-[320px]">
+                  <div className="flex-1 flex items-center justify-center w-full">
+                    <Image
+                      src={getURLFromMedia(meter.meterImage ?? '')}
+                      alt={meter.title ?? ''}
+                      width={256}
+                      height={161}
+                      className="object-contain max-h-[200px]"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-accent text-center mt-4">{meter.title}</h3>
                 </div>
               </Link>
             ))}

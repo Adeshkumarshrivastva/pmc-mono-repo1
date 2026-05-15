@@ -28,48 +28,53 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
               {service.name}
             </h2>
 
-            {service.image ? (
-              <div className="mt-12 md:mt-16 flex items-center justify-center  w-full relative">
-                <div className="relative w-full min-h-[300px] md:min-h-[400px] lg:min-h-[450px] rounded-2xl overflow-hidden">
-                  {service.image && (
+            {/* Image and Description - 2 Column Layout */}
+            <div className="mt-12 md:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+              {/* Left: Image */}
+              {service.image ? (
+                <div className="w-full">
+                  <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden sticky top-24">
                     <Image
                       src={getURLFromMedia(service.image)}
                       alt={service.name}
                       fill
                       className="object-cover rounded-2xl"
                     />
-                  )}
-                </div>
-
-                <div className="absolute inset-x-4 bottom-4 bg-primary-foreground/50 md:bg-primary-foreground/90 backdrop-blur-sm rounded-xl p-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-3 items-center text-sm">
-                    {/* TODO: Remove hardcoded contact details, handle via CMS */}
-                    <div className="flex items-center space-x-2 min-w-0">
-                      <LocationIcon className="w-5 h-5 text-primary shrink-0" />
-                      <span>804 (A), Arcadia, South City II, Sector-49, Gurugram, HR 122018</span>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <CallIcon className="w-5 h-5 text-primary shrink-0" />
-                      <a href="tel:+918920530832">089205 30832</a>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <MailIcon className="w-5 h-5 text-primary shrink-0" />
-                      <a href="mailto:contact@positivemindcare.com">contact@positivemindcare.com</a>
-                    </div>
-
-                    <Button className="w-full sm:w-auto justify-self-start sm:justify-self-end">
-                      <Link href="/contact-us">Book a visit</Link>
-                    </Button>
                   </div>
                 </div>
-              </div>
-            ) : null}
+              ) : null}
 
-            <article className="mt-12 md:mt-16">
-              <RichText className="prose prose-sm sm:prose-base lg:prose-lg max-w-none" data={service.description!} />
-            </article>
+              {/* Right: Description */}
+              <div className="w-full">
+                <article className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
+                  <RichText data={service.description!} />
+                </article>
+              </div>
+            </div>
+
+            {/* Contact Info Bar */}
+            <div className="mt-8 bg-primary/10 backdrop-blur-sm rounded-xl p-4 border border-primary/20">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-3 items-center text-sm">
+                <div className="flex items-center space-x-2 min-w-0">
+                  <LocationIcon className="w-5 h-5 text-primary shrink-0" />
+                  <span className="text-foreground">804 (A), Arcadia, South City II, Sector-49, Gurugram, HR 122018</span>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <CallIcon className="w-5 h-5 text-primary shrink-0" />
+                  <a href="tel:+918920530832" className="text-foreground hover:text-primary">089205 30832</a>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <MailIcon className="w-5 h-5 text-primary shrink-0" />
+                  <a href="mailto:contact@positivemindcare.com" className="text-foreground hover:text-primary">contact@positivemindcare.com</a>
+                </div>
+
+                <Button className="w-full sm:w-auto">
+                  <Link href="/contact-us">Book a visit</Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

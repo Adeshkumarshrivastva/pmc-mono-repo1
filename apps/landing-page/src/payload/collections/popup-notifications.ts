@@ -32,10 +32,50 @@ export const PopupNotifications: CollectionConfig = {
       required: false,
     },
     {
-      name: 'link',
+      name: 'primaryButton',
+      label: 'Primary Button (Book Now)',
+      type: 'group',
+      fields: [
+        {
+          name: 'text',
+          label: 'Button Text',
+          type: 'text',
+          defaultValue: 'Book Now',
+        },
+        {
+          name: 'link',
+          label: 'Button Link',
+          type: 'text',
+          defaultValue: '/outing/book',
+        },
+      ],
+    },
+    {
+      name: 'secondaryButton',
+      label: 'Secondary Button (Return Policy)',
+      type: 'group',
+      fields: [
+        {
+          name: 'text',
+          label: 'Button Text',
+          type: 'text',
+          defaultValue: 'Return Policy',
+        },
+        {
+          name: 'link',
+          label: 'Button Link',
+          type: 'text',
+          defaultValue: '/return-policy',
+        },
+      ],
+    },
+    {
+      name: 'seeMoreLink',
+      label: 'See More Link (Optional)',
       type: 'text',
-      label: 'Link',
-      required: false,
+      admin: {
+        description: 'Link to detailed page (e.g., /outing for outing details, /franchise for franchise details)',
+      },
     },
     {
       name: 'isActive',
@@ -55,13 +95,6 @@ export const PopupNotifications: CollectionConfig = {
       type: 'date',
       label: 'End Date',
       required: true,
-    },
-    {
-      name: 'ctaText',
-      label: 'Button Text',
-      type: 'text',
-      required: false,
-      defaultValue: 'Grab the offer →',
     },
   ],
 }

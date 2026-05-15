@@ -24,6 +24,26 @@ export const Franchise: GlobalConfig = {
           label: 'Description',
           type: 'richText',
         },
+        {
+          name: 'mainImage',
+          label: 'Main Image',
+          type: 'upload',
+          relationTo: 'media',
+          required: false,
+        },
+        {
+          name: 'benefits',
+          label: 'Franchise Benefits',
+          type: 'array',
+          fields: [
+            {
+              name: 'benefit',
+              label: 'Benefit',
+              type: 'text',
+              required: true,
+            },
+          ],
+        },
       ],
     },
   ],
