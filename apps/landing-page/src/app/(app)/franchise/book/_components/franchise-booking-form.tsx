@@ -40,13 +40,6 @@ Franchise Inquiry:
 ${data.message ? `- Additional Message: ${data.message}` : ''}
       `.trim()
 
-      console.log('Submitting franchise request:', {
-        fullName: data.fullName,
-        email: data.email,
-        phone: data.phone,
-        message: franchiseDetails,
-      })
-
       return createFranchiseRequest({
         fullName: data.fullName,
         email: data.email,
@@ -55,7 +48,6 @@ ${data.message ? `- Additional Message: ${data.message}` : ''}
       })
     },
     onSuccess: () => {
-      console.log('Franchise request submitted successfully')
       toast.success('Franchise inquiry submitted!', {
         description: 'Our team will contact you shortly to discuss the opportunity.',
       })

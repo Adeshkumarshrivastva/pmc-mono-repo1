@@ -37,7 +37,7 @@ export default function OutingBookingForm() {
 
   const bookingMutation = useMutation({
     mutationFn: async (data: BookingFormData) => {
-      // Format booking details as message for Zoho lead
+      
       const bookingDetails = `
 Outing Booking Request:
 - Number of People: ${data.numberOfPeople}
@@ -54,16 +54,9 @@ ${data.message ? `- Additional Message: ${data.message}` : ''}
         message: bookingDetails,
       }
 
-      console.log('Submitting outing booking to Zoho:', leadData)
-
-      const result = await createLead(leadData)
-      
-      console.log('Zoho response:', result)
-      
-      return result
+      return createLead(leadData)
     },
     onSuccess: () => {
-      console.log('Outing booking submitted successfully')
       toast.success('Booking request submitted!', {
         description: 'Our team will contact you shortly to confirm your booking.',
       })
