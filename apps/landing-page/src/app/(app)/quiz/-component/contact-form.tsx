@@ -48,10 +48,10 @@ export default function QuizContactForm({
     mutationFn: createQuizLead,
     onSuccess: () => {
       form.reset()
-      onOpenChange(false)
-      onSuccess()
+      // Don't call onSuccess here, it's already called
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Form submission error:', error)
       toast('Failed to submit the form. Please try again later.', {
         description: 'If the problem persists, please contact us directly.',
       })
@@ -70,13 +70,20 @@ export default function QuizContactForm({
           <form
             onSubmit={form.handleSubmit(
               (values) => {
+                // Close dialog FIRST
+                onOpenChange(false)
+                
+                // Then trigger loading and navigation
+                onSuccess()
+                
+                // API call in background
                 quizFormMutation.mutate({
                   ...values,
                   quizAnswers,
                 })
               },
               (error) => {
-                console.error(error)
+                console.error('Form validation error:', error)
               },
             )}
             className="space-y-4"

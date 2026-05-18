@@ -33,6 +33,9 @@ import { Academy } from './globals/academy'
 import { Franchise } from './globals/franchise'
 import { FranchiseRequest } from './collections/franchise'
 import { PopupNotifications } from './collections/popup-notifications'
+import { Events } from './globals/events'
+import { ReturnPolicy } from './globals/return-policy'
+import { OutingPage } from './globals/outing-page'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -73,6 +76,9 @@ export default buildConfig({
     Footer,
     Academy,
     Franchise,
+    Events,
+    ReturnPolicy,
+    OutingPage,
   ],
   editor: lexicalEditor({}),
   secret: env.PAYLOAD_SECRET,

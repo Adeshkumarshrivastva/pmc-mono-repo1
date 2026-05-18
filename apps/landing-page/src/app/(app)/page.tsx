@@ -22,6 +22,7 @@ import BlogsSection from './_components/blogs-section'
 import ExpertsSection from './_components/experts-section'
 import QuizSection from './_components/quiz-section'
 import FAQSection from './_components/faq-section'
+import PopupNotification from './_components/popup-notification'
 
 export default async function HomePage() {
   const payload = await getPayloadClient()
@@ -55,6 +56,7 @@ export default async function HomePage() {
     collection: 'blog',
     sort: '-publishedAt',
     limit: 3,
+    depth: 2, // Populate image relationship
   })
 
   const services = await getServices({})
@@ -62,6 +64,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen" style={{ height: `calc(100% - ${NAVBAR_HEIGHT}px)` }}>
+      <PopupNotification />
       <BookingSection data={bookingSection} />
       <MeterSection data={meterSection} />
       <HeroSection data={heroSetion} />
