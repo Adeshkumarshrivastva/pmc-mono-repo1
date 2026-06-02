@@ -9,6 +9,7 @@ export const env = createEnv({
   server: {
     PAYLOAD_DB_URL: z.url(),
     PAYLOAD_SECRET: z.string(),
+    PAYLOAD_SERVER_URL: z.string().optional(),
     PAYLOAD_BUCKET: z.string(),
     RAZORPAY_KEY_ID: z.string(),
     RAZORPAY_KEY_SECRET: z.string(),
@@ -58,5 +59,6 @@ export const env = createEnv({
     PAYLOAD_BUCKET_REGION: process.env.PAYLOAD_BUCKET_REGION,
     PAYLOAD_BUCKET_ACCESS_KEY: process.env.PAYLOAD_BUCKET_ACCESS_KEY,
     PAYLOAD_BUCKET_SECRET_KEY: process.env.PAYLOAD_BUCKET_SECRET_KEY,
+    PAYLOAD_SERVER_URL: process.env.PAYLOAD_SERVER_URL,
   },
 })
