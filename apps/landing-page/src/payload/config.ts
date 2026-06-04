@@ -41,7 +41,6 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  serverURL: env.PAYLOAD_SERVER_URL,
   admin: {
     user: Users.slug,
     importMap: {
@@ -95,9 +94,7 @@ export default buildConfig({
     }),
     s3Storage({
       collections: {
-        media: {
-          generateFileURL: ({ filename }) => `/api/media/file/${filename}`,
-        },
+        media: true,
       },
       bucket: env.PAYLOAD_BUCKET,
       config: {
