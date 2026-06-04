@@ -153,12 +153,7 @@ function ServicesMenu({ services, isActive }: { services: Service[]; isActive: b
 
   // Filter main services (those without parent)
   const mainServices = services.filter(service => !service.parent)
-  
-  console.log('=== SERVICES DEBUG ===')
-  console.log('Total services:', services.length)
-  console.log('Main services:', mainServices.length)
-  console.log('Main services list:', mainServices.map(s => s.name))
-  console.log('=====================')
+
 
   return (
     <HoverCard
