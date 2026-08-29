@@ -17,13 +17,15 @@ export default function TreatmentSection({ data }: TreatmentSectionProps) {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
             <div className="hidden lg:block">
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <Image
-                  alt="Deep TMS treatment"
-                  width={564}
-                  height={800}
-                  className="h-auto w-full object-contain rounded-xl"
-                  src={getURLFromMedia(data?.premaryImage ?? '')}
-                />
+                {getURLFromMedia(data?.premaryImage ?? '') ? (
+                  <Image
+                    alt="Deep TMS treatment"
+                    width={564}
+                    height={800}
+                    className="h-auto w-full object-contain rounded-xl"
+                    src={getURLFromMedia(data?.premaryImage ?? '')}
+                  />
+                ) : null}
               </div>
             </div>
 

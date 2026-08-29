@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const ReturnPolicy: GlobalConfig = {
   slug: 'return-policy',
+  access: {
+    read: () => true,
+  },
   label: 'Return Policy',
   fields: [
     {

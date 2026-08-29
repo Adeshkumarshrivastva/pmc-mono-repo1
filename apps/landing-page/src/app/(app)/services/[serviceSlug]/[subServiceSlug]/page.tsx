@@ -57,7 +57,7 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-3 items-center text-sm">
                 <div className="flex items-center space-x-2 min-w-0">
                   <LocationIcon className="w-5 h-5 text-primary shrink-0" />
-                  <span className="text-foreground">804 (A), Arcadia, South City II, Sector-49, Gurugram, HR 122018</span>
+                  <span className="text-foreground">GF - 43, M2K Corporate Park, N Block, Mayfield Garden, Sector-51, Gurugram, HR 122018</span>
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -87,7 +87,7 @@ export default async function SubServicePage({ params }: SubServicePageProps) {
               </h3>
 
               <div className="space-y-8 md:space-y-12">
-                {subServices.docs.map((sub) => {
+                {subServices.docs.map((sub: any) => {
                   if (typeof sub === 'string') return null
 
                   return (

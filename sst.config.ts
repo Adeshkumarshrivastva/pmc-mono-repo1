@@ -171,9 +171,6 @@ export default $config({
       environment: {
         PAYLOAD_SECRET: PayloadSecret.value,
         PAYLOAD_BUCKET: MediaBucket.name,
-        PAYLOAD_BUCKET_REGION: PayloadBucketRegion.value,
-        PAYLOAD_BUCKET_ACCESS_KEY: PayloadBucketAccessKey.value,
-        PAYLOAD_BUCKET_SECRET_KEY: PayloadBucketSecretKey.value,
         PAYLOAD_DB_URL: PayloadDBUrl.value,
         RAZORPAY_KEY_ID: RazorpayKeyId.value,
         RAZORPAY_KEY_SECRET: RazorpayKeySecret.value,
@@ -187,6 +184,9 @@ export default $config({
         WHATSAPP_API_KEY_SECRET: WhatsappApiKeySecret.value,
         WHATSAPP_LICENCE_NUMBER_SECRET: WhatsappLicenceNumberSecret.value,
         WHATSAPP_TEST_NUMBER_SECRET: WhatsappTestNumberSecret.value,
+        PAYLOAD_BUCKET_REGION: PayloadBucketRegion.value,
+        PAYLOAD_BUCKET_ACCESS_KEY: PayloadBucketAccessKey.value,
+        PAYLOAD_BUCKET_SECRET_KEY: PayloadBucketSecretKey.value,
       },
     })
   },

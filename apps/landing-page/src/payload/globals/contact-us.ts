@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const ContactUs: GlobalConfig = {
   slug: 'contact-us',
+  access: {
+    read: () => true,
+  },
   label: 'Contact Us',
   fields: [
     {

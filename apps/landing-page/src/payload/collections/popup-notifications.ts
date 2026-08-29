@@ -2,6 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 export const PopupNotifications: CollectionConfig = {
   slug: 'popup-notifications',
+  access: {
+    read: () => true,
+  },
   admin: {
     useAsTitle: 'popupName',
   },

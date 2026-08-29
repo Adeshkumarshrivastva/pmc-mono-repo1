@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const PrivacyPolicy: GlobalConfig = {
   slug: 'privacy-policy',
+  access: {
+    read: () => true,
+  },
   label: 'Privacy Policy',
   admin: {
     group: 'Legal',

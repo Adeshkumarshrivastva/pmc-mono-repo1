@@ -2,9 +2,10 @@ import { Client } from 'minio'
 import { config } from '../config'
 
 export const minioClient = new Client({
-  endPoint: `s3.${config.minio.region}.amazonaws.com`,
+  endPoint: config.minio.endpoint ?? `s3.${config.minio.region}.amazonaws.com`,
+  ...(config.minio.port ? { port: config.minio.port } : {}),
   region: config.minio.region,
-  useSSL: true,
+  useSSL: config.minio.useSSL,
   accessKey: config.minio.accessKey,
   secretKey: config.minio.secretKey,
 })

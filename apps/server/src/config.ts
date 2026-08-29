@@ -53,6 +53,9 @@ export const configSchema = z.object({
     secretKey: z.string(),
     region: z.string(),
     bucket: z.string(),
+    endpoint: z.string().optional(),
+    port: z.number().optional(),
+    useSSL: z.boolean(),
   }),
 })
 
@@ -100,6 +103,9 @@ function getConfig() {
         secretKey: env.S3_SECRET_KEY,
         region: env.S3_REGION,
         bucket: env.S3_BUCKET,
+        endpoint: env.S3_ENDPOINT,
+        port: env.S3_PORT,
+        useSSL: env.S3_USE_SSL,
       },
     })
 

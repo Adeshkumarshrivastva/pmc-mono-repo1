@@ -1,0 +1,190 @@
+name: pmc-prod
+
+# Production stack for a self-hosted VPS (e.g. Hostinger).
+# Run all `docker compose` commands from this file's directory with an explicit
+# env file, e.g.:
+#   docker compose --env-file ../.env -f docker-compose.prod.yml up -d --build
+#
+# Differs from docker-compose.yml (local dev) in three ways:
+#   1. Traefik terminates real TLS via Let's Encrypt instead of routing plain HTTP .localhost.
+#   2. App containers do NOT publish ports directly to the host — only Traefik (80/443) is
+#      internet-facing; landing-page/portal/server are only reachable through it.
+#   3. Adds self-hosted MongoDB (single-node replica set, required by Prisma's mongo
+#      connector) and MinIO (S3-compatible object storage) with one-shot init jobs.
+
+services:
+  traefik:
+    image: traefik:v3.6.2
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.le.acme.httpchallenge=true
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.le.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+      - --log.level=INFO
+      - --accesslog=true
+      - --ping=true
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/letsencrypt
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'traefik', 'healthcheck', '--ping']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  mongo:
+    image: mongo:7
+    command: ['--replSet', 'rs0', '--bind_ip_all']
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # Deliberately no `ports:` — only reachable from other containers on this
+    # compose network, never from the internet or the host's other services.
+
+  mongo-init:
+    # One-shot: turns the single mongo node into a (single-member) replica set.
+    # Prisma's MongoDB connector refuses to run against a standalone instance.
+    # Safe to re-run on every `up` — no-ops once already initiated.
+    image: mongo:7
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: 'no'
+    entrypoint:
+      - bash
+      - -c
+      - |
+        mongosh --host mongo --quiet --eval '
+          try { rs.status(); print("replica set already initiated"); }
+          catch (e) { rs.initiate(); print("replica set initiated"); }
+        '
+
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # Deliberately no `ports:` — not exposed publicly. If you need the admin
+    # console, reach it via an SSH tunnel: `ssh -L 9001:localhost:9001 root@<vps-ip>`
+    # then open http://localhost:9001 locally, or add a Traefik router later.
+
+  minio-init:
+    # One-shot: creates the buckets the apps expect. Safe to re-run.
+    image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: 'no'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mc alias set local http://minio:9000 "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}" &&
+        mc mb -p local/payload-media &&
+        mc mb -p local/server-files &&
+        echo 'buckets ready'
+
+  server-migrate:
+    # One-off: `prisma db push` syncs indexes/constraints into MongoDB. Not part
+    # of `up` (profile-gated) — run manually once per schema change:
+    #   docker compose --env-file ../.env -f docker-compose.prod.yml run --rm server-migrate
+    build:
+      context: ..
+      dockerfile: apps/server/docker/Dockerfile
+      target: build
+    env_file:
+      - ../.env
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
+    profiles: ['tools']
+    entrypoint: ['bunx', 'prisma', 'db', 'push', '--schema', 'apps/server/prisma/schema.prisma']
+
+  landing-page:
+    image: pmc-landing:prod
+    build:
+      context: ..
+      dockerfile: apps/landing-page/docker/Dockerfile
+    env_file:
+      - ../.env
+    depends_on:
+      - mongo-init
+      - minio-init
+    restart: unless-stopped
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.landing-page.rule=Host(`${DOMAIN}`)'
+      - 'traefik.http.routers.landing-page.entrypoints=websecure'
+      - 'traefik.http.routers.landing-page.tls.certresolver=le'
+      - 'traefik.http.routers.landing-page.priority=1'
+      - 'traefik.http.services.landing-page.loadbalancer.server.port=3000'
+
+  portal:
+    image: pmc-portal:prod
+    build:
+      context: ..
+      dockerfile: apps/portal/docker/Dockerfile
+      args:
+        VITE_PUBLIC_API_BASE_URL: ${VITE_PUBLIC_API_BASE_URL}
+        VITE_PUBLIC_RAZORPAY_KEY_ID: ${VITE_PUBLIC_RAZORPAY_KEY_ID}
+    env_file:
+      - ../.env
+    restart: unless-stopped
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.portal.rule=Host(`${DOMAIN}`) && PathPrefix(`/portal`)'
+      - 'traefik.http.routers.portal.entrypoints=websecure'
+      - 'traefik.http.routers.portal.tls.certresolver=le'
+      - 'traefik.http.routers.portal.priority=10'
+      - 'traefik.http.services.portal.loadbalancer.server.port=80'
+
+  server:
+    image: pmc-server:prod
+    build:
+      context: ..
+      dockerfile: apps/server/docker/Dockerfile
+    env_file:
+      - ../.env
+    depends_on:
+      - mongo-init
+      - minio-init
+    restart: unless-stopped
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.server.rule=Host(`${DOMAIN}`) && PathPrefix(`/server`)'
+      - 'traefik.http.routers.server.entrypoints=websecure'
+      - 'traefik.http.routers.server.tls.certresolver=le'
+      - 'traefik.http.routers.server.priority=10'
+      - 'traefik.http.services.server.loadbalancer.server.port=4000'
+
+volumes:
+  letsencrypt:
+  mongo_data:
+  minio_data:

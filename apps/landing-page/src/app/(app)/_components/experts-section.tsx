@@ -86,7 +86,7 @@ export default function ExpertsSection({ data, experts }: ExpertsSectionProps) {
                           width={180}
                           height={190}
                           className="h-[190px] w-full max-w-[180px] sm:w-[140px] lg:w-[180px] object-cover py-2 rounded-xl bg-primary shadow-[0px_0px_4px_0px_#FEFEE3]"
-                          src={expert.file ? getFileUrl(expert.file.fileName) : expert.image}
+                          src={expert.file ? getFileUrl(expert.file.fileName) : (expert.image ?? '')}
                         />
                       </div>
 
@@ -156,4 +156,7 @@ const EXPERT_TYPE_CONFIG: Record<Expert['type'], string> = {
   CONSULTANT_PHYSICIAN: 'Consultant Physician',
   REHABILITATION_PSYCHOLOGIST: 'Rehabilitation Psychologist',
   COUNSELLING_PSYCHOLOGIST: 'Counselling Psychologist',
+  NEUROLOGIST: 'Neurologist',
+  GENERAL_PHYSICIAN: 'General Physician',
+  OTHER: 'Other',
 }

@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const Events: GlobalConfig = {
   slug: 'events',
+  access: {
+    read: () => true,
+  },
   label: 'Events & Camps Page',
   fields: [
     {

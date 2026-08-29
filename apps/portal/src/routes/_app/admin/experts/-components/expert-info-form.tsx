@@ -1,14 +1,16 @@
 import { useMutation } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import type { InferResponseType } from 'hono'
+import { PlusIcon, TrashIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Card } from '@/components/ui/card'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { honoClient } from '@/lib/hono-client'
 import type { HonoClient } from '@/lib/hono-client'
@@ -23,6 +25,12 @@ const expertInfoSchema = z.object({
   type: z.custom<ExpertType>(),
   qualifications: z.string().optional(),
   bio: z.string().optional(),
+  professionalSnapshot: z.array(z.string()),
+  education: z.array(z.object({ degree: z.string(), institution: z.string() })),
+  professionalRegistration: z.string().optional(),
+  whyChooseUs: z.array(z.string()),
+  whatToExpect: z.array(z.string()),
+  faqs: z.array(z.object({ question: z.string(), answer: z.string() })),
   gender: z.enum(['MALE', 'FEMALE']),
   city: z.string().min(1, 'City is required'),
   country: z.string().min(1, 'Country is required'),
@@ -53,6 +61,12 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
       type: initialData?.type || 'PSYCHOLOGIST',
       qualifications: initialData?.qualifications || '',
       bio: initialData?.bio || '',
+      professionalSnapshot: initialData?.professionalSnapshot?.length ? initialData.professionalSnapshot : [],
+      education: initialData?.education?.length ? initialData.education : [],
+      professionalRegistration: initialData?.professionalRegistration || '',
+      whyChooseUs: initialData?.whyChooseUs?.length ? initialData.whyChooseUs : [],
+      whatToExpect: initialData?.whatToExpect?.length ? initialData.whatToExpect : [],
+      faqs: initialData?.faqs?.length ? initialData.faqs : [],
       gender: initialData?.gender || 'MALE',
       city: initialData?.city || '',
       country: initialData?.country || '',
@@ -62,6 +76,28 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
       photoId: initialData?.file?.id,
     },
   })
+
+  const {
+    fields: faqFields,
+    append: addFaq,
+    remove: removeFaq,
+  } = useFieldArray({
+    control: form.control,
+    name: 'faqs',
+  })
+
+  const {
+    fields: educationFields,
+    append: addEducation,
+    remove: removeEducation,
+  } = useFieldArray({
+    control: form.control,
+    name: 'education',
+  })
+
+  const whyChooseUs = form.watch('whyChooseUs')
+  const whatToExpect = form.watch('whatToExpect')
+  const professionalSnapshot = form.watch('professionalSnapshot')
 
   const uploadFileMutation = useMutation({
     mutationFn: async (file: File) => {
@@ -101,6 +137,12 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
           type: values.type,
           qualifications: values.qualifications,
           bio: values.bio,
+          professionalSnapshot: values.professionalSnapshot.filter(Boolean),
+          education: values.education.filter((edu) => edu.degree.trim() && edu.institution.trim()),
+          professionalRegistration: values.professionalRegistration,
+          whyChooseUs: values.whyChooseUs.filter(Boolean),
+          whatToExpect: values.whatToExpect.filter(Boolean),
+          faqs: values.faqs.filter((faq) => faq.question.trim() && faq.answer.trim()),
           gender: values.gender,
           city: values.city,
           country: values.country,
@@ -258,6 +300,77 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
           )}
         />
 
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <FormLabel>Educational Qualifications</FormLabel>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              icon={<PlusIcon className="size-4" />}
+              onClick={() => addEducation({ degree: '', institution: '' })}
+            >
+              Add Qualification
+            </Button>
+          </div>
+          {educationFields.map((field, index) => (
+            <Card key={field.id} className="p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h5 className="font-medium text-sm">Qualification {index + 1}</h5>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  icon={<TrashIcon className="size-4" />}
+                  onClick={() => removeEducation(index)}
+                >
+                  Remove
+                </Button>
+              </div>
+              <FormField
+                name={`education.${index}.degree`}
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Degree</FormLabel>
+                    <FormControl>
+                      <Input placeholder="M.Phil. in Clinical Psychology" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name={`education.${index}.institution`}
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Institution</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Amity University" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </Card>
+          ))}
+        </div>
+
+        <FormField
+          name="professionalRegistration"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Professional Registration</FormLabel>
+              <FormControl>
+                <Textarea placeholder="e.g. Rehabilitation Council of India (RCI) - CRR-A112506" {...field} rows={2} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           name="experienceInYears"
           control={form.control}
@@ -336,6 +449,171 @@ export default function ExpertInfoForm({ expertId, initialData, onSuccess }: Exp
             </FormItem>
           )}
         />
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <FormLabel>Professional Snapshot</FormLabel>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              icon={<PlusIcon className="size-4" />}
+              onClick={() => form.setValue('professionalSnapshot', [...professionalSnapshot, ''])}
+            >
+              Add Point
+            </Button>
+          </div>
+          <FormDescription>Click "Add Point" for each line separately — don't paste all points into one box.</FormDescription>
+          {professionalSnapshot.map((_, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Input
+                placeholder="e.g. 3+ Years of Clinical Experience"
+                value={professionalSnapshot[index]}
+                onChange={(e) => {
+                  const next = [...professionalSnapshot]
+                  next[index] = e.target.value
+                  form.setValue('professionalSnapshot', next)
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                icon={<TrashIcon className="size-4" />}
+                onClick={() => form.setValue('professionalSnapshot', professionalSnapshot.filter((_, i) => i !== index))}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <FormLabel>Why Choose Us</FormLabel>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              icon={<PlusIcon className="size-4" />}
+              onClick={() => form.setValue('whyChooseUs', [...whyChooseUs, ''])}
+            >
+              Add Point
+            </Button>
+          </div>
+          <FormDescription>Click "Add Point" for each line separately — don't paste all points into one box.</FormDescription>
+          {whyChooseUs.map((_, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Input
+                placeholder="e.g. RCI-Registered Clinical Psychologist"
+                value={whyChooseUs[index]}
+                onChange={(e) => {
+                  const next = [...whyChooseUs]
+                  next[index] = e.target.value
+                  form.setValue('whyChooseUs', next)
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                icon={<TrashIcon className="size-4" />}
+                onClick={() => form.setValue('whyChooseUs', whyChooseUs.filter((_, i) => i !== index))}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <FormLabel>What to Expect</FormLabel>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              icon={<PlusIcon className="size-4" />}
+              onClick={() => form.setValue('whatToExpect', [...whatToExpect, ''])}
+            >
+              Add Point
+            </Button>
+          </div>
+          <FormDescription>Click "Add Point" for each line separately — don't paste all points into one box.</FormDescription>
+          {whatToExpect.map((_, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Input
+                placeholder="e.g. Understanding your symptoms and challenges"
+                value={whatToExpect[index]}
+                onChange={(e) => {
+                  const next = [...whatToExpect]
+                  next[index] = e.target.value
+                  form.setValue('whatToExpect', next)
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                icon={<TrashIcon className="size-4" />}
+                onClick={() => form.setValue('whatToExpect', whatToExpect.filter((_, i) => i !== index))}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <FormLabel>FAQs</FormLabel>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              icon={<PlusIcon className="size-4" />}
+              onClick={() => addFaq({ question: '', answer: '' })}
+            >
+              Add FAQ
+            </Button>
+          </div>
+          {faqFields.map((field, index) => (
+            <Card key={field.id} className="p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h5 className="font-medium text-sm">FAQ {index + 1}</h5>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  icon={<TrashIcon className="size-4" />}
+                  onClick={() => removeFaq(index)}
+                >
+                  Remove
+                </Button>
+              </div>
+              <FormField
+                name={`faqs.${index}.question`}
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Question</FormLabel>
+                    <FormControl>
+                      <Input placeholder="How is a Clinical Psychologist different from a Psychiatrist?" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name={`faqs.${index}.answer`}
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Answer</FormLabel>
+                    <FormControl>
+                      <Textarea rows={3} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </Card>
+          ))}
+        </div>
 
         <div className="flex justify-end space-x-4">
           <Button type="submit" disabled={updateMutation.isPending} loading={updateMutation.isPending}>

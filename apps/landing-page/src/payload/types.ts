@@ -81,9 +81,9 @@ export interface Config {
     internships: Internship;
     franchiseRequest: FranchiseRequest;
     'popup-notifications': PopupNotification;
+    souvenirs: Souvenir;
+    news: News;
     exports: Export;
-    imports: Import;
-    'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -109,9 +109,9 @@ export interface Config {
     internships: InternshipsSelect<false> | InternshipsSelect<true>;
     franchiseRequest: FranchiseRequestSelect<false> | FranchiseRequestSelect<true>;
     'popup-notifications': PopupNotificationsSelect<false> | PopupNotificationsSelect<true>;
+    souvenirs: SouvenirsSelect<false> | SouvenirsSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
-    imports: ImportsSelect<false> | ImportsSelect<true>;
-    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -120,7 +120,6 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  fallbackLocale: null;
   globals: {
     home: Home;
     'deep-tms': DeepTm;
@@ -156,14 +155,12 @@ export interface Config {
     'outing-page': OutingPageSelect<false> | OutingPageSelect<true>;
   };
   locale: null;
-  widgets: {
-    collections: CollectionsWidget;
+  user: User & {
+    collection: 'users';
   };
-  user: User;
   jobs: {
     tasks: {
       createCollectionExport: TaskCreateCollectionExport;
-      createCollectionImport: TaskCreateCollectionImport;
       inline: {
         input: unknown;
         output: unknown;
@@ -205,15 +202,7 @@ export interface User {
   hash?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
   password?: string | null;
-  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -249,7 +238,7 @@ export interface Blog {
     root: {
       type: string;
       children: {
-        type: any;
+        type: string;
         version: number;
         [k: string]: unknown;
       }[];
@@ -282,7 +271,7 @@ export interface Service {
     root: {
       type: string;
       children: {
-        type: any;
+        type: string;
         version: number;
         [k: string]: unknown;
       }[];
@@ -315,7 +304,7 @@ export interface Expert {
     root: {
       type: string;
       children: {
-        type: any;
+        type: string;
         version: number;
         [k: string]: unknown;
       }[];
@@ -512,7 +501,7 @@ export interface Webinar {
     root: {
       type: string;
       children: {
-        type: any;
+        type: string;
         version: number;
         [k: string]: unknown;
       }[];
@@ -586,12 +575,115 @@ export interface PopupNotification {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "souvenirs".
+ */
+export interface Souvenir {
+  id: string;
+  /**
+   * Shown once as the heading of the souvenir section/page
+   */
+  title: string;
+  /**
+   * Add all souvenir products here
+   */
+  products?:
+    | {
+        productName: string;
+        /**
+         * Add one or more images. First image is shown as main.
+         */
+        images?:
+          | {
+              image: string | Media;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Enter price in Indian Rupees (₹)
+         */
+        price: number;
+        about?: string | null;
+        /**
+         * Add each point as a separate item
+         */
+        whySpecial?:
+          | {
+              point: string;
+              id?: string | null;
+            }[]
+          | null;
+        specifications?:
+          | {
+              key?: string | null;
+              value?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        disclaimer?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: string;
+  /**
+   * Headline of the press release (added once, shared by all PRs below)
+   */
+  title: string;
+  publishedAt: string;
+  /**
+   * Add one entry per media outlet this PR was published on
+   */
+  prs?:
+    | {
+        /**
+         * Logo of the media outlet
+         */
+        logo?: (string | null) | Media;
+        /**
+         * Name of the media outlet (e.g., UP 18 News)
+         */
+        media: string;
+        /**
+         * e.g., News Portal
+         */
+        mediaType?: string | null;
+        /**
+         * e.g., Information, Business
+         */
+        industry?: string | null;
+        /**
+         * e.g., IN or IN,US
+         */
+        visitingCountry?: string | null;
+        /**
+         * e.g., 104760 visit/month
+         */
+        potentialAudience?: string | null;
+        /**
+         * External URL this PR card should open (e.g., https://example.com/article)
+         */
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports".
  */
 export interface Export {
   id: string;
   name?: string | null;
-  format: 'csv' | 'json';
+  format?: ('csv' | 'json') | null;
   limit?: number | null;
   page?: number | null;
   sort?: string | null;
@@ -620,60 +712,6 @@ export interface Export {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "imports".
- */
-export interface Import {
-  id: string;
-  collectionSlug: string;
-  importMode?: ('create' | 'update' | 'upsert') | null;
-  matchField?: string | null;
-  status?: ('pending' | 'completed' | 'partial' | 'failed') | null;
-  summary?: {
-    imported?: number | null;
-    updated?: number | null;
-    total?: number | null;
-    issues?: number | null;
-    issueDetails?:
-      | {
-          [k: string]: unknown;
-        }
-      | unknown[]
-      | string
-      | number
-      | boolean
-      | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-kv".
- */
-export interface PayloadKv {
-  id: string;
-  key: string;
-  data:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -727,7 +765,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'createCollectionExport' | 'createCollectionImport';
+        taskSlug: 'inline' | 'createCollectionExport';
         taskID: string;
         input?:
           | {
@@ -760,7 +798,7 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'createCollectionExport' | 'createCollectionImport') | null;
+  taskSlug?: ('inline' | 'createCollectionExport') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -829,6 +867,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'popup-notifications';
         value: string | PopupNotification;
+      } | null)
+    | ({
+        relationTo: 'souvenirs';
+        value: string | Souvenir;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: string | News;
+      } | null)
+    | ({
+        relationTo: 'exports';
+        value: string | Export;
+      } | null)
+    | ({
+        relationTo: 'payload-jobs';
+        value: string | PayloadJob;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -886,13 +940,6 @@ export interface UsersSelect<T extends boolean = true> {
   hash?: T;
   loginAttempts?: T;
   lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1149,6 +1196,65 @@ export interface PopupNotificationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "souvenirs_select".
+ */
+export interface SouvenirsSelect<T extends boolean = true> {
+  title?: T;
+  products?:
+    | T
+    | {
+        productName?: T;
+        images?:
+          | T
+          | {
+              image?: T;
+              id?: T;
+            };
+        price?: T;
+        about?: T;
+        whySpecial?:
+          | T
+          | {
+              point?: T;
+              id?: T;
+            };
+        specifications?:
+          | T
+          | {
+              key?: T;
+              value?: T;
+              id?: T;
+            };
+        disclaimer?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  title?: T;
+  publishedAt?: T;
+  prs?:
+    | T
+    | {
+        logo?: T;
+        media?: T;
+        mediaType?: T;
+        industry?: T;
+        visitingCountry?: T;
+        potentialAudience?: T;
+        link?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports_select".
  */
 export interface ExportsSelect<T extends boolean = true> {
@@ -1174,44 +1280,6 @@ export interface ExportsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "imports_select".
- */
-export interface ImportsSelect<T extends boolean = true> {
-  collectionSlug?: T;
-  importMode?: T;
-  matchField?: T;
-  status?: T;
-  summary?:
-    | T
-    | {
-        imported?: T;
-        updated?: T;
-        total?: T;
-        issues?: T;
-        issueDetails?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-kv_select".
- */
-export interface PayloadKvSelect<T extends boolean = true> {
-  key?: T;
-  data?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1292,7 +1360,7 @@ export interface Home {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1318,7 +1386,7 @@ export interface Home {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1348,7 +1416,7 @@ export interface Home {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1379,7 +1447,7 @@ export interface Home {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1432,6 +1500,13 @@ export interface Home {
     cards?:
       | {
           card1?: (string | null) | Media;
+          card1Back?: (string | null) | Media;
+          card1Name?: string | null;
+          card1Price?: number | null;
+          /**
+           * URL-friendly name (e.g., basic-card)
+           */
+          card1Slug?: string | null;
           card1Button?: string | null;
           card1Link?: string | null;
           card1Features?:
@@ -1441,6 +1516,13 @@ export interface Home {
               }[]
             | null;
           card2?: (string | null) | Media;
+          card2Back?: (string | null) | Media;
+          card2Name?: string | null;
+          card2Price?: number | null;
+          /**
+           * URL-friendly name (e.g., advanced-card)
+           */
+          card2Slug?: string | null;
           card2Button?: string | null;
           card2Link?: string | null;
           card2Features?:
@@ -1450,6 +1532,13 @@ export interface Home {
               }[]
             | null;
           card3?: (string | null) | Media;
+          card3Back?: (string | null) | Media;
+          card3Name?: string | null;
+          card3Price?: number | null;
+          /**
+           * URL-friendly name (e.g., card-3)
+           */
+          card3Slug?: string | null;
           card3Button?: string | null;
           card3Link?: string | null;
           card3Features?:
@@ -1461,6 +1550,10 @@ export interface Home {
           id?: string | null;
         }[]
       | null;
+  };
+  newsSection?: {
+    title?: string | null;
+    action?: string | null;
   };
   packagesSection?: {
     title?: string | null;
@@ -1550,7 +1643,7 @@ export interface Home {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1634,7 +1727,7 @@ export interface Home {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1680,7 +1773,7 @@ export interface DeepTm {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1713,7 +1806,7 @@ export interface DeepTm {
             root: {
               type: string;
               children: {
-                type: any;
+                type: string;
                 version: number;
                 [k: string]: unknown;
               }[];
@@ -1824,7 +1917,7 @@ export interface OurService {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1869,7 +1962,7 @@ export interface ContactUs {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1897,7 +1990,7 @@ export interface AboutUs {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1927,7 +2020,7 @@ export interface AboutUs {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -1948,7 +2041,7 @@ export interface AboutUs {
             root: {
               type: string;
               children: {
-                type: any;
+                type: string;
                 version: number;
                 [k: string]: unknown;
               }[];
@@ -1972,7 +2065,7 @@ export interface AboutUs {
         root: {
           type: string;
           children: {
-            type: any;
+            type: string;
             version: number;
             [k: string]: unknown;
           }[];
@@ -1990,7 +2083,7 @@ export interface AboutUs {
         root: {
           type: string;
           children: {
-            type: any;
+            type: string;
             version: number;
             [k: string]: unknown;
           }[];
@@ -2009,7 +2102,7 @@ export interface AboutUs {
         root: {
           type: string;
           children: {
-            type: any;
+            type: string;
             version: number;
             [k: string]: unknown;
           }[];
@@ -2037,7 +2130,7 @@ export interface AboutUs {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -2099,7 +2192,7 @@ export interface PrivacyPolicy {
     root: {
       type: string;
       children: {
-        type: any;
+        type: string;
         version: number;
         [k: string]: unknown;
       }[];
@@ -2131,7 +2224,7 @@ export interface TermsAndCondition {
     root: {
       type: string;
       children: {
-        type: any;
+        type: string;
         version: number;
         [k: string]: unknown;
       }[];
@@ -2239,7 +2332,7 @@ export interface Academy {
             root: {
               type: string;
               children: {
-                type: any;
+                type: string;
                 version: number;
                 [k: string]: unknown;
               }[];
@@ -2280,7 +2373,7 @@ export interface Franchise {
       root: {
         type: string;
         children: {
-          type: any;
+          type: string;
           version: number;
           [k: string]: unknown;
         }[];
@@ -2353,7 +2446,7 @@ export interface ReturnPolicy {
     root: {
       type: string;
       children: {
-        type: any;
+        type: string;
         version: number;
         [k: string]: unknown;
       }[];
@@ -2380,7 +2473,7 @@ export interface OutingPage {
     root: {
       type: string;
       children: {
-        type: any;
+        type: string;
         version: number;
         [k: string]: unknown;
       }[];
@@ -2514,6 +2607,10 @@ export interface HomeSelect<T extends boolean = true> {
           | T
           | {
               card1?: T;
+              card1Back?: T;
+              card1Name?: T;
+              card1Price?: T;
+              card1Slug?: T;
               card1Button?: T;
               card1Link?: T;
               card1Features?:
@@ -2523,6 +2620,10 @@ export interface HomeSelect<T extends boolean = true> {
                     id?: T;
                   };
               card2?: T;
+              card2Back?: T;
+              card2Name?: T;
+              card2Price?: T;
+              card2Slug?: T;
               card2Button?: T;
               card2Link?: T;
               card2Features?:
@@ -2532,6 +2633,10 @@ export interface HomeSelect<T extends boolean = true> {
                     id?: T;
                   };
               card3?: T;
+              card3Back?: T;
+              card3Name?: T;
+              card3Price?: T;
+              card3Slug?: T;
               card3Button?: T;
               card3Link?: T;
               card3Features?:
@@ -2542,6 +2647,12 @@ export interface HomeSelect<T extends boolean = true> {
                   };
               id?: T;
             };
+      };
+  newsSection?:
+    | T
+    | {
+        title?: T;
+        action?: T;
       };
   packagesSection?:
     | T
@@ -3316,51 +3427,20 @@ export interface OutingPageSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "collections_widget".
- */
-export interface CollectionsWidget {
-  data?: {
-    [k: string]: unknown;
-  };
-  width: 'full';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "TaskCreateCollectionExport".
  */
 export interface TaskCreateCollectionExport {
   input: {
-    id: string;
-    name: string;
-    batchSize?: number | null;
-    collectionSlug:
-      | 'users'
-      | 'media'
-      | 'blog'
-      | 'experts'
-      | 'team-members'
-      | 'testimonial'
-      | 'services'
-      | 'leads'
-      | 'appointments'
-      | 'webinars'
-      | 'quiz'
-      | 'internships'
-      | 'franchiseRequest'
-      | 'popup-notifications'
-      | 'exports'
-      | 'imports';
-    drafts?: ('yes' | 'no') | null;
-    exportCollection: string;
-    fields?: string[] | null;
-    format: 'csv' | 'json';
+    name?: string | null;
+    format?: ('csv' | 'json') | null;
     limit?: number | null;
-    locale?: string | null;
-    maxLimit?: number | null;
     page?: number | null;
     sort?: string | null;
-    userCollection?: string | null;
-    userID?: string | null;
+    sortOrder?: ('asc' | 'desc') | null;
+    drafts?: ('yes' | 'no') | null;
+    selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null;
+    fields?: string[] | null;
+    collectionSlug: string;
     where?:
       | {
           [k: string]: unknown;
@@ -3370,23 +3450,9 @@ export interface TaskCreateCollectionExport {
       | number
       | boolean
       | null;
-  };
-  output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TaskCreateCollectionImport".
- */
-export interface TaskCreateCollectionImport {
-  input: {
-    importId: string;
-    importCollection: string;
-    userID?: string | null;
+    user?: string | null;
     userCollection?: string | null;
-    batchSize?: number | null;
-    debug?: boolean | null;
-    defaultVersionStatus?: ('draft' | 'published') | null;
-    maxLimit?: number | null;
+    exportsCollection?: string | null;
   };
   output?: unknown;
 }

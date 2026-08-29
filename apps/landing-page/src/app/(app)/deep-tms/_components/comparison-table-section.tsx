@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { DeepTm } from '@/payload/types'
+import type { DeepTm } from '@/payload/types'
 
 type ComparisonTableSectionProps = {
   data: DeepTm['deepTmsComparisonSection']

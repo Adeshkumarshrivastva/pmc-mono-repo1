@@ -11,7 +11,6 @@ FROM base AS build
 # Copy package files
 COPY pnpm-workspace.yaml ./
 COPY package.json ./
-COPY pnpm-lock.yaml ./
 COPY apps/landing-page/package.json apps/landing-page/package.json
 COPY apps/server/package.json apps/server/package.json
 COPY apps/portal/package.json apps/portal/package.json

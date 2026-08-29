@@ -11,6 +11,9 @@ import { webinarsSection } from '../fields/webinars-section'
 
 export const Home: GlobalConfig = {
   slug: 'home',
+  access: {
+    read: () => true,
+  },
   label: 'Home',
   fields: [
     {
@@ -366,9 +369,36 @@ export const Home: GlobalConfig = {
           fields: [
             {
               name: 'card1',
-              label: 'Card 1',
+              label: 'Card 1 Front Image',
               type: 'relationship',
               relationTo: 'media',
+            },
+            {
+              name: 'card1Back',
+              label: 'Card 1 Back Image',
+              type: 'relationship',
+              relationTo: 'media',
+            },
+            {
+              name: 'card1Name',
+              label: 'Card 1 Name',
+              type: 'text',
+              defaultValue: 'Basic Card',
+            },
+            {
+              name: 'card1Price',
+              label: 'Card 1 Price',
+              type: 'number',
+              defaultValue: 399,
+            },
+            {
+              name: 'card1Slug',
+              label: 'Card 1 Slug (URL)',
+              type: 'text',
+              defaultValue: 'basic-card',
+              admin: {
+                description: 'URL-friendly name (e.g., basic-card)',
+              },
             },
             {
               name: 'card1Button',
@@ -397,9 +427,36 @@ export const Home: GlobalConfig = {
             },
             {
               name: 'card2',
-              label: 'Card 2',
+              label: 'Card 2 Front Image',
               type: 'relationship',
               relationTo: 'media',
+            },
+            {
+              name: 'card2Back',
+              label: 'Card 2 Back Image',
+              type: 'relationship',
+              relationTo: 'media',
+            },
+            {
+              name: 'card2Name',
+              label: 'Card 2 Name',
+              type: 'text',
+              defaultValue: 'Advanced Card',
+            },
+            {
+              name: 'card2Price',
+              label: 'Card 2 Price',
+              type: 'number',
+              defaultValue: 599,
+            },
+            {
+              name: 'card2Slug',
+              label: 'Card 2 Slug (URL)',
+              type: 'text',
+              defaultValue: 'advanced-card',
+              admin: {
+                description: 'URL-friendly name (e.g., advanced-card)',
+              },
             },
             {
               name: 'card2Button',
@@ -428,9 +485,33 @@ export const Home: GlobalConfig = {
             },
             {
               name: 'card3',
-              label: 'Card 3',
+              label: 'Card 3 Front Image',
               type: 'relationship',
               relationTo: 'media',
+            },
+            {
+              name: 'card3Back',
+              label: 'Card 3 Back Image',
+              type: 'relationship',
+              relationTo: 'media',
+            },
+            {
+              name: 'card3Name',
+              label: 'Card 3 Name',
+              type: 'text',
+            },
+            {
+              name: 'card3Price',
+              label: 'Card 3 Price',
+              type: 'number',
+            },
+            {
+              name: 'card3Slug',
+              label: 'Card 3 Slug (URL)',
+              type: 'text',
+              admin: {
+                description: 'URL-friendly name (e.g., card-3)',
+              },
             },
             {
               name: 'card3Button',
@@ -458,6 +539,25 @@ export const Home: GlobalConfig = {
               ],
             },
           ],
+        },
+      ],
+    },
+    {
+      name: 'newsSection',
+      label: 'News Section',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Section Title',
+          type: 'text',
+          defaultValue: 'Latest News',
+        },
+        {
+          name: 'action',
+          label: 'Action Button Text',
+          type: 'text',
+          defaultValue: 'View All News',
         },
       ],
     },

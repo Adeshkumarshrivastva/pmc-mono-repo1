@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const TermsAndConditions: GlobalConfig = {
   slug: 'terms-and-conditions',
+  access: {
+    read: () => true,
+  },
   label: 'Terms & Conditions',
   admin: {
     group: 'Legal',

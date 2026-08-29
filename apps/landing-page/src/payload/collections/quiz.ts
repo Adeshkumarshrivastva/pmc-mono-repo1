@@ -2,6 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 export const Quiz: CollectionConfig = {
   slug: 'quiz',
+  access: {
+    read: () => true,
+  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'order'],

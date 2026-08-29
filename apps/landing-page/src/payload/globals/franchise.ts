@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const Franchise: GlobalConfig = {
   slug: 'franchise',
+  access: {
+    read: () => true,
+  },
   label: 'Franchise',
   fields: [
     {

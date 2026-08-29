@@ -18,14 +18,16 @@ export default function HeroSection({ data }: HeroSectionProps) {
 
   return (
     <div className="bg-primary min-h-[600px] sm:min-h-[700px] xl:min-h-[800px] flex items-center relative">
-      <Image
-        src={backgroundImageUrl}
-        alt="Hero background"
-        fill
-        sizes="100vw"
-        className="object-cover xl:object-contain xl:object-bottom"
-        priority
-      />
+      {backgroundImageUrl ? (
+        <Image
+          src={backgroundImageUrl}
+          alt="Hero background"
+          fill
+          sizes="100vw"
+          className="object-cover xl:object-contain xl:object-bottom"
+          priority
+        />
+      ) : null}
       <div className="relative 2xl:container w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-25 z-10">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8 xl:gap-12">

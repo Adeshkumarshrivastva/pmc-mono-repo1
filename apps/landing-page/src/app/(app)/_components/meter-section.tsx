@@ -8,6 +8,11 @@ type MeterSectionProps = {
   data: Home['meterSection']
 }
 
+const SCREENING_TESTS = [
+  { title: 'Anxiety', href: 'https://forestgreen-scorpion-490773.hostingersite.com/anxiety-screening/' },
+  { title: 'Depression', href: 'https://forestgreen-scorpion-490773.hostingersite.com/depression-screening/' },
+]
+
 export default function MeterSection({ data }: MeterSectionProps) {
   return (
     <section className="w-full bg-accent">
@@ -30,22 +35,39 @@ export default function MeterSection({ data }: MeterSectionProps) {
           </div>
 
           <div className="grid gap-4 xl:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-            {data?.meters?.map((meter) => (
-              <Link href={meter.href ?? ''} key={meter.id}>
-                <div className="bg-card p-4 rounded-xl flex flex-col items-center justify-between h-[320px]">
-                  <div className="flex-1 flex items-center justify-center w-full">
-                    <Image
-                      src={getURLFromMedia(meter.meterImage ?? '')}
-                      alt={meter.title ?? ''}
-                      width={256}
-                      height={161}
-                      className="object-contain max-h-[200px]"
-                    />
+            {data?.meters?.map((meter) => {
+              const imageUrl = getURLFromMedia(meter.meterImage ?? '')
+              return (
+                <Link href={meter.href ?? ''} key={meter.id}>
+                  <div className="bg-card p-4 rounded-xl flex flex-col items-center justify-between h-[320px]">
+                    <div className="flex-1 flex items-center justify-center w-full">
+                      {imageUrl ? (
+                        <Image
+                          src={imageUrl}
+                          alt={meter.title ?? ''}
+                          width={256}
+                          height={161}
+                          className="object-contain max-h-[200px]"
+                        />
+                      ) : null}
+                    </div>
+                    <h3 className="text-2xl font-semibold text-accent text-center mt-4">{meter.title}</h3>
                   </div>
-                  <h3 className="text-2xl font-semibold text-accent text-center mt-4">{meter.title}</h3>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              )
+            })}
+          </div>
+          <div className="mt-8 sm:mt-10">
+            <h3 className="text-xl font-semibold text-primary text-center mb-4 sm:mb-6">Minds AI for Screening Test</h3>
+            <div className="grid gap-4 xl:gap-6 grid-cols-1 sm:grid-cols-2 max-w-xl mx-auto">
+              {SCREENING_TESTS.map((test) => (
+                <a href={test.href} target="_blank" rel="noopener noreferrer" key={test.title}>
+                  <div className="bg-card p-4 rounded-xl flex items-center justify-center h-[140px]">
+                    <h3 className="text-2xl font-semibold text-accent text-center">{test.title}</h3>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>

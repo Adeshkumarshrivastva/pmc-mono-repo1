@@ -2,6 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 export const Webinars: CollectionConfig = {
   slug: 'webinars',
+  access: {
+    read: () => true,
+  },
   admin: {
     useAsTitle: 'title',
   },

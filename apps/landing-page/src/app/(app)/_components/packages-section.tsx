@@ -158,8 +158,8 @@ export default function PackagesSection({ data }: PackagesSectionProps) {
                           className={cn(
                             'w-full py-3 px-4 rounded-lg font-medium transition-colors border flex items-center justify-center gap-2',
                             index === 1
-                              ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 border-border'
-                              : 'bg-secondary text-secondary-foreground hover:bg-secondary/90 border-card'
+                              ? 'bg-card text-card-foreground hover:bg-card/90 border-border'
+                              : 'bg-card text-card-foreground hover:bg-card/90 border-card'
                           )}
                         >
                           <ChatIcon className="size-5" />
@@ -222,8 +222,8 @@ export default function PackagesSection({ data }: PackagesSectionProps) {
                             className={cn(
                               'w-full py-3 px-4 rounded-lg font-medium transition-colors border flex items-center justify-center gap-2',
                               index === 1
-                                ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 border-border'
-                                : 'bg-secondary text-secondary-foreground hover:bg-secondary/90 border-card'
+                                ? 'bg-card text-card-foreground hover:bg-card/90 border-border'
+                                : 'bg-card text-card-foreground hover:bg-card/90 border-card'
                             )}
                           >
                             Book Now - ₹{calculateDiscountedPrice(pkg?.price)}

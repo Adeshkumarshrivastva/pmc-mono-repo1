@@ -33,6 +33,8 @@ import { Academy } from './globals/academy'
 import { Franchise } from './globals/franchise'
 import { FranchiseRequest } from './collections/franchise'
 import { PopupNotifications } from './collections/popup-notifications'
+import { Souvenir } from './collections/souvenir'
+import { News } from './collections/news'
 import { Events } from './globals/events'
 import { ReturnPolicy } from './globals/return-policy'
 import { OutingPage } from './globals/outing-page'
@@ -62,6 +64,8 @@ export default buildConfig({
     Internships,
     FranchiseRequest,
     PopupNotifications,
+    Souvenir,
+    News,
   ],
   globals: [
     Home,
@@ -103,6 +107,11 @@ export default buildConfig({
           accessKeyId: env.PAYLOAD_BUCKET_ACCESS_KEY,
           secretAccessKey: env.PAYLOAD_BUCKET_SECRET_KEY,
         },
+        // Only set for self-hosted S3-compatible storage (e.g. MinIO). Leave
+        // PAYLOAD_BUCKET_ENDPOINT unset to use real AWS S3 as before.
+        ...(env.PAYLOAD_BUCKET_ENDPOINT
+          ? { endpoint: env.PAYLOAD_BUCKET_ENDPOINT, forcePathStyle: true }
+          : {}),
       },
     }),
     importExportPlugin({

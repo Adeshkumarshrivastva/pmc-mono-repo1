@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Home } from '@/payload/types'
+import type { Home } from '@/payload/types'
 import { SqureMinusIcon, SqurePlusIcon } from '@/components/ui/icons'
 import { cn } from '@/lib/utils'
 

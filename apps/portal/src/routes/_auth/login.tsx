@@ -5,7 +5,8 @@ import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { useTimer } from 'react-timer-hook'
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { CURRENT_SESSION_QUERY_KEY } from '@/queries/session'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
@@ -63,6 +64,7 @@ type Mode = { type: 'initial'; phoneNumber?: string } | { type: 'verify'; phoneN
 
 function OtpLoginForm() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [mode, setMode] = useState<Mode>({ type: 'initial' })
 
   return match(mode)
@@ -77,7 +79,8 @@ function OtpLoginForm() {
     .with({ type: 'verify' }, ({ phoneNumber }) => (
       <VerifyOTP
         phoneNumber={phoneNumber}
-        onSuccess={() => {
+        onSuccess={async () => {
+          await queryClient.invalidateQueries({ queryKey: CURRENT_SESSION_QUERY_KEY })
           navigate({ to: '/', replace: true })
         }}
         onBack={() => {

@@ -55,11 +55,11 @@ function ExpertGrid({ expert }: { expert: ExpertWithRelations }) {
       <div className="p-4 pb-4 text-slate-900 flex flex-col flex-1">
         <div className="flex items-start gap-4 mb-3">
           <div className="relative w-28 h-28 shrink-0">
-            {expert.file ? (
+            {expert.image ? (
               <div className="relative flex-shrink-0">
                 <div className="w-28 h-28">
                   <img
-                    src={getFileUrl(expert.file.fileName)}
+                    src={expert.file ? getFileUrl(expert.file.fileName) : expert.image}
                     alt={name}
                     className="w-full h-full object-cover rounded-xl"
                   />
@@ -373,14 +373,16 @@ export default function BookingSection({ data }: BookingSectionProps) {
 
   return (
     <div className="bg-primary min-h-[600px] sm:min-h-[700px] xl:min-h-[800px] flex items-center relative px-4 py-8 overflow-hidden">
-      <Image
-        src={backgroundImageUrl}
-        alt="Hero background"
-        fill
-        sizes="33vw"
-        className="hidden sm:block object-cover"
-        priority
-      />
+      {backgroundImageUrl ? (
+        <Image
+          src={backgroundImageUrl}
+          alt="Hero background"
+          fill
+          sizes="33vw"
+          className="hidden sm:block object-cover"
+          priority
+        />
+      ) : null}
 
       <div className="relative 2xl:container w-full mx-auto xl:px-10 z-10">
         <div className="flex flex-col md:flex-row justify-center items-center mb-8 gap-4">

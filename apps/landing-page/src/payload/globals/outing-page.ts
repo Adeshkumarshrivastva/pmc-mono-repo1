@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const OutingPage: GlobalConfig = {
   slug: 'outing-page',
+  access: {
+    read: () => true,
+  },
   label: 'Outing Page',
   admin: {
     group: 'Pages',

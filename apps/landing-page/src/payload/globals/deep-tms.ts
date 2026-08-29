@@ -5,6 +5,9 @@ import { serivicesSection } from '../fields/services-section'
 
 export const DeepTms: GlobalConfig = {
   slug: 'deep-tms',
+  access: {
+    read: () => true,
+  },
   label: 'About Deep TMS',
   fields: [
     {

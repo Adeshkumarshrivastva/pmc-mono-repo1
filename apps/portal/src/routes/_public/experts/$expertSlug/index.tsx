@@ -1,7 +1,23 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { MapPin, Star, ArrowLeft, UserIcon, Award, User, BookOpenIcon, ClockIcon } from 'lucide-react'
+import { useState } from 'react'
+import {
+  MapPin,
+  Star,
+  ArrowLeft,
+  UserIcon,
+  Award,
+  User,
+  BookOpenIcon,
+  ClockIcon,
+  CheckCircle2,
+  ListChecks,
+  ChevronDown,
+  BadgeCheck,
+  GraduationCap,
+  ClipboardList,
+} from 'lucide-react'
 import { match } from 'ts-pattern'
 import { Button } from '@/components/ui/button'
 import { honoClient } from '@/lib/hono-client'
@@ -15,6 +31,15 @@ import { isExpertOnline, EXPERT_TYPES_CONFIG } from '@/lib/expert'
 export const Route = createFileRoute('/_public/experts/$expertSlug/')({
   component: ExpertPage,
 })
+
+// Some entries were saved as a single blob with "•" separators instead of
+// one array item per point, so split those apart before rendering as a list.
+function splitIntoPoints(points: string[]) {
+  return points
+    .flatMap((point) => point.split('•'))
+    .map((point) => point.trim())
+    .filter(Boolean)
+}
 
 function ExpertPage() {
   const { expertSlug } = Route.useParams()
@@ -62,6 +87,12 @@ function ExpertPage() {
         country,
         bio,
         qualifications,
+        professionalSnapshot,
+        education,
+        professionalRegistration,
+        whyChooseUs,
+        whatToExpect,
+        faqs,
         avgRating,
         image,
         expertise,
@@ -220,6 +251,12 @@ function ExpertPage() {
                             </p>
                           </div>
                         ) : null}
+                        {professionalRegistration ? (
+                          <div className="mb-4 flex items-start gap-1.5">
+                            <BadgeCheck className="size-4 text-primary mt-0.5 flex-shrink-0" />
+                            <p className="text-sm text-muted-foreground">{professionalRegistration}</p>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -235,6 +272,78 @@ function ExpertPage() {
                   <p className="text-muted-foreground leading-relaxed text-sm">{bio}</p>
                 </div>
               ) : null}
+
+              {professionalSnapshot && professionalSnapshot.length > 0 ? (
+                <div className="bg-card/80 rounded-2xl border border-border shadow-lg p-6 mb-6">
+                  <h2 className="text-lg flex font-bold text-foreground mb-3">
+                    <ClipboardList className="size-5 text-primary mt-1 mr-1" />
+                    Professional Snapshot
+                  </h2>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {splitIntoPoints(professionalSnapshot).map((point, index) => (
+                      <li key={index} className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <CheckCircle2 className="size-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {education && education.length > 0 ? (
+                <div className="bg-card/80 rounded-2xl border border-border shadow-lg p-6 mb-6">
+                  <h2 className="text-lg flex font-bold text-foreground mb-3">
+                    <GraduationCap className="size-5 text-primary mt-1 mr-1" />
+                    Educational Qualifications
+                  </h2>
+                  <ul className="space-y-3">
+                    {education.map((edu, index) => (
+                      <li key={index}>
+                        <p className="text-sm font-medium text-foreground">{edu.degree}</p>
+                        <p className="text-sm text-muted-foreground">{edu.institution}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {whyChooseUs && whyChooseUs.length > 0 ? (
+                <div className="bg-card/80 rounded-2xl border border-border shadow-lg p-6 mb-6">
+                  <h2 className="text-lg flex font-bold text-foreground mb-3">
+                    <CheckCircle2 className="size-5 text-primary mt-1 mr-1" />
+                    Why Choose {name}?
+                  </h2>
+                  <ul className="space-y-2">
+                    {splitIntoPoints(whyChooseUs).map((point, index) => (
+                      <li key={index} className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <CheckCircle2 className="size-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {whatToExpect && whatToExpect.length > 0 ? (
+                <div className="bg-card/80 rounded-2xl border border-border shadow-lg p-6 mb-6">
+                  <h2 className="text-lg flex font-bold text-foreground mb-3">
+                    <ListChecks className="size-5 text-primary mt-1 mr-1" />
+                    What to Expect During Your First Consultation
+                  </h2>
+                  <ol className="space-y-2">
+                    {splitIntoPoints(whatToExpect).map((point, index) => (
+                      <li key={index} className="flex items-start gap-2 text-muted-foreground text-sm">
+                        <span className="flex-shrink-0 size-5 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center">
+                          {index + 1}
+                        </span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : null}
+
+              {faqs && faqs.length > 0 ? <FaqSection faqs={faqs} /> : null}
 
               <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border shadow-lg p-6">
                 <h2 className="text-lg font-bold text-foreground mb-4">Services</h2>
@@ -275,6 +384,36 @@ function ExpertPage() {
       )
     })
     .otherwise(() => null)
+}
+
+function FaqSection({ faqs }: { faqs: { question: string; answer: string }[] }) {
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+  return (
+    <div className="bg-card/80 rounded-2xl border border-border shadow-lg p-6 mb-6">
+      <h2 className="text-lg font-bold text-foreground mb-3">Frequently Asked Questions</h2>
+      <div className="divide-y divide-border">
+        {faqs.map((faq, index) => {
+          const isOpen = openIndex === index
+          return (
+            <div key={index} className="py-3">
+              <button
+                type="button"
+                onClick={() => setOpenIndex(isOpen ? null : index)}
+                className="flex w-full items-center justify-between gap-2 text-left"
+              >
+                <span className="text-sm font-medium text-foreground">{faq.question}</span>
+                <ChevronDown
+                  className={cn('size-4 text-muted-foreground flex-shrink-0 transition-transform', isOpen ? 'rotate-180' : '')}
+                />
+              </button>
+              {isOpen ? <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{faq.answer}</p> : null}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 
 function ExpertDetailSkeleton() {

@@ -9,7 +9,6 @@ export const env = createEnv({
   server: {
     PAYLOAD_DB_URL: z.url(),
     PAYLOAD_SECRET: z.string(),
-    PAYLOAD_SERVER_URL: z.string().optional(),
     PAYLOAD_BUCKET: z.string(),
     RAZORPAY_KEY_ID: z.string(),
     RAZORPAY_KEY_SECRET: z.string(),
@@ -24,6 +23,9 @@ export const env = createEnv({
     PAYLOAD_BUCKET_REGION: z.string(),
     PAYLOAD_BUCKET_ACCESS_KEY: z.string(),
     PAYLOAD_BUCKET_SECRET_KEY: z.string(),
+    // Set only for self-hosted S3-compatible storage (e.g. MinIO), e.g.
+    // http://minio:9000. Leave unset to use real AWS S3.
+    PAYLOAD_BUCKET_ENDPOINT: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -59,6 +61,6 @@ export const env = createEnv({
     PAYLOAD_BUCKET_REGION: process.env.PAYLOAD_BUCKET_REGION,
     PAYLOAD_BUCKET_ACCESS_KEY: process.env.PAYLOAD_BUCKET_ACCESS_KEY,
     PAYLOAD_BUCKET_SECRET_KEY: process.env.PAYLOAD_BUCKET_SECRET_KEY,
-    PAYLOAD_SERVER_URL: process.env.PAYLOAD_SERVER_URL,
+    PAYLOAD_BUCKET_ENDPOINT: process.env.PAYLOAD_BUCKET_ENDPOINT,
   },
 })

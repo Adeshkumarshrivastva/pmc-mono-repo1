@@ -35,7 +35,7 @@ export default async function MainServicePage({ params }: MainServicePageProps) 
                 ) : null}
               </div>
               <div className="grid gap-6 md:grid-cols-3 md:gap-8 lg:gap-12">
-                {subServices?.docs.map((subService) => (
+                {subServices?.docs.map((subService: any) => (
                   <div key={subService.id} className="space-y-2">
                     {subService.image && (
                       <div className="relative rounded-3xl w-full h-64 sm:h-80 lg:h-96 lg:w-96 mx-auto overflow-hidden">

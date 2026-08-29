@@ -22,11 +22,11 @@ export default function Footer({ data }: { data: Footer }) {
             <div>
               <div className="font-medium">Address:</div>
               <div className="text-primary-foreground/50">
-                804 (A), Arcadia, South City II,
+                GF - 43, M2K Corporate Park,
                 <br />
-                Sector 49, Gurugram,
+                N Block, Mayfield Garden,
                 <br />
-                Fatehpur, Haryana 122018
+                Sector 51, Gurugram, Haryana 122018
               </div>
             </div>
             <div>
@@ -34,8 +34,10 @@ export default function Footer({ data }: { data: Footer }) {
               <div className="text-primary-foreground/50">089205 30832</div>
             </div>
           </div>
-          <div className="md:col-span-4 space-y-4">
-            <Image src={getURLFromMedia(data.footer?.info?.image || '')} alt="" width={94} height={69} />
+          <div className="md:col-span-2 space-y-4">
+            {getURLFromMedia(data.footer?.info?.image || '') ? (
+              <Image src={getURLFromMedia(data.footer?.info?.image || '')} alt="" width={94} height={69} />
+            ) : null}
             <div className="font-medium">{data.footer?.info?.title}</div>
             <div className="text-primary-foreground/50">{data.footer?.info?.info}</div>
           </div>
@@ -68,6 +70,22 @@ export default function Footer({ data }: { data: Footer }) {
             <h3 className="mb-4 text-lg font-medium uppercase">Awareness Campaign</h3>
             <ul className="space-y-2">
               {AWARENESS_ITEMS.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={item.href}
+                    rel="noopener noreferrer"
+                    className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="md:col-span-2 space-y-4">
+            <h3 className="mb-4 text-lg font-medium uppercase">Explore</h3>
+            <ul className="space-y-2">
+              {EXPLORE_ITEMS.map((item) => (
                 <li key={item.id}>
                   <a
                     href={item.href}
@@ -117,11 +135,14 @@ export default function Footer({ data }: { data: Footer }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
           {/* left column */}
           <div className="flex text-center items-center gap-5">
-            {data.footer?.social?.map((item) => (
-              <a key={item.id} href={item.url || ''} target="_blank" rel="noopener noreferrer">
-                <Image src={getURLFromMedia(item.icon || '')} alt="" width={30} height={30} />
-              </a>
-            ))}
+            {data.footer?.social?.map((item) => {
+              const iconUrl = getURLFromMedia(item.icon || '')
+              return iconUrl ? (
+                <a key={item.id} href={item.url || ''} target="_blank" rel="noopener noreferrer">
+                  <Image src={iconUrl} alt="" width={30} height={30} />
+                </a>
+              ) : null
+            })}
           </div>
 
           {/* right column */}
@@ -157,6 +178,12 @@ const NAV_ITEMS = [
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
   { id: 'services', href: '/services', label: 'Services' },
   { id: 'our-experts', href: '/portal/experts', label: 'Our Experts' },
+]
+
+const EXPLORE_ITEMS = [
+  { id: 'ambassador', href: '/ambassador', label: 'Ambassador' },
+  { id: 'academy', href: '/academy', label: 'Academy' },
+  { id: 'souvenir', href: '/souvenir', label: 'Souvenir' },
 ]
 
 const AWARENESS_ITEMS = [

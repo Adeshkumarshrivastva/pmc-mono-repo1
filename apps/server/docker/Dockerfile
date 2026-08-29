@@ -26,9 +26,6 @@ RUN bun install --filter @pmc/server
 # Copy rest of app
 COPY . .
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
 RUN bun run --filter @pmc/server build:server
 
 #------------------#

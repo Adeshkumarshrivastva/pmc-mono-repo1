@@ -3,6 +3,9 @@ import { testimonialSection } from '../fields/testimonial-section'
 
 export const OurServices: GlobalConfig = {
   slug: 'our-services',
+  access: {
+    read: () => true,
+  },
   label: 'Our Services',
   fields: [
     {

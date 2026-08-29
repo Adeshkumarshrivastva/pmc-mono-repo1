@@ -4,6 +4,9 @@ import { contactSection } from '../fields/contact-section'
 
 export const AboutUs: GlobalConfig = {
   slug: 'about-us',
+  access: {
+    read: () => true,
+  },
   label: 'About Us',
   fields: [
     {

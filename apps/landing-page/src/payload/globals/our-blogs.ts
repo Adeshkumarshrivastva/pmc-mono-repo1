@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const OurBlogs: GlobalConfig = {
   slug: 'our-blogs',
+  access: {
+    read: () => true,
+  },
   label: 'Our Blogs',
   fields: [
     {

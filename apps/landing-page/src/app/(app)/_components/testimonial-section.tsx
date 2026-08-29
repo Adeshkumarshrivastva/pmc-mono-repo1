@@ -65,12 +65,14 @@ export default function TestimonialSection({ data }: TestimonialSectionProps) {
                             </blockquote>
                             <div className="flex items-center gap-4">
                               <div className="relative w-12 h-12">
-                                <Image
-                                  fill
-                                  src={getURLFromMedia(typedTestimonial.auhtorImage ?? '')}
-                                  alt={typedTestimonial.authorName}
-                                  className="rounded-full object-cover mr-4"
-                                />
+                                {getURLFromMedia(typedTestimonial.auhtorImage ?? '') ? (
+                                  <Image
+                                    fill
+                                    src={getURLFromMedia(typedTestimonial.auhtorImage ?? '')}
+                                    alt={typedTestimonial.authorName}
+                                    className="rounded-full object-cover mr-4"
+                                  />
+                                ) : null}
                               </div>
                               <div>
                                 <p className="font-semibold text-foreground">{typedTestimonial.authorName}</p>

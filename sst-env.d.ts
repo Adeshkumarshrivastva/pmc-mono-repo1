@@ -46,18 +46,6 @@ declare module 'sst' {
       type: 'sst.sst.Secret'
       value: string
     }
-    PAYLOAD_BUCKET_ACCESS_KEY: {
-      type: 'sst.sst.Secret'
-      value: string
-    }
-    PAYLOAD_BUCKET_REGION: {
-      type: 'sst.sst.Secret'
-      value: string
-    }
-    PAYLOAD_BUCKET_SECRET_KEY: {
-      type: 'sst.sst.Secret'
-      value: string
-    }
     PAYLOAD_DB_URL: {
       type: 'sst.sst.Secret'
       value: string

@@ -2,6 +2,9 @@ import type { GlobalConfig } from 'payload'
 
 export const Academy: GlobalConfig = {
   slug: 'academy',
+  access: {
+    read: () => true,
+  },
   label: 'Academy',
   fields: [
     {

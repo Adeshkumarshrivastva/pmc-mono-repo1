@@ -380,7 +380,7 @@ export function ServiceDialog({ open, onOpenChange, expertId, mode, serviceData 
                       <FormLabel className="text-foreground">In-Person Location Address</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="e.g., 804 (A), Arcadia, South City II, Sector 49, Gurugram"
+                          placeholder="e.g., GF - 43, M2K Corporate Park, N Block, Mayfield Garden, Sector 51, Gurugram"
                           className="resize-none"
                           rows={2}
                           {...field}
