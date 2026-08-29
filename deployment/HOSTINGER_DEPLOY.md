@@ -67,6 +67,15 @@ else (Razorpay, Zoho, WhatsApp, Google, OneSignal, SMS, Browserless) is your
 existing third-party credentials — carry them over from wherever this app is
 currently configured (AWS/SST env, or wherever those were issued).
 
+**Razorpay note:** `apps/server/.env` and `apps/landing-page/.env` (local dev)
+use *different* Razorpay accounts. Put server/portal's pair in
+`SERVER_RAZORPAY_KEY_ID`/`SERVER_RAZORPAY_KEY_SECRET` and landing-page's pair
+in `LANDING_RAZORPAY_KEY_ID`/`LANDING_RAZORPAY_KEY_SECRET` — docker-compose.prod.yml
+maps each back to the plain `RAZORPAY_KEY_ID`/`SECRET` the app code expects,
+scoped per-service, so they don't clobber each other in the shared `.env`.
+`NEXT_PUBLIC_RAZORPAY_KEY_ID` should match the landing-page pair;
+`VITE_PUBLIC_RAZORPAY_KEY_ID` (portal) should match the server pair.
+
 ## 4. Bring up the data layer first
 
 ```bash

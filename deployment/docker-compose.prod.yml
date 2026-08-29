@@ -134,6 +134,10 @@ services:
       dockerfile: apps/landing-page/docker/Dockerfile
     env_file:
       - ../.env
+    environment:
+      # landing-page has its own Razorpay account, distinct from server/portal's.
+      RAZORPAY_KEY_ID: ${LANDING_RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${LANDING_RAZORPAY_KEY_SECRET}
     depends_on:
       - mongo-init
       - minio-init
@@ -172,6 +176,10 @@ services:
       dockerfile: apps/server/docker/Dockerfile
     env_file:
       - ../.env
+    environment:
+      # server/portal has its own Razorpay account, distinct from landing-page's.
+      RAZORPAY_KEY_ID: ${SERVER_RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${SERVER_RAZORPAY_KEY_SECRET}
     depends_on:
       - mongo-init
       - minio-init
