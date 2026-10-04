@@ -6,6 +6,7 @@ import Link from 'next/link'
 import type { Home } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
 import { CheckIcon } from '@/components/ui/icons'
+import { toSiteHref } from '@/lib/links'
 
 type CardSectionProps = {
   data: Home['cardSection']
@@ -150,7 +151,7 @@ export default function CardSection({ data }: CardSectionProps) {
                             </Link>
                           ) : card.link ? (
                             <Link
-                              href={card.link}
+                              href={toSiteHref(card.link)}
                               className="flex-1 px-4 py-2 bg-card text-card-foreground rounded-lg font-medium hover:bg-card/90 transition-colors text-sm sm:text-base text-center"
                             >
                               Learn More

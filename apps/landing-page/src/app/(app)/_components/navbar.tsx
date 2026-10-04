@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils'
 import { apiUrl } from '@/lib/api'
 import { ACADEMY_APP_URL } from '@/lib/academy'
 import { openQuikwitChatWidget } from './quikwit-chat-widget'
+import { toSiteHref } from '@/lib/links'
 
 type NavbarProps = { services: Service[] }
 
@@ -149,7 +150,7 @@ export default function Navbar({ services }: NavbarProps) {
               return (
                 <Link
                   key={item.id}
-                  href={item.href}
+                  href={toSiteHref(item.href)}
                   className={cn(
                     'text-sm font-semibold rounded-md px-1.5 py-1 transition-colors whitespace-nowrap',
                     isActive ? 'text-primary-foreground' : 'text-primary-foreground/50 hover:text-primary-foreground',
@@ -174,14 +175,14 @@ export default function Navbar({ services }: NavbarProps) {
               // client-side route resolve.
               if (item.external) {
                 return (
-                  <a key={item.id} href={item.href} className={className}>
+                  <a key={item.id} href={toSiteHref(item.href)} className={className}>
                     {item.label}
                   </a>
                 )
               }
 
               return (
-                <Link key={item.id} href={item.href} className={className}>
+                <Link key={item.id} href={toSiteHref(item.href)} className={className}>
                   {item.label}
                 </Link>
               )
@@ -251,14 +252,14 @@ export default function Navbar({ services }: NavbarProps) {
                       return (
                         <div key={link.id} className="space-y-3">
                           <div className="text-lg">
-                            <Link href={link.href} onClick={() => setSheetOpen(false)}>
+                            <Link href={toSiteHref(link.href)} onClick={() => setSheetOpen(false)}>
                               {link.label}
                             </Link>
                           </div>
                           <div className="pl-4 space-y-3 border-l border-accent-foreground/20">
                             {AWARENESS_ITEMS.map((item) => (
                               <div key={item.id} className="text-base text-accent-foreground/80">
-                                <Link href={item.href} onClick={() => setSheetOpen(false)}>
+                                <Link href={toSiteHref(item.href)} onClick={() => setSheetOpen(false)}>
                                   {item.label}
                                 </Link>
                               </div>
@@ -270,7 +271,7 @@ export default function Navbar({ services }: NavbarProps) {
 
                     return (
                       <div key={link.id} className="text-lg">
-                        <Link href={link.href} onClick={() => setSheetOpen(false)}>
+                        <Link href={toSiteHref(link.href)} onClick={() => setSheetOpen(false)}>
                           {link.label}
                         </Link>
                       </div>
@@ -283,7 +284,7 @@ export default function Navbar({ services }: NavbarProps) {
 
                       if (link.external) {
                         return (
-                          <a key={link.id} href={link.href} className={className}>
+                          <a key={link.id} href={toSiteHref(link.href)} className={className}>
                             {link.label}
                           </a>
                         )
@@ -292,7 +293,7 @@ export default function Navbar({ services }: NavbarProps) {
                       return (
                         <Link
                           key={link.id}
-                          href={link.href}
+                          href={toSiteHref(link.href)}
                           onClick={() => setSheetOpen(false)}
                           className={className}
                         >
@@ -554,7 +555,7 @@ function AwarenessMenu({ isActive }: { isActive: boolean }) {
           return (
             <Link
               key={item.id}
-              href={item.href}
+              href={toSiteHref(item.href)}
               className="flex w-full"
               {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
             >

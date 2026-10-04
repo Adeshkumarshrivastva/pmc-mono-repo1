@@ -4,6 +4,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import AITools from './ai-tools'
+import { toSiteHref } from '@/lib/links'
 
 type MeterSectionProps = {
   data: Home['meterSection']
@@ -34,7 +35,7 @@ export default function MeterSection({ data }: MeterSectionProps) {
             {data?.meters?.map((meter) => {
               const imageUrl = getURLFromMedia(meter.meterImage ?? '')
               return (
-                <Link href={meter.href ?? ''} key={meter.id}>
+                <Link href={toSiteHref(meter.href ?? '')} key={meter.id}>
                   <div className="bg-card p-4 rounded-xl flex flex-col items-center justify-between h-[320px]">
                     <div className="flex-1 flex items-center justify-center w-full">
                       {imageUrl ? (

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import type { Footer } from '@/payload/types'
 import { Logo } from '@/components/ui/logo'
 import { getURLFromMedia } from '@/payload/utils'
+import { toSiteHref } from '@/lib/links'
 
 export default function Footer({ data }: { data: Footer }) {
   return (
@@ -48,14 +49,14 @@ export default function Footer({ data }: { data: Footer }) {
                 <li key={item.id}>
                   {item.id === 'home' ? (
                     <Link
-                      href={item.href}
+                      href={toSiteHref(item.href)}
                       className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
                     >
                       {item.label}
                     </Link>
                   ) : (
                     <a
-                      href={item.href}
+                      href={toSiteHref(item.href)}
                       rel="noopener noreferrer"
                       className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
                     >
@@ -72,7 +73,7 @@ export default function Footer({ data }: { data: Footer }) {
               {AWARENESS_ITEMS.map((item) => (
                 <li key={item.id}>
                   <a
-                    href={item.href}
+                    href={toSiteHref(item.href)}
                     rel="noopener noreferrer"
                     className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
                   >
@@ -88,7 +89,7 @@ export default function Footer({ data }: { data: Footer }) {
               {EXPLORE_ITEMS.map((item) => (
                 <li key={item.id}>
                   <a
-                    href={item.href}
+                    href={toSiteHref(item.href)}
                     rel="noopener noreferrer"
                     className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
                   >
@@ -104,7 +105,7 @@ export default function Footer({ data }: { data: Footer }) {
               {LINKS_1.map((item) => (
                 <li key={item.id}>
                   <a
-                    href={item.href}
+                    href={toSiteHref(item.href)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
@@ -120,7 +121,7 @@ export default function Footer({ data }: { data: Footer }) {
               {LINKS_2.map((item) => (
                 <li key={item.id}>
                   <a
-                    href={item.href}
+                    href={toSiteHref(item.href)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="transition-colors text-primary-foreground/50 hover:text-primary-foreground"
@@ -138,7 +139,7 @@ export default function Footer({ data }: { data: Footer }) {
             {data.footer?.social?.map((item) => {
               const iconUrl = getURLFromMedia(item.icon || '')
               return iconUrl ? (
-                <a key={item.id} href={item.url || ''} target="_blank" rel="noopener noreferrer">
+                <a key={item.id} href={toSiteHref(item.url || '')} target="_blank" rel="noopener noreferrer">
                   <Image src={iconUrl} alt="" width={30} height={30} />
                 </a>
               ) : null

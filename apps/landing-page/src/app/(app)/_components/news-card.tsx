@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { News } from '@/payload/types'
 import { getURLFromMedia } from '@/payload/utils'
+import { toSiteHref } from '@/lib/links'
 
 type PrEntry = NonNullable<News['prs']>[number]
 
@@ -74,7 +75,7 @@ export default function NewsCard({ item }: { item: NewsCardItem }) {
 
   if (item.link) {
     return (
-      <Link href={item.link} target="_blank" rel="noopener noreferrer" className={className}>
+      <Link href={toSiteHref(item.link)} target="_blank" rel="noopener noreferrer" className={className}>
         {content}
       </Link>
     )

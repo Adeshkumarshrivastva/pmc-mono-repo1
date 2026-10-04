@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { getAltFromFromMedia, getURLFromMedia } from '@/payload/utils'
 import type { Media, PopupNotification } from '@/payload/types'
+import { toSiteHref } from '@/lib/links'
 
 type PopupNotificationDialogProps = {
   popups: PopupNotification[]
@@ -72,7 +73,7 @@ export default function PopupNotificationDialog({ popups }: PopupNotificationDia
                   <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
                     {popup.primaryButton?.link && (
                       <Link
-                        href={popup.primaryButton.link}
+                        href={toSiteHref(popup.primaryButton.link)}
                         className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-yellow-500 hover:bg-yellow-600 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-black shadow-xl transition-all hover:scale-105 uppercase"
                       >
                         {popup.primaryButton.text || 'BOOK NOW'}
@@ -81,7 +82,7 @@ export default function PopupNotificationDialog({ popups }: PopupNotificationDia
 
                     {popup.secondaryButton?.link && (
                       <Link
-                        href={popup.secondaryButton.link}
+                        href={toSiteHref(popup.secondaryButton.link)}
                         className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-white hover:bg-gray-100 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-black shadow-xl transition-all hover:scale-105 uppercase"
                       >
                         {popup.secondaryButton.text || 'RETURN POLICY'}

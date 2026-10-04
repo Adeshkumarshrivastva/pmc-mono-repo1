@@ -4,6 +4,7 @@ import { getURLFromMedia } from '@/payload/utils'
 import type { Home } from '@/payload/types'
 import Link from 'next/dist/client/link'
 import { ArrowRightIcon } from 'lucide-react'
+import { toSiteHref } from '@/lib/links'
 
 type AcademySectionProps = {
   data: Home['academySection']
@@ -55,7 +56,7 @@ export default function AcademySection({ data }: AcademySectionProps) {
                 </div>
 
                 <div className="flex flex-wrap gap-4 mt-6">
-                  <Link href={data?.href1 || ''}>
+                  <Link href={toSiteHref(data?.href1 || '')}>
                     <Button
                       variant="secondary"
                       icon={<ArrowRightIcon />}
@@ -66,7 +67,7 @@ export default function AcademySection({ data }: AcademySectionProps) {
                     </Button>
                   </Link>
 
-                  <Link href={data?.href2 || ''}>
+                  <Link href={toSiteHref(data?.href2 || '')}>
                     <Button
                       variant="secondary"
                       icon={<ArrowRightIcon />}
