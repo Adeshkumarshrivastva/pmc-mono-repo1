@@ -14,7 +14,7 @@ import { NAVBAR_HEIGHT } from '@/lib/constants'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import type { Service } from '@/payload/types'
 import { cn } from '@/lib/utils'
-import { env } from '@/env'
+import { apiUrl } from '@/lib/api'
 import { ACADEMY_APP_URL } from '@/lib/academy'
 import { openQuikwitChatWidget } from './quikwit-chat-widget'
 
@@ -99,7 +99,7 @@ export default function Navbar({ services }: NavbarProps) {
   const { data, isPending } = useQuery({
     queryKey: ['get-user'],
     queryFn: async () => {
-      const res = await fetch(`${env.NEXT_PUBLIC_API_BASE_URL}/server/auth/get-session`, {
+      const res = await fetch(apiUrl('/server/auth/get-session'), {
         credentials: 'include',
       })
 

@@ -121,7 +121,6 @@ export default buildConfig({
     }),
     importExportPlugin({
       collections: ['leads'],
-      disableSave: true,
     }),
   ],
 })
