@@ -14,6 +14,7 @@ import { fileApp } from './routes/file/file.routes'
 import { paymentApp } from './routes/payment/payment.routes'
 import { patientApp } from './routes/patient/patient.routes'
 import { adminApp } from './routes/admin/admin.routes'
+import { academyApp } from './routes/academy/academy.routes'
 
 invariant(config, 'config must be present')
 
@@ -44,6 +45,7 @@ const app = new Hono<{ Variables: HonoContext }>()
   .route('/payment', paymentApp)
   .route('/patient', patientApp)
   .route('/admin', adminApp)
+  .route('/academy', academyApp)
 
 export { app }
 export type App = typeof app

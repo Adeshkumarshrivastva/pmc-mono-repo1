@@ -3,15 +3,11 @@ import { getURLFromMedia } from '@/payload/utils'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import AITools from './ai-tools'
 
 type MeterSectionProps = {
   data: Home['meterSection']
 }
-
-const SCREENING_TESTS = [
-  { title: 'Anxiety', href: 'https://forestgreen-scorpion-490773.hostingersite.com/anxiety-screening/' },
-  { title: 'Depression', href: 'https://forestgreen-scorpion-490773.hostingersite.com/depression-screening/' },
-]
 
 export default function MeterSection({ data }: MeterSectionProps) {
   return (
@@ -57,18 +53,7 @@ export default function MeterSection({ data }: MeterSectionProps) {
               )
             })}
           </div>
-          <div className="mt-8 sm:mt-10">
-            <h3 className="text-xl font-semibold text-primary text-center mb-4 sm:mb-6">Minds AI for Screening Test</h3>
-            <div className="grid gap-4 xl:gap-6 grid-cols-1 sm:grid-cols-2 max-w-xl mx-auto">
-              {SCREENING_TESTS.map((test) => (
-                <a href={test.href} target="_blank" rel="noopener noreferrer" key={test.title}>
-                  <div className="bg-card p-4 rounded-xl flex items-center justify-center h-[140px]">
-                    <h3 className="text-2xl font-semibold text-accent text-center">{test.title}</h3>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
+          <AITools />
         </div>
       </div>
     </section>

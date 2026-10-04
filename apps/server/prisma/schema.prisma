@@ -380,3 +380,56 @@ model File {
   size      Int
   Expert    Expert[]
 }
+
+// ---------------------------------------------------------------------------
+// Academy
+//
+// Ported from the standalone academy-demo backend (Express + Mongoose), where
+// each of the five kinds of course was its own Mongoose model over a shared,
+// byte-identical schema — Webinar, OnlineCourse, HybridCourse, OnlineClass,
+// OfflineCourse. Five collections that differ only by name buy nothing here:
+// every query would be a five-way branch on a route param, and Enrollment
+// already stored the kind as a `courseType` string field rather than deriving
+// it from the collection. So the kind is data, and it is one model.
+// ---------------------------------------------------------------------------
+
+enum AcademyCourseType {
+  WEBINAR
+  ONLINE_COURSE
+  HYBRID_COURSE
+  ONLINE_CLASS
+  OFFLINE_COURSE
+}
+
+enum AcademyCourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  ALL_LEVELS
+}
+
+model AcademyCourse {
+  id        String             @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  type      AcademyCourseType
+  emoji     String             @default("")
+  title     String
+  desc      String
+  duration  String
+  // Display strings carried over from the demo verbatim ("12,000 enrolled",
+  // "4.9★", "4,999"). They are copy, not quantities: nothing computes with
+  // them, and `price` never reaches a payment — Razorpay orders are raised
+  // against CourseMaterial.price, which is a real number. Left as-is so the
+  // ported API answers byte-identically to the demo it replaces; worth
+  // normalising to Int/Float/Decimal the day something needs to sort or sum.
+  students  String             @default("0 enrolled")
+  rating    String             @default("0★")
+  price     String
+  oldPrice  String             @default("")
+  level     AcademyCourseLevel @default(ALL_LEVELS)
+  isActive  Boolean            @default(true)
+
+  // Every read is "the live courses of one kind, oldest first".
+  @@index([type, isActive, createdAt])
+}

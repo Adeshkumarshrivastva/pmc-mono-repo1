@@ -44,8 +44,10 @@ export const configSchema = z.object({
     calendarEmail: z.string(),
   }),
   sms: z.object({
-    userId: z.string(),
-    password: z.string(),
+    apiBaseUrl: z.string(),
+    uname: z.string(),
+    pass: z.string(),
+    senderId: z.string(),
   }),
   browserlessWsUrl: z.string(),
   minio: z.object({
@@ -94,8 +96,10 @@ function getConfig() {
         emailSender: env.EMAIL_SENDER,
       },
       sms: {
-        userId: env.SMS_SERVICE_USERID,
-        password: env.SMS_SERVICE_PASSWORD,
+        apiBaseUrl: env.SMS_API_BASE_URL,
+        uname: env.SMS_UNAME,
+        pass: env.SMS_PASS,
+        senderId: env.SMS_SENDER_ID,
       },
       browserlessWsUrl: env.BROWSERLESS_WS_ENDPOINT,
       minio: {

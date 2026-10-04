@@ -50,8 +50,10 @@ export default $config({
     const GoogleServiceAccountEmail = new sst.Secret('GOOGLE_SERVICE_ACCOUNT_EMAIL')
     const GoogleServiceAccountPrivateKey = new sst.Secret('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY')
     const GoogleCalendarEmail = new sst.Secret('GOOGLE_CALENDAR_EMAIL')
-    const SmsServiceUserId = new sst.Secret('SMS_SERVICE_USERID')
-    const SmsServicePassword = new sst.Secret('SMS_SERVICE_PASSWORD')
+    const SmsApiBaseUrl = new sst.Secret('SMS_API_BASE_URL')
+    const SmsUname = new sst.Secret('SMS_UNAME')
+    const SmsPass = new sst.Secret('SMS_PASS')
+    const SmsSenderId = new sst.Secret('SMS_SENDER_ID')
     const PortalMediaBucket = new sst.aws.Bucket('PMC_PORTAL_MEDIA_BUCKET')
     const S3AccessKey = new sst.Secret('S3_ACCESS_KEY')
     const S3SecretKey = new sst.Secret('S3_SECRET_KEY')
@@ -85,8 +87,10 @@ export default $config({
       GOOGLE_SERVICE_ACCOUNT_EMAIL: GoogleServiceAccountEmail.value,
       GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: GoogleServiceAccountPrivateKey.value,
       GOOGLE_CALENDAR_EMAIL: GoogleCalendarEmail.value,
-      SMS_SERVICE_USERID: SmsServiceUserId.value,
-      SMS_SERVICE_PASSWORD: SmsServicePassword.value,
+      SMS_API_BASE_URL: SmsApiBaseUrl.value,
+      SMS_UNAME: SmsUname.value,
+      SMS_PASS: SmsPass.value,
+      SMS_SENDER_ID: SmsSenderId.value,
       S3_BUCKET: PortalMediaBucket.name,
       S3_ACCESS_KEY: S3AccessKey.value,
       S3_SECRET_KEY: S3SecretKey.value,

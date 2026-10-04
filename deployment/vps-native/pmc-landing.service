@@ -1,0 +1,39 @@
+# apps/landing-page — Next.js standalone + Payload CMS, listens on 127.0.0.1:3000,
+# serves "/" (and /admin) via nginx.
+# Install to /etc/systemd/system/pmc-landing.service
+[Unit]
+Description=PMC landing page (Next.js + Payload)
+After=network-online.target mongod.service minio.service
+Wants=network-online.target
+# Requires= deliberately omitted: a hard requirement would refuse to start the app
+# if mongod is down, and would stop it whenever mongod stops. After= is enough to
+# order startup; the app retries its own DB connection.
+
+[Service]
+Type=simple
+User=pmc
+Group=pmc
+
+# `output: 'standalone'` in next.config.mjs emits a self-contained tree that keeps the
+# monorepo layout, so the entrypoint is apps/landing-page/server.js *relative to the
+# standalone root* — same as the old Dockerfile's `node apps/landing-page/server.js`.
+WorkingDirectory=/opt/pmc-mono-repo1/apps/landing-page/.next/standalone
+
+EnvironmentFile=/opt/pmc-mono-repo1/.env
+EnvironmentFile=/etc/pmc/landing.env
+
+ExecStart=/usr/bin/node apps/landing-page/server.js
+
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pmc-landing
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

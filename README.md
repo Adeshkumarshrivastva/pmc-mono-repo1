@@ -108,8 +108,10 @@ pnpm sst secret set GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY <your-private-key>
 pnpm sst secret set GOOGLE_CALENDAR_EMAIL <your-calendar-email>
 
 # SMS Service
-pnpm sst secret set SMS_SERVICE_USERID <your-sms-userid>
-pnpm sst secret set SMS_SERVICE_PASSWORD <your-sms-password>
+pnpm sst secret set SMS_API_BASE_URL <your-sms-api-base-url>
+pnpm sst secret set SMS_UNAME <your-sms-uname>
+pnpm sst secret set SMS_PASS <your-sms-pass>
+pnpm sst secret set SMS_SENDER_ID <your-sms-sender-id>
 
 # Payload CMS
 pnpm sst secret set PAYLOAD_SECRET <your-payload-secret>

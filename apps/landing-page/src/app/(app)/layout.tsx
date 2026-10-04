@@ -5,7 +5,7 @@ import AppShell from './_components/app-shell'
 import Providers from './_components/providers'
 import FloatingWhatsapp from './_components/floating-whatsapp'
 import OneSignalComponent from './_components/one-signal'
-import VapiAssistant from './_components/vapi-assistant'
+import QuikwitChatWidget from './_components/quikwit-chat-widget'
 import '@/app/styles.css'
 
 export const metadata = {
@@ -30,14 +30,11 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
         </Providers>
         <Toaster />
         <FloatingWhatsapp />
-        <VapiAssistant />
-        <Script
-          src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js"
-          strategy="afterInteractive"
-          async
-          type="text/javascript"
-        />
-        {/* Zoho SalesIQ loader */}
+        <QuikwitChatWidget />
+        {/* Zoho SalesIQ loader — disabled (kept in code, not removed).
+            Was popping open its own "Sandra" chat panel over the UI; only
+            WhatsApp + Dr Shy should show as chat launchers, so these scripts
+            are commented out rather than loaded.
         <Script
           id="zoho-salesiq-init"
           defer
@@ -53,6 +50,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
           src="https://salesiq.zohopublic.in/widget?wc=siqb5ebcc68f690c8c01503c350f12ae3bf5a6fa772a9b447169c32afb30ac509a2"
           defer
         />
+        */}
       </body>
     </html>
   )

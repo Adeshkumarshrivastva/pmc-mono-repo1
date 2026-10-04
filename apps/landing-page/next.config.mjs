@@ -40,6 +40,11 @@ const nextConfig = {
     return [
       { source: '/portal', destination: 'http://localhost:5173/portal' },
       { source: '/portal/:path*', destination: 'http://localhost:5173/portal/:path*' },
+      // Academy course app (apps/academy) — Vite dev server on :5174, same
+      // arrangement as the portal above. Its Express backend stays on :5000 and
+      // is called directly in dev (VITE_API_URL), so it needs no rewrite here.
+      { source: '/academy-app', destination: 'http://localhost:5174/academy-app' },
+      { source: '/academy-app/:path*', destination: 'http://localhost:5174/academy-app/:path*' },
       // Vite dev server internal paths injected as root-relative URLs in HTML
       { source: '/@vite/:path*', destination: 'http://localhost:5173/@vite/:path*' },
       { source: '/@react-refresh', destination: 'http://localhost:5173/@react-refresh' },

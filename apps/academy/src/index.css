@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: inherit; }
+
+/* Hero blurred background shapes — requires keyframes + blur, done here */
+.hero-bg-shapes { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.shape { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.18; }
+.shape-1 { width: 520px; height: 520px; background: #9BC7AE; top: -130px; right: -90px; }
+.shape-2 { width: 360px; height: 360px; background: #6FA98A; bottom: -20px; left: -90px; }
+.shape-3 { width: 220px; height: 220px; background: #C8E6D2; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+/* Hero card float animations */
+@keyframes float1 { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-14px) rotate(-4deg); } }
+@keyframes float2 { 0%, 100% { transform: translateY(0) rotate(4deg);  } 50% { transform: translateY(-10px) rotate(4deg);  } }
+@keyframes float3 { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-18px) rotate(-2deg); } }
+
+.hero-float-1 { animation: float1 3.5s ease-in-out infinite; }
+.hero-float-2 { animation: float2 4s   ease-in-out infinite; }
+.hero-float-3 { animation: float3 4.5s ease-in-out infinite; }

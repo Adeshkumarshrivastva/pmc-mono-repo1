@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, ChevronRight, MenuIcon, Download, X, CheckCircle2, Loader2 } from 'lucide-react'
+import { ChevronDown, ChevronRight, MenuIcon, Download, X, CheckCircle2, Loader2, MessageCircle } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import * as z from 'zod'
 import { Logo } from '@/components/ui/logo'
@@ -15,6 +15,8 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import type { Service } from '@/payload/types'
 import { cn } from '@/lib/utils'
 import { env } from '@/env'
+import { ACADEMY_APP_URL } from '@/lib/academy'
+import { openQuikwitChatWidget } from './quikwit-chat-widget'
 
 type NavbarProps = { services: Service[] }
 
@@ -28,10 +30,12 @@ const NAV_ITEMS = [
   { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ] as const
 
+// `external: true` marks a destination that is not a Next.js route — it is served
+// by a different app behind the same domain, so it needs a full page load via <a>.
 const EXTERNAL_NAV_ITEMS = [
-  { id: 'ambassador', href: '/ambassador', label: 'Ambassador' },
-  { id: 'academy', href: '/academy', label: 'Academy' },
-  { id: 'souvenir', href: '/souvenir', label: 'Souvenir' },
+  { id: 'ambassador', href: '/ambassador', label: 'Ambassador', external: false },
+  { id: 'academy', href: ACADEMY_APP_URL, label: 'Academy', external: true },
+  { id: 'souvenir', href: '/souvenir', label: 'Souvenir', external: false },
 ] as const
 
 const AWARENESS_ITEMS = [
@@ -133,7 +137,7 @@ export default function Navbar({ services }: NavbarProps) {
           </div>
         </Link>
 
-        <div className="flex-1 hidden xl:flex items-center justify-center gap-3">
+        <div className="flex-1 min-w-0 hidden xl:flex items-center justify-center gap-2">
           {NAV_ITEMS.map((item) => {
             if (item.id === 'contact-us') return null
             const isActive = `/${pathname.split('/')[1]}` === item.href
@@ -159,17 +163,25 @@ export default function Navbar({ services }: NavbarProps) {
           <div className="flex items-center gap-1.5 border-l border-primary-foreground/20 pl-3">
             {EXTERNAL_NAV_ITEMS.map((item) => {
               const isActive = pathname.startsWith(item.href)
+              const className = cn(
+                'text-xs font-semibold rounded-full border border-primary-foreground/40 px-2.5 py-0.5 transition-colors whitespace-nowrap',
+                isActive
+                  ? 'bg-primary-foreground text-primary'
+                  : 'text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground hover:border-primary-foreground',
+              )
+
+              // Another app on the same domain — needs a real navigation, not a
+              // client-side route resolve.
+              if (item.external) {
+                return (
+                  <a key={item.id} href={item.href} className={className}>
+                    {item.label}
+                  </a>
+                )
+              }
+
               return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  className={cn(
-                    'text-xs font-semibold rounded-full border border-primary-foreground/40 px-2.5 py-0.5 transition-colors whitespace-nowrap',
-                    isActive
-                      ? 'bg-primary-foreground text-primary'
-                      : 'text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground hover:border-primary-foreground',
-                  )}
-                >
+                <Link key={item.id} href={item.href} className={className}>
                   {item.label}
                 </Link>
               )
@@ -187,11 +199,20 @@ export default function Navbar({ services }: NavbarProps) {
             Contact
           </Link>
         </div>
-        <div className="hidden xl:flex items-center gap-2">
+        <div className="hidden xl:flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            onClick={openQuikwitChatWidget}
+            className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-primary-foreground/40 px-2.5 py-1 text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground hover:border-primary-foreground transition-colors whitespace-nowrap shrink-0"
+          >
+            <MessageCircle className="size-3.5" />
+            Dr Shy
+          </button>
+
           <button
             type="button"
             onClick={handleAppDownloadModalOpen}
-            className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-primary-foreground/40 px-2.5 py-1 text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground hover:border-primary-foreground transition-colors whitespace-nowrap"
+            className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-primary-foreground/40 px-2.5 py-1 text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground hover:border-primary-foreground transition-colors whitespace-nowrap shrink-0"
           >
             <Download className="size-3.5" />
             Get the App
@@ -200,7 +221,9 @@ export default function Navbar({ services }: NavbarProps) {
           {showBookingButton && (
             <Button
               variant="secondary"
+              size="sm"
               disabled={isPending}
+              className="shrink-0 whitespace-nowrap"
               onClick={() => {
                 if (isUserLoggedIn) {
                   window.location.href = `/portal`
@@ -254,37 +277,64 @@ export default function Navbar({ services }: NavbarProps) {
                     )
                   })}
                   <div className="flex flex-wrap gap-2">
-                    {EXTERNAL_NAV_ITEMS.map((link) => (
-                      <Link
-                        key={link.id}
-                        href={link.href}
-                        onClick={() => setSheetOpen(false)}
-                        className="text-xs font-semibold rounded-full border border-primary-foreground/40 px-2.5 py-0.5 text-primary-foreground/70 hover:text-primary-foreground"
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {EXTERNAL_NAV_ITEMS.map((link) => {
+                      const className =
+                        'text-xs font-semibold rounded-full border border-primary-foreground/40 px-2.5 py-0.5 text-primary-foreground/70 hover:text-primary-foreground'
+
+                      if (link.external) {
+                        return (
+                          <a key={link.id} href={link.href} className={className}>
+                            {link.label}
+                          </a>
+                        )
+                      }
+
+                      return (
+                        <Link
+                          key={link.id}
+                          href={link.href}
+                          onClick={() => setSheetOpen(false)}
+                          className={className}
+                        >
+                          {link.label}
+                        </Link>
+                      )
+                    })}
                   </div>
                   <div className="text-lg">
                     <Link href="/contact-us" onClick={() => setSheetOpen(false)}>
                       Contact
                     </Link>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSheetOpen(false)
-                      // Wait for the Sheet's own close animation/cleanup to finish before opening the
-                      // download dialog — opening both at once is what left the page unclickable.
-                      window.setTimeout(() => {
-                        handleAppDownloadModalOpen()
-                      }, 300)
-                    }}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-full border border-accent-foreground/40 px-3 py-1.5 text-accent-foreground/80 hover:text-accent-foreground w-fit"
-                  >
-                    <Download className="size-4" />
-                    Get the App
-                  </button>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSheetOpen(false)
+                        openQuikwitChatWidget()
+                      }}
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-full border border-accent-foreground/40 px-3 py-1.5 text-accent-foreground/80 hover:text-accent-foreground w-fit"
+                    >
+                      <MessageCircle className="size-4" />
+                      Dr Shy
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSheetOpen(false)
+                        // Wait for the Sheet's own close animation/cleanup to finish before opening the
+                        // download dialog — opening both at once is what left the page unclickable.
+                        window.setTimeout(() => {
+                          handleAppDownloadModalOpen()
+                        }, 300)
+                      }}
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-full border border-accent-foreground/40 px-3 py-1.5 text-accent-foreground/80 hover:text-accent-foreground w-fit"
+                    >
+                      <Download className="size-4" />
+                      Get the App
+                    </button>
+                  </div>
                 </div>
               </SheetDescription>
             </SheetHeader>

@@ -19,5 +19,8 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  // Pages are proxied through the landing page (:3001), which can't forward
+  // websockets — point the HMR client straight at the Vite server instead.
+  server: { hmr: { clientPort: 5173 } },
   base: '/portal',
 }))

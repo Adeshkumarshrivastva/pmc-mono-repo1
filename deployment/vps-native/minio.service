@@ -1,0 +1,28 @@
+# Self-hosted MinIO (S3-compatible storage), replaces the `minio` container.
+# Binds to 127.0.0.1 only — never reachable from the internet, same as the
+# container's deliberate lack of a `ports:` mapping.
+# Install to /etc/systemd/system/minio.service
+[Unit]
+Description=MinIO object storage
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=minio-user
+Group=minio-user
+EnvironmentFile=/etc/default/minio
+
+ExecStart=/usr/local/bin/minio server /var/lib/minio \
+  --address 127.0.0.1:9000 \
+  --console-address 127.0.0.1:9001
+
+Restart=always
+RestartSec=5
+LimitNOFILE=65536
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=minio
+
+[Install]
+WantedBy=multi-user.target

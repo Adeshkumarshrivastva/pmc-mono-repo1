@@ -1,0 +1,46 @@
+# apps/academy/server — Express + Mongoose API for the academy course flow
+# (courses, purchases, quizzes, certificates). Listens on 127.0.0.1:5000 and is
+# mounted at /academy-api by nginx, which strips that prefix before proxying.
+# Install to /etc/systemd/system/pmc-academy.service
+#
+# This is a second, separate API from pmc-server: it has its own Mongoose models
+# and its own Razorpay purchase records. It is not the Bun/Hono server, and the
+# two do not share a database schema.
+[Unit]
+Description=PMC Academy API (Express/Mongoose)
+After=network-online.target mongod.service
+Wants=network-online.target
+# Same reasoning as pmc-server.service: After= orders startup without making the
+# service refuse to run whenever mongod is down.
+
+[Service]
+Type=simple
+User=pmc
+Group=pmc
+
+WorkingDirectory=/opt/pmc-mono-repo1/apps/academy/server
+
+# MONGO_URI, JWT_SECRET, PORT, the Razorpay pair, PAYMENT_TEST_MODE and the SMS
+# gateway credentials. Kept out of the repo checkout — apps/academy/.gitignore
+# ignores server/.env precisely so these never get committed.
+EnvironmentFile=/etc/pmc/academy.env
+
+ExecStart=/usr/bin/node server.js
+
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pmc-academy
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+# Unlike pmc-server (which puts uploads in MinIO), this API saves uploaded course
+# PDFs to disk under server/uploads and serves downloads from there, so that one
+# directory has to stay writable under ProtectSystem=strict.
+ReadWritePaths=/opt/pmc-mono-repo1/apps/academy/server/uploads
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,42 @@
+# apps/server — Bun + Hono API, listens on 127.0.0.1:4000, mounted at /server by nginx.
+# Install to /etc/systemd/system/pmc-server.service
+[Unit]
+Description=PMC API server (Bun/Hono)
+After=network-online.target mongod.service minio.service
+Wants=network-online.target
+# Requires= deliberately omitted: a hard requirement would refuse to start the app
+# if mongod is down, and would stop it whenever mongod stops. After= is enough to
+# order startup; the app retries its own DB connection.
+
+[Service]
+Type=simple
+User=pmc
+Group=pmc
+
+# WorkingDirectory must be apps/server: the Bun bundle at dist/index.js resolves the
+# generated Prisma client via the relative path ../src/generated/prisma, exactly the
+# layout the old Dockerfile reproduced by copying dist/ and src/generated/prisma/ side by side.
+WorkingDirectory=/opt/pmc-mono-repo1/apps/server
+
+# Shared config first, then the per-service override. With multiple EnvironmentFile=
+# directives systemd applies them in order and later files win — this is how we
+# reproduce docker-compose's per-container `environment:` Razorpay mapping.
+EnvironmentFile=/opt/pmc-mono-repo1/.env
+EnvironmentFile=/etc/pmc/server.env
+
+ExecStart=/usr/local/bin/bun run dist/index.js
+
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pmc-server
+
+# Hardening. ReadWritePaths is empty because the API writes uploads to MinIO, not to disk.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

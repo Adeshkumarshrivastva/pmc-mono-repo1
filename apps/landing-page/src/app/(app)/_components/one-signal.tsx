@@ -3,9 +3,13 @@
 import { useEffect } from 'react'
 import OneSignal from 'react-onesignal'
 
+// The OneSignal app is registered for this origin only; init on any other origin
+// (localhost, staging, www) throws "Can only be used on: https://positivemindcare.com".
+const ONESIGNAL_ALLOWED_ORIGIN = 'https://positivemindcare.com'
+
 export default function OneSignalComponent() {
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.location.origin === ONESIGNAL_ALLOWED_ORIGIN) {
       runOneSignal()
     }
   }, [])

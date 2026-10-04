@@ -1,3 +1,18 @@
 packages:
   - packages/*
   - apps/*
+
+# Pin transitive deps so a fresh resolve (lockfile ignored, or a different pnpm
+# major on the server) can't pull mismatched versions:
+# - router-plugin 1.121.x builds its config with zod v3; newer router-generator
+#   uses zod v4, and mixing them crashes `vite build` ("enableRouteGeneration").
+# - apps/academy asks for @types/react 19.3, which then gets hoisted and breaks
+#   `tsc -b` in the portal (everything else is on 19.1).
+overrides:
+  '@tanstack/history': 1.121.34
+  '@tanstack/router-core': 1.121.34
+  '@tanstack/router-generator': 1.121.34
+  '@tanstack/router-utils': 1.121.21
+  '@tanstack/virtual-file-routes': 1.121.21
+  '@types/react': 19.1.0
+  '@types/react-dom': 19.1.2
