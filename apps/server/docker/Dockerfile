@@ -14,6 +14,8 @@ FROM base AS build
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/server/package.json apps/server/tsconfig.json ./apps/server/
 COPY packages/config/package.json ./packages/config/
+# pnpm-lock.yaml lists the apps/academy importer; bun fails without its package.json
+COPY apps/academy/package.json ./apps/academy/
 COPY apps/server/scripts ./apps/server/scripts
 COPY apps/server/src ./apps/server/src
 
