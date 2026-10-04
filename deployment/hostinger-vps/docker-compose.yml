@@ -1,0 +1,96 @@
+# Docker stack actually running on the Hostinger VPS (copy to /var/www/pmc-mono-repo/docker-compose.yml).
+# nginx on the host terminates TLS and proxies to the 127.0.0.1 ports below
+# (see nginx-mindsai.conf). Variables in ${...} come from the sibling .env.
+volumes:
+  pmc-mongodb-data:
+    external: true
+  academy-uploads:
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: pmc-mongodb
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    restart: unless-stopped
+    volumes:
+      - pmc-mongodb-data:/data/db
+    networks:
+      - pmc-network
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/docker/Dockerfile
+    container_name: pmc-server
+    env_file:
+      - .env
+    environment:
+      # server/portal and landing use different Razorpay accounts
+      RAZORPAY_KEY_ID: ${SERVER_RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${SERVER_RAZORPAY_KEY_SECRET}
+    ports:
+      - "127.0.0.1:4000:4000"
+    restart: unless-stopped
+    networks:
+      - pmc-network
+
+  landing-page:
+    build:
+      context: .
+      dockerfile: apps/landing-page/docker/Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+        NEXT_PUBLIC_RAZORPAY_KEY_ID: ${NEXT_PUBLIC_RAZORPAY_KEY_ID}
+    container_name: pmc-landing-page
+    env_file:
+      - .env
+    environment:
+      RAZORPAY_KEY_ID: ${LANDING_RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${LANDING_RAZORPAY_KEY_SECRET}
+    ports:
+      - "127.0.0.1:3001:4000"
+    restart: unless-stopped
+    networks:
+      - pmc-network
+
+  portal:
+    build:
+      context: .
+      dockerfile: apps/portal/docker/Dockerfile
+      args:
+        VITE_PUBLIC_API_BASE_URL: ${VITE_PUBLIC_API_BASE_URL}
+        VITE_PUBLIC_RAZORPAY_KEY_ID: ${VITE_PUBLIC_RAZORPAY_KEY_ID}
+    container_name: pmc-portal
+    ports:
+      - "127.0.0.1:3002:80"
+    restart: unless-stopped
+    networks:
+      - pmc-network
+
+  academy-server:
+    build:
+      context: apps/academy/server
+    container_name: pmc-academy-server
+    env_file:
+      - academy.env
+    volumes:
+      - academy-uploads:/app/uploads
+    ports:
+      - "127.0.0.1:5000:5000"
+    restart: unless-stopped
+    networks:
+      - pmc-network
+
+  academy-web:
+    build:
+      context: apps/academy
+    container_name: pmc-academy-web
+    ports:
+      - "127.0.0.1:3003:80"
+    restart: unless-stopped
+    networks:
+      - pmc-network
+
+networks:
+  pmc-network:
+    driver: bridge

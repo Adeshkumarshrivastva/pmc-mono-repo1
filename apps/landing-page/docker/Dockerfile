@@ -24,6 +24,13 @@ RUN pnpm install
 # Copy rest of app
 COPY . .
 
+# NEXT_PUBLIC_* values are inlined into the client bundle at build time, so they
+# must be supplied as build args (docker-compose `build.args`), not just runtime env.
+ARG NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
+ARG NEXT_PUBLIC_RAZORPAY_KEY_ID
+ENV NEXT_PUBLIC_RAZORPAY_KEY_ID=${NEXT_PUBLIC_RAZORPAY_KEY_ID}
+
 RUN pnpm run build --filter @pmc/landing-page
 
 #------------------#
