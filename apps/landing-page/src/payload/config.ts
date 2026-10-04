@@ -89,6 +89,11 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'types.ts'),
   },
+  // Without a runner, queued jobs (e.g. importExportPlugin CSV exports) stay in
+  // payload-jobs forever. Poll the queue every minute so exports actually run.
+  jobs: {
+    autoRun: [{ cron: '* * * * *', limit: 10 }],
+  },
   db: mongooseAdapter({
     url: env.PAYLOAD_DB_URL,
   }),
