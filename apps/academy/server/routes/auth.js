@@ -163,7 +163,13 @@ router.post('/send-otp', async (req, res) => {
     const result = await sendOtpMessage({ phone, otp });
     if (!result.sent) return res.status(502).json({ message: 'Could not send OTP. Please try again.' });
 
-    res.json({ message: 'OTP sent', ...(result.devMode ? { devOtp: otp } : {}) });
+    // Outside production, always hand back the real OTP too — SMS/WhatsApp
+    // gateway "success" only means the gateway accepted the message, not
+    // that it actually reached the phone (DLT content filtering, carrier
+    // delays, etc. can silently swallow it after acceptance), so devMode
+    // alone isn't a reliable signal that a human can read the code somewhere.
+    const isDevelopment = process.env.NODE_ENV !== 'production';
+    res.json({ message: 'OTP sent', ...(result.devMode || isDevelopment ? { devOtp: otp } : {}) });
   } catch (err) {
     console.error('Send OTP error:', err.message);
     res.status(500).json({ message: 'Server error' });

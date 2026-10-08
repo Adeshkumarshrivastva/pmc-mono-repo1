@@ -1,17 +1,13 @@
 // Thin proxy client to apps/server (pmc-mono-repo's own Bun/Hono API), whose
-// database now holds the real academy course/enrollment data (see
-// scripts/migrate-to-main-db.js). This app's own MONGO_URI is left pointed at
-// a now-empty database on purpose — courses/enrollments must stop being
-// readable/writable there so a restart of this process can never again
-// silently start a second, disconnected copy of this data.
+// database now holds the real academy course/enrollment/material/purchase/
+// quiz data (see scripts/migrate-to-main-db.js). This app's own MONGO_URI is
+// left pointed at a now-empty database on purpose — none of this data must
+// ever be readable/writable there again, so a restart of this process can
+// never again silently start a second, disconnected copy of it.
 //
-// Only routes with no Purchase/QuizAttempt dependency (course catalog,
-// enrollments) are proxied so far. materials.js/quiz.js/course.js/payment.js
-// still use the local Mongoose Purchase/QuizAttempt models — proxying those
-// needs a product decision first (apps/server replaced the old trust-based
-// "I've Paid" flow with a real Razorpay order; moving materials/quiz over
-// without moving payment too would desync "paid" state from what unlocks a
-// quiz). Flagged to the user; not done here.
+// materials.js/quiz.js/course.js now proxy fully, and payment.js raises a
+// real Razorpay order via apps/server's purchases.service.ts (replacing the
+// old trust-based "I've Paid" static-QR confirm) — see routes/payment.js.
 
 const MAIN_API_BASE_URL = process.env.MAIN_API_BASE_URL || 'http://127.0.0.1:4000';
 
@@ -45,4 +41,27 @@ async function callMainApi(path, { method = 'GET', identity, body } = {}) {
   return { ok: res.ok, status: res.status, data };
 }
 
-module.exports = { callMainApi, identityHeaders, MAIN_API_BASE_URL };
+// For file responses (material download, certificate PDF) — apps/server
+// streams these as a raw body, not JSON, so the caller pipes the buffer
+// straight through to its own response instead of parsing it.
+async function callMainApiFile(path, { identity } = {}) {
+  const res = await fetch(`${MAIN_API_BASE_URL}/server/academy${path}`, {
+    headers: identityHeaders(identity),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    return { ok: false, status: res.status, data };
+  }
+
+  const buffer = Buffer.from(await res.arrayBuffer());
+  return {
+    ok: true,
+    status: res.status,
+    buffer,
+    contentType: res.headers.get('content-type'),
+    contentDisposition: res.headers.get('content-disposition'),
+  };
+}
+
+module.exports = { callMainApi, callMainApiFile, identityHeaders, MAIN_API_BASE_URL };

@@ -66,8 +66,12 @@ export default function PhoneAuth({ variant = 'user', onLogin }) {
 
     setSending(true);
     try {
-      await apiSendOtp(phone.trim());
-      setInfo('OTP sent successfully');
+      const data = await apiSendOtp(phone.trim());
+      // `devOtp` only comes back when neither SMS nor WhatsApp could be
+      // confirmed as delivered (no gateway configured, or both rejected it) —
+      // see apps/academy/server/utils/otp.js. Showing it here is what makes
+      // login usable in that situation instead of silently hanging.
+      setInfo(data.devOtp ? `OTP sent — delivery unconfirmed, use ${data.devOtp} to continue` : 'OTP sent successfully');
       setStep('otp');
       startResendTimer();
     } catch (err) {
@@ -82,9 +86,9 @@ export default function PhoneAuth({ variant = 'user', onLogin }) {
     setError('');
     setResending(true);
     try {
-      await apiSendOtp(phone.trim());
+      const data = await apiSendOtp(phone.trim());
       setOtp('');
-      setInfo('OTP sent successfully');
+      setInfo(data.devOtp ? `OTP sent — delivery unconfirmed, use ${data.devOtp} to continue` : 'OTP sent successfully');
       startResendTimer();
     } catch (err) {
       setError(err.message || 'Could not send OTP');

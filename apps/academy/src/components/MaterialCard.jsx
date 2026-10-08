@@ -18,11 +18,11 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Chip from '@mui/material/Chip';
 
 import {
-  apiCheckAccess, apiConfirmPayment,
+  apiCheckAccess, apiCreatePurchaseOrder,
   apiGetQuizQuestions, apiSubmitQuiz,
   ENDPOINTS, withIdentity,
 } from '../api/endpoints';
-import paymentQr from '../assets/payment-qr.jpg';
+import { openRazorpayCheckout } from '../lib/razorpay';
 
 export const GREEN = '#385246';
 export const GREEN_DARK = '#2A3D33';
@@ -39,20 +39,27 @@ export function formatSize(bytes) {
   return mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
-// ---------- Payment dialog: details first, then scan & pay ----------
-// Step 1 ("details"): the learner fills their name/email/phone/reason.
-// Step 2 ("pay"): the static UPI QR — they scan it, pay for real in their own
-// UPI app, then tap "I've Paid" to unlock immediately. There's no gateway
-// callback here, so this is trust-based by design (confirmed choice).
+// Polls access until the Razorpay webhook has flipped the purchase to PAID
+// (it lands shortly after the checkout's own success callback, not within
+// it), or gives up after ~20s so the UI doesn't hang forever.
+async function waitForAccess(materialId, { attempts = 10, intervalMs = 2000 } = {}) {
+  for (let i = 0; i < attempts; i++) {
+    const { purchased } = await apiCheckAccess(materialId).catch(() => ({ purchased: false }));
+    if (purchased) return true;
+    await new Promise(resolve => setTimeout(resolve, intervalMs));
+  }
+  return false;
+}
+
+// ---------- Payment dialog: details, then a real Razorpay checkout ----------
 function PaymentDialog({ open, material, user, onClose, onPaid, showToast }) {
-  const [step, setStep] = useState('details'); // 'details' | 'pay'
   const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', phone: user?.phone || '', reason: '' });
   const [errors, setErrors] = useState({});
-  const [confirming, setConfirming] = useState(false);
+  const [stage, setStage] = useState(null); // null | 'starting' | 'confirming'
 
   useEffect(() => {
     if (open) {
-      setStep('details');
+      setStage(null);
       setForm({ name: user?.name || '', email: user?.email || '', phone: user?.phone || '', reason: '' });
     }
   }, [open, user]);
@@ -71,23 +78,37 @@ function PaymentDialog({ open, material, user, onClose, onPaid, showToast }) {
     return e;
   };
 
-  const handleContinue = () => {
+  const handlePay = async () => {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
-    setStep('pay');
-  };
 
-  const handleConfirm = async () => {
-    setConfirming(true);
+    setStage('starting');
     try {
-      await apiConfirmPayment({ materialId: material._id, ...form });
-      showToast('Thanks! You can now download the file.');
-      onPaid();
-      onClose();
+      const { razorpayOrder, keyId } = await apiCreatePurchaseOrder({ materialId: material._id, ...form });
+
+      const paid = await openRazorpayCheckout({
+        keyId,
+        orderId: razorpayOrder.id,
+        amount: razorpayOrder.amount,
+        description: material.title,
+        prefill: { name: form.name, email: form.email, contact: form.phone },
+      });
+      if (!paid) { setStage(null); return; }
+
+      setStage('confirming');
+      const unlocked = await waitForAccess(material._id);
+      if (unlocked) {
+        showToast('Thanks! You can now download the file.');
+        onPaid();
+        onClose();
+      } else {
+        showToast("Payment received — it's still confirming. Refresh in a moment if the download doesn't unlock.", 'info');
+        onClose();
+      }
     } catch (err) {
-      showToast(err.message || 'Could not confirm payment', 'error');
+      showToast(err.message || 'Could not complete payment', 'error');
     } finally {
-      setConfirming(false);
+      setStage(null);
     }
   };
 
@@ -100,52 +121,27 @@ function PaymentDialog({ open, material, user, onClose, onPaid, showToast }) {
         <IconButton onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8 }}><CloseIcon /></IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        {step === 'details' ? (
-          <>
-            <Typography sx={{ mb: 2.25, color: 'rgba(42,61,51,0.65)', fontSize: 13.5 }}>
-              Fill in your details, then pay <b>₹{material.price}</b> once to unlock the PDF download.
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.75 }}>
-              <TextField label="Full Name" value={form.name} onChange={e => update('name', e.target.value)}
-                error={!!errors.name} helperText={errors.name} fullWidth sx={fieldSx} />
-              <TextField label="Email Address" value={form.email} onChange={e => update('email', e.target.value)}
-                error={!!errors.email} helperText={errors.email} fullWidth sx={fieldSx} />
-              <TextField label="Phone Number" value={form.phone} onChange={e => update('phone', e.target.value.replace(/\D/g, ''))}
-                error={!!errors.phone} helperText={errors.phone} fullWidth sx={fieldSx} inputProps={{ maxLength: 10 }} />
-              <TextField label="Why are you interested in this course?" value={form.reason} onChange={e => update('reason', e.target.value)}
-                error={!!errors.reason} helperText={errors.reason} fullWidth multiline minRows={2} sx={fieldSx} />
-            </Box>
-          </>
-        ) : (
-          <>
-            <Typography sx={{ mb: 2, color: 'rgba(42,61,51,0.65)', fontSize: 13.5 }}>
-              Scan the QR code below and pay <b>₹{material.price}</b> with any UPI app, then tap "I've Paid" to unlock the PDF.
-            </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Box component="img" src={paymentQr} alt="Scan to pay via UPI"
-                sx={{ width: 200, height: 'auto', borderRadius: 2, border: '1px solid #E8ECEA' }} />
-            </Box>
-          </>
-        )}
+        <Typography sx={{ mb: 2.25, color: 'rgba(42,61,51,0.65)', fontSize: 13.5 }}>
+          Fill in your details, then pay <b>₹{material.price}</b> once via Razorpay to unlock the PDF download.
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.75 }}>
+          <TextField label="Full Name" value={form.name} onChange={e => update('name', e.target.value)}
+            error={!!errors.name} helperText={errors.name} fullWidth sx={fieldSx} disabled={!!stage} />
+          <TextField label="Email Address" value={form.email} onChange={e => update('email', e.target.value)}
+            error={!!errors.email} helperText={errors.email} fullWidth sx={fieldSx} disabled={!!stage} />
+          <TextField label="Phone Number" value={form.phone} onChange={e => update('phone', e.target.value.replace(/\D/g, ''))}
+            error={!!errors.phone} helperText={errors.phone} fullWidth sx={fieldSx} inputProps={{ maxLength: 10 }} disabled={!!stage} />
+          <TextField label="Why are you interested in this course?" value={form.reason} onChange={e => update('reason', e.target.value)}
+            error={!!errors.reason} helperText={errors.reason} fullWidth multiline minRows={2} sx={fieldSx} disabled={!!stage} />
+        </Box>
       </DialogContent>
-      <DialogActions sx={{ p: 2.5, flexDirection: 'column', gap: 1 }}>
-        {step === 'details' ? (
-          <Button onClick={handleContinue} fullWidth variant="contained" size="large"
-            sx={{ py: 1.3, borderRadius: 2.5, fontWeight: 700, background: GREEN, '&:hover': { background: GREEN_DARK } }}>
-            Continue to Pay →
-          </Button>
-        ) : (
-          <>
-            <Button onClick={handleConfirm} disabled={confirming} fullWidth variant="contained" size="large"
-              sx={{ py: 1.3, borderRadius: 2.5, fontWeight: 700, background: GREEN, '&:hover': { background: GREEN_DARK } }}>
-              {confirming ? 'Confirming…' : "I've Paid — Unlock"}
-            </Button>
-            <Button onClick={() => setStep('details')} disabled={confirming} fullWidth variant="text" size="small"
-              sx={{ fontWeight: 600, color: 'rgba(42,61,51,0.55)' }}>
-              ← Back to details
-            </Button>
-          </>
-        )}
+      <DialogActions sx={{ p: 2.5 }}>
+        <Button onClick={handlePay} disabled={!!stage} fullWidth variant="contained" size="large"
+          sx={{ py: 1.3, borderRadius: 2.5, fontWeight: 700, background: GREEN, '&:hover': { background: GREEN_DARK } }}>
+          {stage === 'starting' && 'Opening payment…'}
+          {stage === 'confirming' && 'Confirming payment…'}
+          {!stage && `Pay ₹${material.price} →`}
+        </Button>
       </DialogActions>
     </Dialog>
   );

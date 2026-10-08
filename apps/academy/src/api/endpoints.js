@@ -18,7 +18,7 @@ export const ENDPOINTS = {
   MATERIAL_DOWNLOAD:(id) => `${API_BASE_URL}/api/materials/${id}/download`,
   MATERIAL_DELETE:  (id) => `${API_BASE_URL}/api/materials/${id}`,
 
-  CONFIRM_PAYMENT: `${API_BASE_URL}/api/payment/confirm`,
+  CREATE_PURCHASE_ORDER: `${API_BASE_URL}/api/payment/create-order`,
   MY_PURCHASES:    `${API_BASE_URL}/api/payment/my-purchases`,
   ADMIN_PURCHASES: `${API_BASE_URL}/api/payment/purchases`,
   PAYMENT_STATS:   `${API_BASE_URL}/api/payment/stats`,
@@ -231,17 +231,19 @@ export async function apiCheckAccess(materialId) {
   return data;
 }
 
-// Learner scans the static QR shown in the payment dialog and pays directly,
-// then hits "I've Paid" — this just records the purchase and unlocks the
-// material, there is no gateway callback to verify against.
-export async function apiConfirmPayment({ materialId, name, email, phone, reason }) {
-  const res = await fetch(ENDPOINTS.CONFIRM_PAYMENT, {
+// Raises a real Razorpay order for this material — returns
+// { purchaseId, razorpayOrder, keyId } to open the Razorpay checkout with.
+// Payment itself is confirmed server-to-server by Razorpay's webhook, not by
+// the client, so the caller must poll apiCheckAccess() after checkout
+// succeeds rather than trusting the client-side response alone.
+export async function apiCreatePurchaseOrder({ materialId, name, email, phone, reason }) {
+  const res = await fetch(ENDPOINTS.CREATE_PURCHASE_ORDER, {
     method: 'POST',
     headers: getIdentityHeaders(),
     body: JSON.stringify({ materialId, name, email, phone, reason }),
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Could not confirm payment');
+  if (!res.ok) throw new Error(data.message || 'Could not start payment');
   return data;
 }
 

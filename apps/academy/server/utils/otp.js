@@ -37,6 +37,13 @@ function parseGatewayResponse(body) {
   }
 }
 
+function whatsappLooksSent(result) {
+  if (!result) return false;
+  if (typeof result.isSuccess === 'boolean') return result.isSuccess;
+  if (typeof result.ApiResponse === 'string' && /invalid|error|fail/i.test(result.ApiResponse)) return false;
+  return true;
+}
+
 async function sendOtpMessage({ phone, otp }) {
   console.log(`[OTP] ${phone} → ${otp}`);
 
@@ -45,7 +52,14 @@ async function sendOtpMessage({ phone, otp }) {
   // see parseGatewayResponse), so waiting to see the SMS "fail" before trying
   // WhatsApp would just reproduce the same bug via a different code path.
   const whatsappResult = await sendWhatsappOtp({ phone, otp });
-  const whatsappSent = Boolean(whatsappResult?.isSuccess ?? whatsappResult);
+  // Chatboat's success shape isn't documented, but its failure shape is:
+  // `{ ApiResponse: "<error text>" }` (e.g. "Invalid license number / api
+  // key"). The old `Boolean(whatsappResult?.isSuccess ?? whatsappResult)`
+  // treated ANY truthy object as success, including that exact error object
+  // (no `isSuccess` field on it, so it fell through to the whole object) —
+  // which meant a rejected/misconfigured WhatsApp send was silently counted
+  // as delivered, masking real delivery failures.
+  const whatsappSent = whatsappLooksSent(whatsappResult);
 
   const { SMS_UNAME, SMS_PASS, SMS_SENDER_ID } = process.env;
   if (!SMS_UNAME || !SMS_PASS || !SMS_SENDER_ID) {
