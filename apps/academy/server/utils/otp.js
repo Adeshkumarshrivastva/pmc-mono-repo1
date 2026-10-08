@@ -21,6 +21,8 @@
 // UI) so the login flow still works end-to-end without a live/working
 // gateway — check this process's terminal output for `[OTP] <phone> → <code>`.
 
+const { sendWhatsappOtp } = require('./whatsapp');
+
 const SMS_API_URL = 'https://api.bulksmsadmin.com/BulkSMSapi/keyApiSendSMS/SendMsg';
 
 function generateOtp() {
@@ -38,9 +40,18 @@ function parseGatewayResponse(body) {
 async function sendOtpMessage({ phone, otp }) {
   console.log(`[OTP] ${phone} → ${otp}`);
 
+  // Fire WhatsApp alongside SMS rather than as an SMS-failure-only fallback —
+  // the SMS gateway can reject a message silently (HTTP 200 + an error body,
+  // see parseGatewayResponse), so waiting to see the SMS "fail" before trying
+  // WhatsApp would just reproduce the same bug via a different code path.
+  const whatsappResult = await sendWhatsappOtp({ phone, otp });
+  const whatsappSent = Boolean(whatsappResult?.isSuccess ?? whatsappResult);
+
   const { SMS_UNAME, SMS_PASS, SMS_SENDER_ID } = process.env;
   if (!SMS_UNAME || !SMS_PASS || !SMS_SENDER_ID) {
-    return { sent: true, devMode: true }; // no gateway configured — dev/demo fallback
+    // No SMS gateway configured. If WhatsApp got through, this is a real send,
+    // not the dev/demo fallback — only show the OTP on-screen if neither did.
+    return { sent: true, devMode: !whatsappSent };
   }
 
   const params = new URLSearchParams({
@@ -60,14 +71,14 @@ async function sendOtpMessage({ phone, otp }) {
 
     if (!res.ok || !result?.isSuccess) {
       console.error(`OTP send failed (http ${res.status}): ${body}`);
-      // Gateway is configured but rejected/misbehaved — fall back to dev mode
-      // rather than blocking sign-in entirely; the OTP above still works.
-      return { sent: true, devMode: true };
+      // SMS gateway rejected/misbehaved — only fall back to dev mode (showing
+      // the OTP on-screen) if WhatsApp didn't get through either.
+      return { sent: true, devMode: !whatsappSent };
     }
     return { sent: true, devMode: false };
   } catch (err) {
     console.error('OTP send failed:', err.message);
-    return { sent: true, devMode: true };
+    return { sent: true, devMode: !whatsappSent };
   } finally {
     clearTimeout(timeoutId);
   }

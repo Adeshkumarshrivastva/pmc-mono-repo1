@@ -66,7 +66,7 @@ export default function PrebookingForm({ service, phoneNumber, patientName, pati
           amount: Number(data.razorpayOrder.amount),
           currency: 'INR',
           name: 'Positive Mind Care',
-          prefill: { fullName: patientName, email: patientEmail, contact: phoneNumber },
+          prefill: { name: patientName, email: patientEmail, contact: phoneNumber },
           order_id: data.razorpayOrder.id,
           modal: {
             escape: false,
@@ -272,7 +272,9 @@ async function createBooking({ formInput, expertId, serviceId, startDateTime }: 
   })
 
   if (!res.ok) {
-    throw new Error('Failed to create booking')
+    // Show the server's reason (e.g. slot unavailable) instead of a generic message.
+    const body = (await res.json().catch(() => null)) as { error?: string } | null
+    throw new Error(body?.error || 'Failed to create booking')
   }
 
   return res.json()

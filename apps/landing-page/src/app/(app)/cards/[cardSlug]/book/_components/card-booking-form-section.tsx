@@ -1,20 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { createOrder } from '@/payload/actions/payments/payments.action'
-import { env } from '@/env'
+import { createCatalogOrder } from '@/payload/actions/payments/payments.action'
+import { openRazorpayCheckout } from '@/lib/razorpay-checkout'
 import { toast } from 'sonner'
-
-declare global {
-  interface Window {
-    Razorpay: any
-  }
-}
 
 const bookingFormSchema = z.object({
   fullName: z.string().min(2, 'Name is required'),
@@ -31,22 +25,8 @@ type CardBookingFormSectionProps = {
   cardSlug: string
 }
 
-export default function CardBookingFormSection({ cardName, cardPrice }: CardBookingFormSectionProps) {
+export default function CardBookingFormSection({ cardName, cardPrice, cardSlug }: CardBookingFormSectionProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false)
-
-  useEffect(() => {
-    // Load Razorpay script
-    const script = document.createElement('script')
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-    script.async = true
-    script.onload = () => setIsScriptLoaded(true)
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
-    }
-  }, [])
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingFormSchema),
@@ -58,79 +38,31 @@ export default function CardBookingFormSection({ cardName, cardPrice }: CardBook
     },
   })
 
-  async function onSubmit(data: BookingFormData) {
+async function onSubmit(data: BookingFormData) {
     setIsSubmitting(true)
     try {
-      console.log('Starting payment process for:', { cardName, cardPrice, data })
-
-      if (!isScriptLoaded || !window.Razorpay) {
-        throw new Error('Razorpay SDK not loaded. Please refresh the page.')
+      const order = await createCatalogOrder({ kind: 'card', key: cardSlug })
+      const paid = await openRazorpayCheckout({
+        keyId: order.keyId,
+        orderId: order.orderId,
+        amount: order.amount,
+        description: `Booking for ${cardName}`,
+        prefill: { name: data.fullName, email: data.email, contact: data.phone },
+        notes: { card: cardName, message: data.message },
+      })
+      if (paid) {
+        toast.success('Payment successful!', { description: 'Our team will contact you shortly.' })
+      } else {
+        toast.error('Payment cancelled')
       }
-
-      let orderId: string | undefined
-
-      // Try to create Razorpay order via API
-      try {
-        console.log('Creating order via API...')
-        const orderResponse = await createOrder({
-          amount: parseInt(cardPrice),
-          currency: 'INR',
-        })
-        orderId = orderResponse.orderId
-        console.log('Order created successfully:', orderId)
-      } catch (apiError) {
-        console.warn('API order creation failed, using test mode:', apiError)
-        // Continue without order_id (test mode)
-      }
-
-      // Razorpay options
-      const options = {
-        key: env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_JNSOKgtrfEng3Y',
-        amount: parseInt(cardPrice) * 100,
-        currency: 'INR',
-        name: 'Positive Mind Care',
-        description: `Purchase of ${cardName}`,
-        ...(orderId && { order_id: orderId }),
-        prefill: {
-          name: data.fullName,
-          email: data.email,
-          contact: data.phone,
-        },
-        notes: {
-          card: cardName,
-          message: data.message,
-        },
-        theme: {
-          color: '#3399cc',
-        },
-        handler: function (response: any) {
-          toast.success('Payment successful!', {
-            description: `Payment ID: ${response.razorpay_payment_id}`,
-          })
-          console.log('Payment successful:', response)
-          setIsSubmitting(false)
-          // TODO: Save purchase details to database
-        },
-        modal: {
-          ondismiss: function () {
-            setIsSubmitting(false)
-            toast.error('Payment cancelled')
-          },
-        },
-      }
-
-      console.log('Opening Razorpay modal...', orderId ? 'with order_id' : 'in test mode')
-      const razorpay = new window.Razorpay(options)
-      razorpay.open()
     } catch (error) {
-      console.error('Purchase error:', error)
-      toast.error('Failed to process purchase', {
+      toast.error('Failed to process booking', {
         description: error instanceof Error ? error.message : 'Please try again later',
       })
+    } finally {
       setIsSubmitting(false)
     }
   }
-
   return (
     <section className="w-full flex-1 bg-accent">
       <div className="px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-12 lg:py-20 xl:px-16 xl:py-24">

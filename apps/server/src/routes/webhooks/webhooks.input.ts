@@ -33,3 +33,19 @@ export const paymentConfirmationInput = z.object({
 })
 
 export type PaymentConfirmationInput = z.infer<typeof paymentConfirmationInput>
+
+export const academyPurchaseConfirmationInput = z.object({
+  payload: z.object({
+    order: z.object({
+      entity: z.object({
+        id: z.string(),
+        notes: z.object({
+          purchaseId: z.string(),
+          materialId: z.string(),
+        }),
+      }),
+    }),
+  }),
+})
+
+export type AcademyPurchaseConfirmationInput = z.infer<typeof academyPurchaseConfirmationInput>

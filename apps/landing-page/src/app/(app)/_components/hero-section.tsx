@@ -17,7 +17,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
   const backgroundImageUrl = getURLFromMedia(data?.heroSectionImage ?? '')
 
   return (
-    <div className="bg-primary min-h-[600px] sm:min-h-[700px] xl:min-h-[800px] flex items-center relative">
+    <div className="bg-primary min-h-[480px] sm:min-h-[560px] xl:min-h-[640px] flex items-start pt-6 pb-12 sm:pt-8 xl:pt-10 relative">
       {backgroundImageUrl ? (
         <Image
           src={backgroundImageUrl}
@@ -30,15 +30,15 @@ export default function HeroSection({ data }: HeroSectionProps) {
       ) : null}
       <div className="relative 2xl:container w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-25 z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8 xl:gap-12">
-            <div className="flex-1 max-w-2xl xl:max-w-none">
+          <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-8 xl:gap-12">
+            <div className="flex-1 max-w-2xl xl:max-w-[40%]">
               <div className="space-y-2">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-primary-foreground leading-tight">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-primary-foreground leading-tight">
                   {data?.heroSectionTitle ? <RichText data={data.heroSectionTitle} disableContainer={true} /> : null}
                 </h2>
 
                 {data?.heroSectionDescription ? (
-                  <p className="sm:text-lg text-primary-foreground leading-relaxed opacity-80 bg-primary/60 border border-primary/30 rounded-2xl backdrop-blur-md xl:bg-transparent xl:border-0 xl:rounded-none xl:backdrop-blur-none xl:w-[425px]">
+                  <p className="text-sm sm:text-base text-primary-foreground leading-relaxed opacity-80 bg-primary/60 border border-primary/30 rounded-2xl backdrop-blur-md xl:bg-transparent xl:border-0 xl:rounded-none xl:backdrop-blur-none xl:w-[425px]">
                     {data.heroSectionDescription}
                   </p>
                 ) : null}

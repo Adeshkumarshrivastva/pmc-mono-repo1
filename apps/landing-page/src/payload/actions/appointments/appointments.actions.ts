@@ -4,26 +4,33 @@ import { getPayloadClient } from '@/lib/payload'
 import type { AppointmentFormInput, AppointmentFormUpdateInput, DeleteAppointmentInput } from './appointments.input'
 import { zohoAPI } from '@/lib/zoho'
 import { sendWhatsappMessageByTemplate } from '@/lib/whatsapp'
+import { TRIAL_SESSION_AMOUNT } from '@/lib/constants'
+import { appointmentFormInput } from './appointments.input'
+import { verifyTrialSessionPayment } from '../payments/payments.action'
 
-export async function createAppointment({ serviceId, subServiceId, dateTime, ...rest }: AppointmentFormInput) {
+async function saveAppointment(
+  { serviceId, subServiceId, dateTime, ...rest }: AppointmentFormInput,
+  orderId: string,
+) {
   const payload = await getPayloadClient()
   const amount = rest?.amount ? Number(rest.amount) : 0
 
   const formattedDate = new Date(dateTime).toLocaleString()
 
-  await Promise.allSettled([
-    payload.create({
-      collection: 'appointments',
-      data: {
-        ...rest,
-        amount,
-        service: serviceId,
-        subService: subServiceId,
-        paymentStatus: 'unpaid',
-        dateTime: formattedDate,
-      },
-    }),
+  const appointment = await payload.create({
+    collection: 'appointments',
+    data: {
+      ...rest,
+      amount,
+      service: serviceId,
+      subService: subServiceId,
+      paymentStatus: 'paid',
+      orderId,
+      dateTime: formattedDate,
+    },
+  })
 
+  await Promise.allSettled([
     payload.create({
       collection: 'leads',
       data: {
@@ -47,6 +54,31 @@ export async function createAppointment({ serviceId, subServiceId, dateTime, ...
       templateValues: [rest.fullName],
     }),
   ])
+
+  return appointment
+}
+
+type CompleteTrialSessionInput = {
+  appointment: AppointmentFormInput
+  orderId: string
+  paymentId: string
+  signature: string
+}
+
+export async function completeTrialSessionAppointment({
+  appointment,
+  orderId,
+  paymentId,
+  signature,
+}: CompleteTrialSessionInput) {
+  const validatedAppointment = appointmentFormInput.parse(appointment)
+
+  await verifyTrialSessionPayment({ orderId, paymentId, signature })
+
+  return saveAppointment(
+    { ...validatedAppointment, amount: String(TRIAL_SESSION_AMOUNT) },
+    orderId,
+  )
 }
 
 export async function getAppointmentById(id: string) {

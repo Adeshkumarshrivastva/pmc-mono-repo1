@@ -1,17 +1,24 @@
-# apps/academy/server — Express + Mongoose API for the academy course flow
-# (courses, purchases, quizzes, certificates). Listens on 127.0.0.1:5000 and is
-# mounted at /academy-api by nginx, which strips that prefix before proxying.
+# apps/academy/server — Express API for the academy course flow (login/OTP,
+# courses, enrollments, purchases, quizzes, certificates). Listens on
+# 127.0.0.1:5000 and is mounted at /academy-api by nginx, which strips that
+# prefix before proxying.
 # Install to /etc/systemd/system/pmc-academy.service
 #
-# This is a second, separate API from pmc-server: it has its own Mongoose models
-# and its own Razorpay purchase records. It is not the Bun/Hono server, and the
-# two do not share a database schema.
+# Login/OTP (routes/auth.js) still uses this app's own Mongoose User/Otp
+# models — unchanged. Course data (courses/enrollments; see
+# routes/courses.js, routes/enrollments.js) is proxied over loopback to
+# pmc-server's own API (MAIN_API_BASE_URL) instead, which is where that data
+# actually lives now (apps/academy/server/scripts/migrate-to-main-db.js).
+# materials/quiz/payment still use this app's own Mongoose models for now —
+# see utils/mainApiClient.js's header comment for why those weren't moved
+# over in the same pass. Needs pmc-server reachable at MAIN_API_BASE_URL.
 [Unit]
-Description=PMC Academy API (Express/Mongoose)
-After=network-online.target mongod.service
+Description=PMC Academy API (Express)
+After=network-online.target mongod.service pmc-server.service
 Wants=network-online.target
 # Same reasoning as pmc-server.service: After= orders startup without making the
-# service refuse to run whenever mongod is down.
+# service refuse to run whenever mongod (or pmc-server) is down — course data
+# calls will just fail until pmc-server comes up, same as any transient outage.
 
 [Service]
 Type=simple
@@ -20,9 +27,14 @@ Group=pmc
 
 WorkingDirectory=/opt/pmc-mono-repo1/apps/academy/server
 
-# MONGO_URI, JWT_SECRET, PORT, the Razorpay pair, PAYMENT_TEST_MODE and the SMS
-# gateway credentials. Kept out of the repo checkout — apps/academy/.gitignore
-# ignores server/.env precisely so these never get committed.
+# MONGO_URI, JWT_SECRET, PORT, MAIN_API_BASE_URL (pmc-server, default
+# http://127.0.0.1:4000 — same box, matches nginx's /server upstream), the
+# Razorpay pair, PAYMENT_TEST_MODE, the SMS gateway credentials, and
+# WHATSAPP_API_KEY_SECRET/WHATSAPP_LICENCE_NUMBER_SECRET/WHATSAPP_TEST_NUMBER_SECRET
+# (same Chatboat account as apps/server — WhatsApp is OTP's second delivery
+# channel now, see server/utils/whatsapp.js). Kept out of the repo checkout —
+# apps/academy/.gitignore ignores server/.env precisely so these never get
+# committed.
 EnvironmentFile=/etc/pmc/academy.env
 
 ExecStart=/usr/bin/node server.js

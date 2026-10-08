@@ -8,9 +8,10 @@ import DeepTmsSection from './_components/deep-tms-section'
 import TreatmentSection from './_components/treatment-section'
 import WellnessSection from './_components/wellness-section'
 import CardSection from './_components/card-section'
-import PackagesSection from './_components/packages-section'
+import MindCheckSection from './_components/mind-check-section'
+// import PackagesSection from './_components/packages-section'
 import WebinarsSection from './_components/webinars-section'
-import AcademySection from './_components/academy-section'
+// import AcademySection from './_components/academy-section'
 import ServicesSection from './_components/services-section'
 import WhyChooseSection from './_components/why-choose-section'
 import MapSection from './_components/map-section'
@@ -188,13 +189,14 @@ export default async function HomePage() {
         <DeepTmsSection data={deepTmsSection} />
         <TreatmentSection data={treatmentSection} />
         <WellnessSection data={wellnessSection} />
+        <ServicesSection data={servicesSection} services={services.docs} />
+        {/* <PackagesSection data={packagesSection} /> */}
+        <MindCheckSection data={meterSection} />
         <CardSection data={cardSection} />
         <SouvenirSection souvenir={(souvenirs.docs[0] as import('@/payload/types').Souvenir) ?? null} />
         <NewsSection data={newsSection} news={flattenNews(topNews.docs).slice(0, 3)} />
-        <PackagesSection data={packagesSection} />
         <WebinarsSection data={webinarsSection} webinars={webinars.docs} />
-        <AcademySection data={academySection} />
-        <ServicesSection data={servicesSection} services={services.docs} />
+        {/* <AcademySection data={academySection} /> */}
         <WhyChooseSection data={whyChooseSection} />
         <MapSection data={mapSection} />
         <ContactSection data={contactSection} />

@@ -37,6 +37,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
 
 export async function generateMetadata({ params }: QuizPageProps) {
   const { slug } = await params
+
   const payload = await getPayload({ config })
 
   const { docs } = await payload.find({

@@ -18,6 +18,8 @@ export const env = z
     NODE_ENV: z.enum([NodeEnv.development, NodeEnv.production]).default(NodeEnv.development),
     RAZORPAY_KEY_ID: z.string(),
     RAZORPAY_KEY_SECRET: z.string(),
+    // Secret set in the Razorpay dashboard (Webhooks). Required to accept payment webhooks.
+    RAZORPAY_WEBHOOK_SECRET: z.string().optional(),
     WHATSAPP_API_KEY_SECRET: z.string(),
     WHATSAPP_LICENCE_NUMBER_SECRET: z.string(),
     WHATSAPP_TEST_NUMBER_SECRET: z.string(),

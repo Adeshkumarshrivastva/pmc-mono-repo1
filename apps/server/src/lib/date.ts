@@ -4,8 +4,10 @@ import dayjs from './dayjs'
 export const MINUTES_PER_HOUR = 60
 export const DEFAULT_TIMEZONE = 'Asia/Calcutta'
 
+// Availability is stored as UTC wall-clock times (see schema), so minutes are always read in UTC,
+// never in the server process timezone. Reading local time made slots shift by the server offset.
 export function dateToMinutes(date: Date | string): number {
-  const dt = dayjs(date)
+  const dt = dayjs(date).utc()
   return dt.hour() * MINUTES_PER_HOUR + dt.minute()
 }
 

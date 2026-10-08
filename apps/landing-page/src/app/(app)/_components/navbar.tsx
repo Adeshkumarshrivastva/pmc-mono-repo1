@@ -28,14 +28,13 @@ const NAV_ITEMS = [
   { id: 'services', href: '/services', label: 'Services' },
   { id: 'our-experts', href: '/portal/experts', label: 'Our Experts' },
   { id: 'awareness', href: '/webinars', label: 'Awareness' },
-  { id: 'contact-us', href: '/contact-us', label: 'Contact' },
 ] as const
 
 // `external: true` marks a destination that is not a Next.js route — it is served
 // by a different app behind the same domain, so it needs a full page load via <a>.
 const EXTERNAL_NAV_ITEMS = [
   { id: 'ambassador', href: '/ambassador', label: 'Ambassador', external: false },
-  { id: 'academy', href: ACADEMY_APP_URL, label: 'Academy', external: true },
+  { id: 'academy', href: ACADEMY_APP_URL, label: 'PMC Academy', external: true },
   { id: 'souvenir', href: '/souvenir', label: 'Souvenir', external: false },
 ] as const
 
@@ -140,7 +139,6 @@ export default function Navbar({ services }: NavbarProps) {
 
         <div className="flex-1 min-w-0 hidden xl:flex items-center justify-center gap-2">
           {NAV_ITEMS.map((item) => {
-            if (item.id === 'contact-us') return null
             const isActive = `/${pathname.split('/')[1]}` === item.href
             if (item.id === 'services') {
               return <ServicesMenu key={item.id} services={services} isActive={isActive} />
@@ -247,7 +245,7 @@ export default function Navbar({ services }: NavbarProps) {
               <SheetTitle className="mb-8 text-2xl text-accent-foreground">Positive Mind Care</SheetTitle>
               <SheetDescription asChild>
                 <div className="space-y-6">
-                  {NAV_ITEMS.filter((link) => link.id !== 'contact-us').map((link) => {
+                  {NAV_ITEMS.map((link) => {
                     if (link.id === 'awareness') {
                       return (
                         <div key={link.id} className="space-y-3">

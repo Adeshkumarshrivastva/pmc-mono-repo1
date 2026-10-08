@@ -15,13 +15,23 @@ import { cn } from '@/lib/utils'
 import dayjs from '@/lib/dayjs'
 import type { MonthlyAvailableSlots } from '@/lib/booking'
 
+const WEEKDAYS = [
+  { index: 1, label: 'Monday' },
+  { index: 2, label: 'Tuesday' },
+  { index: 3, label: 'Wednesday' },
+  { index: 4, label: 'Thursday' },
+  { index: 5, label: 'Friday' },
+  { index: 6, label: 'Saturday' },
+  { index: 0, label: 'Sunday' },
+]
+
 type AvailableSlotsProps = {
   onNext: () => void
   getMonthlyAvailableSlotsQuery: UseQueryResult<MonthlyAvailableSlots>
 }
 
 export default function AvailableSlots({ onNext, getMonthlyAvailableSlotsQuery }: AvailableSlotsProps) {
-  const { getSelectedDate, getSelectedSlot, setSelectedSlot } = useBooking()
+  const { getSelectedDate, getSelectedSlot, setSelectedSlot, setSelectedDate } = useBooking()
 
   const selectedDate = getSelectedDate()
   const selectedSlot = getSelectedSlot()
@@ -69,9 +79,43 @@ export default function AvailableSlots({ onNext, getMonthlyAvailableSlotsQuery }
     .with({ status: 'success' }, ({ data }) => {
       const slots = data.availability[toDDMMYYYY(selectedDate)] || []
 
+      // Dates in this month that have at least one slot, earliest first.
+      const datesWithSlots = Object.keys(data.availability)
+        .filter((dateStr) => (data.availability[dateStr] || []).length > 0)
+        .map((dateStr) => dayjs(dateStr, 'DD-MM-YYYY'))
+        .sort((a, b) => a.valueOf() - b.valueOf())
+      const weekdaysWithSlots = WEEKDAYS.filter((weekday) => datesWithSlots.some((date) => date.day() === weekday.index))
+
+      // Picking a day jumps to its first date with slots, so the slot list below shows that day.
+      const handleDaySelect = (weekdayIndex: number) => {
+        const firstDate = datesWithSlots.find((date) => date.day() === weekdayIndex)
+        if (!firstDate) return
+        setSelectedDate(firstDate.toDate())
+        setSelectedSlot(null)
+      }
+
       return (
         <div className="flex flex-col h-full">
           <div className="h-full flex-1 p-6 flex flex-col space-y-4 xl:overflow-hidden">
+            <div className="space-y-2">
+              <label htmlFor="slot-day" className="text-sm font-medium">
+                Select day
+              </label>
+              <select
+                id="slot-day"
+                className="w-full h-10 rounded-md border bg-background px-3 text-sm"
+                value={dayjs(selectedDate).day()}
+                onChange={(event) => handleDaySelect(Number(event.target.value))}
+                disabled={weekdaysWithSlots.length === 0}
+              >
+                {weekdaysWithSlots.length === 0 ? <option value="">No days available</option> : null}
+                {weekdaysWithSlots.map((weekday) => (
+                  <option key={weekday.index} value={weekday.index}>
+                    {weekday.label}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div> {dayjs(selectedDate).format('dddd, MMMM D')}</div>
             <div className="space-y-2 h-full flex-1 overflow-auto pb-20 xl:pb-0">
               {slots.length === 0 ? (

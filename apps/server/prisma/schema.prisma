@@ -379,6 +379,7 @@ model File {
   mimeType  String
   size      Int
   Expert    Expert[]
+  courseMaterial CourseMaterial?
 }
 
 // ---------------------------------------------------------------------------
@@ -432,4 +433,140 @@ model AcademyCourse {
 
   // Every read is "the live courses of one kind, oldest first".
   @@index([type, isActive, createdAt])
+  enrollments Enrollment[]
+}
+
+// ---------------------------------------------------------------------------
+// Academy — enrollments, paid materials, quizzes, certificates.
+//
+// Ported from the same standalone academy-demo backend as AcademyCourse
+// above, replacing its Enrollment / CourseMaterial / Purchase / QuizAttempt /
+// CourseCertificate Mongoose models. The demo's trust-based "I've Paid" QR
+// flow is replaced here with a real Razorpay order (see academy.service.ts
+// and webhooks.service.ts) — everything else is a faithful port.
+// ---------------------------------------------------------------------------
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+}
+
+model Enrollment {
+  id         String            @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  // Plain string, not a relation — carries either a real `user.id` from the
+  // main auth system or a migrated legacy academy user id. Mirrors how
+  // Purchase/QuizAttempt below key off `identity` rather than a hard FK.
+  userId     String
+  course     AcademyCourse     @relation(fields: [courseId], references: [id])
+  courseId   String            @db.ObjectId
+  courseType AcademyCourseType
+  courseTitle String
+  price      String            @default("")
+  status     EnrollmentStatus  @default(ACTIVE)
+  progress   Int               @default(0)
+  lastAccessedAt DateTime?
+  enrolledAt DateTime          @default(now())
+
+  @@unique([userId, courseId])
+}
+
+// A single uploaded course resource (PDF/PPT) for the Online Course page —
+// the file itself lives in the shared `File`/MinIO store, this just carries
+// the academy-specific metadata (price, sequential-course ordering).
+model CourseMaterial {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime @default(now())
+  title       String
+  // The original upload name shown to learners — distinct from `file.fileName`,
+  // which is the storage path (`files/<date>/<name>_<randomId>`) and not meant
+  // for display.
+  fileName    String
+  file        File     @relation(fields: [fileId], references: [id])
+  fileId      String   @unique @db.ObjectId
+  // Rupees, charged to unlock download. Order 0 (free preview) and order 2+
+  // of a sequential course (earned by quiz, not paid) are both priced 0 by
+  // the upload flow — see academy.service.ts.
+  price       Int      @default(99)
+  uploadedBy  String?
+  // Sequential-course grouping: materials sharing `courseGroup` unlock in
+  // `order` (1, 2, 3…) — see hasAccess() in academy.access.ts.
+  courseGroup String?
+  order       Int?
+
+  purchases    Purchase[]
+  quizAttempts QuizAttempt[]
+
+  @@index([courseGroup, order])
+}
+
+model Purchase {
+  id         String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime       @default(now())
+  // `user:<id>` (logged in) or `guest:<uuid>` — identical scheme to the
+  // academy-demo, so a visitor can buy without an account.
+  identity   String
+  material   CourseMaterial @relation(fields: [materialId], references: [id])
+  materialId String         @db.ObjectId
+
+  // Details collected just before payment (pre-filled from profile, editable).
+  name   String
+  email  String
+  phone  String
+  reason String // "Why are you interested in this course?"
+
+  amount   Int // rupees
+  currency String @default("INR")
+
+  status          PurchaseStatus @default(PENDING)
+  razorpayOrderId String?        @unique
+  paidAt          DateTime?
+
+  @@index([identity, materialId, status])
+}
+
+enum PurchaseStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+// A user's attempt at the certification quiz for a given CourseMaterial.
+model QuizAttempt {
+  id         String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime       @default(now())
+  // Mirrors Purchase.identity — `user:<id>` or `guest:<uuid>`.
+  identity   String
+  material   CourseMaterial @relation(fields: [materialId], references: [id])
+  materialId String         @db.ObjectId
+
+  score  Int // number of correct answers
+  total  Int // total questions
+  passed Boolean
+
+  certificateId String? // set once a certificate has been issued
+
+  @@index([identity, materialId])
+}
+
+// The final, whole-course certificate — separate from the per-part
+// QuizAttempt records above. Earned by passing the final bundle assessment
+// (every part's MCQs together, plus a required long-answer submission) once
+// every part in the courseGroup has already been individually passed.
+model CourseCertificate {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime @default(now())
+  identity    String
+  courseGroup String
+
+  score  Int // MCQ correct count
+  total  Int
+  passed Boolean
+
+  longAnswer String @default("") // not auto-graded, kept for record/review
+
+  certificateId String? // set once issued
+
+  @@index([identity, courseGroup])
 }

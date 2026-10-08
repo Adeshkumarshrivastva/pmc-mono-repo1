@@ -7,6 +7,10 @@ import { DayOfWeek } from '../../generated/prisma'
 import { dateToMinutes } from '../../lib/date'
 import { razorpayInstance } from '../../lib/razorpay'
 import { handlePostBooking } from '../../lib/post-booking'
+import { createLogger } from '../../lib/logger'
+import { getErrorMessage } from '../../lib/utils'
+
+const logger = createLogger('booking-service')
 
 export async function createBooking(c: C, input: CreateBookingInput) {
   const userId = c.var.user?.id
@@ -240,7 +244,8 @@ export async function createBooking(c: C, input: CreateBookingInput) {
         razorpayOrder: null,
       })
     }
-  } catch {
+  } catch (error) {
+    logger.error(`Failed to create booking: ${getErrorMessage(error)}`)
     return c.json({ error: 'Failed to create booking' }, 500)
   }
 }

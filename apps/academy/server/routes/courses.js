@@ -1,27 +1,24 @@
 const express = require('express');
-const Webinar = require('../models/Webinar');
-const OnlineCourse = require('../models/OnlineCourse');
-const HybridCourse = require('../models/HybridCourse');
-const OnlineClass = require('../models/OnlineClass');
-const OfflineCourse = require('../models/OfflineCourse');
+const { callMainApi } = require('../utils/mainApiClient');
 
 const router = express.Router();
 
-const modelMap = {
-  'webinar':        Webinar,
-  'online-course':  OnlineCourse,
-  'hybrid-course':  HybridCourse,
-  'online-class':   OnlineClass,
-  'offline-course': OfflineCourse,
-};
+const VALID_TYPES = new Set(['webinar', 'online-course', 'hybrid-course', 'online-class', 'offline-course']);
 
-// GET /api/courses/:type  — fetch all courses of a given type
+// GET /api/courses/:type  — fetch all courses of a given type.
+// Proxied to apps/server, which holds the real (migrated) course data —
+// see utils/mainApiClient.js. `:type` slugs are unchanged from the demo
+// (apps/server/src/routes/academy/academy.input.ts keeps the same spelling),
+// so no translation is needed beyond restoring `_id` for this app's
+// frontend, which still reads `course._id`.
 router.get('/:type', async (req, res) => {
   try {
-    const Model = modelMap[req.params.type];
-    if (!Model) return res.status(404).json({ message: 'Course type not found' });
+    if (!VALID_TYPES.has(req.params.type)) return res.status(404).json({ message: 'Course type not found' });
 
-    const courses = await Model.find({ isActive: true }).sort({ createdAt: 1 });
+    const { ok, status, data } = await callMainApi(`/courses/${req.params.type}`);
+    if (!ok) return res.status(status).json(data || { message: 'Server error' });
+
+    const courses = (data.courses || []).map(({ id, ...rest }) => ({ _id: id, ...rest }));
     res.json({ courses });
   } catch (err) {
     console.error('Courses fetch error:', err.message);

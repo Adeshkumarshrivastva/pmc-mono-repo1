@@ -5,11 +5,9 @@ import type { Home } from '@/payload/types'
 import Link from 'next/dist/client/link'
 import { ArrowRightIcon } from 'lucide-react'
 import { toSiteHref } from '@/lib/links'
-
 type AcademySectionProps = {
   data: Home['academySection']
 }
-
 export default function AcademySection({ data }: AcademySectionProps) {
   return (
     <section className="w-full bg-primary text-accent">
@@ -29,15 +27,11 @@ export default function AcademySection({ data }: AcademySectionProps) {
                 )}
               </div>
             </div>
-
             <div className="flex flex-col gap-6">
               <div>
                 {data.subTitle && <p className="text-sm uppercase tracking-widest text-black-200">{data.subTitle}</p>}
-
                 {data.title && <h1 className="text-4xl font-sm mt-4 leading-tight">{data.title}</h1>}
-
                 {data.description && <p className="text-gray-200 mt-6 max-w-xl">{data.description}</p>}
-
                 <div className="grid grid-cols-2 gap-6 mt-8 text-sm">
                   {data.featuresCards?.map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
@@ -54,7 +48,6 @@ export default function AcademySection({ data }: AcademySectionProps) {
                     </div>
                   ))}
                 </div>
-
                 <div className="flex flex-wrap gap-4 mt-6">
                   <Link href={toSiteHref(data?.href1 || '')}>
                     <Button
@@ -66,7 +59,6 @@ export default function AcademySection({ data }: AcademySectionProps) {
                       {data?.button1 || ''}
                     </Button>
                   </Link>
-
                   <Link href={toSiteHref(data?.href2 || '')}>
                     <Button
                       variant="secondary"
@@ -81,7 +73,6 @@ export default function AcademySection({ data }: AcademySectionProps) {
               </div>
             </div>
           </div>
-
           <div className="bg-accent p-10 rounded-xl mt-12">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
               {data.stats?.stats?.map((stat, i) => (
