@@ -137,7 +137,9 @@ export default function Navbar({ services }: NavbarProps) {
           </div>
         </Link>
 
-        <div className="flex-1 min-w-0 hidden xl:flex items-center justify-center gap-2">
+        <div
+          className="flex-1 min-w-0 hidden xl:flex items-center justify-center gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {NAV_ITEMS.map((item) => {
             const isActive = `/${pathname.split('/')[1]}` === item.href
             if (item.id === 'services') {
@@ -205,7 +207,7 @@ export default function Navbar({ services }: NavbarProps) {
             className="flex items-center gap-1.5 text-xs font-semibold rounded-full border border-primary-foreground/40 px-2.5 py-1 text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground hover:border-primary-foreground transition-colors whitespace-nowrap shrink-0"
           >
             <MessageCircle className="size-3.5" />
-            Dr Shy
+            Dr Psy
           </button>
 
           <button
@@ -315,7 +317,7 @@ export default function Navbar({ services }: NavbarProps) {
                       className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-full border border-accent-foreground/40 px-3 py-1.5 text-accent-foreground/80 hover:text-accent-foreground w-fit"
                     >
                       <MessageCircle className="size-4" />
-                      Dr Shy
+                      Dr Psy
                     </button>
 
                     <button
